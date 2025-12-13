@@ -1,0 +1,27 @@
+input,
+select,
+textarea {
+    direction: rtl;
+}
+
+label {
+    float: right;
+}
+
+form .row {
+    flex-direction: row-reverse;
+}
+
+form .actions {
+    text-align: right;
+}
+
+.card-body .d-flex {
+    flex-direction: row-reverse;
+}
+
+form span.text-danger {
+    text-align: right;
+    display: block;
+}
+

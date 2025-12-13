@@ -1,0 +1,11 @@
+{
+    "name": "Basicdata",
+    "alias": "basicdata",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Basicdata\\App\\Providers\\BasicdataServiceProvider"
+    ],
+    "files": []
+}

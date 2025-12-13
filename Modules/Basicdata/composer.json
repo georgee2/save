@@ -1,0 +1,31 @@
+{
+    "name": "nwidart/basicdata",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Basicdata\\": "",
+            "Modules\\Basicdata\\App\\": "app/",
+            "Modules\\Basicdata\\Database\\Factories\\": "database/factories/",
+            "Modules\\Basicdata\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Basicdata\\Tests\\": "tests/"
+        }
+    }
+}

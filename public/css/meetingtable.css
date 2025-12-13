@@ -1,0 +1,24 @@
+.meeting-header{
+	background-color: #64a6a0;
+	color: white;
+	text-align: center;
+}
+.meeting-td{
+	background-color:#11446f;
+	color: white;
+	text-align: center;
+	width: 150px !important;
+}
+.meeting-span{
+	font-weight: bold;
+	white-space: initial;
+	
+}
+.meeting-section{
+	min-width: 100px;
+	max-width: 100px;
+}
+
+.meeting-p{
+	white-space: initial;
+}

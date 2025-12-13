@@ -1,0 +1,65 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\ContactInformation;
+use App\Models\ContactUs;
+use App\Models\Service;
+use App\Models\PageBanner;
+
+class ContactController extends Controller
+{
+    /**
+     * Display the contact page.
+     */
+    public function index()
+    {
+        // Get contact information
+        $contactInfo = ContactInformation::getContactInfo();
+        
+        // Get main services for the dropdown
+        $services = Service::where('deleted_at', null)
+                          ->where('is_sub_service', 0)
+                          ->where('publish_status', 0)
+                          ->select('id', 'title_english', 'title_arabic')
+                          ->get();
+
+        // Get page banner for contact page
+        $pageBanner = PageBanner::getByTarget('contact');
+
+        return view('pages.contact.contact', compact('contactInfo', 'services', 'pageBanner'));
+    }
+
+    /**
+     * Store a new contact message.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'subject' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:255',
+            'message' => 'required|string',
+            'service_id' => 'nullable|exists:services,id',
+        ]);
+
+        ContactUs::create([
+            'name' => $request->name,
+            'subject' => $request->subject,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'message' => $request->message,
+            'service_id' => $request->service_id,
+            'status' => 'Pending',
+        ]);
+
+        $successMessage = app()->getLocale() == 'en' 
+            ? 'Your message has been sent successfully! We will contact you soon.' 
+            : 'تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.';
+
+        return back()->with('success', $successMessage);
+    }
+}
+
