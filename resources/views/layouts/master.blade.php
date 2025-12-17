@@ -12,21 +12,25 @@
         <!-- Place favicon.ico in the root directory -->
           <link rel="shortcut icon" type="image/x-icon" href="assets/images/fav.png">
 
-          <!-- CSS here -->
-          <link rel="stylesheet" href="{{asset('/assets/css/bootstrap.min.css')}}">
-          <link rel="stylesheet" href="{{asset('/assets/css/font-awesome-pro.min.css')}}">
-          <link rel="stylesheet" href="{{asset('/assets/css/animate.min.css')}}">
-          <link rel="stylesheet" href="{{asset('/assets/css/bexon-icons.css')}}">
-          <link rel="stylesheet" href="{{asset('/assets/css/nice-select.css')}}">
-          <link rel="stylesheet" href="{{asset('/assets/css/swiper.min.css')}}">
-          <link rel="stylesheet" href="{{asset('/assets/css/venobox.min.css')}}">
-          <link rel="stylesheet" href="{{asset('/assets/css/odometer-theme-default.css')}}">
-          <link rel="stylesheet" href="{{asset('/assets/css/meanmenu.css')}}">
-          <link rel="stylesheet" href="{{asset('/assets/css/main.css')}}">
-          <!-- Scroll and Animation Optimization -->
-          <link rel="stylesheet" href="{{asset('/assets/css/scroll-optimization.css')}}">
           <!-- Mobile Hero Optimization -->
           <link rel="stylesheet" href="{{asset('/assets/css/mobile-hero.css')}}">
+
+          <!-- Google fonts -->
+          <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap"
+            rel="stylesheet">
+          <!-- Vendors CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/vendors/fontawesome-pro-5/css/all.css')}}">
+          <link rel="stylesheet" href="{{asset('/assets/vendors/bootstrap-select/css/bootstrap-select.min.css')}}">
+          <link rel="stylesheet" href="{{asset('/assets/vendors/slick/slick.min.css')}}">
+          <link rel="stylesheet" href="{{asset('/assets/vendors/magnific-popup/magnific-popup.min.css')}}">
+          <link rel="stylesheet" href="{{asset('/assets/vendors/jquery-ui/jquery-ui.min.css')}}">
+          <link rel="stylesheet" href="{{asset('/assets/vendors/chartjs/Chart.min.css')}}">
+          <link rel="stylesheet" href="{{asset('/assets/vendors/dropzone/css/dropzone.min.css')}}">
+          <link rel="stylesheet" href="{{asset('/assets/vendors/animate.css')}}">
+          <link rel="stylesheet" href="{{asset('/assets/vendors/timepicker/bootstrap-timepicker.min.css')}}">
+          <link rel="stylesheet" href="{{asset('/assets/vendors/mapbox-gl/mapbox-gl.min.css')}}">
+          <!-- Themes core CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/css/themes.css')}}">
                 
 
         @yield('css')
@@ -34,69 +38,36 @@
     </head>
 
     <body>
+      @include('includes.header')
 
-    <div class="body-overlay"></div>
+      <main id="content">
+        @include('includes.search')
 
-      <!-- Preloader Start -->
-      <div class="tj-preloader is-loading">
-        <div class="tj-preloader-inner">
-          <div class="tj-preloader-ball-wrap">
-            <div class="tj-preloader-ball-inner-wrap">
-              <div class="tj-preloader-ball-inner">
-                <div class="tj-preloader-ball"></div>
-              </div>
-              <div class="tj-preloader-ball-shadow"></div>
-            </div>
-            <div id="tj-weave-anim" class="tj-preloader-text">Smart Vision Group ...</div>
-          </div>
-        </div>
-        <div class="tj-preloader-overlay"></div>
-      </div>
-      <!-- Preloader end -->
+        @yield('content')
 
-      <!-- back to top start -->
-      <div id="tj-back-to-top"><span id="tj-back-to-top-percentage"></span></div>
-      <!-- back to top end -->
-
-      <!-- start: Search Popup -->
-      <div class="search-popup-overlay"></div>
-
-        @include('includes.sidebar')
-        @include('includes.mobile')
-        @include('includes.header')
-
-    <div id="smooth-wrapper">
-        <div id="smooth-content">
-          <main id="primary" class="site-main">
-            <div class="space-for-header"></div>
-                @yield('content')
-                @include('includes.footer')
-
-            </main>
-        </div>
-    </div>
+      </main>
+      @include('includes.footer')
 
 
 
+        <!-- Vendors scripts -->
+        <script src="{{asset('/assets/vendors/jquery.min.js')}}"></script>
+        <script src="{{asset('/assets/vendors/jquery-ui/jquery-ui.min.js')}}"></script>
+        <script src="{{asset('/assets/vendors/bootstrap/bootstrap.bundle.js')}}"></script>
+        <script src="{{asset('/assets/vendors/bootstrap-select/js/bootstrap-select.min.js')}}"></script>
+        <script src="{{asset('/assets/vendors/slick/slick.min.js')}}"></script>
+        <script src="{{asset('/assets/vendors/waypoints/jquery.waypoints.min.js')}}"></script>
+        <script src="{{asset('/assets/vendors/counter/countUp.js')}}"></script>
+        <script src="{{asset('/assets/vendors/magnific-popup/jquery.magnific-popup.min.js')}}"></script>
+        <script src="{{asset('/assets/vendors/chartjs/Chart.min.js')}}"></script>
+        <script src="{{asset('/assets/vendors/dropzone/js/dropzone.min.js')}}"></script>
+        <script src="{{asset('/assets/vendors/timepicker/bootstrap-timepicker.min.js')}}"></script>
+        <script src="{{asset('/assets/vendors/hc-sticky/hc-sticky.min.js')}}"></script>
+        <script src="{{asset('/assets/vendors/jparallax/TweenMax.min.js')}}"></script>
+        <script src="{{asset('/assets/vendors/mapbox-gl/mapbox-gl.js')}}"></script>
+        <!-- Theme scripts -->
+        <script src="{{asset('/assets/js/theme.js')}}"></script>
    
-      <script src="{{asset('/assets/js/jquery.min.js')}}"></script>
-      <script src="{{asset('/assets/js/bootstrap.bundle.min.js')}}"></script>
-      <script src="{{asset('/assets/js/gsap.min.js')}}"></script>
-      <script src="{{asset('/assets/js/ScrollSmoother.js')}}"></script>
-      <script src="{{asset('/assets/js/gsap-scroll-to-plugin.min.js')}}"></script>
-      <script src="{{asset('/assets/js/gsap-scroll-trigger.min.js')}}"></script>
-      <script src="{{asset('/assets/js/gsap-split-text.min.js')}}"></script>
-      <script src="{{asset('/assets/js/jquery.nice-select.min.js')}}"></script>
-      <script src="{{asset('/assets/js/swiper.min.js')}}"></script>
-      <script src="{{asset('/assets/js/odometer.min.js')}}"></script>
-      <script src="{{asset('/assets/js/venobox.min.js')}}"></script>
-      <script src="{{asset('/assets/js/appear.min.js')}}"></script>
-      <script src="{{asset('/assets/js/wow.min.js')}}"></script>
-      <script src="{{asset('/assets/js/wow-config.js')}}"></script>
-      <script src="{{asset('/assets/js/meanmenu.js')}}"></script>
-      <script src="{{asset('/assets/js/imagesloaded-pkgd.js')}}"></script>
-      <script src="{{asset('/assets/js/isotope.pkgd.min.js')}}"></script>
-      <script src="{{asset('/assets/js/main.js')}}"></script>
     
     @yield('js')
 
