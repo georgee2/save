@@ -42,8 +42,8 @@ File: Main Css File
   General
 ===================*/
 :root {
-    --main--color: #e64c29;
-    --secondary--color: #000000;
+    --main--color: #00797b;
+    --secondary--color: #e1273e;
 }
 body {
     background: #f5f5f5;
