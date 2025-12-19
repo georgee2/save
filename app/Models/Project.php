@@ -63,6 +63,14 @@ class Project extends Model
     }
     
     /**
+     * Relationship: Project belongs to Emirate
+     */
+    public function emirate()
+    {
+        return $this->belongsTo(Emirate::class, 'emirate_id');
+    }
+    
+    /**
      * Relationship: Project has many Floors
      */
     public function floors()
@@ -108,6 +116,14 @@ class Project extends Model
     public function feasibilityStudies()
     {
         return $this->hasMany(FeasibilityStudy::class, 'project_id');
+    }
+    
+    /**
+     * Relationship: Project has many Images
+     */
+    public function images()
+    {
+        return $this->hasMany(ProjectImage::class, 'project_id');
     }
     
     /**

@@ -21,6 +21,7 @@ use Modules\Basicdata\App\Http\Controllers\JobTitleController;
 use Modules\Basicdata\App\Http\Controllers\JobCategoryController;
 use Modules\Basicdata\App\Http\Controllers\RankController;
 use Modules\Basicdata\App\Http\Controllers\LanguageController;
+use Modules\Basicdata\App\Http\Controllers\EmirateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -267,6 +268,19 @@ Route::group(
                 Route::get('/index', [LanguageController::class, 'index'])->name('language.index');
                 Route::get('/edit/{key}', [LanguageController::class, 'edit'])->name('language.edit');
                 Route::post('/update/{key}', [LanguageController::class, 'update'])->name('language.update');
+            });
+
+            // Emirates Routes
+            Route::prefix('emirate')->group(function () {
+                Route::get('/index', [EmirateController::class, 'index'])->name('emirate.index');
+                Route::get('/create', [EmirateController::class, 'create'])->name('emirate.create');
+                Route::post('/store', [EmirateController::class, 'store'])->name('emirate.store');
+                Route::get('/show/{id}', [EmirateController::class, 'show'])->name('emirate.show');
+                Route::get('/edit/{id}', [EmirateController::class, 'edit'])->name('emirate.edit');
+                Route::post('/update/{id}', [EmirateController::class, 'update'])->name('emirate.update');
+                Route::post('/delete/{id}', [EmirateController::class, 'destroy'])->name('emirate.delete');
+                Route::get('/trashed', [EmirateController::class, 'trashed'])->name('emirate.trashed');
+                Route::post('/restore/{id}', [EmirateController::class, 'restore'])->name('emirate.restore');
             });
 
         });

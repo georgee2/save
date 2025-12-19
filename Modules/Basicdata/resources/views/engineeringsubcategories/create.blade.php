@@ -113,6 +113,9 @@
                             <div class="form-group col-md-12">
                                 <label class="text-capitalize">Icon <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
                                 <input accept="image/*" class="form-control dropify" type="file" name="icon">
+                                <small class="form-text text-muted">
+                                    <i class="fa fa-info-circle"></i> Recommended size: <strong>150px x 150px</strong>. Image will be automatically resized and converted to WebP format.
+                                </small>
                                 @error('icon')
                                 <span class="text-danger mt-1">{{ $message }}</span>
                                 @enderror

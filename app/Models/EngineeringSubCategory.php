@@ -45,6 +45,14 @@ class EngineeringSubCategory extends Model
     }
     
     /**
+     * Relationship: Sub Category has many Projects
+     */
+    public function projects()
+    {
+        return $this->hasMany(Project::class, 'subcategory_id');
+    }
+    
+    /**
      * Get all engineering sub categories for listing
      */
     public static function list()

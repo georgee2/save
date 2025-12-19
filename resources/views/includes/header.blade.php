@@ -3,7 +3,7 @@
         <div class="container">
           <nav class="navbar navbar-expand-lg px-0">
             <a class="navbar-brand" href=".">
-              <img src="images/logo.png" alt="HomeID"
+              <img style="max-width: 200px;max-height: 90px" src="{{url('/pic/logo.png')}}" alt="HomeID"
                          class="d-none d-lg-inline-block">
               <img src="images/logo-white.png" alt="HomeID"
                          class="d-inline-block d-lg-none">
