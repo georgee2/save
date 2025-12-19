@@ -23,12 +23,12 @@
             <div class="form-group">
                 <label class="font-weight-bold">
                     Gallery Images 
-                    <small class="text-muted">(Width: 870px - Height: 550px)</small>
+                    <small class="text-muted">(1080px x 1080px)</small>
                 </label>
                 <div class="images mb-3"></div>
                 <small class="form-text text-muted">
                     <i class="fas fa-info-circle"></i> 
-                    You can upload multiple images. Drag and drop to reorder. Click the X to remove an image. Images will be automatically resized to 870x420 and converted to WebP format.
+                    You can upload multiple images. Drag and drop to reorder. Click the X to remove an image. Images will be automatically resized to 1080x1080 and converted to WebP format with 80% quality.
                 </small>
             </div>
 

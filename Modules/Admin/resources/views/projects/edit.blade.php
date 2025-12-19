@@ -116,7 +116,7 @@
                                 </select>
                                 @error('currency_id')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
-                            <div class="form-group col-md-12">
+                            <div class="form-group col-md-6">
                                 <label class="text-capitalize">Partner</label>
                                 <select class="form-control select2" name="partner_id">
                                     <option value="">Select Partner</option>
@@ -125,6 +125,16 @@
                                     @endforeach
                                 </select>
                                 @error('partner_id')<span class="text-danger mt-1">{{ $message }}</span>@enderror
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="text-capitalize">Emirate</label>
+                                <select class="form-control select2" name="emirate_id">
+                                    <option value="">Select Emirate</option>
+                                    @foreach($emirates as $emirate)
+                                        <option value="{{ $emirate->id }}" {{ old('emirate_id', $project->emirate_id) == $emirate->id ? 'selected' : '' }}>{{ $emirate->title_english }}</option>
+                                    @endforeach
+                                </select>
+                                @error('emirate_id')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                         </div>
 
@@ -164,9 +174,9 @@
                         <h5 class="mb-3 mt-4 text-primary">Project Images</h5>
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize">Main Image (820x550)</label>
+                                <label class="text-capitalize">Main Image (1080x1080)</label>
                                 <input accept="image/*" class="form-control dropify" type="file" name="main_image" data-default-file="{{ asset('storage' . $project->main_image) }}">
-                                <small class="form-text text-muted">Leave empty to keep current image. Recommended: 820x550 pixels. Will be converted to WebP.</small>
+                                <small class="form-text text-muted">Leave empty to keep current image. Recommended: 1080x1080 pixels. Will be converted to WebP with 80% quality.</small>
                                 @error('main_image')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-6">

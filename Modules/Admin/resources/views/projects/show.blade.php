@@ -751,7 +751,7 @@
                             <div class="image-grid">
                                 <div class="image-grid-item" onclick="openLightbox('{{ asset('storage' . $project->main_image) }}')">
                                     <img src="{{ asset('storage' . $project->main_image) }}" alt="Main Image">
-                                    <div class="image-label">Main Image (820x550)</div>
+                                    <div class="image-label">Main Image (1080x1080)</div>
                                 </div>
                                 
                                 @if($project->cover_image)

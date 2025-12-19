@@ -41,7 +41,7 @@ class ProjectImageController extends Controller
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
                     $filename = $image->getClientOriginalExtension();
-                    $finalimage = Image::make($image)->resize(870, 550)->encode('webp', 80);
+                    $finalimage = Image::make($image)->fit(1080, 1080)->encode('webp', 80);
                     $imageName = Str::random() . ".webp";
                     Storage::disk('public')->put('/uploads/projects/gallery/' . $imageName, (string) $finalimage);
                     
@@ -77,7 +77,7 @@ class ProjectImageController extends Controller
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
                     $filename = $image->getClientOriginalExtension();
-                    $finalimage = Image::make($image)->resize(870, 550)->encode('webp', 80);
+                    $finalimage = Image::make($image)->fit(1080, 1080)->encode('webp', 80);
                     $imageName = Str::random() . ".webp";
                     Storage::disk('public')->put('/uploads/projects/gallery/' . $imageName, (string) $finalimage);
                     

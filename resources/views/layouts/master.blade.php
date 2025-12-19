@@ -31,6 +31,8 @@
           <link rel="stylesheet" href="{{asset('/assets/vendors/mapbox-gl/mapbox-gl.min.css')}}">
           <!-- Themes core CSS -->
           <link rel="stylesheet" href="{{asset('/assets/css/themes.css')}}">
+          <!-- Custom Sections CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/css/custom-sections.css')}}">
                 
 
         @yield('css')

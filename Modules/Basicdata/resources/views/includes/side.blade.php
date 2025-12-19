@@ -193,6 +193,15 @@
                                 </ul>
                             </li>
 
+                            <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-18px mdi-map-marker"></i><span> Emirates <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                                <ul class="list-unstyled">
+                                    <li><a href="{{route('emirate.create')}}">Add New Emirate</a></li>
+                                    <li><a href="{{route('emirate.index')}}">Emirates List</a></li>
+                                    <li><a href="{{route('emirate.trashed')}}">Trashed Emirates</a></li>
+                                </ul>
+                            </li>
+
                         </ul>
                     </div>
                     <div class="clearfix"></div>

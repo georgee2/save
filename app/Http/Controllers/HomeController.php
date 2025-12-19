@@ -20,6 +20,9 @@ use App\Models\Fact;
 use App\Models\DefaultProcess;
 use App\Models\DefaultProcessCard;
 use App\Models\DefaultBanner;
+use App\Models\EngineeringSubCategory;
+use App\Models\ProjectImage;
+use App\Models\ProjectSpecification;
 
 class HomeController extends Controller
 {
@@ -158,6 +161,36 @@ class HomeController extends Controller
             ->orderBy('created_at', 'desc')
             ->first();
         
-        return view('index', compact('sliders', 'aboutBlock', 'aboutCards', 'services', 'showcases', 'facts', 'defaultProcess', 'processCards', 'whyChooseUsBlock', 'whyChooseUsCards', 'engineeringProjects', 'teamMembers', 'portfolioTypes', 'portfolios', 'homeContact', 'contactInfo', 'homeFaqs', 'blogs', 'defaultBanner'));
+        // Fetch engineering sub categories with project counts
+        $engineeringSubCategories = EngineeringSubCategory::withCount(['projects' => function($query) {
+                $query->where('publish_status', 0)->whereNull('deleted_at');
+            }])
+            ->whereNull('deleted_at')
+            ->orderBy('created_at', 'asc')
+            ->get();
+        
+        // Fetch featured projects (home_status = 0) with category, subcategory, specifications and images count
+        $featuredProjects = Project::with(['category', 'subcategory', 'specifications.specification'])
+            ->withCount('images')
+            ->where('publish_status', 0) // Published
+            ->where('home_status', 0)    // Shown on home (featured)
+            ->whereNull('deleted_at')
+            ->orderBy('created_at', 'desc')
+            ->limit(20)
+            ->get()
+            ->map(function($project) {
+                // Count videos (video_url and tour_url)
+                $videoCount = 0;
+                if (!empty($project->video_url)) $videoCount++;
+                if (!empty($project->tour_url)) $videoCount++;
+                $project->video_count = $videoCount;
+                
+                // Add 1 for main image to images_count
+                $project->total_images = $project->images_count + 1;
+                
+                return $project;
+            });
+        
+        return view('index', compact('sliders', 'aboutBlock', 'aboutCards', 'services', 'showcases', 'facts', 'defaultProcess', 'processCards', 'whyChooseUsBlock', 'whyChooseUsCards', 'engineeringProjects', 'teamMembers', 'portfolioTypes', 'portfolios', 'homeContact', 'contactInfo', 'homeFaqs', 'blogs', 'defaultBanner', 'engineeringSubCategories', 'featuredProjects'));
     }
 }

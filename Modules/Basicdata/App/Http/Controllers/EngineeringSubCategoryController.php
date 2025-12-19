@@ -8,6 +8,7 @@ use App\Models\EngineeringSubCategory;
 use App\Models\EngineeringCategory;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class EngineeringSubCategoryController extends Controller
 {
@@ -83,11 +84,18 @@ class EngineeringSubCategoryController extends Controller
             $data['seo_description_arabic'] = $request->seo_description_arabic;
         }
 
-        // Handle icon upload (required)
+        // Handle icon upload (required) - resize to 150x150, quality 80, convert to WebP
         if ($request->hasFile('icon')) {
             $icon = $request->file('icon');
-            $iconName = time() . '_icon_' . uniqid() . '.' . $icon->getClientOriginalExtension();
-            $iconPath = $icon->storeAs('engineering_sub_categories/icons', $iconName, 'public');
+            $iconName = time() . '_icon_' . uniqid() . '.webp';
+            $iconPath = 'engineering_sub_categories/icons/' . $iconName;
+            
+            // Resize to 150x150 and convert to WebP with quality 80
+            $img = Image::make($icon)
+                ->fit(150, 150)
+                ->encode('webp', 80);
+            
+            Storage::disk('public')->put($iconPath, $img->stream());
             $data['icon'] = '/' . $iconPath;
         }
 
@@ -181,7 +189,7 @@ class EngineeringSubCategoryController extends Controller
             $data['seo_description_arabic'] = $request->seo_description_arabic;
         }
 
-        // Handle icon upload
+        // Handle icon upload - resize to 150x150, quality 80, convert to WebP
         if ($request->hasFile('icon')) {
             // Delete old icon if exists
             if ($subCategory->icon) {
@@ -189,8 +197,15 @@ class EngineeringSubCategoryController extends Controller
             }
             
             $icon = $request->file('icon');
-            $iconName = time() . '_icon_' . uniqid() . '.' . $icon->getClientOriginalExtension();
-            $iconPath = $icon->storeAs('engineering_sub_categories/icons', $iconName, 'public');
+            $iconName = time() . '_icon_' . uniqid() . '.webp';
+            $iconPath = 'engineering_sub_categories/icons/' . $iconName;
+            
+            // Resize to 150x150 and convert to WebP with quality 80
+            $img = Image::make($icon)
+                ->fit(150, 150)
+                ->encode('webp', 80);
+            
+            Storage::disk('public')->put($iconPath, $img->stream());
             $data['icon'] = '/' . $iconPath;
         }
 

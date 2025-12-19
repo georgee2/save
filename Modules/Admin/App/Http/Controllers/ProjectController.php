@@ -11,6 +11,7 @@ use App\Models\Currency;
 use App\Models\ProjectStyle;
 use App\Models\ProjectType;
 use App\Models\Partner;
+use App\Models\Emirate;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
@@ -46,8 +47,9 @@ class ProjectController extends Controller
         $styles = ProjectStyle::whereNull('deleted_at')->orderBy('title_english')->get();
         $types = ProjectType::whereNull('deleted_at')->orderBy('name_english')->get();
         $partners = Partner::whereNull('deleted_at')->orderBy('name_english')->get();
+        $emirates = Emirate::whereNull('deleted_at')->orderBy('title_english')->get();
         
-        return view('admin::projects.create', compact('categories', 'currencies', 'styles', 'types', 'partners'));
+        return view('admin::projects.create', compact('categories', 'currencies', 'styles', 'types', 'partners', 'emirates'));
     }
 
     /**
@@ -64,6 +66,7 @@ class ProjectController extends Controller
             'style_id' => 'nullable|exists:project_styles,id',
             'type_id' => 'required|exists:project_types,id',
             'partner_id' => 'nullable|exists:partners,id',
+            'emirate_id' => 'nullable|exists:emirates,id',
             'sqft' => 'nullable|numeric|min:0',
             'sqm' => 'nullable|numeric|min:0',
             'video_url' => 'nullable|url|max:255',
@@ -88,9 +91,9 @@ class ProjectController extends Controller
         // Auto-generate slug from English title
         $data['slug'] = Str::slug($data['title_english']);
 
-        // Handle main_image upload (820x550)
+        // Handle main_image upload (1080x1080)
         if ($request->hasFile('main_image')) {
-            $data['main_image'] = $this->handleImageUpload($request->file('main_image'), 820, 550, 'projects/main');
+            $data['main_image'] = $this->handleImageUpload($request->file('main_image'), 1080, 1080, 'projects/main');
         }
 
         // Handle cover_image upload (1890x420)
@@ -140,8 +143,9 @@ class ProjectController extends Controller
         $styles = ProjectStyle::whereNull('deleted_at')->orderBy('title_english')->get();
         $types = ProjectType::whereNull('deleted_at')->orderBy('name_english')->get();
         $partners = Partner::whereNull('deleted_at')->orderBy('name_english')->get();
+        $emirates = Emirate::whereNull('deleted_at')->orderBy('title_english')->get();
         
-        return view('admin::projects.edit', compact('project', 'categories', 'subcategories', 'currencies', 'styles', 'types', 'partners'));
+        return view('admin::projects.edit', compact('project', 'categories', 'subcategories', 'currencies', 'styles', 'types', 'partners', 'emirates'));
     }
 
     /**
@@ -160,6 +164,7 @@ class ProjectController extends Controller
             'style_id' => 'nullable|exists:project_styles,id',
             'type_id' => 'required|exists:project_types,id',
             'partner_id' => 'nullable|exists:partners,id',
+            'emirate_id' => 'nullable|exists:emirates,id',
             'sqft' => 'nullable|numeric|min:0',
             'sqm' => 'nullable|numeric|min:0',
             'video_url' => 'nullable|url|max:255',
@@ -184,12 +189,12 @@ class ProjectController extends Controller
         // Auto-generate slug from English title
         $data['slug'] = Str::slug($data['title_english']);
 
-        // Handle main_image upload (820x550)
+        // Handle main_image upload (1080x1080)
         if ($request->hasFile('main_image')) {
             if ($project->main_image) {
                 Storage::disk('public')->delete(ltrim($project->main_image, '/'));
             }
-            $data['main_image'] = $this->handleImageUpload($request->file('main_image'), 820, 550, 'projects/main');
+            $data['main_image'] = $this->handleImageUpload($request->file('main_image'), 1080, 1080, 'projects/main');
         }
 
         // Handle cover_image upload (1890x420)

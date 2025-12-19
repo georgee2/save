@@ -12,6 +12,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CareerController;
+use App\Http\Controllers\EngineeringSubCategoryController;
 
 
 
@@ -46,6 +47,11 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 	Route::prefix('projects')->name('projects.')->group(function () {
 		Route::get('/', [ProjectsController::class, 'index'])->name('index');
 		Route::get('/{slug}', [ProjectsController::class, 'show'])->name('show');
+	});
+
+	// Engineering Sub Categories Routes Group
+	Route::prefix('engineering')->name('engineering.')->group(function () {
+		Route::get('/{slug}', [EngineeringSubCategoryController::class, 'show'])->name('subcategory.show');
 	});
 
 	// Portfolio Routes Group
