@@ -55,6 +55,15 @@
                             </li>
 
                             <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-tag"></i><span> Offers <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                                <ul class="list-unstyled">
+                                    <li><a href="{{route('offer.create')}}">Add New Offer</a></li>
+                                    <li><a href="{{route('offer.index')}}">Offers List</a></li>
+                                    <li><a href="{{route('offer.trashed')}}">Trashed Offers</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="has_sub">
                                 <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-star"></i><span> Showcases <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
                                 <ul class="list-unstyled">
                                     <li><a href="{{route('showcase.create')}}">Add New Showcase</a></li>

@@ -22,6 +22,8 @@ use Modules\Basicdata\App\Http\Controllers\JobCategoryController;
 use Modules\Basicdata\App\Http\Controllers\RankController;
 use Modules\Basicdata\App\Http\Controllers\LanguageController;
 use Modules\Basicdata\App\Http\Controllers\EmirateController;
+use Modules\Basicdata\App\Http\Controllers\OfferCategoryController;
+use Modules\Basicdata\App\Http\Controllers\OfferSubCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -281,6 +283,32 @@ Route::group(
                 Route::post('/delete/{id}', [EmirateController::class, 'destroy'])->name('emirate.delete');
                 Route::get('/trashed', [EmirateController::class, 'trashed'])->name('emirate.trashed');
                 Route::post('/restore/{id}', [EmirateController::class, 'restore'])->name('emirate.restore');
+            });
+
+            // Offer Categories Routes
+            Route::prefix('offercategory')->group(function () {
+                Route::get('/index', [OfferCategoryController::class, 'index'])->name('offercategory.index');
+                Route::get('/create', [OfferCategoryController::class, 'create'])->name('offercategory.create');
+                Route::post('/store', [OfferCategoryController::class, 'store'])->name('offercategory.store');
+                Route::get('/show/{id}', [OfferCategoryController::class, 'show'])->name('offercategory.show');
+                Route::get('/edit/{id}', [OfferCategoryController::class, 'edit'])->name('offercategory.edit');
+                Route::post('/update/{id}', [OfferCategoryController::class, 'update'])->name('offercategory.update');
+                Route::post('/delete/{id}', [OfferCategoryController::class, 'destroy'])->name('offercategory.delete');
+                Route::get('/trashed', [OfferCategoryController::class, 'trashed'])->name('offercategory.trashed');
+                Route::post('/restore/{id}', [OfferCategoryController::class, 'restore'])->name('offercategory.restore');
+            });
+
+            // Offer Sub Categories Routes
+            Route::prefix('offersubcategory')->group(function () {
+                Route::get('/index', [OfferSubCategoryController::class, 'index'])->name('offersubcategory.index');
+                Route::get('/create', [OfferSubCategoryController::class, 'create'])->name('offersubcategory.create');
+                Route::post('/store', [OfferSubCategoryController::class, 'store'])->name('offersubcategory.store');
+                Route::get('/show/{id}', [OfferSubCategoryController::class, 'show'])->name('offersubcategory.show');
+                Route::get('/edit/{id}', [OfferSubCategoryController::class, 'edit'])->name('offersubcategory.edit');
+                Route::post('/update/{id}', [OfferSubCategoryController::class, 'update'])->name('offersubcategory.update');
+                Route::post('/delete/{id}', [OfferSubCategoryController::class, 'destroy'])->name('offersubcategory.delete');
+                Route::get('/trashed', [OfferSubCategoryController::class, 'trashed'])->name('offersubcategory.trashed');
+                Route::post('/restore/{id}', [OfferSubCategoryController::class, 'restore'])->name('offersubcategory.restore');
             });
 
         });

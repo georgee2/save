@@ -108,28 +108,6 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="form-group col-md-12">
-                                <label class="text-capitalize">Image</label>
-                                <input accept="image/*" class="form-control dropify" type="file" name="image"
-                                    @if($category->image) data-default-file="{{url('/storage'.$category->image)}}" @endif>
-                                @error('image')
-                                <span class="text-danger mt-1">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group col-md-12">
-                                <label class="text-capitalize">Cover</label>
-                                <input accept="image/*" class="form-control dropify" type="file" name="cover"
-                                    @if($category->cover) data-default-file="{{url('/storage'.$category->cover)}}" @endif>
-                                @error('cover')
-                                <span class="text-danger mt-1">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-
                         <div class="row mt-4">
                             <div class="form-group col-md-12">
                                 <label>SEO Tags <span class="text-danger">Press Enter After You Type</span></label>

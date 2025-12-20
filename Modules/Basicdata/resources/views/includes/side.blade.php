@@ -202,6 +202,24 @@
                                 </ul>
                             </li>
 
+                            <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-18px mdi-tag-multiple"></i><span> Offer Categories <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                                <ul class="list-unstyled">
+                                    <li><a href="{{route('offercategory.create')}}">Add New Category</a></li>
+                                    <li><a href="{{route('offercategory.index')}}">Categories List</a></li>
+                                    <li><a href="{{route('offercategory.trashed')}}">Trashed Categories</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-18px mdi-tag-outline"></i><span> <small>Offer Sub Categories</small>  <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                                <ul class="list-unstyled">
+                                    <li><a href="{{route('offersubcategory.create')}}">Add New Sub Category</a></li>
+                                    <li><a href="{{route('offersubcategory.index')}}">Sub Categories List</a></li>
+                                    <li><a href="{{route('offersubcategory.trashed')}}">Trashed Sub Categories</a></li>
+                                </ul>
+                            </li>
+
                         </ul>
                     </div>
                     <div class="clearfix"></div>
