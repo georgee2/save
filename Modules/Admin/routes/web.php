@@ -53,6 +53,10 @@ use Modules\Admin\App\Http\Controllers\FactController;
 use Modules\Admin\App\Http\Controllers\DefaultProcessController;
 use Modules\Admin\App\Http\Controllers\DefaultProcessCardController;
 use Modules\Admin\App\Http\Controllers\DefaultBannerController;
+use Modules\Admin\App\Http\Controllers\OfferController;
+use Modules\Admin\App\Http\Controllers\OfferPriceController;
+use Modules\Admin\App\Http\Controllers\OfferImageController;
+use Modules\Admin\App\Http\Controllers\OfferBuildingComponentController;
 
 
 /*
@@ -585,6 +589,46 @@ Route::group(
                 Route::post('/restore/{id}', [DefaultBannerController::class, 'restore'])->name('admin.default-banners.restore');
                 Route::delete('/force-delete/{id}', [DefaultBannerController::class, 'forceDelete'])->name('admin.default-banners.force-delete');
                 Route::post('/toggle-status/{id}', [DefaultBannerController::class, 'toggleStatus'])->name('admin.default-banners.toggle-status');
+            });
+
+            // Offers Routes
+            Route::prefix('offer')->group(function () {
+                Route::get('/index', [OfferController::class, 'index'])->name('offer.index');
+                Route::get('/create', [OfferController::class, 'create'])->name('offer.create');
+                Route::post('/store', [OfferController::class, 'store'])->name('offer.store');
+                Route::get('/edit/{id}', [OfferController::class, 'edit'])->name('offer.edit');
+                Route::post('/update/{id}', [OfferController::class, 'update'])->name('offer.update');
+                Route::post('/delete/{id}', [OfferController::class, 'destroy'])->name('offer.delete');
+                Route::get('/show/{id}', [OfferController::class, 'show'])->name('offer.show');
+                Route::get('/trashed', [OfferController::class, 'trashed'])->name('offer.trashed');
+                Route::post('/restore/{id}', [OfferController::class, 'restore'])->name('offer.restore');
+                Route::post('/toggle-publish/{id}', [OfferController::class, 'togglePublish'])->name('offer.toggle-publish');
+                Route::post('/toggle-home-feature/{id}', [OfferController::class, 'toggleHomeFeature'])->name('offer.toggle-home-feature');
+                Route::get('/subcategories', [OfferController::class, 'getSubcategories'])->name('offer.subcategories');
+                
+                // Offer Prices Sub-Routes (AJAX)
+                Route::prefix('{offerId}/prices')->group(function () {
+                    Route::get('/available-emirates', [OfferPriceController::class, 'getAvailableEmirates']);
+                    Route::post('/store', [OfferPriceController::class, 'store']);
+                    Route::post('/update/{id}', [OfferPriceController::class, 'update']);
+                    Route::post('/delete/{id}', [OfferPriceController::class, 'destroy']);
+                    Route::post('/restore/{id}', [OfferPriceController::class, 'restore']);
+                });
+            });
+            
+            // Offer Image/Gallery Routes
+            Route::prefix('offer-image')->group(function () {
+                Route::post('/store/{offerId}', [OfferImageController::class, 'store'])->name('offer-image.store');
+                Route::get('/galleries/{offerId}', [OfferImageController::class, 'getGallery'])->name('offer-image.galleries');
+            });
+            
+            // Offer Building Components Sub-Routes (AJAX)
+            Route::prefix('offer/{offerId}/buildingcomponents')->group(function () {
+                Route::get('/available', [OfferBuildingComponentController::class, 'getAvailableComponents']);
+                Route::post('/store', [OfferBuildingComponentController::class, 'store']);
+                Route::post('/update/{id}', [OfferBuildingComponentController::class, 'update']);
+                Route::post('/delete/{id}', [OfferBuildingComponentController::class, 'destroy']);
+                Route::post('/restore/{id}', [OfferBuildingComponentController::class, 'restore']);
             });
 
         });

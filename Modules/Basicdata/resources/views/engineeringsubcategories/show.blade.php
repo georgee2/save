@@ -124,43 +124,13 @@
                             <h5 class="text-primary mb-3"><i class="fa fa-image"></i> Media</h5>
                         </div>
                         
-                        <div class="col-md-4">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label class="font-weight-bold">Icon:</label>
                                 @if($subCategory->icon)
                                     <div>
                                         <a data-lightbox="icon" href="{{url('/storage'.$subCategory->icon)}}">
                                             <img style="width:100px; height: 100px; object-fit: contain; border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="{{url('/storage'.$subCategory->icon)}}" alt="Icon">
-                                        </a>
-                                    </div>
-                                @else
-                                    <p class="text-muted">N/A</p>
-                                @endif
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="font-weight-bold">Image:</label>
-                                @if($subCategory->image)
-                                    <div>
-                                        <a data-lightbox="image" href="{{url('/storage'.$subCategory->image)}}">
-                                            <img style="width:200px; height: 150px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="{{url('/storage'.$subCategory->image)}}" alt="Image">
-                                        </a>
-                                    </div>
-                                @else
-                                    <p class="text-muted">N/A</p>
-                                @endif
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="font-weight-bold">Cover:</label>
-                                @if($subCategory->cover)
-                                    <div>
-                                        <a data-lightbox="cover" href="{{url('/storage'.$subCategory->cover)}}">
-                                            <img style="width:200px; height: 150px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px; padding: 5px;" src="{{url('/storage'.$subCategory->cover)}}" alt="Cover">
                                         </a>
                                     </div>
                                 @else
