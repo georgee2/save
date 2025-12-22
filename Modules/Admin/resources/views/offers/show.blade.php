@@ -452,6 +452,26 @@
                             <i class="fa fa-cube"></i>
                             <span>Building Components</span>
                         </div>
+                        <div class="tab-item" data-tab="floors">
+                            <i class="fa fa-layer-group"></i>
+                            <span>Floors</span>
+                        </div>
+                        <div class="tab-item" data-tab="length-components">
+                            <i class="fa fa-arrows-h"></i>
+                            <span>Length Components</span>
+                        </div>
+                        <div class="tab-item" data-tab="income-components">
+                            <i class="fa fa-dollar"></i>
+                            <span>Income Components</span>
+                        </div>
+                        <div class="tab-item" data-tab="construction-costs">
+                            <i class="fa fa-wrench"></i>
+                            <span>Construction Costs</span>
+                        </div>
+                        <div class="tab-item" data-tab="specifications">
+                            <i class="fa fa-list-alt"></i>
+                            <span>Specifications</span>
+                        </div>
                         <div class="tab-item" data-tab="media">
                             <i class="fa fa-film"></i>
                             <span>Media</span>
@@ -467,6 +487,10 @@
                         <div class="tab-item" data-tab="timestamps">
                             <i class="fa fa-clock-o"></i>
                             <span>Timestamps</span>
+                        </div>
+                        <div class="tab-item" data-tab="feasibility-studies">
+                            <i class="fa fa-money"></i>
+                            <span>Feasibility Studies</span>
                         </div>
                     </div>
                     
@@ -734,6 +758,31 @@
                             @include('admin::offers.buildingcomponents._index')
                         </div>
                         
+                        <!-- Floors Tab -->
+                        <div class="tab-pane" id="floors">
+                            @include('admin::offers.floors._list')
+                        </div>
+                        
+                        <!-- Length Components Tab -->
+                        <div class="tab-pane" id="length-components">
+                            @include('admin::offers.lengthcomponents._index')
+                        </div>
+                        
+                        <!-- Income Components Tab -->
+                        <div class="tab-pane" id="income-components">
+                            @include('admin::offers.incomecomponents._index')
+                        </div>
+                        
+                        <!-- Construction Costs Tab -->
+                        <div class="tab-pane" id="construction-costs">
+                            @include('admin::offers.constructioncosts._index')
+                        </div>
+                        
+                        <!-- Specifications Tab -->
+                        <div class="tab-pane" id="specifications">
+                            @include('admin::offers.specifications._index')
+                        </div>
+                        
                         <!-- Descriptions Tab -->
                         <div class="tab-pane" id="descriptions">
                             <h5 class="mb-4 text-primary">Descriptions</h5>
@@ -810,6 +859,125 @@
                                     <small class="text-muted">({{ \Carbon\Carbon::parse($offer->updated_at)->diffForHumans() }})</small>
                                 </div>
                             </div>
+                        </div>
+                        
+                        <!-- Feasibility Studies Tab -->
+                        <div class="tab-pane" id="feasibility-studies">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="text-primary mb-0">
+                                    <i class="fa fa-chart-line"></i> Feasibility Studies
+                                </h5>
+                                
+                                <!-- Website Visibility Toggle -->
+                                <div>
+                                    <form action="{{ route('offer.toggle-feasibility-studies', ['id' => $offer->id]) }}" method="POST" style="display:inline;" id="toggleFSForm">
+                                        @csrf
+                                        @if($offer->show_feasibility_studies == 0)
+                                            <button type="button" class="btn btn-sm btn-success" onclick="confirmToggleFS('hide')" title="Feasibility Studies are currently visible on website">
+                                                <i class="fa fa-eye"></i> Visible on Website
+                                            </button>
+                                        @else
+                                            <button type="button" class="btn btn-sm btn-warning" onclick="confirmToggleFS('show')" title="Feasibility Studies are currently hidden from website">
+                                                <i class="fa fa-eye-slash"></i> Hidden from Website
+                                            </button>
+                                        @endif
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <a href="{{ route('offer-feasibility-study.create', ['offerId' => $offer->id]) }}" class="btn btn-success">
+                                    <i class="fa fa-plus"></i> Create New Feasibility Study
+                                </a>
+                                <a href="{{ route('offer-feasibility-study.index') }}" class="btn btn-primary">
+                                    <i class="fa fa-list"></i> View All Studies
+                                </a>
+                            </div>
+                            
+                            @php
+                                use App\Models\OfferFeasibilityStudy;
+                                $feasibilityStudies = OfferFeasibilityStudy::getByOffer($offer->id);
+                            @endphp
+                            
+                            @if($feasibilityStudies && $feasibilityStudies->count() > 0)
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Study Name</th>
+                                                <th>Emirate</th>
+                                                <th>Price</th>
+                                                <th>Type</th>
+                                                <th>Status</th>
+                                                <th>Created By</th>
+                                                <th>Created Date</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($feasibilityStudies as $study)
+                                            <tr>
+                                                <td>{{ $study->id }}</td>
+                                                <td><strong>{{ $study->study_name }}</strong></td>
+                                                <td>
+                                                    <span class="badge badge-info">{{ $study->emirate_name_en }}</span>
+                                                </td>
+                                                <td>
+                                                    <strong class="text-success">{{ number_format($study->emirate_price ?? 0, 2) }}</strong>
+                                                </td>
+                                                <td>
+                                                    @if($study->study_type == 'Master')
+                                                        <span class="badge badge-warning"><i class="fa fa-star"></i> Master</span>
+                                                    @else
+                                                        <span class="badge badge-primary"><i class="fa fa-edit"></i> Custom</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($study->status == 'Active')
+                                                        <span class="badge badge-success">Active</span>
+                                                    @elseif($study->status == 'Archived')
+                                                        <span class="badge badge-secondary">Archived</span>
+                                                    @else
+                                                        <span class="badge badge-info">Draft</span>
+                                                    @endif
+                                                </td>
+                                                <td>{{ $study->creator_name ?? 'N/A' }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($study->created_at)->format('Y-m-d') }}</td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <a href="{{ route('offer-feasibility-study.show', ['id' => $study->id]) }}" 
+                                                           class="btn btn-sm btn-info" title="View Study">
+                                                            <i class="fa fa-eye"></i>
+                                                        </a>
+                                                        <a href="{{ route('offer-feasibility-study.edit', ['id' => $study->id]) }}" 
+                                                           class="btn btn-sm btn-warning" title="Edit Study">
+                                                            <i class="fa fa-pencil"></i>
+                                                        </a>
+                                                        @if($study->study_type != 'Master')
+                                                        <form action="{{ route('offer-feasibility-study.delete', ['id' => $study->id]) }}" method="POST" style="display:inline;" class="delete-fs-form">
+                                                            @csrf
+                                                            <button type="button" class="btn btn-sm btn-danger delete-fs-btn" title="Delete Study" 
+                                                                    data-study-id="{{ $study->id }}" data-study-name="{{ $study->study_name }}">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                        @endif
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @else
+                                <div class="alert alert-info">
+                                    <i class="fa fa-info-circle"></i> No feasibility studies created for this offer yet.
+                                    <a href="{{ route('offer-feasibility-study.create', ['offerId' => $offer->id]) }}">
+                                        Create your first study
+                                    </a>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -984,6 +1152,733 @@
             }
         });
     }
+    
+    // ===================================
+    // LENGTH COMPONENTS JAVASCRIPT
+    // ===================================
+    const lengthOfferId = {{ $offer->id }};
+    
+    // Initialize Select2 for Length Component dropdowns
+    function initLengthSelect2() {
+        $('.select2-length-building').select2({
+            dropdownParent: $('#addLengthComponentModal'),
+            placeholder: "Select Building Component",
+            allowClear: true
+        });
+        $('.select2-length').select2({
+            dropdownParent: $('#addLengthComponentModal'),
+            placeholder: "Select Length Component",
+            allowClear: true
+        });
+    }
+    
+    // Open Add Length Component Modal
+    function openAddLengthComponentModal() {
+        $('#addLengthComponentModal').modal('show');
+        loadAvailableBuildingComponents();
+    }
+    
+    // Load available building components (is_length = true)
+    function loadAvailableBuildingComponents() {
+        $.ajax({
+            url: `/admin/offer/${lengthOfferId}/lengthcomponents/available-building-components`,
+            method: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    let options = '<option value="">Select Building Component</option>';
+                    response.components.forEach(function(comp) {
+                        options += `<option value="${comp.id}">${comp.name_english} - ${comp.name_arabic}</option>`;
+                    });
+                    $('#building_component_id_add').html(options);
+                    initLengthSelect2();
+                }
+            },
+            error: function() {
+                alert('Failed to load building components');
+            }
+        });
+    }
+    
+    // Load length components when building component is selected
+    $(document).on('change', '#building_component_id_add', function() {
+        const buildingComponentId = $(this).val();
+        const lengthSelect = $('#length_component_id_add');
+        
+        if (buildingComponentId) {
+            lengthSelect.prop('disabled', false);
+            lengthSelect.html('<option value="">Loading...</option>');
+            
+            $.ajax({
+                url: `/admin/offer/${lengthOfferId}/lengthcomponents/available-length-components`,
+                method: 'GET',
+                data: { building_component_id: buildingComponentId },
+                success: function(response) {
+                    if (response.success) {
+                        let options = '<option value="">Select Length Component</option>';
+                        response.components.forEach(function(comp) {
+                            options += `<option value="${comp.id}">${comp.name_english} - ${comp.name_arabic}</option>`;
+                        });
+                        lengthSelect.html(options);
+                    }
+                },
+                error: function() {
+                    alert('Failed to load length components');
+                }
+            });
+        } else {
+            lengthSelect.prop('disabled', true);
+            lengthSelect.html('<option value="">Select Building Component First</option>');
+        }
+    });
+    
+    // Add Length Component Form Submit
+    $(document).on('submit', '#addLengthComponentForm', function(e) {
+        e.preventDefault();
+        
+        $.ajax({
+            url: `/admin/offer/${lengthOfferId}/lengthcomponents/store`,
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                if (response.success) {
+                    $('#addLengthComponentModal').modal('hide');
+                    $('#addLengthComponentForm')[0].reset();
+                    location.reload();
+                }
+            },
+            error: function(xhr) {
+                alert(xhr.responseJSON?.message || 'Failed to add length component');
+            }
+        });
+    });
+    
+    // Open Edit Length Modal
+    function openEditLengthModal(id, name, unitCost) {
+        $('#edit_length_component_id').val(id);
+        $('#edit_length_component_name').val(name);
+        $('#edit_length_unit_cost').val(unitCost);
+        $('#editLengthComponentModal').modal('show');
+    }
+    
+    // Edit Length Component Form Submit
+    $(document).on('submit', '#editLengthComponentForm', function(e) {
+        e.preventDefault();
+        const componentId = $('#edit_length_component_id').val();
+        
+        $.ajax({
+            url: `/admin/offer/${lengthOfferId}/lengthcomponents/update/${componentId}`,
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                if (response.success) {
+                    $('#editLengthComponentModal').modal('hide');
+                    location.reload();
+                }
+            },
+            error: function(xhr) {
+                alert(xhr.responseJSON?.message || 'Failed to update length component');
+            }
+        });
+    });
+    
+    // Open Delete Length Modal
+    function openDeleteLengthModal(id, name) {
+        $('#delete_length_component_id').val(id);
+        $('#delete_length_component_name').text(name);
+        $('#deleteLengthComponentModal').modal('show');
+    }
+    
+    // Confirm Delete Length Component
+    function confirmDeleteLengthComponent() {
+        const componentId = $('#delete_length_component_id').val();
+        
+        $.ajax({
+            url: `/admin/offer/${lengthOfferId}/lengthcomponents/delete/${componentId}`,
+            method: 'POST',
+            data: { _token: '{{ csrf_token() }}' },
+            success: function(response) {
+                $('#deleteLengthComponentModal').modal('hide');
+                if (response.success) {
+                    location.reload();
+                }
+            },
+            error: function() {
+                alert('Failed to delete length component');
+            }
+        });
+    }
+    
+    // Restore Length Component
+    function restoreLengthComponent(id) {
+        if (confirm('Are you sure you want to restore this length component?')) {
+            $.ajax({
+                url: `/admin/offer/${lengthOfferId}/lengthcomponents/restore/${id}`,
+                method: 'POST',
+                data: { _token: '{{ csrf_token() }}' },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    }
+                },
+                error: function() {
+                    alert('Failed to restore length component');
+                }
+            });
+        }
+    }
+    
+    // ===================================
+    // INCOME COMPONENTS JAVASCRIPT
+    // ===================================
+    const incomeOfferId = {{ $offer->id }};
+    
+    // Initialize Select2 for Income Component dropdowns
+    function initIncomeSelect2() {
+        $('.select2-income').select2({
+            dropdownParent: $('#addIncomeComponentModal'),
+            placeholder: "Select Income Component",
+            allowClear: true
+        });
+    }
+    
+    // Open Add Income Component Modal
+    function openAddIncomeComponentModal() {
+        // Load available components
+        $.ajax({
+            url: `/admin/offer/${incomeOfferId}/incomecomponents/available`,
+            method: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    let options = '<option value="">Select Component</option>';
+                    if (response.components.length > 0) {
+                        response.components.forEach(function(comp) {
+                            options += `<option value="${comp.id}">${comp.name_english} - ${comp.name_arabic}</option>`;
+                        });
+                    } else {
+                        options = '<option value="">No components available</option>';
+                    }
+                    $('#income_component_id').html(options);
+                    initIncomeSelect2();
+                    $('#addIncomeComponentModal').modal('show');
+                }
+            },
+            error: function() {
+                alert('Failed to load income components');
+            }
+        });
+    }
+    
+    // Add Income Component Form Submit
+    $(document).on('submit', '#addIncomeComponentForm', function(e) {
+        e.preventDefault();
+        
+        $.ajax({
+            url: `/admin/offer/${incomeOfferId}/incomecomponents/store`,
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                if (response.success) {
+                    $('#addIncomeComponentModal').modal('hide');
+                    $('#addIncomeComponentForm')[0].reset();
+                    location.reload();
+                }
+            },
+            error: function(xhr) {
+                alert(xhr.responseJSON?.message || 'Failed to add income component');
+            }
+        });
+    });
+    
+    // Open Edit Income Component Modal
+    function openEditIncomeComponentModal(id, name, units, rent) {
+        $('#edit_income_component_id').val(id);
+        $('#edit_income_component_name').val(name);
+        $('#edit_income_number_of_units').val(units);
+        $('#edit_income_rent_per_year').val(rent);
+        $('#editIncomeComponentModal').modal('show');
+    }
+    
+    // Edit Income Component Form Submit
+    $(document).on('submit', '#editIncomeComponentForm', function(e) {
+        e.preventDefault();
+        const componentId = $('#edit_income_component_id').val();
+        
+        $.ajax({
+            url: `/admin/offer/${incomeOfferId}/incomecomponents/update/${componentId}`,
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                if (response.success) {
+                    $('#editIncomeComponentModal').modal('hide');
+                    location.reload();
+                }
+            },
+            error: function(xhr) {
+                alert(xhr.responseJSON?.message || 'Failed to update income component');
+            }
+        });
+    });
+    
+    // Open Delete Income Component Modal
+    function openDeleteIncomeComponentModal(id, name) {
+        $('#delete_income_component_id').val(id);
+        $('#delete_income_component_name').text(name);
+        $('#deleteIncomeComponentModal').modal('show');
+    }
+    
+    // Confirm Delete Income Component
+    function confirmDeleteIncomeComponent() {
+        const componentId = $('#delete_income_component_id').val();
+        
+        $.ajax({
+            url: `/admin/offer/${incomeOfferId}/incomecomponents/delete/${componentId}`,
+            method: 'POST',
+            data: { _token: '{{ csrf_token() }}' },
+            success: function(response) {
+                $('#deleteIncomeComponentModal').modal('hide');
+                if (response.success) {
+                    location.reload();
+                }
+            },
+            error: function() {
+                alert('Failed to delete income component');
+            }
+        });
+    }
+    
+    // Restore Income Component
+    function restoreIncomeComponent(id) {
+        if (confirm('Are you sure you want to restore this income component?')) {
+            $.ajax({
+                url: `/admin/offer/${incomeOfferId}/incomecomponents/restore/${id}`,
+                method: 'POST',
+                data: { _token: '{{ csrf_token() }}' },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    }
+                },
+                error: function() {
+                    alert('Failed to restore income component');
+                }
+            });
+        }
+    }
+    
+    // ===================================
+    // CONSTRUCTION COSTS JAVASCRIPT
+    // ===================================
+    const constructionOfferId = {{ $offer->id }};
+    
+    // Initialize Select2 for Construction Cost dropdowns
+    function initConstructionSelect2() {
+        $('.select2-construction-fsc').select2({
+            dropdownParent: $('#addConstructionCostModal'),
+            placeholder: "Select Feasibility Study Component",
+            allowClear: true
+        });
+        $('.select2-construction-substation').select2({
+            dropdownParent: $('#addConstructionCostModal'),
+            placeholder: "Select Substation Room",
+            allowClear: true
+        });
+        $('.select2-construction-pumps').select2({
+            dropdownParent: $('#addConstructionCostModal'),
+            placeholder: "Select Pumps Room",
+            allowClear: true
+        });
+    }
+    
+    function initConstructionEditSelect2() {
+        $('.select2-construction-substation-edit').select2({
+            dropdownParent: $('#editConstructionCostModal'),
+            placeholder: "Select Substation Room",
+            allowClear: true
+        });
+        $('.select2-construction-pumps-edit').select2({
+            dropdownParent: $('#editConstructionCostModal'),
+            placeholder: "Select Pumps Room",
+            allowClear: true
+        });
+    }
+    
+    // Open Add Construction Cost Modal
+    function openAddConstructionCostModal() {
+        // Load feasibility study components
+        $.ajax({
+            url: `/admin/offer/${constructionOfferId}/constructioncosts/available-feasibility-components`,
+            method: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    let options = '<option value="">Select Component</option>';
+                    if (response.components.length > 0) {
+                        response.components.forEach(function(comp) {
+                            options += `<option value="${comp.id}">${comp.header_english} - ${comp.title_english}</option>`;
+                        });
+                    } else {
+                        options = '<option value="">No components available</option>';
+                    }
+                    $('#feasibility_study_component_id_add').html(options);
+                }
+            }
+        });
+        
+        // Load substation rooms
+        $.ajax({
+            url: `/admin/offer/${constructionOfferId}/constructioncosts/available-substation-rooms`,
+            method: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    let options = '<option value="">None</option>';
+                    response.rooms.forEach(function(room) {
+                        options += `<option value="${room.id}">${room.name_english} - ${number_format(room.price, 2)}</option>`;
+                    });
+                    $('#substation_room_id_add').html(options);
+                }
+            }
+        });
+        
+        // Load pumps rooms
+        $.ajax({
+            url: `/admin/offer/${constructionOfferId}/constructioncosts/available-pumps-rooms`,
+            method: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    let options = '<option value="">None</option>';
+                    response.rooms.forEach(function(room) {
+                        options += `<option value="${room.id}">${room.name_english} - ${number_format(room.price, 2)}</option>`;
+                    });
+                    $('#pumps_room_id_add').html(options);
+                }
+            }
+        });
+        
+        initConstructionSelect2();
+        $('#addConstructionCostModal').modal('show');
+    }
+    
+    // Helper function for number formatting
+    function number_format(number, decimals) {
+        return parseFloat(number).toFixed(decimals).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    }
+    
+    // Add Construction Cost Form Submit
+    $(document).on('submit', '#addConstructionCostForm', function(e) {
+        e.preventDefault();
+        
+        $.ajax({
+            url: `/admin/offer/${constructionOfferId}/constructioncosts/store`,
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                if (response.success) {
+                    $('#addConstructionCostModal').modal('hide');
+                    $('#addConstructionCostForm')[0].reset();
+                    location.reload();
+                }
+            },
+            error: function(xhr) {
+                alert(xhr.responseJSON?.message || 'Failed to add construction cost');
+            }
+        });
+    });
+    
+    // Open Edit Construction Cost Modal
+    function openEditConstructionCostModal(id, substationRoomId, pumpsRoomId) {
+        $('#edit_construction_cost_id').val(id);
+        
+        // Load substation rooms for edit
+        $.ajax({
+            url: `/admin/offer/${constructionOfferId}/constructioncosts/available-substation-rooms`,
+            method: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    let options = '<option value="">None</option>';
+                    response.rooms.forEach(function(room) {
+                        let selected = substationRoomId == room.id ? 'selected' : '';
+                        options += `<option value="${room.id}" ${selected}>${room.name_english} - ${number_format(room.price, 2)}</option>`;
+                    });
+                    $('#substation_room_id_edit').html(options);
+                }
+            }
+        });
+        
+        // Load pumps rooms for edit
+        $.ajax({
+            url: `/admin/offer/${constructionOfferId}/constructioncosts/available-pumps-rooms`,
+            method: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    let options = '<option value="">None</option>';
+                    response.rooms.forEach(function(room) {
+                        let selected = pumpsRoomId == room.id ? 'selected' : '';
+                        options += `<option value="${room.id}" ${selected}>${room.name_english} - ${number_format(room.price, 2)}</option>`;
+                    });
+                    $('#pumps_room_id_edit').html(options);
+                }
+            }
+        });
+        
+        initConstructionEditSelect2();
+        $('#editConstructionCostModal').modal('show');
+    }
+    
+    // Edit Construction Cost Form Submit
+    $(document).on('submit', '#editConstructionCostForm', function(e) {
+        e.preventDefault();
+        const costId = $('#edit_construction_cost_id').val();
+        
+        $.ajax({
+            url: `/admin/offer/${constructionOfferId}/constructioncosts/update/${costId}`,
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                if (response.success) {
+                    $('#editConstructionCostModal').modal('hide');
+                    location.reload();
+                }
+            },
+            error: function(xhr) {
+                alert(xhr.responseJSON?.message || 'Failed to update construction cost');
+            }
+        });
+    });
+    
+    // Open Delete Construction Cost Modal
+    function openDeleteConstructionCostModal(id, name) {
+        $('#delete_construction_cost_id').val(id);
+        $('#delete_construction_cost_name').text(name);
+        $('#deleteConstructionCostModal').modal('show');
+    }
+    
+    // Confirm Delete Construction Cost
+    function confirmDeleteConstructionCost() {
+        const costId = $('#delete_construction_cost_id').val();
+        
+        $.ajax({
+            url: `/admin/offer/${constructionOfferId}/constructioncosts/delete/${costId}`,
+            method: 'POST',
+            data: { _token: '{{ csrf_token() }}' },
+            success: function(response) {
+                $('#deleteConstructionCostModal').modal('hide');
+                if (response.success) {
+                    location.reload();
+                }
+            },
+            error: function() {
+                alert('Failed to delete construction cost');
+            }
+        });
+    }
+    
+    // Restore Construction Cost
+    function restoreConstructionCost(id) {
+        if (confirm('Are you sure you want to restore this construction cost?')) {
+            $.ajax({
+                url: `/admin/offer/${constructionOfferId}/constructioncosts/restore/${id}`,
+                method: 'POST',
+                data: { _token: '{{ csrf_token() }}' },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    }
+                },
+                error: function() {
+                    alert('Failed to restore construction cost');
+                }
+            });
+        }
+    }
+    
+    // ===================================
+    // SPECIFICATIONS JAVASCRIPT
+    // ===================================
+    const specOfferId = {{ $offer->id }};
+    
+    // Initialize Select2 for Specification dropdowns
+    function initSpecificationSelect2() {
+        $('.select2-specification').select2({
+            dropdownParent: $('#addSpecificationModal'),
+            placeholder: "Select Specification",
+            allowClear: true
+        });
+    }
+    
+    // Open Add Specification Modal
+    function openAddSpecificationModal() {
+        // Load available specifications
+        $.ajax({
+            url: `/admin/offer/${specOfferId}/specifications/available`,
+            method: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    let options = '<option value="">Select Specification</option>';
+                    if (response.components.length > 0) {
+                        response.components.forEach(function(spec) {
+                            options += `<option value="${spec.id}">${spec.title_english} - ${spec.title_arabic}</option>`;
+                        });
+                    } else {
+                        options = '<option value="">No specifications available</option>';
+                    }
+                    $('#specification_id').html(options);
+                    initSpecificationSelect2();
+                    $('#addSpecificationModal').modal('show');
+                }
+            },
+            error: function() {
+                alert('Failed to load specifications');
+            }
+        });
+    }
+    
+    // Add Specification Form Submit
+    $(document).on('submit', '#addSpecificationForm', function(e) {
+        e.preventDefault();
+        
+        $.ajax({
+            url: `/admin/offer/${specOfferId}/specifications/store`,
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                if (response.success) {
+                    $('#addSpecificationModal').modal('hide');
+                    $('#addSpecificationForm')[0].reset();
+                    location.reload();
+                }
+            },
+            error: function(xhr) {
+                alert(xhr.responseJSON?.message || 'Failed to add specification');
+            }
+        });
+    });
+    
+    // Open Edit Specification Modal
+    function openEditSpecificationModal(id, name, valueEn, valueAr) {
+        $('#edit_specification_id').val(id);
+        $('#edit_specification_name').val(name);
+        $('#edit_value_english').val(valueEn);
+        $('#edit_value_arabic').val(valueAr);
+        $('#editSpecificationModal').modal('show');
+    }
+    
+    // Edit Specification Form Submit
+    $(document).on('submit', '#editSpecificationForm', function(e) {
+        e.preventDefault();
+        const specificationId = $('#edit_specification_id').val();
+        
+        $.ajax({
+            url: `/admin/offer/${specOfferId}/specifications/update/${specificationId}`,
+            method: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                if (response.success) {
+                    $('#editSpecificationModal').modal('hide');
+                    location.reload();
+                }
+            },
+            error: function(xhr) {
+                alert(xhr.responseJSON?.message || 'Failed to update specification');
+            }
+        });
+    });
+    
+    // Open Delete Specification Modal
+    function openDeleteSpecificationModal(id, name) {
+        $('#delete_specification_id').val(id);
+        $('#delete_specification_name').text(name);
+        $('#deleteSpecificationModal').modal('show');
+    }
+    
+    // Confirm Delete Specification
+    function confirmDeleteSpecification() {
+        const specificationId = $('#delete_specification_id').val();
+        
+        $.ajax({
+            url: `/admin/offer/${specOfferId}/specifications/delete/${specificationId}`,
+            method: 'POST',
+            data: { _token: '{{ csrf_token() }}' },
+            success: function(response) {
+                $('#deleteSpecificationModal').modal('hide');
+                if (response.success) {
+                    location.reload();
+                }
+            },
+            error: function() {
+                alert('Failed to delete specification');
+            }
+        });
+    }
+    
+    // Restore Specification
+    function restoreSpecification(id) {
+        if (confirm('Are you sure you want to restore this specification?')) {
+            $.ajax({
+                url: `/admin/offer/${specOfferId}/specifications/restore/${id}`,
+                method: 'POST',
+                data: { _token: '{{ csrf_token() }}' },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    }
+                },
+                error: function() {
+                    alert('Failed to restore specification');
+                }
+            });
+        }
+    }
+    
+    // ===================================
+    // FEASIBILITY STUDIES JAVASCRIPT
+    // ===================================
+    
+    // Toggle Feasibility Studies Visibility on Website
+    function confirmToggleFS(action) {
+        const isShowing = action === 'show';
+        
+        Swal.fire({
+            title: isShowing ? 'Show Feasibility Studies?' : 'Hide Feasibility Studies?',
+            html: isShowing 
+                ? 'All feasibility studies for this offer will be <strong>visible on the website</strong>.' 
+                : 'All feasibility studies for this offer will be <strong>hidden from the website</strong>.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: isShowing ? '#28a745' : '#ffc107',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: isShowing ? '<i class="fa fa-eye"></i> Yes, Show on Website' : '<i class="fa fa-eye-slash"></i> Yes, Hide from Website',
+            cancelButtonText: '<i class="fa fa-times"></i> Cancel',
+            reverseButtons: true,
+            focusCancel: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#toggleFSForm').submit();
+            }
+        });
+    }
+    
+    // Delete Feasibility Study
+    $(document).on('click', '.delete-fs-btn', function(e) {
+        e.preventDefault();
+        const studyId = $(this).data('study-id');
+        const studyName = $(this).data('study-name');
+        const form = $(this).closest('form');
+        
+        Swal.fire({
+            title: 'Delete Feasibility Study?',
+            html: `Are you sure you want to delete <strong>${studyName}</strong>?<br><br>This action cannot be undone.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: '<i class="fa fa-trash"></i> Yes, Delete',
+            cancelButtonText: '<i class="fa fa-times"></i> Cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
 </script>
 @endsection
 

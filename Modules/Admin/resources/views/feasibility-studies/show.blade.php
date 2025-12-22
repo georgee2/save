@@ -8,8 +8,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <style>
     :root {
-        --main-color: #cc2637;
-        --secondary-color: #fc9534;
+        --main-color: #19868b;
+        --secondary-color: #e1273d;
     }
     .study-header {
         background: linear-gradient(135deg, var(--main-color) 0%, var(--secondary-color) 100%);
