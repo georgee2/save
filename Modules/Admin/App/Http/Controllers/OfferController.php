@@ -310,6 +310,19 @@ class OfferController extends Controller
     }
 
     /**
+     * Toggle feasibility studies visibility on website
+     */
+    public function toggleFeasibilityStudies($id)
+    {
+        $offer = Offer::findOrFail($id);
+        $offer->show_feasibility_studies = $offer->show_feasibility_studies == 0 ? 1 : 0;
+        $offer->save();
+
+        $status = $offer->show_feasibility_studies == 0 ? 'visible on website' : 'hidden from website';
+        return redirect()->back()->with('success', "Feasibility studies {$status} successfully!");
+    }
+
+    /**
      * Get subcategories by category (AJAX)
      */
     public function getSubcategories(Request $request)

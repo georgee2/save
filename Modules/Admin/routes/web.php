@@ -57,6 +57,14 @@ use Modules\Admin\App\Http\Controllers\OfferController;
 use Modules\Admin\App\Http\Controllers\OfferPriceController;
 use Modules\Admin\App\Http\Controllers\OfferImageController;
 use Modules\Admin\App\Http\Controllers\OfferBuildingComponentController;
+use Modules\Admin\App\Http\Controllers\OfferFloorController;
+use Modules\Admin\App\Http\Controllers\OfferFloorSpecificationController;
+use Modules\Admin\App\Http\Controllers\OfferFloorAmenityController;
+use Modules\Admin\App\Http\Controllers\OfferLengthComponentController;
+use Modules\Admin\App\Http\Controllers\OfferIncomeComponentController;
+use Modules\Admin\App\Http\Controllers\OfferConstructionCostController;
+use Modules\Admin\App\Http\Controllers\OfferSpecificationController;
+use Modules\Admin\App\Http\Controllers\OfferFeasibilityStudyController;
 
 
 /*
@@ -604,6 +612,7 @@ Route::group(
                 Route::post('/restore/{id}', [OfferController::class, 'restore'])->name('offer.restore');
                 Route::post('/toggle-publish/{id}', [OfferController::class, 'togglePublish'])->name('offer.toggle-publish');
                 Route::post('/toggle-home-feature/{id}', [OfferController::class, 'toggleHomeFeature'])->name('offer.toggle-home-feature');
+                Route::post('/toggle-feasibility-studies/{id}', [OfferController::class, 'toggleFeasibilityStudies'])->name('offer.toggle-feasibility-studies');
                 Route::get('/subcategories', [OfferController::class, 'getSubcategories'])->name('offer.subcategories');
                 
                 // Offer Prices Sub-Routes (AJAX)
@@ -629,6 +638,89 @@ Route::group(
                 Route::post('/update/{id}', [OfferBuildingComponentController::class, 'update']);
                 Route::post('/delete/{id}', [OfferBuildingComponentController::class, 'destroy']);
                 Route::post('/restore/{id}', [OfferBuildingComponentController::class, 'restore']);
+            });
+            
+            // Offer Length Components Sub-Routes (AJAX)
+            Route::prefix('offer/{offerId}/lengthcomponents')->group(function () {
+                Route::get('/available-building-components', [OfferLengthComponentController::class, 'getAvailableBuildingComponents']);
+                Route::get('/available-length-components', [OfferLengthComponentController::class, 'getAvailableLengthComponents']);
+                Route::post('/store', [OfferLengthComponentController::class, 'store']);
+                Route::post('/update/{id}', [OfferLengthComponentController::class, 'update']);
+                Route::post('/delete/{id}', [OfferLengthComponentController::class, 'destroy']);
+                Route::post('/restore/{id}', [OfferLengthComponentController::class, 'restore']);
+            });
+            
+            // Offer Income Components Sub-Routes (AJAX)
+            Route::prefix('offer/{offerId}/incomecomponents')->group(function () {
+                Route::get('/available', [OfferIncomeComponentController::class, 'getAvailableComponents']);
+                Route::post('/store', [OfferIncomeComponentController::class, 'store']);
+                Route::post('/update/{id}', [OfferIncomeComponentController::class, 'update']);
+                Route::post('/delete/{id}', [OfferIncomeComponentController::class, 'destroy']);
+                Route::post('/restore/{id}', [OfferIncomeComponentController::class, 'restore']);
+            });
+            
+            // Offer Construction Costs Sub-Routes (AJAX)
+            Route::prefix('offer/{offerId}/constructioncosts')->group(function () {
+                Route::get('/available-feasibility-components', [OfferConstructionCostController::class, 'getAvailableFeasibilityComponents']);
+                Route::get('/available-substation-rooms', [OfferConstructionCostController::class, 'getAvailableSubstationRooms']);
+                Route::get('/available-pumps-rooms', [OfferConstructionCostController::class, 'getAvailablePumpsRooms']);
+                Route::post('/store', [OfferConstructionCostController::class, 'store']);
+                Route::post('/update/{id}', [OfferConstructionCostController::class, 'update']);
+                Route::post('/delete/{id}', [OfferConstructionCostController::class, 'destroy']);
+                Route::post('/restore/{id}', [OfferConstructionCostController::class, 'restore']);
+            });
+            
+            // Offer Specifications Sub-Routes (AJAX)
+            Route::prefix('offer/{offerId}/specifications')->group(function () {
+                Route::get('/available', [OfferSpecificationController::class, 'getAvailableComponents']);
+                Route::post('/store', [OfferSpecificationController::class, 'store']);
+                Route::post('/update/{id}', [OfferSpecificationController::class, 'update']);
+                Route::post('/delete/{id}', [OfferSpecificationController::class, 'destroy']);
+                Route::post('/restore/{id}', [OfferSpecificationController::class, 'restore']);
+            });
+            
+            // Offer Feasibility Studies Routes
+            Route::prefix('offer-feasibility-study')->group(function () {
+                Route::get('/index', [OfferFeasibilityStudyController::class, 'index'])->name('offer-feasibility-study.index');
+                Route::get('/offer/{offerId}/create', [OfferFeasibilityStudyController::class, 'create'])->name('offer-feasibility-study.create');
+                Route::post('/store', [OfferFeasibilityStudyController::class, 'store'])->name('offer-feasibility-study.store');
+                Route::get('/{id}/show', [OfferFeasibilityStudyController::class, 'show'])->name('offer-feasibility-study.show');
+                Route::get('/{id}/edit', [OfferFeasibilityStudyController::class, 'edit'])->name('offer-feasibility-study.edit');
+                Route::post('/{id}/update', [OfferFeasibilityStudyController::class, 'update'])->name('offer-feasibility-study.update');
+                Route::post('/{id}/delete', [OfferFeasibilityStudyController::class, 'destroy'])->name('offer-feasibility-study.delete');
+                Route::post('/{id}/duplicate', [OfferFeasibilityStudyController::class, 'duplicate'])->name('offer-feasibility-study.duplicate');
+            });
+            
+            // Offer Floors Sub-Routes
+            Route::prefix('offer/{offerId}/floors')->group(function () {
+                Route::get('/index', [OfferFloorController::class, 'index'])->name('offer.floor.index');
+                Route::get('/create', [OfferFloorController::class, 'create'])->name('offer.floor.create');
+                Route::post('/store', [OfferFloorController::class, 'store'])->name('offer.floor.store');
+                Route::get('/show/{id}', [OfferFloorController::class, 'show'])->name('offer.floor.show');
+                Route::get('/edit/{id}', [OfferFloorController::class, 'edit'])->name('offer.floor.edit');
+                Route::post('/update/{id}', [OfferFloorController::class, 'update'])->name('offer.floor.update');
+                Route::post('/delete/{id}', [OfferFloorController::class, 'destroy'])->name('offer.floor.delete');
+                Route::post('/restore/{id}', [OfferFloorController::class, 'restore'])->name('offer.floor.restore');
+                Route::get('/get-floor-components', [OfferFloorController::class, 'getFloorComponents'])->name('offer.floor.get-floor-components');
+                
+                // Floor Specifications Sub-Routes
+                Route::prefix('{floorId}/specifications')->group(function () {
+                    Route::get('/index', [OfferFloorSpecificationController::class, 'index'])->name('offer.floor.specification.index');
+                    Route::get('/create', [OfferFloorSpecificationController::class, 'create'])->name('offer.floor.specification.create');
+                    Route::post('/store', [OfferFloorSpecificationController::class, 'store'])->name('offer.floor.specification.store');
+                    Route::get('/edit/{id}', [OfferFloorSpecificationController::class, 'edit'])->name('offer.floor.specification.edit');
+                    Route::post('/update/{id}', [OfferFloorSpecificationController::class, 'update'])->name('offer.floor.specification.update');
+                    Route::post('/delete/{id}', [OfferFloorSpecificationController::class, 'destroy'])->name('offer.floor.specification.delete');
+                    Route::post('/restore/{id}', [OfferFloorSpecificationController::class, 'restore'])->name('offer.floor.specification.restore');
+                });
+                
+                // Floor Amenities Sub-Routes (AJAX)
+                Route::prefix('{floorId}/amenities')->group(function () {
+                    Route::get('/available', [OfferFloorAmenityController::class, 'getAvailableAmenities']);
+                    Route::post('/store', [OfferFloorAmenityController::class, 'store']);
+                    Route::post('/delete/{id}', [OfferFloorAmenityController::class, 'destroy']);
+                    Route::post('/restore/{id}', [OfferFloorAmenityController::class, 'restore']);
+                });
             });
 
         });
