@@ -13,6 +13,8 @@ use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CareerController;
 use App\Http\Controllers\EngineeringSubCategoryController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OffersController;
 
 
 
@@ -46,12 +48,31 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 	// Projects Routes Group
 	Route::prefix('projects')->name('projects.')->group(function () {
 		Route::get('/', [ProjectsController::class, 'index'])->name('index');
+		Route::get('/featured', [ProjectsController::class, 'featured'])->name('featured');
 		Route::get('/{slug}', [ProjectsController::class, 'show'])->name('show');
 	});
 
-	// Engineering Sub Categories Routes Group
+	// Engineering Sub Categories Routes Group (legacy route - redirects to new subcategory route)
 	Route::prefix('engineering')->name('engineering.')->group(function () {
 		Route::get('/{slug}', [EngineeringSubCategoryController::class, 'show'])->name('subcategory.show');
+	});
+
+	// Subcategory Routes Group (Projects by Subcategory)
+	Route::prefix('subcategory')->name('subcategory.')->group(function () {
+		Route::get('/{slug}', [EngineeringSubCategoryController::class, 'show'])->name('show');
+	});
+
+	// Category Routes Group (Projects by Category)
+	Route::prefix('category')->name('category.')->group(function () {
+		Route::get('/{slug}', [CategoryController::class, 'show'])->name('show');
+	});
+
+	// Offers Routes Group
+	Route::prefix('offers')->name('offers.')->group(function () {
+		Route::get('/', [OffersController::class, 'index'])->name('index');
+		Route::get('/category/{slug}', [OffersController::class, 'category'])->name('category');
+		Route::get('/subcategory/{slug}', [OffersController::class, 'subcategory'])->name('subcategory');
+		Route::get('/{slug}', [OffersController::class, 'show'])->name('show');
 	});
 
 	// Portfolio Routes Group

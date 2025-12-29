@@ -39,6 +39,22 @@ class OfferFloor extends Model
     }
     
     /**
+     * Relationship: Floor has many Specifications
+     */
+    public function specifications()
+    {
+        return $this->hasMany(OfferFloorSpecification::class, 'floor_id');
+    }
+    
+    /**
+     * Relationship: Floor has many Amenities
+     */
+    public function amenities()
+    {
+        return $this->hasMany(OfferFloorAmenity::class, 'floor_id');
+    }
+    
+    /**
      * Get all floors for a specific offer
      */
     public static function getByOffer($offerId)

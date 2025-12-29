@@ -754,6 +754,8 @@
                                     <div class="image-label">Main Image (1080x1080)</div>
                                 </div>
                                 
+                                {{-- Cover Image and Page Image are hidden for now but fields remain in database --}}
+                                {{--
                                 @if($project->cover_image)
                                 <div class="image-grid-item" onclick="openLightbox('{{ asset('storage' . $project->cover_image) }}')">
                                     <img src="{{ asset('storage' . $project->cover_image) }}" alt="Cover Image">
@@ -767,11 +769,12 @@
                                     <div class="image-label">Page Image (868x450)</div>
                                 </div>
                                 @endif
+                                --}}
                                 
                                 @if($project->site_image)
                                 <div class="image-grid-item" onclick="openLightbox('{{ asset('storage' . $project->site_image) }}')">
                                     <img src="{{ asset('storage' . $project->site_image) }}" alt="Site Image">
-                                    <div class="image-label">Site Image (420x420)</div>
+                                    <div class="image-label">Site Image (1080x1080)</div>
                                 </div>
                                 @endif
                                 
@@ -788,7 +791,7 @@
                                 @if($project->plan_3d_image)
                                 <div class="image-grid-item" onclick="openLightbox('{{ asset('storage' . $project->plan_3d_image) }}')">
                                     <img src="{{ asset('storage' . $project->plan_3d_image) }}" alt="3D Image">
-                                    <div class="image-label">3D Image (870x420)</div>
+                                    <div class="image-label">3D Image (1080x1080)</div>
                                 </div>
                                 @endif
                             </div>

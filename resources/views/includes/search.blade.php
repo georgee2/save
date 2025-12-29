@@ -1,17 +1,17 @@
-<section class="bg-secondary">
+<section class="bg-primary">
         <div class="container">
           <form class="property-search d-none d-lg-block">
             <div class="row align-items-lg-center" id="accordion-2">
               <div class="col-xl-2 col-lg-3 col-md-4">
                 <div class="property-search-status-tab d-flex flex-row">
                   <input class="search-field" type="hidden" name="status" value="for-rent"
-                               data-default-value="">
+                              data-default-value="">
                   <button type="button" data-value="for-rent"
-                                class="btn shadow-none btn-active-primary text-white rounded-0 hover-white text-uppercase h-lg-80 border-right-0 border-top-0 border-bottom-0 border-left border-white-opacity-03 active flex-md-1">
+                                class="btn shadow-none btn-active-secondary text-white rounded-0 hover-white text-uppercase h-lg-80 border-right-0 border-top-0 border-bottom-0 border-left border-white-opacity-03 active flex-md-1">
                     Rent
                   </button>
                   <button type="button" data-value="for-sale"
-                                class="btn shadow-none btn-active-primary text-white rounded-0 hover-white text-uppercase h-lg-80 border-left-0 border-top-0 border-bottom-0 border-right border-white-opacity-03 flex-md-1">
+                                class="btn shadow-none btn-active-secondary text-white rounded-0 hover-white text-uppercase h-lg-80 border-left-0 border-top-0 border-bottom-0 border-right border-white-opacity-03 flex-md-1">
                     Sale
                   </button>
                 </div>
@@ -38,7 +38,7 @@
               </div>
               <div class="col-lg-2">
                 <a href="#advanced-search-filters-2"
-                       class="icon-primary btn advanced-search w-100 shadow-none text-white text-left rounded-0 fs-14 font-weight-600 position-relative collapsed px-0 d-flex align-items-center"
+                       class="icon-white btn advanced-search w-100 shadow-none text-white text-left rounded-0 fs-14 font-weight-600 position-relative collapsed px-0 d-flex align-items-center"
                        data-toggle="collapse" data-target="#advanced-search-filters-2" aria-expanded="true"
                        aria-controls="advanced-search-filters-2">
                   Advanced Search

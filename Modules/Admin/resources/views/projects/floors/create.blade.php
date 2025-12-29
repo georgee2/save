@@ -122,16 +122,16 @@
                                     
                                     <div class="row">
                                         <div class="form-group col-md-6">
-                                            <label class="text-capitalize">2D Image</label>
+                                            <label class="text-capitalize">2D Image (1080x1080)</label>
                                             <input accept="image/*" class="form-control dropify" type="file" name="image_2d">
-                                            <small class="form-text text-muted">Optional 2D floor plan image</small>
+                                            <small class="form-text text-muted">Optional 2D floor plan image. Recommended: 1080x1080 pixels. Will be converted to WebP.</small>
                                             @error('image_2d')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                                         </div>
                                         
                                         <div class="form-group col-md-6">
-                                            <label class="text-capitalize">3D Image <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                            <label class="text-capitalize">3D Image (1080x1080) <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
                                             <input accept="image/*" class="form-control dropify" type="file" name="image_3d" required>
-                                            <small class="form-text text-muted">Required 3D floor visualization</small>
+                                            <small class="form-text text-muted">Required 3D floor visualization. Recommended: 1080x1080 pixels. Will be converted to WebP.</small>
                                             @error('image_3d')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                                         </div>
                                     </div>

@@ -33,6 +33,16 @@
           <link rel="stylesheet" href="{{asset('/assets/css/themes.css')}}">
           <!-- Custom Sections CSS -->
           <link rel="stylesheet" href="{{asset('/assets/css/custom-sections.css')}}">
+          <!-- Category/Projects Page CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/css/category-page.css')}}">
+          <!-- Offers Section CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/css/offers-section.css')}}">
+          <!-- Services Section CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/css/services-section.css')}}">
+          <!-- Section Divider CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/css/section-divider.css')}}">
+          <!-- Why Choose Us CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/css/why-choose-us.css')}}">
                 
 
         @yield('css')

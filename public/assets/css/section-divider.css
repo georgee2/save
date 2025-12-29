@@ -1,0 +1,12 @@
+/**
+ * Section Divider Bar
+ * Matches theme colors: Primary #19868b, Secondary #e1273d
+ */
+
+.section-divider-bar {
+    height: 4px;
+    background: linear-gradient(90deg, #19868b 0%, #0d6b6f 40%, #19868b 60%, #e1273d 100%);
+    width: 100%;
+    margin: 0;
+    border: none;
+}

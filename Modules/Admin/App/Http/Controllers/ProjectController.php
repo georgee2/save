@@ -106,9 +106,9 @@ class ProjectController extends Controller
             $data['page_image'] = $this->handleImageUpload($request->file('page_image'), 868, 450, 'projects/page');
         }
 
-        // Handle site_image upload (420x420)
+        // Handle site_image upload (1080x1080)
         if ($request->hasFile('site_image')) {
-            $data['site_image'] = $this->handleImageUpload($request->file('site_image'), 420, 420, 'projects/site');
+            $data['site_image'] = $this->handleImageUpload($request->file('site_image'), 1080, 1080, 'projects/site');
         }
 
         // Handle plan_2d_image upload (PDF file)
@@ -116,9 +116,9 @@ class ProjectController extends Controller
             $data['plan_2d_image'] = $this->handlePdfUpload($request->file('plan_2d_image'), 'projects/files');
         }
 
-        // Handle plan_3d_image upload (870x420)
+        // Handle plan_3d_image upload (1080x1080)
         if ($request->hasFile('plan_3d_image')) {
-            $data['plan_3d_image'] = $this->handleImageUpload($request->file('plan_3d_image'), 870, 420, 'projects/plans_3d');
+            $data['plan_3d_image'] = $this->handleImageUpload($request->file('plan_3d_image'), 1080, 1080, 'projects/plans_3d');
         }
 
         // SEO Tags Insertion (Helper Function)
@@ -213,12 +213,12 @@ class ProjectController extends Controller
             $data['page_image'] = $this->handleImageUpload($request->file('page_image'), 868, 450, 'projects/page');
         }
 
-        // Handle site_image upload (420x420)
+        // Handle site_image upload (1080x1080)
         if ($request->hasFile('site_image')) {
             if ($project->site_image) {
                 Storage::disk('public')->delete(ltrim($project->site_image, '/'));
             }
-            $data['site_image'] = $this->handleImageUpload($request->file('site_image'), 420, 420, 'projects/site');
+            $data['site_image'] = $this->handleImageUpload($request->file('site_image'), 1080, 1080, 'projects/site');
         }
 
         // Handle plan_2d_image upload (PDF file)
@@ -229,12 +229,12 @@ class ProjectController extends Controller
             $data['plan_2d_image'] = $this->handlePdfUpload($request->file('plan_2d_image'), 'projects/files');
         }
 
-        // Handle plan_3d_image upload (870x420)
+        // Handle plan_3d_image upload (1080x1080)
         if ($request->hasFile('plan_3d_image')) {
             if ($project->plan_3d_image) {
                 Storage::disk('public')->delete(ltrim($project->plan_3d_image, '/'));
             }
-            $data['plan_3d_image'] = $this->handleImageUpload($request->file('plan_3d_image'), 870, 420, 'projects/plans_3d');
+            $data['plan_3d_image'] = $this->handleImageUpload($request->file('plan_3d_image'), 1080, 1080, 'projects/plans_3d');
         }
 
         // SEO Tags Insertion (Helper Function)

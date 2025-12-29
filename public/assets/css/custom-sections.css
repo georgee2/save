@@ -5,6 +5,20 @@
  */
 
 /* ========================================
+   SEARCH HEADER - Button Active State
+   ======================================== */
+
+.btn-active-secondary.active {
+    background-color: #e1273d !important;
+}
+
+/* Advanced Search Icon - White Color */
+.icon-white:before,
+.icon-white:after {
+    color: #fff !important;
+}
+
+/* ========================================
    ABOUT SECTION - Solutions Built for Business
    ======================================== */
 

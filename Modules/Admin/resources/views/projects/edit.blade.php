@@ -179,6 +179,8 @@
                                 <small class="form-text text-muted">Leave empty to keep current image. Recommended: 1080x1080 pixels. Will be converted to WebP with 80% quality.</small>
                                 @error('main_image')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
+                            {{-- Cover Image and Page Image are hidden for now but fields remain in database --}}
+                            {{--
                             <div class="form-group col-md-6">
                                 <label class="text-capitalize">Cover Image (1890x420)</label>
                                 <input accept="image/*" class="form-control dropify" type="file" name="cover_image" data-default-file="{{ $project->cover_image ? asset('storage' . $project->cover_image) : '' }}">
@@ -191,10 +193,11 @@
                                 <small class="form-text text-muted">Recommended: 868x450 pixels. Will be converted to WebP.</small>
                                 @error('page_image')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
+                            --}}
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize">Site Image (420x420)</label>
+                                <label class="text-capitalize">Site Image (1080x1080)</label>
                                 <input accept="image/*" class="form-control dropify" type="file" name="site_image" data-default-file="{{ $project->site_image ? asset('storage' . $project->site_image) : '' }}">
-                                <small class="form-text text-muted">Recommended: 420x420 pixels. Will be converted to WebP.</small>
+                                <small class="form-text text-muted">Recommended: 1080x1080 pixels. Will be converted to WebP.</small>
                                 @error('site_image')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-6">
@@ -207,9 +210,9 @@
                                 @error('plan_2d_image')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize">3D Image (870x420)</label>
+                                <label class="text-capitalize">3D Image (1080x1080)</label>
                                 <input accept="image/*" class="form-control dropify" type="file" name="plan_3d_image" data-default-file="{{ $project->plan_3d_image ? asset('storage' . $project->plan_3d_image) : '' }}">
-                                <small class="form-text text-muted">Recommended: 870x420 pixels. Will be converted to WebP.</small>
+                                <small class="form-text text-muted">Recommended: 1080x1080 pixels. Will be converted to WebP.</small>
                                 @error('plan_3d_image')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                         </div>

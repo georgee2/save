@@ -1,0 +1,258 @@
+/**
+ * Category Page Styles
+ * Projects by Category listing page
+ */
+
+/* View Toggle Buttons */
+.view-toggle.active {
+    color: #0d6efd !important;
+}
+
+.view-toggle {
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.view-toggle:hover {
+    color: #0d6efd !important;
+}
+
+/* Object Fit Cover for Images */
+.object-fit-cover {
+    object-fit: cover;
+}
+
+/* Fixed Square Aspect Ratio for Project Card Images - Grid View (1080x1080) */
+#gridView .card-img-top,
+#gridView .hover-change-image {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%; /* 1:1 Aspect Ratio for square */
+    overflow: hidden;
+}
+
+#gridView .card-img-top img,
+#gridView .hover-change-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#gridView .card-img-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* Fixed Height for Project Card Images - List View */
+#listView .card-img,
+#listView .hover-change-image {
+    min-height: 250px;
+}
+
+#listView .card-img img,
+#listView .hover-change-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Card Shadow and Styling */
+#gridView .card,
+#listView .card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    background: #fff;
+    transition: box-shadow 0.3s ease;
+}
+
+#gridView .card:hover,
+#listView .card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Specification Icons - Base Styles */
+.spec-icon {
+    width: 24px !important;
+    height: 24px !important;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.spec-icon-placeholder {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 12px !important;
+    font-weight: 600;
+    flex-shrink: 0;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.spec-value {
+    display: inline-block;
+    color: #5c727d; /* text-gray */
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* Category/Subcategory Links */
+.category-link,
+.subcategory-link {
+    transition: color 0.3s ease;
+}
+
+.category-link:hover,
+.subcategory-link:hover {
+    color: #0d6efd !important;
+}
+
+/* View Project Button Hover - Red Theme Color */
+#gridView .btn-primary:hover,
+#gridView .btn-primary:focus,
+#listView .btn-primary:hover,
+#listView .btn-primary:focus {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: #fff !important;
+}
+
+/* Home Featured Projects Section - Square Aspect Ratio (1080x1080) */
+/* Only target project cards with hover-change-image, not subcategory icon cards */
+.slick-slider .card .hover-change-image.bg-hover-overlay {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%; /* 1:1 Aspect Ratio for square */
+    overflow: hidden;
+}
+
+.slick-slider .card .hover-change-image.bg-hover-overlay img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.slick-slider .card .hover-change-image.bg-hover-overlay .card-img-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* Home Featured Projects - View Button Red Hover */
+.slick-slider .card .btn-primary:hover,
+.slick-slider .card .btn-primary:focus {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: #fff !important;
+}
+
+/* =====================================================
+   FIX: Image Count & Media Badges Visibility
+   Ensures badges don't get cut off by overflow:hidden
+   ===================================================== */
+
+/* Card Image Overlay - Proper padding and z-index */
+.card-img-overlay {
+    z-index: 2;
+    padding: 10px !important;
+}
+
+/* Hover Image List (Image/Video Count) - Enhanced Visibility */
+.hover-image {
+    position: relative;
+    z-index: 3;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.hover-image .list-inline-item {
+    margin-bottom: 0 !important;
+    margin-right: 8px !important;
+}
+
+.hover-image .list-inline-item:last-child {
+    margin-right: 0 !important;
+}
+
+.hover-image .list-inline-item a {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    backdrop-filter: blur(4px);
+    transition: background 0.3s ease;
+    color: #fff !important;
+}
+
+.hover-image .list-inline-item a:hover {
+    background: rgba(25, 134, 139, 0.9);
+    color: #fff !important;
+}
+
+.hover-image .list-inline-item a i {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.hover-image .list-inline-item a span {
+    padding-left: 5px !important;
+    line-height: 1;
+}
+
+/* Slick Slider Cards - Same fix for home featured projects */
+.slick-slider .card .hover-image .list-inline-item a {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    backdrop-filter: blur(4px);
+    color: #fff !important;
+}
+
+.slick-slider .card .hover-image .list-inline-item a:hover {
+    background: rgba(25, 134, 139, 0.9);
+}
+
+/* =====================================================
+   FIX: Specifications Label and Icon Alignment
+   ===================================================== */
+
+/* Specification Items - Better spacing and alignment */
+.list-inline.d-flex.flex-wrap .list-inline-item {
+    margin-bottom: 8px !important;
+}
+
+/* Specification Icon and Text Container */
+.card-body .list-inline .list-inline-item.d-flex.align-items-center {
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+/* Specification Value Text */
+.card-body .list-inline .list-inline-item {
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* Slick Slider Cards - Specification Styling */
+.slick-slider .card .card-body .list-inline .list-inline-item {
+    margin-bottom: 8px !important;
+}
+
