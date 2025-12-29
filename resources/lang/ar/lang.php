@@ -160,6 +160,34 @@ return [
     'view_all_services' => 'عرض جميع الخدمات',
     'service' => 'خدمة',
     
+    // Home Projects Section
+    'explore' => 'استكشف',
+    'our_projects' => 'مشاريعنا',
+    'projects_bio' => 'اكتشف مجموعتنا من المشاريع الهندسية الاستثنائية عبر مختلف الفئات.',
+    'all' => 'الكل',
+    
+    // Home Contact & FAQ Section
+    'why_choose_us' => 'لماذا تختارنا',
+    
+    // Home News Section
+    'latest_news' => 'آخر الأخبار',
+    'news_and_articles' => 'الأخبار والمقالات',
+    'news_bio' => 'ابق على اطلاع بآخر الأخبار والرؤى والمقالات من فريق خبرائنا.',
+    'view_all_news' => 'عرض جميع الأخبار',
+    
+    // Footer
+    'footer_default_bio' => 'نحن شركة هندسية رائدة نقدم حلولاً مبتكرة للمشاريع السكنية والتجارية والصناعية في جميع أنحاء الإمارات.',
+    'categories' => 'الفئات',
+    'resources' => 'الموارد',
+    'sitemap' => 'خريطة الموقع',
+    'contact_info' => 'معلومات الاتصال',
+    'address' => 'العنوان',
+    'phone' => 'الهاتف',
+    'email' => 'البريد الإلكتروني',
+    'all_rights_reserved' => 'جميع الحقوق محفوظة',
+    'privacy_policy' => 'سياسة الخصوصية',
+    'terms_of_service' => 'شروط الخدمة',
+    
     // Common
     'read_more' => 'اقرأ المزيد',
     'learn_more' => 'معرفة المزيد',

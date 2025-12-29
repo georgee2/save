@@ -43,6 +43,14 @@
           <link rel="stylesheet" href="{{asset('/assets/css/section-divider.css')}}">
           <!-- Why Choose Us CSS -->
           <link rel="stylesheet" href="{{asset('/assets/css/why-choose-us.css')}}">
+          <!-- Home Projects CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/css/home-projects.css')}}">
+          <!-- Home Contact & FAQ CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/css/home-contact-faq.css')}}">
+          <!-- Home News CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/css/home-news.css')}}">
+          <!-- Footer CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/css/footer.css')}}">
                 
 
         @yield('css')
@@ -79,6 +87,32 @@
         <script src="{{asset('/assets/vendors/mapbox-gl/mapbox-gl.js')}}"></script>
         <!-- Theme scripts -->
         <script src="{{asset('/assets/js/theme.js')}}"></script>
+        
+        <!-- Back to Top Script -->
+        <script>
+            (function() {
+                var backToTop = document.getElementById('backToTop');
+                if (backToTop) {
+                    // Show/hide button on scroll
+                    window.addEventListener('scroll', function() {
+                        if (window.pageYOffset > 300) {
+                            backToTop.classList.add('show');
+                        } else {
+                            backToTop.classList.remove('show');
+                        }
+                    });
+                    
+                    // Smooth scroll to top on click
+                    backToTop.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    });
+                }
+            })();
+        </script>
    
     
     @yield('js')

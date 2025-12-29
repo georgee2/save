@@ -14,7 +14,7 @@ class OfferImageController extends Controller
 {
     protected $offer;
     protected $offerImage;
-    
+
     // Gallery image dimensions (903x1146 portrait aspect ratio)
     const GALLERY_WIDTH = 903;
     const GALLERY_HEIGHT = 1146;

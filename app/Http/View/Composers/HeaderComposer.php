@@ -5,6 +5,7 @@ namespace App\Http\View\Composers;
 use Illuminate\View\View;
 use App\Models\EngineeringCategory;
 use App\Models\OfferCategory;
+use App\Models\ContactInformation;
 
 class HeaderComposer
 {
@@ -32,9 +33,13 @@ class HeaderComposer
             ->orderBy('created_at', 'DESC')
             ->get();
 
+        // Get contact information for footer
+        $footerContactInfo = ContactInformation::getContactInfo();
+
         $view->with([
             'headerProjectCategories' => $headerProjectCategories,
             'headerOfferCategories' => $headerOfferCategories,
+            'footerContactInfo' => $footerContactInfo,
         ]);
     }
 }
