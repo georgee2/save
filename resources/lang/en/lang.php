@@ -160,6 +160,34 @@ return [
     'view_all_services' => 'View All Services',
     'service' => 'Service',
     
+    // Home Projects Section
+    'explore' => 'Explore',
+    'our_projects' => 'Our Projects',
+    'projects_bio' => 'Discover our portfolio of exceptional engineering projects across various categories.',
+    'all' => 'All',
+    
+    // Home Contact & FAQ Section
+    'why_choose_us' => 'Why Choose Us',
+    
+    // Home News Section
+    'latest_news' => 'Latest News',
+    'news_and_articles' => 'News & Articles',
+    'news_bio' => 'Stay updated with the latest news, insights, and articles from our team of experts.',
+    'view_all_news' => 'View All News',
+    
+    // Footer
+    'footer_default_bio' => 'We are a leading engineering company providing innovative solutions for residential, commercial, and industrial projects across the UAE.',
+    'categories' => 'Categories',
+    'resources' => 'Resources',
+    'sitemap' => 'Sitemap',
+    'contact_info' => 'Contact Info',
+    'address' => 'Address',
+    'phone' => 'Phone',
+    'email' => 'Email',
+    'all_rights_reserved' => 'All Rights Reserved',
+    'privacy_policy' => 'Privacy Policy',
+    'terms_of_service' => 'Terms of Service',
+    
     // Common
     'read_more' => 'Read More',
     'learn_more' => 'Learn More',

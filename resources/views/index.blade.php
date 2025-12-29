@@ -14,5 +14,11 @@
 	@include('home.services')
 	@include('home.partials.section-divider')
 	@include('home.whychooseus')
+	@include('home.partials.section-divider')
+	@include('home.projects')
+	@include('home.partials.section-divider')
+	@include('home.contactfaq')
+	@include('home.partials.section-divider')
+	@include('home.news')
 @endsection
 

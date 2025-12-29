@@ -104,7 +104,7 @@ class News extends Model
             FROM news
             JOIN newscategories ON newscategories.id = news.category_code
             ORDER BY news.created_at DESC 
-            LIMIT 3
+            LIMIT 10
             ');
         return $news;
     }

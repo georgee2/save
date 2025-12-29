@@ -1,0 +1,149 @@
+/**
+ * Home Projects Section - Square Image Cards
+ * Primary: #19868b | Secondary: #e1273d
+ */
+
+/* Section */
+.home-projects-section {
+    background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+}
+
+/* Square Image Card */
+.project-card-square {
+    position: relative;
+    overflow: visible;
+}
+
+.project-card-square .card-img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    border-radius: 0.5rem;
+}
+
+.project-card-square:hover .card-img {
+    transform: scale(1.02);
+}
+
+/* Overlay Gradient */
+.project-card-square .card-img-overlay {
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+    border-radius: 0.5rem;
+    overflow: visible;
+}
+
+/* Card Hover Effect */
+.project-card-square {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.project-card-square:hover {
+    box-shadow: 0 15px 40px rgba(25, 134, 139, 0.3);
+    transform: translateY(-5px);
+}
+
+/* Badge Styling */
+.home-projects-section .badge-primary {
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+}
+
+/* Nav Pills - Category Tabs */
+.home-projects-section .nav-pills .nav-link {
+    transition: all 0.3s ease;
+}
+
+.home-projects-section .nav-pills .nav-link.active,
+.home-projects-section .nav-pills .nav-link:hover {
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%) !important;
+    color: #fff !important;
+}
+
+/* Spec Icons in Overlay */
+.home-projects-section .list-inline-item img {
+    opacity: 0.9;
+}
+
+/* Image/Video Count Badges - Always visible */
+.home-projects-section .hover-image {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.home-projects-section .hover-image .list-inline-item {
+    opacity: 1 !important;
+    margin-right: 8px;
+}
+
+.home-projects-section .bg-dark-opacity-03 {
+    background: rgba(0, 0, 0, 0.6) !important;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.home-projects-section .w-40px {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px;
+}
+
+.home-projects-section .h-40 {
+    height: 36px !important;
+}
+
+.home-projects-section .w-40px i,
+.home-projects-section .h-40 i {
+    font-size: 14px;
+}
+
+/* Category Badge */
+.home-projects-section .badge-primary {
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Heading Divider */
+.home-projects-section .heading-divider {
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+    margin: 12px 0 15px;
+    border-radius: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .home-projects-section .nav-pills {
+        justify-content: flex-start !important;
+        flex-wrap: wrap;
+    }
+    
+    .home-projects-section .nav-pills .nav-item {
+        margin-bottom: 10px;
+    }
+}
+
+/* RTL Support */
+[dir="rtl"] .home-projects-section .mr-auto {
+    margin-right: 0 !important;
+    margin-left: auto !important;
+}
+
+[dir="rtl"] .home-projects-section .mr-2 {
+    margin-right: 0 !important;
+    margin-left: 0.5rem !important;
+}
+
+[dir="rtl"] .home-projects-section .mr-4 {
+    margin-right: 0 !important;
+    margin-left: 1rem !important;
+}
+
+[dir="rtl"] .home-projects-section .mr-1 {
+    margin-right: 0 !important;
+    margin-left: 0.25rem !important;
+}
+

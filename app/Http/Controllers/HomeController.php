@@ -24,6 +24,7 @@ use App\Models\EngineeringSubCategory;
 use App\Models\ProjectImage;
 use App\Models\ProjectSpecification;
 use App\Models\Offer;
+use App\Models\EngineeringCategory;
 
 class HomeController extends Controller
 {
@@ -122,6 +123,34 @@ class HomeController extends Controller
             ->limit(10)
             ->get();
         
+        // Fetch project categories with their projects for home section
+        $projectCategories = EngineeringCategory::whereNull('deleted_at')
+            ->whereHas('projects', function($query) {
+                $query->where('publish_status', 0)
+                      ->whereNull('deleted_at');
+            })
+            ->with(['projects' => function($query) {
+                $query->where('publish_status', 0)
+                      ->whereNull('deleted_at')
+                      ->with(['category', 'subcategory', 'specifications.specification'])
+                      ->withCount('images')
+                      ->orderBy('created_at', 'desc')
+                      ->limit(8);
+            }])
+            ->orderBy('title_english', 'asc')
+            ->get()
+            ->map(function($category) {
+                // Add video count and total images to each project
+                $category->projects->each(function($project) {
+                    $videoCount = 0;
+                    if (!empty($project->video_url)) $videoCount++;
+                    if (!empty($project->tour_url)) $videoCount++;
+                    $project->video_count = $videoCount;
+                    $project->total_images = $project->images_count + 1; // +1 for main image
+                });
+                return $category;
+            });
+        
         // Fetch team members with their job titles
         $teamMembers = Team::with('jobTitle')
             ->whereNull('deleted_at')
@@ -219,6 +248,6 @@ class HomeController extends Controller
                 return $offer;
             });
         
-        return view('index', compact('sliders', 'aboutBlock', 'aboutCards', 'services', 'showcases', 'facts', 'defaultProcess', 'processCards', 'whyChooseUsBlock', 'whyChooseUsCards', 'engineeringProjects', 'teamMembers', 'portfolioTypes', 'portfolios', 'homeContact', 'contactInfo', 'homeFaqs', 'blogs', 'defaultBanner', 'engineeringSubCategories', 'featuredProjects', 'featuredOffers'));
+        return view('index', compact('sliders', 'aboutBlock', 'aboutCards', 'services', 'showcases', 'facts', 'defaultProcess', 'processCards', 'whyChooseUsBlock', 'whyChooseUsCards', 'engineeringProjects', 'teamMembers', 'portfolioTypes', 'portfolios', 'homeContact', 'contactInfo', 'homeFaqs', 'blogs', 'defaultBanner', 'engineeringSubCategories', 'featuredProjects', 'featuredOffers', 'projectCategories'));
     }
 }

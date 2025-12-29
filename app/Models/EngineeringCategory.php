@@ -78,5 +78,13 @@ class EngineeringCategory extends Model
     {
         return $this->hasMany(EngineeringSubCategory::class, 'category_id');
     }
+    
+    /**
+     * Relationship: Category has many Projects
+     */
+    public function projects()
+    {
+        return $this->hasMany(Project::class, 'category_id');
+    }
 }
 
