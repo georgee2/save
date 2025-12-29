@@ -1,15 +1,16 @@
 {{-- Featured Projects Section --}}
 @if(isset($featuredProjects) && $featuredProjects->count() > 0)
-<section class="pt-lg-12 pb-lg-11 py-11">
+<section class="pt-lg-12 pb-lg-11 py-11 featured-projects-section">
     <div class="container container-xxl">
-        <div class="row">
-            <div class="col-md-6">
-                <h2 class="text-heading">{{ __('lang.featured_projects_title') }}</h2>
+        <div class="row align-items-center mb-6">
+            <div class="col-md-7">
+                <span class="text-primary font-weight-600 letter-spacing-2 text-uppercase fs-13">{{ __('lang.our_work') }}</span>
+                <h2 class="text-heading mt-2 mb-0">{{ __('lang.featured_projects_title') }}</h2>
                 <span class="heading-divider"></span>
-                <p class="mb-6">{{ __('lang.featured_projects_bio') }}</p>
+                <p class="mb-0">{{ __('lang.featured_projects_bio') }}</p>
             </div>
-            <div class="col-md-6 text-md-right">
-                <a href="#" class="btn fs-14 text-secondary btn-accent py-3 lh-15 px-7 mb-6 mb-lg-0">
+            <div class="col-md-5 text-md-right mt-4 mt-md-0">
+                <a href="{{ route('projects.featured') }}" class="btn fs-14 text-secondary btn-accent py-3 lh-15 px-7 mb-6 mb-lg-0">
                     {{ __('lang.featured_projects_button') }}
                     <i class="far fa-long-arrow-right ml-1"></i>
                 </a>
@@ -68,20 +69,20 @@
                         <ul class="list-inline d-flex mb-0 flex-wrap mr-n5">
                             @foreach($project->specifications->take(4) as $spec)
                             @if($spec->specification)
-                            <li class="list-inline-item text-gray font-weight-500 fs-13 d-flex align-items-center mr-5"
+                            <li class="list-inline-item text-gray font-weight-500 fs-13 d-flex align-items-center mr-5 mb-2"
                                 data-toggle="tooltip" title="{{ app()->getLocale() == 'ar' ? $spec->specification->title_arabic : $spec->specification->title_english }}">
                                 @if($spec->specification->icon)
                                 <img src="{{ url('/storage' . $spec->specification->icon) }}" 
                                      alt="{{ app()->getLocale() == 'ar' ? $spec->specification->title_arabic : $spec->specification->title_english }}"
-                                     class="mr-1" 
-                                     style="width: 30px; height: 30px; object-fit: contain;">
+                                     class="mr-2 spec-icon" 
+                                     style="width: 24px; height: 24px; object-fit: contain;">
                                 @else
-                                <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white mr-1" 
-                                      style="width: 30px; height: 30px; font-size: 14px; font-weight: 600;">
+                                <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary text-white mr-2 spec-icon-placeholder" 
+                                      style="width: 24px; height: 24px; font-size: 12px; font-weight: 600;">
                                     {{ mb_substr(app()->getLocale() == 'ar' ? $spec->specification->title_arabic : $spec->specification->title_english, 0, 1) }}
                                 </span>
                                 @endif
-                                {{ app()->getLocale() == 'ar' ? $spec->value_arabic : $spec->value_english }}
+                                <span class="spec-value">{{ app()->getLocale() == 'ar' ? $spec->value_arabic : $spec->value_english }}</span>
                             </li>
                             @endif
                             @endforeach

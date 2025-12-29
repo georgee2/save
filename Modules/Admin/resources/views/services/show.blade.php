@@ -723,8 +723,9 @@
                                     </div>
                                 </div>
                                 
+                                {{-- Service Home Image - Hidden (using main image only)
                                 <div class="image-item">
-                                    <div class="image-item-label">Service Home Image (434x420):</div>
+                                    <div class="image-item-label">Service Home Image (870x450):</div>
                                     <div class="image-item-content">
                                         @if($Service->service_home_image)
                                             <img src="{{url('/storage' . $Service->service_home_image)}}" 
@@ -739,6 +740,7 @@
                                         @endif
                                     </div>
                                 </div>
+                                --}}
                                 
                                 <div class="image-item">
                                     <div class="image-item-label">Icon:</div>

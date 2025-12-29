@@ -104,9 +104,10 @@
                                                     </div> 
                                     </div>
 
+                         {{-- Service Home Image - Hidden (using main image only)
                          <div class="row">
                                         <div class="form-group col-md-6">
-                                            <label class="text-capitalize">Service Home Image (Width: 434px - Height : 420px) - For Home Page Display</label>
+                                            <label class="text-capitalize">Service Home Image (Width: 870px - Height : 450px) - For Home Page Display</label>
                                             <input accept="image/*"  class="form-control dropify" type="file" name="service_home_image">
                                             <small class="form-text text-muted">Optional - If not provided, main image will be used and resized for home page</small>
                                             @error('service_home_image')
@@ -118,12 +119,13 @@
                                                         <label class="mb-3">Current Service Home Image </label>
                                                         <br>
                                                         @if($Service->service_home_image != null)
-                                                        <img src="{{url('/storage' . $Service->service_home_image)}}" width="434" height="420">
+                                                        <img src="{{url('/storage' . $Service->service_home_image)}}" width="435" height="225">
                                                         @else
                                                         <p class="text-muted">No Service Home Image - Main Image will be used</p>
                                                         @endif
                                                     </div> 
                                     </div>
+                         --}}
 
                          <div class="row">
                                         <div class="form-group col-md-6">

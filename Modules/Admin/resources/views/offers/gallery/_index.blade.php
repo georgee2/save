@@ -23,12 +23,12 @@
         <div class="form-group">
             <label class="font-weight-bold">
                 Gallery Images 
-                <small class="text-muted">(1080px x 1080px)</small>
+                <small class="text-muted">(903px x 1146px - Portrait)</small>
             </label>
             <div class="offer-gallery-images mb-3"></div>
             <small class="form-text text-muted">
                 <i class="fa fa-info-circle"></i> 
-                You can upload multiple images. Drag and drop to reorder. Click the X to remove an image. Images will be automatically resized to 1080x1080 and converted to WebP format with 80% quality.
+                You can upload multiple images. Drag and drop to reorder. Click the X to remove an image. Images will be automatically resized to <strong>903x1146</strong> (portrait) and converted to <strong>WebP format</strong> with 80% quality.
             </small>
         </div>
 
@@ -56,7 +56,9 @@
                 imagesInputName: 'images',
                 preloadedInputName: 'preloaded',
                 maxSize: 5 * 1024 * 1024, // 5MB
-                maxFiles: 30
+                maxFiles: 30,
+                extensions: ['.jpg', '.jpeg', '.png', '.gif', '.webp'],
+                mimes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
             });
             
             // Update gallery count
@@ -68,7 +70,9 @@
                 imagesInputName: 'images',
                 preloadedInputName: 'preloaded',
                 maxSize: 5 * 1024 * 1024,
-                maxFiles: 30
+                maxFiles: 30,
+                extensions: ['.jpg', '.jpeg', '.png', '.gif', '.webp'],
+                mimes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
             });
         }
     });

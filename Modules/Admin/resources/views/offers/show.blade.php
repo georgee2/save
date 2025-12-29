@@ -674,29 +674,8 @@
                             <div class="image-grid">
                                 <div class="image-grid-item" onclick="openLightbox('{{ asset('storage' . $offer->main_image) }}')">
                                     <img src="{{ asset('storage' . $offer->main_image) }}" alt="Main Image">
-                                    <div class="image-label">Main Image (1080x1080)</div>
+                                    <div class="image-label">Main Image (903x1146)</div>
                                 </div>
-                                
-                                @if($offer->cover_image)
-                                <div class="image-grid-item" onclick="openLightbox('{{ asset('storage' . $offer->cover_image) }}')">
-                                    <img src="{{ asset('storage' . $offer->cover_image) }}" alt="Cover Image">
-                                    <div class="image-label">Cover Image (1890x420)</div>
-                                </div>
-                                @endif
-                                
-                                @if($offer->page_image)
-                                <div class="image-grid-item" onclick="openLightbox('{{ asset('storage' . $offer->page_image) }}')">
-                                    <img src="{{ asset('storage' . $offer->page_image) }}" alt="Page Image">
-                                    <div class="image-label">Page Image (868x450)</div>
-                                </div>
-                                @endif
-                                
-                                @if($offer->site_image)
-                                <div class="image-grid-item" onclick="openLightbox('{{ asset('storage' . $offer->site_image) }}')">
-                                    <img src="{{ asset('storage' . $offer->site_image) }}" alt="Site Image">
-                                    <div class="image-label">Site Image (420x420)</div>
-                                </div>
-                                @endif
                                 
                                 @if($offer->plan_2d_image)
                                 <div class="image-grid-item" style="cursor: pointer;" onclick="window.open('{{ asset('storage' . $offer->plan_2d_image) }}', '_blank')">
@@ -711,7 +690,7 @@
                                 @if($offer->plan_3d_image)
                                 <div class="image-grid-item" onclick="openLightbox('{{ asset('storage' . $offer->plan_3d_image) }}')">
                                     <img src="{{ asset('storage' . $offer->plan_3d_image) }}" alt="3D Image">
-                                    <div class="image-label">3D Image (870x420)</div>
+                                    <div class="image-label">3D Image (903x1146)</div>
                                 </div>
                                 @endif
                             </div>

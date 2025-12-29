@@ -111,11 +111,11 @@ class ServiceController extends Controller
                 $data['main_image'] = "/uploads/services/{$imageName}";
             }
 
-        // Service Home Image Upload (434x420)
+        // Service Home Image Upload (870x450)
         if ($request->has('service_home_image') != null) {
                 $classifiedImg = $request->file('service_home_image');
                 $filename = $classifiedImg->getClientOriginalExtension();
-                $image = Image::make($classifiedImg)->resize(434,420)->encode('webp', 80);
+                $image = Image::make($classifiedImg)->resize(870,450)->encode('webp', 80);
 
                 $imageName = Str::random() . ".webp";
                 Storage::disk('public')->put( '/uploads/services/home/' . $imageName ,(string) $image);
@@ -247,11 +247,11 @@ class ServiceController extends Controller
                 $data['main_image'] = "/uploads/services/{$imageName}";
             }
 
-        // Service Home Image Upload (434x420)
+        // Service Home Image Upload (870x450)
         if ($request->has('service_home_image') != null) {
                 $classifiedImg = $request->file('service_home_image');
                 $filename = $classifiedImg->getClientOriginalExtension();
-                $image = Image::make($classifiedImg)->resize(434,420)->encode('webp', 80);
+                $image = Image::make($classifiedImg)->resize(870,450)->encode('webp', 80);
 
                 $imageName = Str::random() . ".webp";
                 Storage::disk('public')->put( '/uploads/services/home/' . $imageName ,(string) $image);

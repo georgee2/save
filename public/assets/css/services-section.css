@@ -1,0 +1,260 @@
+/**
+ * Services Section Styles
+ * Matching the Offers Section Design
+ */
+
+/* Section Container */
+.services-section {
+    background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+    position: relative;
+}
+
+/* Service Card */
+.service-card {
+    background: #fff;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(25, 134, 139, 0.15) !important;
+}
+
+/* Service Image - 870x450 aspect ratio (1.93:1) */
+.service-card-image {
+    position: relative;
+    overflow: visible; /* Allow icon to be visible */
+    width: 100%;
+    padding-bottom: 51.72%; /* 450/870 = 0.5172 aspect ratio for landscape */
+}
+
+.service-card-image > a {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: hidden;
+}
+
+.service-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.service-card:hover .service-card-image img {
+    transform: scale(1.08);
+}
+
+/* Placeholder Image */
+.service-placeholder-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Gradient Overlay */
+.service-gradient-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60%;
+    background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%);
+    pointer-events: none;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+.service-card:hover .service-gradient-overlay {
+    opacity: 1;
+}
+
+/* Service Icon Badge - Positioned inside image area */
+.service-icon-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 55px;
+    height: 55px;
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(25, 134, 139, 0.4);
+    transition: all 0.3s ease;
+    z-index: 3;
+}
+
+[dir="rtl"] .service-icon-badge {
+    right: auto;
+    left: 15px;
+}
+
+.service-icon-badge img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover .service-icon-badge {
+    transform: rotate(10deg) scale(1.1);
+    background: linear-gradient(135deg, #e1273d 0%, #c41f33 100%);
+}
+
+/* Service Content */
+.service-card-body {
+    min-height: 100px;
+}
+
+.service-title a {
+    color: #333;
+    transition: color 0.3s ease;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.service-title a:hover {
+    color: #19868b;
+}
+
+.service-bio {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.6;
+}
+
+/* Card Footer */
+.service-card .card-footer {
+    border-top: 1px solid rgba(0,0,0,0.05);
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.service-card .card-footer .btn-primary {
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.service-card .card-footer .btn-primary:hover {
+    background: linear-gradient(135deg, #e1273d 0%, #c41f33 100%);
+    box-shadow: 0 4px 15px rgba(225, 39, 61, 0.3);
+    transform: translateX(5px);
+}
+
+[dir="rtl"] .service-card .card-footer .btn-primary:hover {
+    transform: translateX(-5px);
+}
+
+/* Services Slider */
+.services-slider .slick-list {
+    overflow: visible !important;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.services-slider .slick-track {
+    overflow: visible !important;
+}
+
+.services-slider .slick-slide {
+    overflow: visible !important;
+}
+
+/* Slider Dots */
+.services-slider .slick-dots {
+    bottom: -35px;
+}
+
+.services-slider .slick-dots li button:before {
+    font-size: 10px;
+    color: #19868b;
+    opacity: 0.3;
+}
+
+.services-slider .slick-dots li.slick-active button:before {
+    opacity: 1;
+    color: #19868b;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .service-card-image {
+        padding-bottom: 51.72%; /* Maintain aspect ratio */
+    }
+}
+
+@media (max-width: 768px) {
+    .services-section {
+        padding-top: 60px !important;
+        padding-bottom: 60px !important;
+    }
+    
+    .service-card-image {
+        padding-bottom: 55%; /* Slightly taller on tablets */
+    }
+    
+    .service-icon-badge {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .service-icon-badge img {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .services-slider .slick-dots {
+        bottom: -25px;
+    }
+}
+
+@media (max-width: 576px) {
+    .service-card-image {
+        padding-bottom: 60%; /* Slightly taller on mobile for better visibility */
+    }
+    
+    .service-title {
+        font-size: 16px !important;
+    }
+}
+
+/* RTL Support */
+[dir="rtl"] .services-section .text-md-right {
+    text-align: left !important;
+}
+
+[dir="rtl"] .service-card .card-footer .btn-primary i {
+    margin-left: 0;
+    margin-right: 0.25rem;
+    transform: scaleX(-1);
+}
+
+/* Heading Divider - Matching other sections */
+.services-section .heading-divider {
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+    margin: 12px 0 15px;
+    border-radius: 2px;
+}

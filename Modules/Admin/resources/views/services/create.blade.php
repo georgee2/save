@@ -94,9 +94,10 @@
                             </div>
                         </div>
 
+                        {{-- Service Home Image - Hidden (using main image only)
                         <div class="row">
                             <div class="form-group col-md-12">
-                                <label class="text-capitalize">Service Home Image (Width: 434px - Height : 420px) - For Home Page Display</label>
+                                <label class="text-capitalize">Service Home Image (Width: 870px - Height : 450px) - For Home Page Display</label>
                                 <input accept="image/*"  class="form-control dropify" type="file" name="service_home_image">
                                 <small class="form-text text-muted">Optional - If not provided, main image will be used and resized for home page</small>
                                 @error('service_home_image')
@@ -104,6 +105,7 @@
                                 @enderror
                             </div>
                         </div>
+                        --}}
 
                         <div class="row">
                             <div class="form-group col-md-12">

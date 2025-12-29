@@ -154,28 +154,10 @@
                         <h5 class="mb-3 mt-4 text-primary">Offer Images</h5>
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize">Main Image (1080x1080)</label>
+                                <label class="text-capitalize">Main Image (903x1146)</label>
                                 <input accept="image/*" class="form-control dropify" type="file" name="main_image" data-default-file="{{ asset('storage' . $offer->main_image) }}">
-                                <small class="form-text text-muted">Leave empty to keep current image. Recommended: 1080x1080 pixels. Will be converted to WebP with 80% quality.</small>
+                                <small class="form-text text-muted">Leave empty to keep current image. Recommended: 903x1146 pixels. Will be converted to WebP with 80% quality.</small>
                                 @error('main_image')<span class="text-danger mt-1">{{ $message }}</span>@enderror
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label class="text-capitalize">Cover Image (1890x420)</label>
-                                <input accept="image/*" class="form-control dropify" type="file" name="cover_image" data-default-file="{{ $offer->cover_image ? asset('storage' . $offer->cover_image) : '' }}">
-                                <small class="form-text text-muted">Recommended: 1890x420 pixels. Will be converted to WebP.</small>
-                                @error('cover_image')<span class="text-danger mt-1">{{ $message }}</span>@enderror
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label class="text-capitalize">Page Image (868x450)</label>
-                                <input accept="image/*" class="form-control dropify" type="file" name="page_image" data-default-file="{{ $offer->page_image ? asset('storage' . $offer->page_image) : '' }}">
-                                <small class="form-text text-muted">Recommended: 868x450 pixels. Will be converted to WebP.</small>
-                                @error('page_image')<span class="text-danger mt-1">{{ $message }}</span>@enderror
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label class="text-capitalize">Site Image (420x420)</label>
-                                <input accept="image/*" class="form-control dropify" type="file" name="site_image" data-default-file="{{ $offer->site_image ? asset('storage' . $offer->site_image) : '' }}">
-                                <small class="form-text text-muted">Recommended: 420x420 pixels. Will be converted to WebP.</small>
-                                @error('site_image')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-6">
                                 <label class="text-capitalize">Offer File (PDF)</label>
@@ -187,9 +169,9 @@
                                 @error('plan_2d_image')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize">3D Image (870x420)</label>
+                                <label class="text-capitalize">3D Image (903x1146)</label>
                                 <input accept="image/*" class="form-control dropify" type="file" name="plan_3d_image" data-default-file="{{ $offer->plan_3d_image ? asset('storage' . $offer->plan_3d_image) : '' }}">
-                                <small class="form-text text-muted">Recommended: 870x420 pixels. Will be converted to WebP.</small>
+                                <small class="form-text text-muted">Recommended: 903x1146 pixels (Portrait). Will be converted to WebP.</small>
                                 @error('plan_3d_image')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                         </div>

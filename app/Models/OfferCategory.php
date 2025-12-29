@@ -16,6 +16,14 @@ class OfferCategory extends Model
     protected $guarded = [];
     
     /**
+     * Get subcategories for this category
+     */
+    public function subCategories()
+    {
+        return $this->hasMany(OfferSubCategory::class, 'category_id');
+    }
+    
+    /**
      * Boot the model
      */
     protected static function boot()

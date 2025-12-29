@@ -23,7 +23,8 @@ class ProjectsController extends Controller
         // Build query
         $query = Project::where('publish_status', 0)
                        ->whereNull('deleted_at')
-                       ->with(['category', 'subcategory', 'style']);
+                       ->with(['category', 'subcategory', 'style', 'specifications.specification'])
+                       ->withCount('images');
         
         // Apply filters
         if ($request->filled('category_id')) {
@@ -76,12 +77,60 @@ class ProjectsController extends Controller
         }
         
         // Get paginated results
-        $projects = $query->orderBy('created_at', 'DESC')->paginate(15);
+        $projects = $query->orderBy('created_at', 'DESC')->paginate(10)
+            ->through(function($project) {
+                // Count videos (video_url and tour_url)
+                $videoCount = 0;
+                if (!empty($project->video_url)) $videoCount++;
+                if (!empty($project->tour_url)) $videoCount++;
+                $project->video_count = $videoCount;
+                
+                // Add 1 for main image to images_count
+                $project->total_images = $project->images_count + 1;
+                
+                return $project;
+            });
         
         // Get page banner for projects page
         $pageBanner = PageBanner::getByTarget('projects');
         
         return view('pages.projects.index', compact('projects', 'categories', 'subcategories', 'styles', 'specifications', 'pageBanner'));
+    }
+    
+    /**
+     * Display featured projects page
+     */
+    public function featured()
+    {
+        // Get filter data
+        $categories = EngineeringCategory::whereNull('deleted_at')->orderBy('title_english')->get();
+        $subcategories = EngineeringSubCategory::whereNull('deleted_at')->orderBy('title_english')->get();
+        
+        // Fetch featured projects (home_status = 0) with relationships
+        $projects = Project::with(['category', 'subcategory', 'specifications.specification'])
+            ->withCount('images')
+            ->where('publish_status', 0) // Published
+            ->where('home_status', 0)    // Featured (shown on home)
+            ->whereNull('deleted_at')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->through(function($project) {
+                // Count videos (video_url and tour_url)
+                $videoCount = 0;
+                if (!empty($project->video_url)) $videoCount++;
+                if (!empty($project->tour_url)) $videoCount++;
+                $project->video_count = $videoCount;
+                
+                // Add 1 for main image to images_count
+                $project->total_images = $project->images_count + 1;
+                
+                return $project;
+            });
+        
+        // Get page banner for featured projects page
+        $pageBanner = PageBanner::getByTarget('featured-projects');
+        
+        return view('pages.projects.featured.featured', compact('projects', 'categories', 'subcategories', 'pageBanner'));
     }
     
     public function show($slug)
@@ -96,12 +145,23 @@ class ProjectsController extends Controller
                              'style',
                              'type',
                              'partner',
+                             'emirate', // Load emirate for location
+                             'images', // Load project gallery images
                              'floors.floorComponent', // Load floor component details
+                             'floors.buildingComponent', // Load building component details
                              'floors.specifications.specification', // Load floor specifications with icons
                              'floors.amenities.amenity', // Load floor amenities with icons
                              'specifications.specification', // Load project specification details with icon
                              'constructionCosts',
-                             'feasibilityStudies' // Load feasibility studies
+                             'feasibilityStudies' => function($query) {
+                                 $query->where('status', 'Active')->whereNull('deleted_at');
+                             },
+                             'feasibilityStudies.currency',
+                             'feasibilityStudies.buildingComponents.buildingComponent',
+                             'feasibilityStudies.incomeComponents.incomeComponent',
+                             'feasibilityStudies.constructionCosts.substationRoom',
+                             'feasibilityStudies.constructionCosts.pumpsRoom',
+                             'feasibilityStudies.projectCost'
                          ])
                          ->firstOrFail();
         

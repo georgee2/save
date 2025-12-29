@@ -14,6 +14,10 @@ class OfferImageController extends Controller
 {
     protected $offer;
     protected $offerImage;
+    
+    // Gallery image dimensions (903x1146 portrait aspect ratio)
+    const GALLERY_WIDTH = 903;
+    const GALLERY_HEIGHT = 1146;
 
     public function __construct(Offer $offer, OfferImage $offerImage)
     {
@@ -40,10 +44,7 @@ class OfferImageController extends Controller
             // First time upload - no existing images
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
-                    $filename = $image->getClientOriginalExtension();
-                    $finalimage = Image::make($image)->fit(1080, 1080)->encode('webp', 80);
-                    $imageName = Str::random() . ".webp";
-                    Storage::disk('public')->put('/uploads/offers/gallery/' . $imageName, (string) $finalimage);
+                    $imageName = $this->processAndSaveImage($image);
                     
                     $this->offerImage->NewRecord([
                         'image' => "/uploads/offers/gallery/{$imageName}",
@@ -76,10 +77,7 @@ class OfferImageController extends Controller
             // Upload new images if exists
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
-                    $filename = $image->getClientOriginalExtension();
-                    $finalimage = Image::make($image)->fit(1080, 1080)->encode('webp', 80);
-                    $imageName = Str::random() . ".webp";
-                    Storage::disk('public')->put('/uploads/offers/gallery/' . $imageName, (string) $finalimage);
+                    $imageName = $this->processAndSaveImage($image);
                     
                     $this->offerImage->NewRecord([
                         'image' => "/uploads/offers/gallery/{$imageName}",
@@ -90,6 +88,29 @@ class OfferImageController extends Controller
         }
 
         return redirect()->back()->with('success', 'Gallery Updated Successfully!');
+    }
+
+    /**
+     * Process and save image with 903x1146 dimensions and WebP format
+     * 
+     * @param \Illuminate\Http\UploadedFile $image
+     * @return string The saved image filename
+     */
+    private function processAndSaveImage($image)
+    {
+        // Resize to 903x1146 (portrait) and convert to WebP
+        $finalImage = Image::make($image)
+            ->resize(self::GALLERY_WIDTH, self::GALLERY_HEIGHT, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })
+            ->resizeCanvas(self::GALLERY_WIDTH, self::GALLERY_HEIGHT, 'center', false, '#ffffff')
+            ->encode('webp', 80);
+        
+        $imageName = Str::random() . ".webp";
+        Storage::disk('public')->put('/uploads/offers/gallery/' . $imageName, (string) $finalImage);
+        
+        return $imageName;
     }
 
     /**

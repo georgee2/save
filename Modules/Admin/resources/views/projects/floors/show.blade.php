@@ -189,7 +189,7 @@
                         <h5 class="text-primary mb-3"><i class="fa fa-image"></i> Floor Images</h5>
                         <div class="image-container">
                             <div class="image-box">
-                                <div class="image-box-title">2D Floor Plan</div>
+                                <div class="image-box-title">2D Floor Plan (1080x1080)</div>
                                 @if($floor->image_2d)
                                     <img src="{{ asset('storage' . $floor->image_2d) }}" alt="2D Floor Plan" class="floor-image" onclick="openLightbox('{{ asset('storage' . $floor->image_2d) }}')">
                                 @else
@@ -203,7 +203,7 @@
                             </div>
                             
                             <div class="image-box">
-                                <div class="image-box-title">3D Visualization</div>
+                                <div class="image-box-title">3D Visualization (1080x1080)</div>
                                 @if($floor->image_3d)
                                     <img src="{{ asset('storage' . $floor->image_3d) }}" alt="3D Visualization" class="floor-image" onclick="openLightbox('{{ asset('storage' . $floor->image_3d) }}')">
                                 @else

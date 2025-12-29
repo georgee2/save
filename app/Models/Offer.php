@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use App\Models\OffersPrices\OfferPrice;
 
 class Offer extends Model
 {
@@ -52,6 +53,46 @@ class Offer extends Model
     public function type()
     {
         return $this->belongsTo(ProjectType::class, 'type_id');
+    }
+    
+    /**
+     * Relationship: Offer has many Prices
+     */
+    public function prices()
+    {
+        return $this->hasMany(OfferPrice::class, 'offer_id');
+    }
+    
+    /**
+     * Relationship: Offer has many Specifications
+     */
+    public function specifications()
+    {
+        return $this->hasMany(OfferSpecification::class, 'offer_id');
+    }
+    
+    /**
+     * Relationship: Offer has many Images
+     */
+    public function images()
+    {
+        return $this->hasMany(OfferImage::class, 'offer_id');
+    }
+    
+    /**
+     * Relationship: Offer has many Floors
+     */
+    public function floors()
+    {
+        return $this->hasMany(OfferFloor::class, 'offer_id');
+    }
+    
+    /**
+     * Relationship: Offer has many Feasibility Studies
+     */
+    public function feasibilityStudies()
+    {
+        return $this->hasMany(OfferFeasibilityStudy::class, 'offer_id');
     }
     
     /**

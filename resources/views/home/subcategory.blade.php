@@ -25,7 +25,7 @@
                             <a href="{{ route('engineering.subcategory.show', $subCategory->slug) }}"
                                 class="card border-0 align-items-center justify-content-center pt-7 pb-5 px-3 shadow-hover-3 bg-transparent bg-hover-white text-decoration-none">
                                 @if($subCategory->icon)
-                                <img src="{{ asset('storage' . $subCategory->icon) }}" 
+                                <img src="{{ url('/storage' . $subCategory->icon) }}" 
                                      class="card-img-top" 
                                      alt="{{ app()->getLocale() == 'ar' ? $subCategory->title_arabic : $subCategory->title_english }}"
                                      style="width: 80px; height: 80px; object-fit: contain;">

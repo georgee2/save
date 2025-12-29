@@ -23,6 +23,7 @@ use App\Models\DefaultBanner;
 use App\Models\EngineeringSubCategory;
 use App\Models\ProjectImage;
 use App\Models\ProjectSpecification;
+use App\Models\Offer;
 
 class HomeController extends Controller
 {
@@ -191,6 +192,33 @@ class HomeController extends Controller
                 return $project;
             });
         
-        return view('index', compact('sliders', 'aboutBlock', 'aboutCards', 'services', 'showcases', 'facts', 'defaultProcess', 'processCards', 'whyChooseUsBlock', 'whyChooseUsCards', 'engineeringProjects', 'teamMembers', 'portfolioTypes', 'portfolios', 'homeContact', 'contactInfo', 'homeFaqs', 'blogs', 'defaultBanner', 'engineeringSubCategories', 'featuredProjects'));
+        // Fetch featured offers (home_status = 0) with category, specifications, prices and images count
+        $featuredOffers = Offer::with(['category', 'subcategory', 'currency', 'specifications.specification', 'prices.emirate'])
+            ->withCount('images')
+            ->where('publish_status', 0) // Published
+            ->where('home_status', 0)    // Shown on home (featured)
+            ->whereNull('deleted_at')
+            ->orderBy('created_at', 'desc')
+            ->limit(20)
+            ->get()
+            ->map(function($offer) {
+                // Count videos (video_url and tour_url)
+                $videoCount = 0;
+                if (!empty($offer->video_url)) $videoCount++;
+                if (!empty($offer->tour_url)) $videoCount++;
+                $offer->video_count = $videoCount;
+                
+                // Add 1 for main image to images_count
+                $offer->total_images = $offer->images_count + 1;
+                
+                // Get first active price (default price to show)
+                $offer->default_price = $offer->prices
+                    ->where('status', 0) // Active
+                    ->first();
+                
+                return $offer;
+            });
+        
+        return view('index', compact('sliders', 'aboutBlock', 'aboutCards', 'services', 'showcases', 'facts', 'defaultProcess', 'processCards', 'whyChooseUsBlock', 'whyChooseUsCards', 'engineeringProjects', 'teamMembers', 'portfolioTypes', 'portfolios', 'homeContact', 'contactInfo', 'homeFaqs', 'blogs', 'defaultBanner', 'engineeringSubCategories', 'featuredProjects', 'featuredOffers'));
     }
 }

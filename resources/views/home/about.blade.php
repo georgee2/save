@@ -36,7 +36,7 @@
 
             {{-- Icon Cards (up to 4) --}}
             @foreach($iconCards->take(4) as $index => $card)
-            <div class="svg-icon-card {{ $cardPositions[$index] ?? '' }} {{ $index === 0 ? 'svg-card-featured' : '' }}" data-animate="fadeInUp">
+            <div class="svg-icon-card {{ $cardPositions[$index] ?? '' }}" data-animate="fadeInUp">
                 @if($card->icon_dark)
                 <div class="card-icon">
                     <img src="{{ asset('storage' . $card->icon_dark) }}" 

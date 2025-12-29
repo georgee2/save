@@ -1,0 +1,161 @@
+{{-- Offers Filter Sidebar --}}
+<div class="col-lg-4 primary-sidebar sidebar-sticky" id="sidebar">
+    <div class="primary-sidebar-inner">
+        <div class="card border-0 mb-4">
+            <div class="card-body pl-0 pl-lg-6 pr-0 pt-2 pb-4">
+                <h4 class="card-title fs-16 lh-2 text-dark mb-3">{{ __('lang.find_your_offer') }}</h4>
+                <form method="GET" action="{{ $formAction ?? request()->url() }}" id="offerFilterForm">
+                    {{-- Keyword Search --}}
+                    <div class="form-group">
+                        <label for="keyword" class="sr-only">{{ __('lang.keyword') }}</label>
+                        <input type="text" class="form-control form-control-lg border-0 shadow-none"
+                               id="keyword" name="keyword" value="{{ request('keyword') }}"
+                               placeholder="{{ __('lang.enter_keyword') }}">
+                    </div>
+                    
+                    {{-- Category --}}
+                    @if(!isset($hideCategory) || !$hideCategory)
+                    <div class="form-group">
+                        <label for="category_id" class="sr-only">{{ __('lang.category') }}</label>
+                        <select class="form-control border-0 shadow-none form-control-lg selectpicker"
+                                title="{{ __('lang.all_categories') }}" data-style="btn-lg py-2 h-52" 
+                                id="category_id" name="category_id">
+                            <option value="">{{ __('lang.all_categories') }}</option>
+                            @foreach($categories as $cat)
+                            <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id || (isset($currentCategory) && $currentCategory->id == $cat->id) ? 'selected' : '' }}>
+                                {{ app()->getLocale() == 'ar' ? $cat->title_arabic : $cat->title_english }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
+                    
+                    {{-- Subcategory --}}
+                    @if(!isset($hideSubcategory) || !$hideSubcategory)
+                    <div class="form-group">
+                        <label for="subcategory_id" class="sr-only">{{ __('lang.subcategory') }}</label>
+                        <select class="form-control border-0 shadow-none form-control-lg selectpicker"
+                                title="{{ __('lang.all_subcategories') }}" data-style="btn-lg py-2 h-52" 
+                                id="subcategory_id" name="subcategory_id">
+                            <option value="">{{ __('lang.all_subcategories') }}</option>
+                            @foreach($subcategories as $subcat)
+                            <option value="{{ $subcat->id }}" {{ request('subcategory_id') == $subcat->id || (isset($currentSubcategory) && $currentSubcategory->id == $subcat->id) ? 'selected' : '' }}>
+                                {{ app()->getLocale() == 'ar' ? $subcat->title_arabic : $subcat->title_english }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
+                    
+                    {{-- Type --}}
+                    <div class="form-group">
+                        <label for="type_id" class="sr-only">{{ __('lang.type') }}</label>
+                        <select class="form-control border-0 shadow-none form-control-lg selectpicker"
+                                title="{{ __('lang.all_types') }}" data-style="btn-lg py-2 h-52" 
+                                id="type_id" name="type_id">
+                            <option value="">{{ __('lang.all_types') }}</option>
+                            @foreach($types as $type)
+                            <option value="{{ $type->id }}" {{ request('type_id') == $type->id ? 'selected' : '' }}>
+                                {{ app()->getLocale() == 'ar' ? $type->name_arabic : $type->name_english }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    {{-- Style --}}
+                    <div class="form-group">
+                        <label for="style_id" class="sr-only">{{ __('lang.style') }}</label>
+                        <select class="form-control border-0 shadow-none form-control-lg selectpicker"
+                                title="{{ __('lang.all_styles') }}" data-style="btn-lg py-2 h-52" 
+                                id="style_id" name="style_id">
+                            <option value="">{{ __('lang.all_styles') }}</option>
+                            @foreach($styles as $style)
+                            <option value="{{ $style->id }}" {{ request('style_id') == $style->id ? 'selected' : '' }}>
+                                {{ app()->getLocale() == 'ar' ? $style->title_arabic : $style->title_english }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    {{-- Emirate --}}
+                    <div class="form-group">
+                        <label for="emirate_id" class="sr-only">{{ __('lang.emirate') }}</label>
+                        <select class="form-control border-0 shadow-none form-control-lg selectpicker"
+                                title="{{ __('lang.all_emirates') }}" data-style="btn-lg py-2 h-52" 
+                                id="emirate_id" name="emirate_id">
+                            <option value="">{{ __('lang.all_emirates') }}</option>
+                            @foreach($emirates as $emirate)
+                            <option value="{{ $emirate->id }}" {{ request('emirate_id') == $emirate->id ? 'selected' : '' }}>
+                                {{ app()->getLocale() == 'ar' ? $emirate->title_arabic : $emirate->title_english }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    {{-- SQFT Range --}}
+                    <div class="form-group">
+                        <label class="text-gray-light mb-2">{{ __('lang.sqft_range') }}</label>
+                        <div class="row">
+                            <div class="col-6">
+                                <input type="number" class="form-control form-control-lg border-0 shadow-none"
+                                       id="sqft_min" name="sqft_min" value="{{ request('sqft_min') }}"
+                                       placeholder="{{ __('lang.min') }}">
+                            </div>
+                            <div class="col-6">
+                                <input type="number" class="form-control form-control-lg border-0 shadow-none"
+                                       id="sqft_max" name="sqft_max" value="{{ request('sqft_max') }}"
+                                       placeholder="{{ __('lang.max') }}">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {{-- SQM Range --}}
+                    <div class="form-group">
+                        <label class="text-gray-light mb-2">{{ __('lang.sqm_range') }}</label>
+                        <div class="row">
+                            <div class="col-6">
+                                <input type="number" class="form-control form-control-lg border-0 shadow-none"
+                                       id="sqm_min" name="sqm_min" value="{{ request('sqm_min') }}"
+                                       placeholder="{{ __('lang.min') }}">
+                            </div>
+                            <div class="col-6">
+                                <input type="number" class="form-control form-control-lg border-0 shadow-none"
+                                       id="sqm_max" name="sqm_max" value="{{ request('sqm_max') }}"
+                                       placeholder="{{ __('lang.max') }}">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {{-- Price Range --}}
+                    <div class="form-group">
+                        <label class="text-gray-light mb-2">{{ __('lang.price_range') }} (AED)</label>
+                        <div class="row">
+                            <div class="col-6">
+                                <input type="number" class="form-control form-control-lg border-0 shadow-none"
+                                       id="price_min" name="price_min" value="{{ request('price_min') }}"
+                                       placeholder="{{ __('lang.min') }}">
+                            </div>
+                            <div class="col-6">
+                                <input type="number" class="form-control form-control-lg border-0 shadow-none"
+                                       id="price_max" name="price_max" value="{{ request('price_max') }}"
+                                       placeholder="{{ __('lang.max') }}">
+                            </div>
+                        </div>
+                        <small class="text-muted d-block mt-1">{{ __('lang.price_filter_note') }}</small>
+                    </div>
+                    
+                    {{-- Buttons --}}
+                    <div class="d-flex">
+                        <button type="submit" class="btn btn-primary btn-lg flex-grow-1 shadow-none mr-2">
+                            <i class="fas fa-search mr-2"></i>{{ __('lang.search') }}
+                        </button>
+                        <a href="{{ $formAction ?? request()->url() }}" class="btn btn-outline-secondary btn-lg shadow-none">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

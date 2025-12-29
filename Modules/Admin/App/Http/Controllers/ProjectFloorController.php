@@ -49,8 +49,8 @@ class ProjectFloorController extends Controller
             'floor_component_id' => 'required|exists:floor_components,id',
             'sqft' => 'required|numeric|min:0',
             'count' => 'required|integer|min:1',
-            'image_3d' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image_2d' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image_3d' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'image_2d' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
 
         $data = [
@@ -62,14 +62,14 @@ class ProjectFloorController extends Controller
             'count' => $request->count,
         ];
 
-        // Handle 3D image upload (required) - Convert to WebP 870x420
+        // Handle 3D image upload (required) - Convert to WebP 1080x1080
         if ($request->hasFile('image_3d')) {
-            $data['image_3d'] = $this->handleImageUpload($request->file('image_3d'), 870, 420, '3d');
+            $data['image_3d'] = $this->handleImageUpload($request->file('image_3d'), 1080, 1080, '3d');
         }
 
-        // Handle 2D image upload (optional) - Convert to WebP 870x420
+        // Handle 2D image upload (optional) - Convert to WebP 1080x1080
         if ($request->hasFile('image_2d')) {
-            $data['image_2d'] = $this->handleImageUpload($request->file('image_2d'), 870, 420, '2d');
+            $data['image_2d'] = $this->handleImageUpload($request->file('image_2d'), 1080, 1080, '2d');
         }
 
         ProjectFloor::create($data);
@@ -120,8 +120,8 @@ class ProjectFloorController extends Controller
             'floor_component_id' => 'required|exists:floor_components,id',
             'sqft' => 'required|numeric|min:0',
             'count' => 'required|integer|min:1',
-            'image_3d' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'image_2d' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image_3d' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'image_2d' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
 
         $data = [
@@ -132,20 +132,20 @@ class ProjectFloorController extends Controller
             'count' => $request->count,
         ];
 
-        // Handle 3D image upload - Convert to WebP 870x420
+        // Handle 3D image upload - Convert to WebP 1080x1080
         if ($request->hasFile('image_3d')) {
             if ($floor->image_3d) {
                 Storage::disk('public')->delete(ltrim($floor->image_3d, '/'));
             }
-            $data['image_3d'] = $this->handleImageUpload($request->file('image_3d'), 870, 420, '3d');
+            $data['image_3d'] = $this->handleImageUpload($request->file('image_3d'), 1080, 1080, '3d');
         }
 
-        // Handle 2D image upload - Convert to WebP 870x420
+        // Handle 2D image upload - Convert to WebP 1080x1080
         if ($request->hasFile('image_2d')) {
             if ($floor->image_2d) {
                 Storage::disk('public')->delete(ltrim($floor->image_2d, '/'));
             }
-            $data['image_2d'] = $this->handleImageUpload($request->file('image_2d'), 870, 420, '2d');
+            $data['image_2d'] = $this->handleImageUpload($request->file('image_2d'), 1080, 1080, '2d');
         }
 
         $floor->update($data);

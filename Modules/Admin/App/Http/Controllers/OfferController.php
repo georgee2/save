@@ -85,24 +85,9 @@ class OfferController extends Controller
         // Auto-generate slug from English title
         $data['slug'] = Str::slug($data['title_english']);
 
-        // Handle main_image upload (1080x1080)
+        // Handle main_image upload (903x1146)
         if ($request->hasFile('main_image')) {
-            $data['main_image'] = $this->handleImageUpload($request->file('main_image'), 1080, 1080, 'offers/main');
-        }
-
-        // Handle cover_image upload (1890x420)
-        if ($request->hasFile('cover_image')) {
-            $data['cover_image'] = $this->handleImageUpload($request->file('cover_image'), 1890, 420, 'offers/cover');
-        }
-
-        // Handle page_image upload (868x450)
-        if ($request->hasFile('page_image')) {
-            $data['page_image'] = $this->handleImageUpload($request->file('page_image'), 868, 450, 'offers/page');
-        }
-
-        // Handle site_image upload (420x420)
-        if ($request->hasFile('site_image')) {
-            $data['site_image'] = $this->handleImageUpload($request->file('site_image'), 420, 420, 'offers/site');
+            $data['main_image'] = $this->handleImageUpload($request->file('main_image'), 903, 1146, 'offers/main');
         }
 
         // Handle plan_2d_image upload (PDF file)
@@ -110,9 +95,9 @@ class OfferController extends Controller
             $data['plan_2d_image'] = $this->handlePdfUpload($request->file('plan_2d_image'), 'offers/files');
         }
 
-        // Handle plan_3d_image upload (870x420)
+        // Handle plan_3d_image upload (903x1146)
         if ($request->hasFile('plan_3d_image')) {
-            $data['plan_3d_image'] = $this->handleImageUpload($request->file('plan_3d_image'), 870, 420, 'offers/plans_3d');
+            $data['plan_3d_image'] = $this->handleImageUpload($request->file('plan_3d_image'), 903, 1146, 'offers/plans_3d');
         }
 
         // SEO Tags Insertion (Helper Function)
@@ -179,36 +164,12 @@ class OfferController extends Controller
         // Auto-generate slug from English title
         $data['slug'] = Str::slug($data['title_english']);
 
-        // Handle main_image upload (1080x1080)
+        // Handle main_image upload (903x1146)
         if ($request->hasFile('main_image')) {
             if ($offer->main_image) {
                 Storage::disk('public')->delete(ltrim($offer->main_image, '/'));
             }
-            $data['main_image'] = $this->handleImageUpload($request->file('main_image'), 1080, 1080, 'offers/main');
-        }
-
-        // Handle cover_image upload (1890x420)
-        if ($request->hasFile('cover_image')) {
-            if ($offer->cover_image) {
-                Storage::disk('public')->delete(ltrim($offer->cover_image, '/'));
-            }
-            $data['cover_image'] = $this->handleImageUpload($request->file('cover_image'), 1890, 420, 'offers/cover');
-        }
-
-        // Handle page_image upload (868x450)
-        if ($request->hasFile('page_image')) {
-            if ($offer->page_image) {
-                Storage::disk('public')->delete(ltrim($offer->page_image, '/'));
-            }
-            $data['page_image'] = $this->handleImageUpload($request->file('page_image'), 868, 450, 'offers/page');
-        }
-
-        // Handle site_image upload (420x420)
-        if ($request->hasFile('site_image')) {
-            if ($offer->site_image) {
-                Storage::disk('public')->delete(ltrim($offer->site_image, '/'));
-            }
-            $data['site_image'] = $this->handleImageUpload($request->file('site_image'), 420, 420, 'offers/site');
+            $data['main_image'] = $this->handleImageUpload($request->file('main_image'), 903, 1146, 'offers/main');
         }
 
         // Handle plan_2d_image upload (PDF file)
@@ -219,12 +180,12 @@ class OfferController extends Controller
             $data['plan_2d_image'] = $this->handlePdfUpload($request->file('plan_2d_image'), 'offers/files');
         }
 
-        // Handle plan_3d_image upload (870x420)
+        // Handle plan_3d_image upload (903x1146)
         if ($request->hasFile('plan_3d_image')) {
             if ($offer->plan_3d_image) {
                 Storage::disk('public')->delete(ltrim($offer->plan_3d_image, '/'));
             }
-            $data['plan_3d_image'] = $this->handleImageUpload($request->file('plan_3d_image'), 870, 420, 'offers/plans_3d');
+            $data['plan_3d_image'] = $this->handleImageUpload($request->file('plan_3d_image'), 903, 1146, 'offers/plans_3d');
         }
 
         // SEO Tags Insertion (Helper Function)
@@ -336,7 +297,7 @@ class OfferController extends Controller
     }
     
     /**
-     * Handle image upload, convert to WebP and resize
+     * Handle image upload, convert to WebP and resize to exact dimensions
      * 
      * @param \Illuminate\Http\UploadedFile $file
      * @param int $width
@@ -349,12 +310,13 @@ class OfferController extends Controller
         // Generate unique filename
         $filename = time() . '_' . uniqid() . '.webp';
         
-        // Create image instance and resize
+        // Create image instance, resize maintaining aspect ratio, then add canvas for exact dimensions
         $image = Image::make($file->getRealPath())
             ->resize($width, $height, function ($constraint) {
                 $constraint->aspectRatio();
                 $constraint->upsize();
             })
+            ->resizeCanvas($width, $height, 'center', false, '#ffffff')
             ->encode('webp', 80);
         
         // Save image using Storage::disk('public')
