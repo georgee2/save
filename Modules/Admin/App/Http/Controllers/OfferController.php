@@ -26,12 +26,81 @@ class OfferController extends Controller
     /**
      * Display a listing of offers
      */
-    public function index()
+    public function index(Request $request)
     {
-        $offers = $this->offer->list();
+        $query = Offer::query()
+            ->leftJoin('offer_categories as oc', 'offers.category_id', '=', 'oc.id')
+            ->leftJoin('offer_sub_categories as osc', 'offers.subcategory_id', '=', 'osc.id')
+            ->leftJoin('project_types as pt', 'offers.type_id', '=', 'pt.id')
+            ->leftJoin('project_styles as ps', 'offers.style_id', '=', 'ps.id')
+            ->select(
+                'offers.id',
+                'offers.offer_code',
+                'offers.title_english',
+                'offers.title_arabic',
+                'oc.title_english as category_name',
+                'osc.title_english as subcategory_name',
+                'pt.name_english as type_name',
+                'ps.title_english as style_name',
+                'offers.publish_status',
+                'offers.home_status',
+                'offers.created_at'
+            )
+            ->whereNull('offers.deleted_at');
+
+        // Apply filters
+        if ($request->filled('offer_id')) {
+            $query->where('offers.id', $request->offer_id);
+        }
+        if ($request->filled('offer_code')) {
+            $query->where('offers.offer_code', 'like', '%' . $request->offer_code . '%');
+        }
+        if ($request->filled('title')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('offers.title_english', 'like', '%' . $request->title . '%')
+                  ->orWhere('offers.title_arabic', 'like', '%' . $request->title . '%');
+            });
+        }
+        if ($request->filled('category_id')) {
+            $query->where('offers.category_id', $request->category_id);
+        }
+        if ($request->filled('subcategory_id')) {
+            $query->where('offers.subcategory_id', $request->subcategory_id);
+        }
+        if ($request->filled('type_id')) {
+            $query->where('offers.type_id', $request->type_id);
+        }
+        if ($request->filled('style_id')) {
+            $query->where('offers.style_id', $request->style_id);
+        }
+        if ($request->filled('publish_status')) {
+            $query->where('offers.publish_status', $request->publish_status);
+        }
+        if ($request->filled('home_status')) {
+            $query->where('offers.home_status', $request->home_status);
+        }
+
+        // Order by newest first and paginate
+        $offers = $query->orderBy('offers.created_at', 'desc')->paginate(15)->withQueryString();
         
+        // Get filter options
+        $categories = OfferCategory::whereNull('deleted_at')->orderBy('title_english')->get();
+        $subcategories = collect();
+        if ($request->filled('category_id')) {
+            $subcategories = OfferSubCategory::where('category_id', $request->category_id)
+                ->whereNull('deleted_at')
+                ->orderBy('title_english')
+                ->get();
+        }
+        $types = ProjectType::whereNull('deleted_at')->orderBy('name_english')->get();
+        $styles = ProjectStyle::whereNull('deleted_at')->orderBy('title_english')->get();
+
         return view('admin::offers.index', [
-            'offers' => $offers
+            'offers' => $offers,
+            'categories' => $categories,
+            'subcategories' => $subcategories,
+            'types' => $types,
+            'styles' => $styles,
         ]);
     }
 
@@ -105,7 +174,11 @@ class OfferController extends Controller
             $data['seo_tags'] = tags($request->seo_tags);
         }
 
-        Offer::create($data);
+        $offer = Offer::create($data);
+
+        // Generate offer code after creation to use the offer ID
+        $offer->offer_code = Offer::generateOfferCode($offer->id, $offer->category_id, $offer->subcategory_id);
+        $offer->save();
 
         return redirect()->route('offer.index')->with('success', 'Offer created successfully!');
     }
@@ -121,6 +194,12 @@ class OfferController extends Controller
         $currencies = Currency::where('status', 0)->whereNull('deleted_at')->orderBy('name_english')->get();
         $styles = ProjectStyle::whereNull('deleted_at')->orderBy('title_english')->get();
         $types = ProjectType::whereNull('deleted_at')->orderBy('name_english')->get();
+        
+        // Generate offer code if it's null (for existing offers without codes)
+        if (is_null($offer->offer_code)) {
+            $offer->offer_code = Offer::generateOfferCode($offer->id, $offer->category_id, $offer->subcategory_id);
+            $offer->save();
+        }
         
         return view('admin::offers.edit', compact('offer', 'categories', 'subcategories', 'currencies', 'styles', 'types'));
     }
@@ -191,6 +270,18 @@ class OfferController extends Controller
         // SEO Tags Insertion (Helper Function)
         if($request->seo_tags != null) {
             $data['seo_tags'] = tags($request->seo_tags);
+        }
+        
+        // Check if category or subcategory changed - need to regenerate offer code
+        $regenerateCode = (
+            $offer->category_id != $data['category_id'] || 
+            $offer->subcategory_id != ($data['subcategory_id'] ?? null) ||
+            is_null($offer->offer_code) // Also regenerate if code is null
+        );
+        
+        // Regenerate offer code if category/subcategory changed or if it's null
+        if ($regenerateCode) {
+            $data['offer_code'] = Offer::generateOfferCode($offer->id, $data['category_id'], $data['subcategory_id'] ?? null);
         }
 
         $offer->update($data);

@@ -33,13 +33,15 @@
                   <div class="d-flex justify-content-md-end align-items-center">
                     <div class="input-group border rounded input-group-lg w-auto bg-white mr-3">
                       <label class="input-group-text bg-transparent border-0 text-uppercase letter-spacing-093 pr-1 pl-3"
-								       for="inputGroupSelect01"><i
+								       for="sortbySelect"><i
 										class="fas fa-align-left fs-16 pr-2"></i>{{ __('lang.sortby') }}:</label>
-                      <select class="form-control border-0 bg-transparent shadow-none p-0 selectpicker sortby"
+                      <select class="form-control border-0 bg-transparent shadow-none p-0 selectpicker sortby-select"
 								        data-style="bg-transparent border-0 font-weight-600 btn-lg pl-0 pr-3"
-								        id="inputGroupSelect01" name="sortby">
-                        <option selected>{{ __('lang.newest') }}</option>
-                        <option value="1">{{ __('lang.oldest') }}</option>
+								        id="sortbySelect" name="sortby">
+                        <option value="newest" {{ request('sortby', 'newest') == 'newest' ? 'selected' : '' }}>{{ __('lang.newest') }}</option>
+                        <option value="oldest" {{ request('sortby') == 'oldest' ? 'selected' : '' }}>{{ __('lang.oldest') }}</option>
+                        <option value="area_low" {{ request('sortby') == 'area_low' ? 'selected' : '' }}>{{ __('lang.area_low_to_high') }}</option>
+                        <option value="area_high" {{ request('sortby') == 'area_high' ? 'selected' : '' }}>{{ __('lang.area_high_to_low') }}</option>
                       </select>
                     </div>
                     <div class="d-none d-md-block">
@@ -283,202 +285,17 @@
               </nav>
               @endif
             </div>
-            <div class="col-lg-4 primary-sidebar sidebar-sticky" id="sidebar">
-              <div class="primary-sidebar-inner">
-                <div class="card border-0 mb-4">
-                  <div class="card-body pl-0 pl-lg-6 pr-0 pt-2 pb-4">
-                    <h4 class="card-title fs-16 lh-2 text-dark mb-3">Find your home</h4>
-                    <form>
-                      <div class="form-group">
-                        <label for="key-word" class="sr-only">Key Word</label>
-                        <input type="text" class="form-control form-control-lg border-0 shadow-none"
-									       id="key-word"
-									       placeholder="Enter keyword...">
-                      </div>
-                      <div class="form-group">
-                        <label for="location" class="sr-only">Location</label>
-                        <select class="form-control border-0 shadow-none form-control-lg selectpicker"
-									        title="Location" data-style="btn-lg py-2 h-52" id="location">
-                          <option>Austin</option>
-                          <option>Boston</option>
-                          <option>Chicago</option>
-                          <option>Denver</option>
-                          <option>Los Angeles</option>
-                          <option>New York</option>
-                          <option>San Francisco</option>
-                        </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="type" class="sr-only">Type</label>
-                        <select class="form-control border-0 shadow-none form-control-lg selectpicker"
-									        title="All Types" data-style="btn-lg py-2 h-52" id="type">
-                          <option>Apartment</option>
-                          <option>Condo</option>
-                          <option>Lot</option>
-                          <option>Multi Family Home</option>
-                          <option>Office</option>
-                          <option>Shop</option>
-                        </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="status" class="sr-only">Status</label>
-                        <select class="form-control border-0 shadow-none form-control-lg selectpicker"
-									        title="All Status" data-style="btn-lg py-2 h-52" id="status">
-                          <option>For Rent</option>
-                          <option>For Sale</option>
-                        </select>
-                      </div>
-                      <div class="form-row mb-4">
-                        <div class="col">
-                          <label for="bed" class="sr-only">Beds</label>
-                          <select class="form-control border-0 shadow-none form-control-lg selectpicker"
-										        title="Beds" data-style="btn-lg py-2 h-52" id="bed">
-                            <option>3</option>
-                            <option>4</option>
-                          </select>
-                        </div>
-                        <div class="col">
-                          <label for="baths" class="sr-only">Baths</label>
-                          <select class="form-control border-0 shadow-none form-control-lg selectpicker"
-										        title="Baths" data-style="btn-lg py-2 h-52" id="baths">
-                            <option>3</option>
-                            <option>4</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="form-group slider-range slider-range-secondary">
-                        <label for="price" class="mb-4 text-gray-light">Price Range</label>
-                        <div data-slider="true"
-									     data-slider-options='{"min":0,"max":8000000,"values":[1000000,5000000],"type":"currency"}'></div>
-                        <div class="text-center mt-2">
-                          <input id="price" type="text" readonly
-										       class="border-0 amount text-center text-body font-weight-500">
-                        </div>
-                      </div>
-                      <div class="form-group slider-range slider-range-secondary">
-                        <label for="area-size" class="mb-4 text-gray-light">Area Size</label>
-                        <div data-slider="true"
-									     data-slider-options='{"min":0,"max":15000,"values":[50,15000],"type":"sqrt"}'></div>
-                        <div class="text-center mt-2">
-                          <input id="area-size" type="text" readonly
-										       class="border-0 amount text-center text-body font-weight-500">
-                        </div>
-                      </div>
-                      <a class="lh-17 d-inline-block" data-toggle="collapse" href="#other-feature"
-								   role="button"
-								   aria-expanded="false" aria-controls="other-feature">
-                        <span class="text-primary d-inline-block mr-1"><i
-											class="far fa-plus-square"></i></span>
-                        <span class="fs-15 text-heading font-weight-500 hover-primary">Other Features</span>
-                      </a>
-                      <div class="collapse" id="other-feature">
-                        <div class="card card-body border-0 px-0 pb-0 pt-3">
-                          <ul class="list-group list-group-no-border">
-                            <li class="list-group-item px-0 pt-0 pb-2">
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="check1">
-                                <label class="custom-control-label" for="check1">Air
-                                  Conditioning</label>
-                              </div>
-                            </li>
-                            <li class="list-group-item px-0 pt-0 pb-2">
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="check2">
-                                <label class="custom-control-label" for="check2">Laundry</label>
-                              </div>
-                            </li>
-                            <li class="list-group-item px-0 pt-0 pb-2">
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="check3">
-                                <label class="custom-control-label"
-													       for="check3">Refrigerator</label>
-                              </div>
-                            </li>
-                            <li class="list-group-item px-0 pt-0 pb-2">
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="check4">
-                                <label class="custom-control-label" for="check4">Washer</label>
-                              </div>
-                            </li>
-                            <li class="list-group-item px-0 pt-0 pb-2">
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="check5">
-                                <label class="custom-control-label" for="check5">Barbeque</label>
-                              </div>
-                            </li>
-                            <li class="list-group-item px-0 pt-0 pb-2">
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="check6">
-                                <label class="custom-control-label" for="check6">Lawn</label>
-                              </div>
-                            </li>
-                            <li class="list-group-item px-0 pt-0 pb-2">
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="check7">
-                                <label class="custom-control-label" for="check7">Sauna</label>
-                              </div>
-                            </li>
-                            <li class="list-group-item px-0 pt-0 pb-2">
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="check8">
-                                <label class="custom-control-label" for="check8">WiFi</label>
-                              </div>
-                            </li>
-                            <li class="list-group-item px-0 pt-0 pb-2">
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="check9">
-                                <label class="custom-control-label" for="check9">Dryer</label>
-                              </div>
-                            </li>
-                            <li class="list-group-item px-0 pt-0 pb-2">
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="check10">
-                                <label class="custom-control-label" for="check10">Microwave</label>
-                              </div>
-                            </li>
-                            <li class="list-group-item px-0 pt-0 pb-2">
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="check11">
-                                <label class="custom-control-label" for="check11">Swimming
-                                  Pool</label>
-                              </div>
-                            </li>
-                            <li class="list-group-item px-0 pt-0 pb-2">
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="check12">
-                                <label class="custom-control-label" for="check12">Window
-                                  Coverings</label>
-                              </div>
-                            </li>
-                            <li class="list-group-item px-0 pt-0 pb-2">
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="check13">
-                                <label class="custom-control-label" for="check13">Gym</label>
-                              </div>
-                            </li>
-                            <li class="list-group-item px-0 pt-0 pb-2">
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="check14">
-                                <label class="custom-control-label" for="check14">Outdoor
-                                  Shower</label>
-                              </div>
-                            </li>
-                            <li class="list-group-item px-0 pt-0 pb-2">
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="check15">
-                                <label class="custom-control-label" for="check15">TV Cable</label>
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                      <button type="submit" class="btn btn-primary btn-lg btn-block shadow-none mt-4">Search
-                      </button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
+            @include('pages.projects.partials.filter-sidebar', [
+                'formAction' => route('category.show', $category->slug),
+                'categories' => $categories,
+                'subcategories' => $subcategories,
+                'styles' => $styles,
+                'types' => $types,
+                'specifications' => $specifications,
+                'specificationValues' => $specificationValues ?? [],
+                'hideCategory' => true,
+                'currentCategory' => $category
+            ])
           </div>
         </div>
       </section>
@@ -488,6 +305,7 @@
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('/assets/css/category-page.css') }}">
+<link rel="stylesheet" href="{{ asset('/assets/css/area-slider.css') }}">
 @endsection
 
 @section('js')
@@ -514,6 +332,110 @@ $(document).ready(function() {
     
     // Set initial state
     $('#listViewBtn').addClass('opacity-2');
+    
+    // Auto-submit for filter dropdowns
+    $('.filter-select').on('changed.bs.select', function() {
+        $('#projectFilterForm').submit();
+    });
+    
+    // SQFT Range Slider
+    $("#sqft-slider").slider({
+        range: true,
+        min: 50,
+        max: 15000,
+        values: [{{ request('sqft_min', 50) }}, {{ request('sqft_max', 15000) }}],
+        slide: function(event, ui) {
+            $("#sqft-range-display").text(ui.values[0] + " {{ __('lang.sqft') }} {{ __('lang.to') }} " + ui.values[1] + " {{ __('lang.sqft') }}");
+            $("#sqft_min").val(ui.values[0]);
+            $("#sqft_max").val(ui.values[1]);
+        },
+        change: function(event, ui) {
+            var defaultMin = 50, defaultMax = 15000;
+            if (ui.values[0] !== defaultMin || ui.values[1] !== defaultMax) {
+                $('#projectFilterForm').submit();
+            }
+        }
+    });
+    $("#sqft-range-display").text($("#sqft-slider").slider("values", 0) + " {{ __('lang.sqft') }} {{ __('lang.to') }} " + $("#sqft-slider").slider("values", 1) + " {{ __('lang.sqft') }}");
+    
+    // SQM Range Slider
+    $("#sqm-slider").slider({
+        range: true,
+        min: 5,
+        max: 1400,
+        values: [{{ request('sqm_min', 5) }}, {{ request('sqm_max', 1400) }}],
+        slide: function(event, ui) {
+            $("#sqm-range-display").text(ui.values[0] + " {{ __('lang.sqm') }} {{ __('lang.to') }} " + ui.values[1] + " {{ __('lang.sqm') }}");
+            $("#sqm_min").val(ui.values[0]);
+            $("#sqm_max").val(ui.values[1]);
+        },
+        change: function(event, ui) {
+            var defaultMin = 5, defaultMax = 1400;
+            if (ui.values[0] !== defaultMin || ui.values[1] !== defaultMax) {
+                $('#projectFilterForm').submit();
+            }
+        }
+    });
+    $("#sqm-range-display").text($("#sqm-slider").slider("values", 0) + " {{ __('lang.sqm') }} {{ __('lang.to') }} " + $("#sqm-slider").slider("values", 1) + " {{ __('lang.sqm') }}");
+    
+    // Specification dropdown - load values dynamically
+    $('#specification_id').on('changed.bs.select', function() {
+        var specId = $(this).val();
+        var $valueSelect = $('#specification_value');
+        
+        if (specId) {
+            $.ajax({
+                url: "{{ route('projects.specification-values') }}",
+                type: 'GET',
+                data: { specification_id: specId },
+                success: function(response) {
+                    $valueSelect.empty();
+                    $valueSelect.append('<option value="">{{ __('lang.select_value') }}</option>');
+                    if (response.values && response.values.length > 0) {
+                        $.each(response.values, function(index, value) {
+                            $valueSelect.append('<option value="' + value + '">' + value + '</option>');
+                        });
+                        $valueSelect.prop('disabled', false);
+                    } else {
+                        $valueSelect.prop('disabled', true);
+                    }
+                    $valueSelect.selectpicker('refresh');
+                }
+            });
+        } else {
+            $valueSelect.empty();
+            $valueSelect.append('<option value="">{{ __('lang.select_value') }}</option>');
+            $valueSelect.prop('disabled', true);
+            $valueSelect.selectpicker('refresh');
+        }
+    });
+    
+    // Specification value dropdown - auto submit
+    $('#specification_value').on('changed.bs.select', function() {
+        if ($(this).val()) {
+            $('#projectFilterForm').submit();
+        }
+    });
+    
+    // Sort by change - auto submit
+    $('.sortby-select').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
+        var sortby = $(this).val();
+        if (sortby) {
+            var url = new URL(window.location.href);
+            url.searchParams.set('sortby', sortby);
+            window.location.href = url.toString();
+        }
+    });
+    
+    // Fallback for native change event
+    $('#sortbySelect').on('change', function() {
+        var sortby = $(this).val();
+        if (sortby) {
+            var url = new URL(window.location.href);
+            url.searchParams.set('sortby', sortby);
+            window.location.href = url.toString();
+        }
+    });
 });
 </script>
 @endsection

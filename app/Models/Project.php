@@ -182,6 +182,7 @@ class Project extends Model
             ->leftJoin('project_styles as ps', 'p.style_id', '=', 'ps.id')
             ->leftJoin('project_types as pt', 'p.type_id', '=', 'pt.id')
             ->leftJoin('partners as pa', 'p.partner_id', '=', 'pa.id')
+            ->leftJoin('emirates as em', 'p.emirate_id', '=', 'em.id')
             ->select(
                 'p.*',
                 'ec.title_english as category_name_en',
@@ -195,11 +196,50 @@ class Project extends Model
                 'pt.name_english as type_name_en',
                 'pt.name_arabic as type_name_ar',
                 'pa.name_english as partner_name_en',
-                'pa.name_arabic as partner_name_ar'
+                'pa.name_arabic as partner_name_ar',
+                'em.title_english as emirate_name_en',
+                'em.title_arabic as emirate_name_ar'
             )
             ->where('p.id', $id)
             ->whereNull('p.deleted_at')
             ->first();
+    }
+    
+    /**
+     * Generate project code: TYPE + CATEGORY + SUBCATEGORY + ID
+     */
+    public static function generateProjectCode($projectId, $typeId, $categoryId, $subcategoryId)
+    {
+        $code = '';
+        
+        // Get type abbreviation (first 3 characters uppercase)
+        if ($typeId) {
+            $type = ProjectType::find($typeId);
+            if ($type) {
+                $code .= strtoupper(substr(preg_replace('/[^a-zA-Z]/', '', $type->name_english), 0, 3));
+            }
+        }
+        
+        // Get category abbreviation (first 3 characters uppercase)
+        if ($categoryId) {
+            $category = EngineeringCategory::find($categoryId);
+            if ($category) {
+                $code .= '-' . strtoupper(substr(preg_replace('/[^a-zA-Z]/', '', $category->title_english), 0, 3));
+            }
+        }
+        
+        // Get subcategory abbreviation (first 3 characters uppercase)
+        if ($subcategoryId) {
+            $subcategory = EngineeringSubCategory::find($subcategoryId);
+            if ($subcategory) {
+                $code .= '-' . strtoupper(substr(preg_replace('/[^a-zA-Z]/', '', $subcategory->title_english), 0, 3));
+            }
+        }
+        
+        // Add project ID padded to 4 digits
+        $code .= '-' . str_pad($projectId, 4, '0', STR_PAD_LEFT);
+        
+        return $code;
     }
 }
 

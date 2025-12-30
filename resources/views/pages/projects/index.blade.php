@@ -32,13 +32,15 @@
                   <div class="d-flex justify-content-md-end align-items-center">
                     <div class="input-group border rounded input-group-lg w-auto bg-white mr-3">
                       <label class="input-group-text bg-transparent border-0 text-uppercase letter-spacing-093 pr-1 pl-3"
-								       for="inputGroupSelect01"><i
+								       for="sortbySelect"><i
 										class="fas fa-align-left fs-16 pr-2"></i>{{ __('lang.sortby') }}:</label>
-                      <select class="form-control border-0 bg-transparent shadow-none p-0 selectpicker sortby"
+                      <select class="form-control border-0 bg-transparent shadow-none p-0 selectpicker sortby-select"
 								        data-style="bg-transparent border-0 font-weight-600 btn-lg pl-0 pr-3"
-								        id="inputGroupSelect01" name="sortby">
-                        <option selected>{{ __('lang.newest') }}</option>
-                        <option value="1">{{ __('lang.oldest') }}</option>
+								        id="sortbySelect" name="sortby">
+                        <option value="newest" {{ request('sortby', 'newest') == 'newest' ? 'selected' : '' }}>{{ __('lang.newest') }}</option>
+                        <option value="oldest" {{ request('sortby') == 'oldest' ? 'selected' : '' }}>{{ __('lang.oldest') }}</option>
+                        <option value="area_low" {{ request('sortby') == 'area_low' ? 'selected' : '' }}>{{ __('lang.area_low_to_high') }}</option>
+                        <option value="area_high" {{ request('sortby') == 'area_high' ? 'selected' : '' }}>{{ __('lang.area_high_to_low') }}</option>
                       </select>
                     </div>
                     <div class="d-none d-md-block">
@@ -282,84 +284,15 @@
               </nav>
               @endif
             </div>
-            <div class="col-lg-4 primary-sidebar sidebar-sticky" id="sidebar">
-              <div class="primary-sidebar-inner">
-                <div class="card border-0 mb-4">
-                  <div class="card-body pl-0 pl-lg-6 pr-0 pt-2 pb-4">
-                    <h4 class="card-title fs-16 lh-2 text-dark mb-3">{{ __('lang.find_your_project') }}</h4>
-                    <form>
-                      <div class="form-group">
-                        <label for="key-word" class="sr-only">{{ __('lang.keyword') }}</label>
-                        <input type="text" class="form-control form-control-lg border-0 shadow-none"
-									       id="key-word"
-									       placeholder="{{ __('lang.enter_keyword') }}">
-                      </div>
-                      <div class="form-group">
-                        <label for="category" class="sr-only">{{ __('lang.category') }}</label>
-                        <select class="form-control border-0 shadow-none form-control-lg selectpicker"
-									        title="{{ __('lang.all_categories') }}" data-style="btn-lg py-2 h-52" id="category">
-                          @foreach($categories as $cat)
-                          <option value="{{ $cat->id }}">{{ app()->getLocale() == 'ar' ? $cat->title_arabic : $cat->title_english }}</option>
-                          @endforeach
-                        </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="subcategory" class="sr-only">{{ __('lang.subcategory') }}</label>
-                        <select class="form-control border-0 shadow-none form-control-lg selectpicker"
-									        title="{{ __('lang.all_subcategories') }}" data-style="btn-lg py-2 h-52" id="subcategory">
-                          @foreach($subcategories as $subcat)
-                          <option value="{{ $subcat->id }}">{{ app()->getLocale() == 'ar' ? $subcat->title_arabic : $subcat->title_english }}</option>
-                          @endforeach
-                        </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="style" class="sr-only">{{ __('lang.style') }}</label>
-                        <select class="form-control border-0 shadow-none form-control-lg selectpicker"
-									        title="{{ __('lang.all_styles') }}" data-style="btn-lg py-2 h-52" id="style">
-                          @foreach($styles as $style)
-                          <option value="{{ $style->id }}">{{ app()->getLocale() == 'ar' ? $style->title_arabic : $style->title_english }}</option>
-                          @endforeach
-                        </select>
-                      </div>
-                      <div class="form-group slider-range slider-range-secondary">
-                        <label for="area-size" class="mb-4 text-gray-light">{{ __('lang.area_size') }}</label>
-                        <div data-slider="true"
-									     data-slider-options='{"min":0,"max":15000,"values":[50,15000],"type":"sqrt"}'></div>
-                        <div class="text-center mt-2">
-                          <input id="area-size" type="text" readonly
-										       class="border-0 amount text-center text-body font-weight-500">
-                        </div>
-                      </div>
-                      <a class="lh-17 d-inline-block" data-toggle="collapse" href="#other-feature"
-								   role="button"
-								   aria-expanded="false" aria-controls="other-feature">
-                        <span class="text-primary d-inline-block mr-1"><i
-											class="far fa-plus-square"></i></span>
-                        <span class="fs-15 text-heading font-weight-500 hover-primary">{{ __('lang.other_features') }}</span>
-                      </a>
-                      <div class="collapse" id="other-feature">
-                        <div class="card card-body border-0 px-0 pb-0 pt-3">
-                          <ul class="list-group list-group-no-border">
-                            @foreach($specifications as $spec)
-                            <li class="list-group-item px-0 pt-0 pb-2">
-                              <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="spec{{ $spec->id }}" name="specifications[]" value="{{ $spec->id }}">
-                                <label class="custom-control-label" for="spec{{ $spec->id }}">
-                                  {{ app()->getLocale() == 'ar' ? $spec->title_arabic : $spec->title_english }}
-                                </label>
-                              </div>
-                            </li>
-                            @endforeach
-                          </ul>
-                        </div>
-                      </div>
-                      <button type="submit" class="btn btn-primary btn-lg btn-block shadow-none mt-4">{{ __('lang.search') }}
-                      </button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
+            @include('pages.projects.partials.filter-sidebar', [
+                'formAction' => route('projects.index'),
+                'categories' => $categories,
+                'subcategories' => $subcategories,
+                'styles' => $styles,
+                'types' => $types,
+                'specifications' => $specifications,
+                'specificationValues' => $specificationValues ?? []
+            ])
           </div>
         </div>
       </section>
@@ -369,6 +302,7 @@
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('/assets/css/category-page.css') }}">
+<link rel="stylesheet" href="{{ asset('/assets/css/area-slider.css') }}?v={{ time() }}">
 @endsection
 
 @section('js')
@@ -395,6 +329,149 @@ $(document).ready(function() {
     
     // Set initial state
     $('#listViewBtn').addClass('opacity-2');
+    
+    // Initialize SQFT Range Slider
+    var sqftMinDefault = 50;
+    var sqftMaxDefault = 15000;
+    var sqftMinVal = {{ request('sqft_min', 50) ?: 50 }};
+    var sqftMaxVal = {{ request('sqft_max', 15000) ?: 15000 }};
+    
+    $("#sqft-slider").slider({
+        range: true,
+        min: sqftMinDefault,
+        max: sqftMaxDefault,
+        values: [sqftMinVal, sqftMaxVal],
+        slide: function(event, ui) {
+            $("#sqft-range-display").text(ui.values[0] + " {{ __('lang.sqft') }} {{ __('lang.to') }} " + ui.values[1] + " {{ __('lang.sqft') }}");
+            $("#sqft_min").val(ui.values[0]);
+            $("#sqft_max").val(ui.values[1]);
+        },
+        stop: function(event, ui) {
+            // Submit form after slider stops
+            if (ui.values[0] !== sqftMinDefault || ui.values[1] !== sqftMaxDefault) {
+                $('#projectFilterForm').submit();
+            }
+        }
+    });
+    $("#sqft-range-display").text(sqftMinVal + " {{ __('lang.sqft') }} {{ __('lang.to') }} " + sqftMaxVal + " {{ __('lang.sqft') }}");
+    
+    // Initialize SQM Range Slider
+    var sqmMinDefault = 5;
+    var sqmMaxDefault = 1400;
+    var sqmMinVal = {{ request('sqm_min', 5) ?: 5 }};
+    var sqmMaxVal = {{ request('sqm_max', 1400) ?: 1400 }};
+    
+    $("#sqm-slider").slider({
+        range: true,
+        min: sqmMinDefault,
+        max: sqmMaxDefault,
+        values: [sqmMinVal, sqmMaxVal],
+        slide: function(event, ui) {
+            $("#sqm-range-display").text(ui.values[0] + " {{ __('lang.sqm') }} {{ __('lang.to') }} " + ui.values[1] + " {{ __('lang.sqm') }}");
+            $("#sqm_min").val(ui.values[0]);
+            $("#sqm_max").val(ui.values[1]);
+        },
+        stop: function(event, ui) {
+            // Submit form after slider stops
+            if (ui.values[0] !== sqmMinDefault || ui.values[1] !== sqmMaxDefault) {
+                $('#projectFilterForm').submit();
+            }
+        }
+    });
+    $("#sqm-range-display").text(sqmMinVal + " {{ __('lang.sqm') }} {{ __('lang.to') }} " + sqmMaxVal + " {{ __('lang.sqm') }}");
+    
+    // Sort by change - auto submit
+    $('.sortby-select').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
+        var sortby = $(this).val();
+        if (sortby) {
+            var url = new URL(window.location.href);
+            url.searchParams.set('sortby', sortby);
+            window.location.href = url.toString();
+        }
+    });
+    
+    // Also bind on native change event as fallback
+    $('#sortbySelect').on('change', function() {
+        var sortby = $(this).val();
+        if (sortby) {
+            var url = new URL(window.location.href);
+            url.searchParams.set('sortby', sortby);
+            window.location.href = url.toString();
+        }
+    });
+    
+    // Auto-submit for filter dropdowns
+    $('.filter-select').on('changed.bs.select', function() {
+        $('#projectFilterForm').submit();
+    });
+    
+    // Dynamic subcategory filtering based on category selection
+    $('#category_id').on('changed.bs.select', function() {
+        var categoryId = $(this).val();
+        if (categoryId) {
+            // Filter subcategories based on selected category
+            $('#subcategory_id option').each(function() {
+                var $option = $(this);
+                var optionCategoryId = $option.data('category');
+                if (optionCategoryId && optionCategoryId != categoryId) {
+                    $option.hide();
+                } else {
+                    $option.show();
+                }
+            });
+            $('#subcategory_id').selectpicker('refresh');
+        } else {
+            // Show all subcategories
+            $('#subcategory_id option').show();
+            $('#subcategory_id').selectpicker('refresh');
+        }
+    });
+    
+    // Dynamic specification value loading based on specification selection
+    $('#specification_id').on('changed.bs.select', function() {
+        var specId = $(this).val();
+        var $valueSelect = $('#specification_value');
+        
+        if (specId) {
+            // Enable the value dropdown and load values via AJAX
+            $valueSelect.prop('disabled', false);
+            
+            $.ajax({
+                url: '{{ route("projects.specification-values") }}',
+                type: 'GET',
+                data: { specification_id: specId },
+                success: function(response) {
+                    // Clear existing options except the first one
+                    $valueSelect.find('option:not(:first)').remove();
+                    
+                    // Add new options
+                    if (response.values && response.values.length > 0) {
+                        $.each(response.values, function(index, value) {
+                            $valueSelect.append('<option value="' + value + '">' + value + '</option>');
+                        });
+                    }
+                    
+                    // Refresh the selectpicker
+                    $valueSelect.selectpicker('refresh');
+                },
+                error: function() {
+                    console.log('Error loading specification values');
+                }
+            });
+        } else {
+            // Disable and reset the value dropdown
+            $valueSelect.prop('disabled', true);
+            $valueSelect.find('option:not(:first)').remove();
+            $valueSelect.selectpicker('refresh');
+        }
+    });
+    
+    // Auto-submit when specification value is selected
+    $('#specification_value').on('changed.bs.select', function() {
+        if ($(this).val()) {
+            $('#projectFilterForm').submit();
+        }
+    });
 });
 </script>
 @endsection

@@ -7,52 +7,78 @@ use App\Models\Project;
 use App\Models\EngineeringCategory;
 use App\Models\EngineeringSubCategory;
 use App\Models\ProjectStyle;
+use App\Models\ProjectType;
 use App\Models\Specification;
+use App\Models\ProjectSpecification;
 use App\Models\PageBanner;
+use Illuminate\Support\Facades\DB;
 
 class ProjectsController extends Controller
 {
-    public function index(Request $request)
+    /**
+     * Apply sorting to the query
+     */
+    private function applySorting($query, Request $request)
     {
-        // Get filter data
-        $categories = EngineeringCategory::whereNull('deleted_at')->orderBy('title_english')->get();
-        $subcategories = EngineeringSubCategory::whereNull('deleted_at')->orderBy('title_english')->get();
-        $styles = ProjectStyle::whereNull('deleted_at')->orderBy('title_english')->get();
-        $specifications = Specification::whereNull('deleted_at')->orderBy('title_english')->get();
+        $sortby = $request->get('sortby', 'newest');
         
-        // Build query
-        $query = Project::where('publish_status', 0)
-                       ->whereNull('deleted_at')
-                       ->with(['category', 'subcategory', 'style', 'specifications.specification'])
-                       ->withCount('images');
-        
-        // Apply filters
+        switch ($sortby) {
+            case 'oldest':
+                $query->orderBy('projects.created_at', 'ASC');
+                break;
+            case 'area_low':
+                $query->orderBy('sqft', 'ASC');
+                break;
+            case 'area_high':
+                $query->orderBy('sqft', 'DESC');
+                break;
+            case 'newest':
+            default:
+                $query->orderBy('projects.created_at', 'DESC');
+                break;
+        }
+        return $query;
+    }
+    
+    /**
+     * Apply common filters to the query
+     */
+    private function applyFilters($query, Request $request)
+    {
+        // Category filter
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
         
+        // Subcategory filter
         if ($request->filled('subcategory_id')) {
             $query->where('subcategory_id', $request->subcategory_id);
         }
         
+        // Style filter
         if ($request->filled('style_id')) {
             $query->where('style_id', $request->style_id);
         }
         
-        if ($request->filled('sqft_from')) {
-            $query->where('sqft', '>=', $request->sqft_from);
+        // Type filter
+        if ($request->filled('type_id')) {
+            $query->where('type_id', $request->type_id);
         }
         
-        if ($request->filled('sqft_to')) {
-            $query->where('sqft', '<=', $request->sqft_to);
+        // SQFT Range filter
+        if ($request->filled('sqft_min') && $request->sqft_min != 50) {
+            $query->where('sqft', '>=', $request->sqft_min);
+        }
+        if ($request->filled('sqft_max') && $request->sqft_max != 15000) {
+            $query->where('sqft', '<=', $request->sqft_max);
         }
         
-        if ($request->filled('sqm_from')) {
-            $query->where('sqm', '>=', $request->sqm_from);
+        // SQM Range filter
+        if ($request->filled('sqm_min') && $request->sqm_min != 5) {
+            $query->where('sqm', '>=', $request->sqm_min);
         }
-        
-        if ($request->filled('sqm_to')) {
-            $query->where('sqm', '<=', $request->sqm_to);
+        if ($request->filled('sqm_max') && $request->sqm_max != 1400) {
+            $query->where('sqm', '<=', $request->sqm_max);
         }
         
         // Keyword search (title and SEO tags)
@@ -65,19 +91,116 @@ class ProjectsController extends Controller
             });
         }
         
-        // Specification filter
-        if ($request->filled('specification_id') && $request->filled('specification_value')) {
-            $query->whereHas('specifications', function($q) use ($request) {
-                $q->where('specification_id', $request->specification_id)
-                  ->where(function($subQ) use ($request) {
-                      $subQ->where('value_english', 'like', "%{$request->specification_value}%")
-                           ->orWhere('value_arabic', 'like', "%{$request->specification_value}%");
-                  });
+        // Specifications filter with value
+        if ($request->filled('specification_id')) {
+            $specId = $request->specification_id;
+            $specValue = $request->get('specification_value', '');
+            
+            $query->whereHas('specifications', function($q) use ($specId, $specValue) {
+                $q->where('specification_id', $specId);
+                if (!empty($specValue)) {
+                    $q->where(function($subQ) use ($specValue) {
+                        $subQ->where('value_english', 'like', "%{$specValue}%")
+                             ->orWhere('value_arabic', 'like', "%{$specValue}%");
+                    });
+                }
             });
         }
         
+        return $query;
+    }
+    
+    /**
+     * Get filter data for views
+     */
+    private function getFilterData()
+    {
+        return [
+            'categories' => EngineeringCategory::whereNull('deleted_at')->orderBy('title_english')->get(),
+            'subcategories' => EngineeringSubCategory::whereNull('deleted_at')->orderBy('title_english')->get(),
+            'styles' => ProjectStyle::whereNull('deleted_at')->orderBy('title_english')->get(),
+            'types' => ProjectType::whereNull('deleted_at')->where('status', 0)->orderBy('name_english')->get(),
+            'specifications' => Specification::whereNull('deleted_at')->orderBy('title_english')->get(),
+        ];
+    }
+    
+    /**
+     * Get specification values for a given specification ID (AJAX endpoint)
+     */
+    public function getSpecificationValues(Request $request)
+    {
+        $specificationId = $request->get('specification_id');
+        
+        if (!$specificationId) {
+            return response()->json(['values' => []]);
+        }
+        
+        $locale = app()->getLocale();
+        $valueColumn = $locale == 'ar' ? 'value_arabic' : 'value_english';
+        
+        // Get distinct values for this specification from project_specifications
+        $values = DB::table('project_specifications')
+            ->join('projects', 'project_specifications.project_id', '=', 'projects.id')
+            ->where('project_specifications.specification_id', $specificationId)
+            ->where('projects.publish_status', 0)
+            ->whereNull('project_specifications.deleted_at')
+            ->whereNull('projects.deleted_at')
+            ->select("project_specifications.{$valueColumn} as value")
+            ->distinct()
+            ->orderBy('value')
+            ->pluck('value')
+            ->filter()
+            ->values()
+            ->toArray();
+        
+        return response()->json(['values' => $values]);
+    }
+
+    public function index(Request $request)
+    {
+        // Get filter data
+        $filterData = $this->getFilterData();
+        $categories = $filterData['categories'];
+        $subcategories = $filterData['subcategories'];
+        $styles = $filterData['styles'];
+        $types = $filterData['types'];
+        $specifications = $filterData['specifications'];
+        
+        // Get specification values if a specification is selected
+        $specificationValues = [];
+        if ($request->filled('specification_id')) {
+            $locale = app()->getLocale();
+            $valueColumn = $locale == 'ar' ? 'value_arabic' : 'value_english';
+            
+            $specificationValues = DB::table('project_specifications')
+                ->join('projects', 'project_specifications.project_id', '=', 'projects.id')
+                ->where('project_specifications.specification_id', $request->specification_id)
+                ->where('projects.publish_status', 0)
+                ->whereNull('project_specifications.deleted_at')
+                ->whereNull('projects.deleted_at')
+                ->select("project_specifications.{$valueColumn} as value")
+                ->distinct()
+                ->orderBy('value')
+                ->pluck('value')
+                ->filter()
+                ->values()
+                ->toArray();
+        }
+        
+        // Build query
+        $query = Project::where('publish_status', 0)
+                       ->whereNull('deleted_at')
+                       ->with(['category', 'subcategory', 'style', 'specifications.specification'])
+                       ->withCount('images');
+        
+        // Apply filters
+        $query = $this->applyFilters($query, $request);
+        
+        // Apply sorting
+        $query = $this->applySorting($query, $request);
+        
         // Get paginated results
-        $projects = $query->orderBy('created_at', 'DESC')->paginate(10)
+        $projects = $query->paginate(10)
             ->through(function($project) {
                 // Count videos (video_url and tour_url)
                 $videoCount = 0;
@@ -94,26 +217,59 @@ class ProjectsController extends Controller
         // Get page banner for projects page
         $pageBanner = PageBanner::getByTarget('projects');
         
-        return view('pages.projects.index', compact('projects', 'categories', 'subcategories', 'styles', 'specifications', 'pageBanner'));
+        return view('pages.projects.index', compact('projects', 'categories', 'subcategories', 'styles', 'types', 'specifications', 'specificationValues', 'pageBanner'));
     }
     
     /**
      * Display featured projects page
      */
-    public function featured()
+    public function featured(Request $request)
     {
         // Get filter data
-        $categories = EngineeringCategory::whereNull('deleted_at')->orderBy('title_english')->get();
-        $subcategories = EngineeringSubCategory::whereNull('deleted_at')->orderBy('title_english')->get();
+        $filterData = $this->getFilterData();
+        $categories = $filterData['categories'];
+        $subcategories = $filterData['subcategories'];
+        $styles = $filterData['styles'];
+        $types = $filterData['types'];
+        $specifications = $filterData['specifications'];
         
-        // Fetch featured projects (home_status = 0) with relationships
-        $projects = Project::with(['category', 'subcategory', 'specifications.specification'])
-            ->withCount('images')
-            ->where('publish_status', 0) // Published
-            ->where('home_status', 0)    // Featured (shown on home)
-            ->whereNull('deleted_at')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10)
+        // Get specification values if a specification is selected
+        $specificationValues = [];
+        if ($request->filled('specification_id')) {
+            $locale = app()->getLocale();
+            $valueColumn = $locale == 'ar' ? 'value_arabic' : 'value_english';
+            
+            $specificationValues = DB::table('project_specifications')
+                ->join('projects', 'project_specifications.project_id', '=', 'projects.id')
+                ->where('project_specifications.specification_id', $request->specification_id)
+                ->where('projects.publish_status', 0)
+                ->where('projects.home_status', 0)
+                ->whereNull('project_specifications.deleted_at')
+                ->whereNull('projects.deleted_at')
+                ->select("project_specifications.{$valueColumn} as value")
+                ->distinct()
+                ->orderBy('value')
+                ->pluck('value')
+                ->filter()
+                ->values()
+                ->toArray();
+        }
+        
+        // Build query for featured projects (home_status = 0)
+        $query = Project::where('publish_status', 0)
+                       ->where('home_status', 0)
+                       ->whereNull('deleted_at')
+                       ->with(['category', 'subcategory', 'style', 'specifications.specification'])
+                       ->withCount('images');
+        
+        // Apply filters
+        $query = $this->applyFilters($query, $request);
+        
+        // Apply sorting
+        $query = $this->applySorting($query, $request);
+        
+        // Get paginated results
+        $projects = $query->paginate(10)
             ->through(function($project) {
                 // Count videos (video_url and tour_url)
                 $videoCount = 0;
@@ -130,7 +286,9 @@ class ProjectsController extends Controller
         // Get page banner for featured projects page
         $pageBanner = PageBanner::getByTarget('featured-projects');
         
-        return view('pages.projects.featured.featured', compact('projects', 'categories', 'subcategories', 'pageBanner'));
+        return view('pages.projects.featured.featured', compact(
+            'projects', 'categories', 'subcategories', 'styles', 'types', 'specifications', 'specificationValues', 'pageBanner'
+        ));
     }
     
     public function show($slug)

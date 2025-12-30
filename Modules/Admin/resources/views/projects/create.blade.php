@@ -247,6 +247,27 @@
                             </div>
                         </div>
 
+                        <!-- Location & Cost -->
+                        <h5 class="mb-3 mt-4 text-primary">Location & Cost</h5>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label class="text-capitalize">Location (English)</label>
+                                <input class="form-control" value="{{old('location_english')}}" type="text" name="location_english" placeholder="e.g., Dubai Marina, UAE">
+                                @error('location_english')<span class="text-danger mt-1">{{ $message }}</span>@enderror
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="text-capitalize">Location (Arabic)</label>
+                                <input class="form-control" value="{{old('location_arabic')}}" type="text" name="location_arabic" placeholder="e.g., دبي مارينا، الإمارات">
+                                @error('location_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="text-capitalize">Project Cost</label>
+                                <input class="form-control" value="{{old('project_cost')}}" type="number" step="0.01" name="project_cost" placeholder="Enter project cost">
+                                <small class="form-text text-muted">Enter the total project cost (optional)</small>
+                                @error('project_cost')<span class="text-danger mt-1">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+
                         <!-- SEO -->
                         <h5 class="mb-3 mt-4 text-primary">SEO Information</h5>
                         <div class="row">

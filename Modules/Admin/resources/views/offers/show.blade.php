@@ -335,6 +335,15 @@
                     <h4 class="offer-title">{{ $offer->title_english }}</h4>
                     <p class="text-muted mb-3">{{ $offer->title_arabic }}</p>
                     
+                    @if($offer->offer_code)
+                    <div class="offer-meta-item">
+                        <div class="offer-meta-label">Offer Code</div>
+                        <div class="offer-meta-value">
+                            <span class="badge badge-secondary">{{ $offer->offer_code }}</span>
+                        </div>
+                    </div>
+                    @endif
+                    
                     <div class="offer-meta-item">
                         <div class="offer-meta-label">Category</div>
                         <div class="offer-meta-value">
@@ -419,8 +428,11 @@
                         <a href="{{ route('offer.index') }}" class="btn btn-primary btn-block mb-2">
                             <i class="fa fa-list"></i> Back to List
                         </a>
-                        <a href="{{ route('offer.edit', ['id' => $offer->id]) }}" class="btn btn-warning btn-block">
+                        <a href="{{ route('offer.edit', ['id' => $offer->id]) }}" class="btn btn-warning btn-block mb-2">
                             <i class="fa fa-pencil"></i> Edit Offer
+                        </a>
+                        <a href="{{ url('en/offers/' . $offer->slug) }}" target="_blank" class="btn btn-success btn-block" style="background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%); border: none;">
+                            <i class="fa fa-external-link"></i> View on Website
                         </a>
                     </div>
                 </div>
@@ -502,6 +514,17 @@
                             <div class="info-row">
                                 <div class="info-label">ID</div>
                                 <div class="info-value"><strong>#{{ $offer->id }}</strong></div>
+                            </div>
+                            
+                            <div class="info-row">
+                                <div class="info-label">Offer Code</div>
+                                <div class="info-value">
+                                    @if($offer->offer_code)
+                                        <span class="badge badge-secondary">{{ $offer->offer_code }}</span>
+                                    @else
+                                        <span class="text-muted">N/A</span>
+                                    @endif
+                                </div>
                             </div>
                             
                             <div class="info-row">

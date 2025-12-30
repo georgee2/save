@@ -13,4 +13,111 @@
                   <p class="mb-0 lh-214 text-muted">{{ __('lang.no_description') }}</p>
                   @endif
                 @endif
+                
+                {{-- Project Overview Details --}}
+                @if($project->project_cost || $project->location_english || $project->location_arabic || $project->sqft || $project->type || $project->style)
+                <div class="mt-5 pt-5 border-top">
+                  <h5 class="fs-18 text-heading mb-4">{{ __('lang.project_overview') }}</h5>
+                  <div class="row">
+                    @if($project->project_cost)
+                    <div class="col-sm-6 col-md-4 mb-4">
+                      <div class="d-flex align-items-center">
+                        <div class="p-2 rounded-lg mr-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; min-width: 48px; background: linear-gradient(135deg, #e1273d 0%, #c41f33 100%);">
+                          <i class="fal fa-dollar-sign text-white fs-20"></i>
+                        </div>
+                        <div>
+                          <h6 class="fs-13 font-weight-500 text-muted mb-1">{{ __('lang.project_cost') }}</h6>
+                          <p class="mb-0 fs-16 font-weight-bold" style="color: #e1273d;">
+                            {{ $project->currency ? $project->currency->abbreviation : 'AED' }} {{ number_format($project->project_cost, 0) }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    @endif
+                    
+                    @if($project->location_english || $project->location_arabic)
+                    <div class="col-sm-6 col-md-4 mb-4">
+                      <div class="d-flex align-items-center">
+                        <div class="p-2 rounded-lg mr-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; min-width: 48px; background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);">
+                          <i class="fal fa-map-marker-alt text-white fs-20"></i>
+                        </div>
+                        <div>
+                          <h6 class="fs-13 font-weight-500 text-muted mb-1">{{ __('lang.location') }}</h6>
+                          <p class="mb-0 fs-15 font-weight-bold text-heading">
+                            {{ app()->getLocale() == 'ar' ? ($project->location_arabic ?? $project->location_english) : ($project->location_english ?? $project->location_arabic) }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    @endif
+                    
+                    @if($project->sqft)
+                    <div class="col-sm-6 col-md-4 mb-4">
+                      <div class="d-flex align-items-center">
+                        <div class="p-2 rounded-lg mr-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; min-width: 48px; background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);">
+                          <i class="fal fa-ruler-combined text-white fs-20"></i>
+                        </div>
+                        <div>
+                          <h6 class="fs-13 font-weight-500 text-muted mb-1">{{ __('lang.total_area') }}</h6>
+                          <p class="mb-0 fs-15 font-weight-bold text-heading">
+                            {{ number_format($project->sqft) }} {{ __('lang.sqft') }}
+                            @if($project->sqm)
+                            <span class="text-muted fs-13">({{ number_format($project->sqm) }} {{ __('lang.sqm') }})</span>
+                            @endif
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    @endif
+                    
+                    @if($project->type)
+                    <div class="col-sm-6 col-md-4 mb-4">
+                      <div class="d-flex align-items-center">
+                        <div class="p-2 rounded-lg mr-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; min-width: 48px; background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);">
+                          <i class="fal fa-building text-white fs-20"></i>
+                        </div>
+                        <div>
+                          <h6 class="fs-13 font-weight-500 text-muted mb-1">{{ __('lang.project_type') }}</h6>
+                          <p class="mb-0 fs-15 font-weight-bold text-heading">
+                            {{ app()->getLocale() == 'ar' ? $project->type->name_arabic : $project->type->name_english }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    @endif
+                    
+                    @if($project->style)
+                    <div class="col-sm-6 col-md-4 mb-4">
+                      <div class="d-flex align-items-center">
+                        <div class="p-2 rounded-lg mr-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; min-width: 48px; background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);">
+                          <i class="fal fa-palette text-white fs-20"></i>
+                        </div>
+                        <div>
+                          <h6 class="fs-13 font-weight-500 text-muted mb-1">{{ __('lang.project_style') }}</h6>
+                          <p class="mb-0 fs-15 font-weight-bold text-heading">
+                            {{ app()->getLocale() == 'ar' ? $project->style->title_arabic : $project->style->title_english }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    @endif
+                    
+                    @if($project->emirate)
+                    <div class="col-sm-6 col-md-4 mb-4">
+                      <div class="d-flex align-items-center">
+                        <div class="p-2 rounded-lg mr-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; min-width: 48px; background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);">
+                          <i class="fal fa-city text-white fs-20"></i>
+                        </div>
+                        <div>
+                          <h6 class="fs-13 font-weight-500 text-muted mb-1">{{ __('lang.emirate') }}</h6>
+                          <p class="mb-0 fs-15 font-weight-bold text-heading">
+                            {{ app()->getLocale() == 'ar' ? $project->emirate->title_arabic : $project->emirate->title_english }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    @endif
+                  </div>
+                </div>
+                @endif
               </section>

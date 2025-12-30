@@ -126,70 +126,48 @@
                     @endif
                   </ul>
                 </li>
-                <li id="navbar-item-docs" aria-haspopup="true" aria-expanded="false"
+            
+                <!-- News Nav with Categories -->
+                <li id="navbar-item-news" aria-haspopup="true" aria-expanded="false"
         class="nav-item dropdown py-2 py-lg-5 px-0 px-lg-4">
                   <a class="nav-link dropdown-toggle p-0"
-           href="#" data-toggle="dropdown" >
-                    Docs
+           href="{{ route('blogs.index') }}" data-toggle="dropdown">
+                    {{ __('lang.news') }}
                     <span class="caret"></span>
                   </a>
-                  <div class="dropdown-menu px-0 pt-3 dropdown-menu-docs">
-                    <div class="dropdown-body">
-                      <a class="dropdown-item py-1"
-           href="docs/getting-started/dev-environment-setup.html">
-                        <div class="media">
-                          <div class="fs-20 mr-3">
-                            <i class="fal fa-file-alt"></i>
-                          </div>
-                          <div class="media-body">
-                            <span class="d-block lh-15">Documentation</span>
-                            <small class="d-block">Kick-start customization</small>
-                          </div>
-                        </div>
+                  <ul class="dropdown-menu pt-3 pb-0 pb-lg-3" aria-labelledby="navbar-item-news" style="min-width: 280px;">
+                    <li class="dropdown-item">
+                      <a class="dropdown-link font-weight-600" href="{{ route('blogs.index') }}">
+                        <i class="fal fa-newspaper mr-2"></i>
+                        {{ __('lang.all_news') }}
                       </a>
-                      <div class="dropdown-divider m-0"></div>
-                      <a class="dropdown-item py-1"
-           href="docs/content/typography.html">
-                        <div class="media">
-                          <div class="fs-20 mr-3">
-                            <i class="fal fa-layer-group"></i>
-                          </div>
-                          <div class="media-body">
-                            <span class="d-block lh-15">UI Kit<span
-                            class="badge badge-danger ml-2">50+</span></span>
-                            <small class="d-block">Flexible components</small>
-                          </div>
-                        </div>
-                      </a>
-                      <div class="dropdown-divider m-0"></div>
-                      <a class="dropdown-item py-1"
-           href="docs/getting-started/changelog.html">
-                        <div class="media">
-                          <div class="fs-20 mr-3">
-                            <i class="fal fa-edit"></i>
-                          </div>
-                          <div class="media-body">
-                            <span class="d-block lh-15">Changelog<span
-                            class="badge badge-success ml-2">v1.0</span></span>
-                            <small class="d-block">Regular updates</small>
-                          </div>
-                        </div>
-                      </a>
-                      <div class="dropdown-divider m-0"></div>
-                      <a class="dropdown-item py-1"
-           href="https://sp.g5plus.net/" target="_blank">
-                        <div class="media">
-                          <div class="fs-20 mr-3">
-                            <i class="fal fa-life-ring"></i>
-                          </div>
-                          <div class="media-body">
-                            <span class="d-block lh-15">Support</span>
-                            <small class="d-block">https://sp.g5plus.net/</small>
-                          </div>
-                        </div>
-                      </a>
-                    </div>
-                  </div>
+                    </li>
+                    @if(isset($headerNewsCategories) && count($headerNewsCategories) > 0)
+                      <li class="dropdown-divider"></li>
+                      @foreach($headerNewsCategories as $newsCategory)
+                        <li class="dropdown-item">
+                          <a class="dropdown-link" href="{{ route('blogs.index', ['category' => $newsCategory->id]) }}">
+                            <i class="fal fa-folder mr-2"></i>
+                            {{ app()->getLocale() == 'ar' ? $newsCategory->name_arabic : $newsCategory->name_english }}
+                          </a>
+                        </li>
+                      @endforeach
+                    @endif
+                  </ul>
+                </li>
+                <!-- About Nav (No Child) -->
+                <li id="navbar-item-about" aria-haspopup="false" aria-expanded="false"
+        class="nav-item py-2 py-lg-5 px-0 px-lg-4">
+                  <a class="nav-link p-0" href="{{ route('about') }}">
+                    {{ __('lang.about_us') }}
+                  </a>
+                </li>
+                <!-- Contact Nav (No Child) -->
+                <li id="navbar-item-contact" aria-haspopup="false" aria-expanded="false"
+        class="nav-item py-2 py-lg-5 px-0 px-lg-4">
+                  <a class="nav-link p-0" href="{{ route('contact') }}">
+                    {{ __('lang.contact_us') }}
+                  </a>
                 </li>
               </ul>
               <div class="d-block d-lg-none">

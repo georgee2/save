@@ -13,10 +13,10 @@ class BlogController extends Controller
     /**
      * Display a listing of blogs with pagination
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Get paginated blogs with category information
-        $blogs = DB::table('news')
+        // Build query for paginated blogs with category information
+        $query = DB::table('news')
             ->join('newscategories', 'newscategories.id', '=', 'news.category_code')
             ->select(
                 'news.id',
@@ -30,9 +30,20 @@ class BlogController extends Controller
                 'newscategories.name_english as category_name_en',
                 'newscategories.name_arabic as category_name_ar',
                 'newscategories.id as category_id'
-            )
-            ->orderBy('news.created_at', 'DESC')
-            ->paginate(10);
+            );
+
+        // Filter by category if provided
+        $selectedCategory = null;
+        if ($request->has('category') && $request->category) {
+            $query->where('news.category_code', $request->category);
+            $selectedCategory = DB::table('newscategories')
+                ->where('id', $request->category)
+                ->first();
+        }
+
+        $blogs = $query->orderBy('news.created_at', 'DESC')
+            ->paginate(10)
+            ->appends($request->query());
 
         // Get last 3 blogs for sidebar
         $recentBlogs = DB::table('news')
@@ -66,7 +77,7 @@ class BlogController extends Controller
         // Get page banner for blogs page
         $pageBanner = PageBanner::getByTarget('blogs');
 
-        return view('pages.blogs.index', compact('blogs', 'recentBlogs', 'categories', 'pageBanner'));
+        return view('pages.blogs.index', compact('blogs', 'recentBlogs', 'categories', 'pageBanner', 'selectedCategory'));
     }
 
     /**

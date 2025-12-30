@@ -6,6 +6,7 @@ use Illuminate\View\View;
 use App\Models\EngineeringCategory;
 use App\Models\OfferCategory;
 use App\Models\ContactInformation;
+use Illuminate\Support\Facades\DB;
 
 class HeaderComposer
 {
@@ -36,10 +37,27 @@ class HeaderComposer
         // Get contact information for footer
         $footerContactInfo = ContactInformation::getContactInfo();
 
+        // Get news categories with their news items for header dropdown
+        $headerNewsCategories = DB::table('newscategories')
+            ->select(
+                'newscategories.id',
+                'newscategories.name_english',
+                'newscategories.name_arabic'
+            )
+            ->whereNull('newscategories.deleted_at')
+            ->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('news')
+                    ->whereColumn('news.category_code', 'newscategories.id');
+            })
+            ->orderBy('newscategories.name_english', 'ASC')
+            ->get();
+
         $view->with([
             'headerProjectCategories' => $headerProjectCategories,
             'headerOfferCategories' => $headerOfferCategories,
             'footerContactInfo' => $footerContactInfo,
+            'headerNewsCategories' => $headerNewsCategories,
         ]);
     }
 }

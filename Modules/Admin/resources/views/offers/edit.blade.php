@@ -51,12 +51,17 @@
                         <!-- Basic Information -->
                         <h5 class="mb-3 text-primary">Basic Information</h5>
                         <div class="row">
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
+                                <label class="text-capitalize">Offer Code</label>
+                                <input class="form-control" value="{{ $offer->offer_code }}" type="text" readonly disabled style="background-color: #f8f9fa;">
+                                <small class="form-text text-muted">Auto-generated based on Category, Subcategory, and ID.</small>
+                            </div>
+                            <div class="form-group col-md-4">
                                 <label class="text-capitalize">English Title <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
                                 <input class="form-control" value="{{ old('title_english', $offer->title_english) }}" type="text" name="title_english" required>
                                 @error('title_english')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
                                 <label class="text-capitalize">Arabic Title <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
                                 <input class="form-control" value="{{ old('title_arabic', $offer->title_arabic) }}" type="text" name="title_arabic" required>
                                 @error('title_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror

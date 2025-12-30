@@ -54,16 +54,27 @@
           <div class="d-md-flex justify-content-md-between mb-6">
             <div>
               <h2 class="fs-35 font-weight-600 lh-15 text-heading">{{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}</h2>
-              @if($project->emirate)
-              <p class="mb-0"><i class="fal fa-map-marker-alt mr-2"></i>{{ app()->getLocale() == 'ar' ? $project->emirate->title_arabic : $project->emirate->title_english }}</p>
+              @if($project->location_english || $project->location_arabic)
+              <p class="mb-1"><i class="fal fa-map-marker-alt mr-2 text-primary"></i>{{ app()->getLocale() == 'ar' ? ($project->location_arabic ?? $project->location_english) : ($project->location_english ?? $project->location_arabic) }}</p>
+              @elseif($project->emirate)
+              <p class="mb-1"><i class="fal fa-map-marker-alt mr-2 text-primary"></i>{{ app()->getLocale() == 'ar' ? $project->emirate->title_arabic : $project->emirate->title_english }}</p>
+              @endif
+              @if($project->project_code)
+              <p class="mb-0"><span class="badge badge-secondary px-3 py-2" style="font-family: 'Courier New', monospace; font-size: 12px; background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%); border: none;"><i class="fal fa-barcode mr-1"></i>{{ $project->project_code }}</span></p>
               @endif
             </div>
             <div class="mt-2 text-md-right">
+              @if($project->project_cost)
+              <p class="fs-28 font-weight-bold mb-1" style="color: #e1273d;">
+                {{ $project->currency ? $project->currency->abbreviation : 'AED' }} {{ number_format($project->project_cost, 0) }}
+              </p>
+              <p class="fs-14 mb-2" style="color: #19868b; font-weight: 500;">{{ __('lang.project_cost') }}</p>
+              @endif
               @if($project->sqft)
-              <p class="fs-22 text-heading font-weight-bold mb-0">{{ number_format($project->sqft) }} {{ __('lang.sqft') }}</p>
+              <p class="fs-20 text-heading font-weight-bold mb-0">{{ number_format($project->sqft) }} {{ __('lang.sqft') }}</p>
               @endif
               @if($project->sqm)
-              <p class="mb-0">{{ number_format($project->sqm) }} {{ __('lang.sqm') }}</p>
+              <p class="mb-0 text-muted">{{ number_format($project->sqm) }} {{ __('lang.sqm') }}</p>
               @endif
             </div>
           </div>
