@@ -49,6 +49,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 	Route::prefix('projects')->name('projects.')->group(function () {
 		Route::get('/', [ProjectsController::class, 'index'])->name('index');
 		Route::get('/featured', [ProjectsController::class, 'featured'])->name('featured');
+		Route::get('/specification-values', [ProjectsController::class, 'getSpecificationValues'])->name('specification-values');
 		Route::get('/{slug}', [ProjectsController::class, 'show'])->name('show');
 	});
 

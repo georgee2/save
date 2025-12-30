@@ -359,6 +359,17 @@
                     <h4 class="project-title">{{ $project->title_english }}</h4>
                     <p class="text-muted mb-3">{{ $project->title_arabic }}</p>
                     
+                    @if($project->project_code)
+                    <div class="project-meta-item">
+                        <div class="project-meta-label">Project Code</div>
+                        <div class="project-meta-value">
+                            <span class="badge" style="font-size: 13px; padding: 6px 12px; background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%); color: white;">
+                                <i class="fa fa-barcode"></i> {{ $project->project_code }}
+                            </span>
+                        </div>
+                    </div>
+                    @endif
+                    
                     <div class="project-meta-item">
                         <div class="project-meta-label">Category</div>
                         <div class="project-meta-value">
@@ -443,8 +454,11 @@
                         <a href="{{ route('project.index') }}" class="btn btn-primary btn-block mb-2">
                             <i class="fa fa-list"></i> Back to List
                         </a>
-                        <a href="{{ route('project.edit', ['id' => $project->id]) }}" class="btn btn-warning btn-block">
+                        <a href="{{ route('project.edit', ['id' => $project->id]) }}" class="btn btn-warning btn-block mb-2">
                             <i class="fa fa-pencil"></i> Edit Project
+                        </a>
+                        <a href="{{ url('en/projects/' . $project->slug) }}" target="_blank" class="btn btn-success btn-block" style="background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%); border: none;">
+                            <i class="fa fa-external-link"></i> View on Website
                         </a>
                     </div>
                 </div>
@@ -528,6 +542,17 @@
                                 <div class="info-value"><strong>#{{ $project->id }}</strong></div>
                             </div>
                             
+                            @if($project->project_code)
+                            <div class="info-row">
+                                <div class="info-label">Project Code</div>
+                                <div class="info-value">
+                                    <span class="badge badge-success" style="font-size: 14px; padding: 8px 15px; background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);">
+                                        <i class="fa fa-barcode"></i> {{ $project->project_code }}
+                                    </span>
+                                </div>
+                            </div>
+                            @endif
+                            
                             <div class="info-row">
                                 <div class="info-label">English Title</div>
                                 <div class="info-value">{{ $project->title_english }}</div>
@@ -541,6 +566,56 @@
                             <div class="info-row">
                                 <div class="info-label">Slug</div>
                                 <div class="info-value"><code>{{ $project->slug }}</code></div>
+                            </div>
+                            
+                            <div class="info-row">
+                                <div class="info-label">Location (English)</div>
+                                <div class="info-value">
+                                    @if($project->location_english)
+                                        <i class="fa fa-map-marker text-danger"></i> {{ $project->location_english }}
+                                    @else
+                                        <span class="text-muted">N/A</span>
+                                    @endif
+                                </div>
+                            </div>
+                            
+                            <div class="info-row">
+                                <div class="info-label">Location (Arabic)</div>
+                                <div class="info-value">
+                                    @if($project->location_arabic)
+                                        <i class="fa fa-map-marker text-danger"></i> {{ $project->location_arabic }}
+                                    @else
+                                        <span class="text-muted">N/A</span>
+                                    @endif
+                                </div>
+                            </div>
+                            
+                            <div class="info-row">
+                                <div class="info-label">Project Cost</div>
+                                <div class="info-value">
+                                    @if($project->project_cost)
+                                        <strong class="text-success" style="font-size: 16px;">
+                                            @if($project->currency_abbr)
+                                                {{ $project->currency_abbr }} {{ number_format($project->project_cost, 2) }}
+                                            @else
+                                                {{ number_format($project->project_cost, 2) }}
+                                            @endif
+                                        </strong>
+                                    @else
+                                        <span class="text-muted">N/A</span>
+                                    @endif
+                                </div>
+                            </div>
+                            
+                            <div class="info-row">
+                                <div class="info-label">Emirate</div>
+                                <div class="info-value">
+                                    @if($project->emirate_name_en)
+                                        <span class="badge badge-secondary">{{ $project->emirate_name_en }}</span>
+                                    @else
+                                        <span class="text-muted">N/A</span>
+                                    @endif
+                                </div>
                             </div>
                             
                             <div class="info-row">

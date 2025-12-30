@@ -5,8 +5,9 @@
 <link rel="stylesheet" href="{{ asset('/css/tagify.css') }}">
 <style>
     :root {
-        --main-color: #e64c29;
-        --secondary-color: #000000;
+        --main-color: #19868b;
+        --secondary-color: #0d6b6f;
+        --accent-color: #e1273d;
     }
     .char-count {
         font-size: 12px;

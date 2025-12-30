@@ -71,10 +71,7 @@ class PageBanner extends Model
      */
     public static function getByTarget($target)
     {
-        return DB::table('page_banners')
-            ->where('target', $target)
-            ->whereNull('deleted_at')
-            ->first();
+        return self::where('target', $target)->first();
     }
 }
 

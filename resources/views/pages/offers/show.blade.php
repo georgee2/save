@@ -409,9 +409,16 @@
                     <div class="card-body p-4">
                         {{-- Price Header --}}
                         <div class="offer-price-header mb-4 pb-3 border-bottom">
-                            <span class="badge badge-offer mb-3" style="background: linear-gradient(135deg, #e1273d 0%, #c41f33 100%); padding: 6px 12px; font-size: 11px; border-radius: 20px;">
-                                {{ __('lang.special_offer') }}
-                            </span>
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <span class="badge badge-offer" style="background: linear-gradient(135deg, #e1273d 0%, #c41f33 100%); padding: 6px 12px; font-size: 11px; border-radius: 20px;">
+                                    {{ __('lang.special_offer') }}
+                                </span>
+                                @if($offer->offer_code)
+                                <span class="badge" style="background: #19868b; color: white; padding: 6px 12px; font-size: 11px; border-radius: 20px;">
+                                    <i class="fas fa-barcode mr-1"></i> {{ $offer->offer_code }}
+                                </span>
+                                @endif
+                            </div>
                             <h4 class="fs-18 text-heading font-weight-600 mb-0">{{ app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english }}</h4>
                         </div>
                         

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use App\Models\OffersPrices\OfferPrice;
 
 class Offer extends Model
@@ -105,6 +106,7 @@ class Offer extends Model
             ->leftJoin('project_types as pt', 'o.type_id', '=', 'pt.id')
             ->select(
                 'o.id',
+                'o.offer_code',
                 'o.title_english',
                 'o.title_arabic',
                 'oc.title_english as category_name',
@@ -128,6 +130,7 @@ class Offer extends Model
             ->leftJoin('project_types as pt', 'o.type_id', '=', 'pt.id')
             ->select(
                 'o.id',
+                'o.offer_code',
                 'o.title_english',
                 'o.title_arabic',
                 'oc.title_english as category_name',
@@ -137,6 +140,26 @@ class Offer extends Model
             ->whereNotNull('o.deleted_at')
             ->orderBy('o.deleted_at', 'desc')
             ->get();
+    }
+    
+    /**
+     * Generate a unique offer code based on category, subcategory, and ID.
+     * Format: SKU-CATEGORY-SUBCATEGORY-ID (e.g., SKU-VIL-LUX-0001)
+     *
+     * @param int $offerId
+     * @param int $categoryId
+     * @param int|null $subcategoryId
+     * @return string
+     */
+    public static function generateOfferCode(int $offerId, int $categoryId, ?int $subcategoryId = null): string
+    {
+        $category = OfferCategory::find($categoryId);
+        $subcategory = $subcategoryId ? OfferSubCategory::find($subcategoryId) : null;
+
+        $categoryCode = Str::upper(Str::substr($category->title_english ?? 'UNK', 0, 3));
+        $subcategoryCode = $subcategory ? Str::upper(Str::substr($subcategory->title_english ?? 'UNK', 0, 3)) : 'NUL';
+
+        return "SKU-{$categoryCode}-{$subcategoryCode}-" . str_pad($offerId, 4, '0', STR_PAD_LEFT);
     }
     
     /**

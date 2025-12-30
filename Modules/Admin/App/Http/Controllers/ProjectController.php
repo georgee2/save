@@ -28,13 +28,93 @@ class ProjectController extends Controller
     /**
      * Display a listing of projects
      */
-    public function index()
+    public function index(Request $request)
     {
-        $projects = $this->project->list();
+        // Build query with filters
+        $query = Project::query()
+            ->leftJoin('engineering_categories as ec', 'projects.category_id', '=', 'ec.id')
+            ->leftJoin('engineering_sub_categories as esc', 'projects.subcategory_id', '=', 'esc.id')
+            ->leftJoin('project_types as pt', 'projects.type_id', '=', 'pt.id')
+            ->leftJoin('project_styles as ps', 'projects.style_id', '=', 'ps.id')
+            ->leftJoin('partners as pa', 'projects.partner_id', '=', 'pa.id')
+            ->select(
+                'projects.id',
+                'projects.project_code',
+                'projects.title_english',
+                'projects.title_arabic',
+                'projects.publish_status',
+                'projects.home_status',
+                'projects.created_at',
+                'ec.title_english as category_name',
+                'esc.title_english as subcategory_name',
+                'pt.name_english as type_name',
+                'ps.title_english as style_name',
+                'pa.name_english as partner_name'
+            )
+            ->whereNull('projects.deleted_at');
         
-        return view('admin::projects.index', [
-            'projects' => $projects
-        ]);
+        // Apply filters
+        if ($request->filled('category_id')) {
+            $query->where('projects.category_id', $request->category_id);
+        }
+        
+        if ($request->filled('subcategory_id')) {
+            $query->where('projects.subcategory_id', $request->subcategory_id);
+        }
+        
+        if ($request->filled('type_id')) {
+            $query->where('projects.type_id', $request->type_id);
+        }
+        
+        if ($request->filled('style_id')) {
+            $query->where('projects.style_id', $request->style_id);
+        }
+        
+        if ($request->filled('partner_id')) {
+            $query->where('projects.partner_id', $request->partner_id);
+        }
+        
+        if ($request->filled('project_code')) {
+            $query->where('projects.project_code', 'LIKE', '%' . $request->project_code . '%');
+        }
+        
+        if ($request->filled('project_id')) {
+            $query->where('projects.id', $request->project_id);
+        }
+        
+        if ($request->filled('title')) {
+            $query->where(function($q) use ($request) {
+                $q->where('projects.title_english', 'LIKE', '%' . $request->title . '%')
+                  ->orWhere('projects.title_arabic', 'LIKE', '%' . $request->title . '%');
+            });
+        }
+        
+        if ($request->filled('publish_status')) {
+            $query->where('projects.publish_status', $request->publish_status);
+        }
+        
+        if ($request->filled('home_status')) {
+            $query->where('projects.home_status', $request->home_status);
+        }
+        
+        // Order by newest first and paginate
+        $projects = $query->orderBy('projects.created_at', 'desc')->paginate(15)->withQueryString();
+        
+        // Get filter options
+        $categories = EngineeringCategory::whereNull('deleted_at')->orderBy('title_english')->get();
+        $subcategories = EngineeringSubCategory::whereNull('deleted_at')->orderBy('title_english')->get();
+        $types = ProjectType::whereNull('deleted_at')->orderBy('name_english')->get();
+        $styles = ProjectStyle::whereNull('deleted_at')->orderBy('title_english')->get();
+        $partners = Partner::whereNull('deleted_at')->orderBy('name_english')->get();
+        
+        return view('admin::projects.index', compact(
+            'projects', 
+            'categories', 
+            'subcategories', 
+            'types', 
+            'styles', 
+            'partners'
+        ));
     }
 
     /**
@@ -84,6 +164,9 @@ class ProjectController extends Controller
             'seo_tags' => 'nullable',
             'seo_description_english' => 'nullable|string|max:1000',
             'seo_description_arabic' => 'nullable|string|max:1000',
+            'location_english' => 'nullable|string|max:255',
+            'location_arabic' => 'nullable|string|max:255',
+            'project_cost' => 'nullable|numeric|min:0',
             'home_status' => 'required|in:0,1',
             'publish_status' => 'required|in:0,1',
         ]);
@@ -126,7 +209,17 @@ class ProjectController extends Controller
             $data['seo_tags'] = tags($request->seo_tags);
         }
 
-        Project::create($data);
+        // Create project
+        $project = Project::create($data);
+        
+        // Auto-generate project code: TYPE + CATEGORY + SUBCATEGORY + ID
+        $projectCode = Project::generateProjectCode(
+            $project->id,
+            $project->type_id,
+            $project->category_id,
+            $project->subcategory_id
+        );
+        $project->update(['project_code' => $projectCode]);
 
         return redirect()->route('project.index')->with('success', 'Project created successfully!');
     }
@@ -182,9 +275,21 @@ class ProjectController extends Controller
             'seo_tags' => 'nullable',
             'seo_description_english' => 'nullable|string|max:1000',
             'seo_description_arabic' => 'nullable|string|max:1000',
+            'location_english' => 'nullable|string|max:255',
+            'location_arabic' => 'nullable|string|max:255',
+            'project_cost' => 'nullable|numeric|min:0',
             'home_status' => 'required|in:0,1',
             'publish_status' => 'required|in:0,1',
         ]);
+        
+        // Check if type, category, or subcategory changed - need to regenerate project code
+        // Also generate if project_code doesn't exist yet (for existing projects)
+        $regenerateCode = (
+            empty($project->project_code) ||
+            $project->type_id != $data['type_id'] || 
+            $project->category_id != $data['category_id'] || 
+            $project->subcategory_id != ($data['subcategory_id'] ?? null)
+        );
 
         // Auto-generate slug from English title
         $data['slug'] = Str::slug($data['title_english']);
@@ -240,6 +345,16 @@ class ProjectController extends Controller
         // SEO Tags Insertion (Helper Function)
         if($request->seo_tags != null) {
             $data['seo_tags'] = tags($request->seo_tags);
+        }
+        
+        // Regenerate project code if type/category/subcategory changed
+        if ($regenerateCode) {
+            $data['project_code'] = Project::generateProjectCode(
+                $project->id,
+                $data['type_id'],
+                $data['category_id'],
+                $data['subcategory_id'] ?? null
+            );
         }
 
         $project->update($data);
