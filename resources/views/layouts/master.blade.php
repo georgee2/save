@@ -36,21 +36,25 @@
           <!-- Category/Projects Page CSS -->
           <link rel="stylesheet" href="{{asset('/assets/css/category-page.css')}}">
           <!-- Offers Section CSS -->
-          <link rel="stylesheet" href="{{asset('/assets/css/offers-section.css')}}">
+          <link rel="stylesheet" href="{{asset('/assets/css/offers-section.css')}}?v={{ time() }}">
           <!-- Services Section CSS -->
           <link rel="stylesheet" href="{{asset('/assets/css/services-section.css')}}">
           <!-- Section Divider CSS -->
           <link rel="stylesheet" href="{{asset('/assets/css/section-divider.css')}}">
           <!-- Why Choose Us CSS -->
-          <link rel="stylesheet" href="{{asset('/assets/css/why-choose-us.css')}}">
+          <link rel="stylesheet" href="{{asset('/assets/css/why-choose-us.css')}}?v={{ time() }}">
           <!-- Home Projects CSS -->
-          <link rel="stylesheet" href="{{asset('/assets/css/home-projects.css')}}">
+          <link rel="stylesheet" href="{{asset('/assets/css/home-projects.css')}}?v={{ time() }}">
           <!-- Home Contact & FAQ CSS -->
-          <link rel="stylesheet" href="{{asset('/assets/css/home-contact-faq.css')}}">
+          <link rel="stylesheet" href="{{asset('/assets/css/home-contact-faq.css')}}?v={{ time() }}">
           <!-- Home News CSS -->
-          <link rel="stylesheet" href="{{asset('/assets/css/home-news.css')}}">
+          <link rel="stylesheet" href="{{asset('/assets/css/home-news.css')}}?v={{ time() }}">
           <!-- Footer CSS -->
           <link rel="stylesheet" href="{{asset('/assets/css/footer.css')}}">
+          <!-- Area Slider CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/css/area-slider.css')}}">
+          <!-- Preloader CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/css/preloader.css')}}">
                 
 
         @yield('css')
@@ -58,6 +62,7 @@
     </head>
 
     <body>
+      @include('includes.preloader')
       @include('includes.header')
 
       <main id="content">
@@ -87,6 +92,20 @@
         <script src="{{asset('/assets/vendors/mapbox-gl/mapbox-gl.js')}}"></script>
         <!-- Theme scripts -->
         <script src="{{asset('/assets/js/theme.js')}}"></script>
+        
+        <!-- Preloader Script -->
+        <script>
+            $(window).on('load', function() {
+                // Hide preloader after page fully loads
+                setTimeout(function() {
+                    $('#preloader').addClass('loaded');
+                    // Remove from DOM after transition
+                    setTimeout(function() {
+                        $('#preloader').remove();
+                    }, 500);
+                }, 300);
+            });
+        </script>
         
         <!-- Back to Top Script -->
         <script>

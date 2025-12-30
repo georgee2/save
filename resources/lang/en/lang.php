@@ -58,6 +58,10 @@ return [
     'sortby' => 'Sort by',
     'newest' => 'Newest',
     'oldest' => 'Oldest',
+    'price_low_to_high' => 'Price: Low to High',
+    'price_high_to_low' => 'Price: High to Low',
+    'area_low_to_high' => 'Area: Small to Large',
+    'area_high_to_low' => 'Area: Large to Small',
     'top_selling' => 'Top Selling',
     'most_viewed' => 'Most Viewed',
     'featured' => 'Featured',
@@ -194,5 +198,7 @@ return [
     'view_all' => 'View All',
     'projects' => 'Projects',
     'all_projects' => 'All Projects',
+    'loading' => 'Loading',
+    'to' => 'to',
 ];
 

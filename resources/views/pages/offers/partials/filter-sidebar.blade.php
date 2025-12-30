@@ -92,37 +92,33 @@
                         </select>
                     </div>
                     
-                    {{-- SQFT Range --}}
-                    <div class="form-group">
-                        <label class="text-gray-light mb-2">{{ __('lang.sqft_range') }}</label>
-                        <div class="row">
-                            <div class="col-6">
-                                <input type="number" class="form-control form-control-lg border-0 shadow-none"
-                                       id="sqft_min" name="sqft_min" value="{{ request('sqft_min') }}"
-                                       placeholder="{{ __('lang.min') }}">
+                    {{-- SQFT Range Slider --}}
+                    <div class="form-group area-slider-group">
+                        <label class="text-gray-light mb-3">{{ __('lang.area_size') }} ({{ __('lang.sqft') }})</label>
+                        <div class="area-slider-container">
+                            <div id="sqft-slider" class="area-range-slider"></div>
+                            <div class="area-slider-values text-center mt-3">
+                                <span id="sqft-range-display" class="font-weight-600 text-heading">
+                                    {{ request('sqft_min', 50) }} {{ __('lang.sqft') }} {{ __('lang.to') }} {{ request('sqft_max', 15000) }} {{ __('lang.sqft') }}
+                                </span>
                             </div>
-                            <div class="col-6">
-                                <input type="number" class="form-control form-control-lg border-0 shadow-none"
-                                       id="sqft_max" name="sqft_max" value="{{ request('sqft_max') }}"
-                                       placeholder="{{ __('lang.max') }}">
-                            </div>
+                            <input type="hidden" id="sqft_min" name="sqft_min" value="{{ request('sqft_min', '') }}">
+                            <input type="hidden" id="sqft_max" name="sqft_max" value="{{ request('sqft_max', '') }}">
                         </div>
                     </div>
                     
-                    {{-- SQM Range --}}
-                    <div class="form-group">
-                        <label class="text-gray-light mb-2">{{ __('lang.sqm_range') }}</label>
-                        <div class="row">
-                            <div class="col-6">
-                                <input type="number" class="form-control form-control-lg border-0 shadow-none"
-                                       id="sqm_min" name="sqm_min" value="{{ request('sqm_min') }}"
-                                       placeholder="{{ __('lang.min') }}">
+                    {{-- SQM Range Slider --}}
+                    <div class="form-group area-slider-group">
+                        <label class="text-gray-light mb-3">{{ __('lang.area_size') }} ({{ __('lang.sqm') }})</label>
+                        <div class="area-slider-container">
+                            <div id="sqm-slider" class="area-range-slider"></div>
+                            <div class="area-slider-values text-center mt-3">
+                                <span id="sqm-range-display" class="font-weight-600 text-heading">
+                                    {{ request('sqm_min', 5) }} {{ __('lang.sqm') }} {{ __('lang.to') }} {{ request('sqm_max', 1400) }} {{ __('lang.sqm') }}
+                                </span>
                             </div>
-                            <div class="col-6">
-                                <input type="number" class="form-control form-control-lg border-0 shadow-none"
-                                       id="sqm_max" name="sqm_max" value="{{ request('sqm_max') }}"
-                                       placeholder="{{ __('lang.max') }}">
-                            </div>
+                            <input type="hidden" id="sqm_min" name="sqm_min" value="{{ request('sqm_min', '') }}">
+                            <input type="hidden" id="sqm_max" name="sqm_max" value="{{ request('sqm_max', '') }}">
                         </div>
                     </div>
                     

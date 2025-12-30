@@ -1,0 +1,82 @@
+/**
+ * Area Range Slider Styles
+ * Primary: #19868b | Secondary: #e1273d
+ */
+
+/* Slider Container */
+.area-slider-group {
+    padding: 10px 0;
+}
+
+.area-slider-container {
+    padding: 0 10px;
+}
+
+/* jQuery UI Slider Override */
+.area-range-slider.ui-slider {
+    height: 6px;
+    border: none;
+    background: #e9ecef;
+    border-radius: 3px;
+    margin: 10px 0;
+}
+
+.area-range-slider.ui-slider .ui-slider-range {
+    background: linear-gradient(90deg, #19868b 0%, #0d6b6f 100%);
+    border-radius: 3px;
+}
+
+.area-range-slider.ui-slider .ui-slider-handle {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 3px solid #19868b;
+    background: #ffffff;
+    top: -8px;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.area-range-slider.ui-slider .ui-slider-handle:hover,
+.area-range-slider.ui-slider .ui-slider-handle:focus {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(25, 134, 139, 0.3);
+    border-color: #0d6b6f;
+}
+
+.area-range-slider.ui-slider .ui-slider-handle:active {
+    transform: scale(1.15);
+    box-shadow: 0 4px 15px rgba(25, 134, 139, 0.4);
+}
+
+/* Slider Values Display */
+.area-slider-values {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.area-slider-values span {
+    display: inline-block;
+    padding: 5px 0;
+}
+
+/* RTL Support */
+[dir="rtl"] .area-range-slider.ui-slider .ui-slider-range {
+    background: linear-gradient(-90deg, #19868b 0%, #0d6b6f 100%);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 576px) {
+    .area-range-slider.ui-slider .ui-slider-handle {
+        width: 26px;
+        height: 26px;
+        top: -10px;
+    }
+    
+    .area-slider-values {
+        font-size: 13px;
+    }
+}
+

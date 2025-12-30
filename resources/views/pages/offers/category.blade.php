@@ -43,12 +43,16 @@
                         <div class="d-flex justify-content-md-end align-items-center">
                             <div class="input-group border rounded input-group-lg w-auto bg-white mr-3">
                                 <label class="input-group-text bg-transparent border-0 text-uppercase letter-spacing-093 pr-1 pl-3"
-                                       for="inputGroupSelect01"><i class="fas fa-align-left fs-16 pr-2"></i>{{ __('lang.sortby') }}:</label>
-                                <select class="form-control border-0 bg-transparent shadow-none p-0 selectpicker sortby"
+                                       for="sortbySelect"><i class="fas fa-align-left fs-16 pr-2"></i>{{ __('lang.sortby') }}:</label>
+                                <select class="form-control border-0 bg-transparent shadow-none p-0 selectpicker sortby-select"
                                         data-style="bg-transparent border-0 font-weight-600 btn-lg pl-0 pr-3"
-                                        id="inputGroupSelect01" name="sortby">
-                                    <option selected>{{ __('lang.newest') }}</option>
-                                    <option value="1">{{ __('lang.oldest') }}</option>
+                                        id="sortbySelect" name="sortby">
+                                    <option value="newest" {{ request('sortby', 'newest') == 'newest' ? 'selected' : '' }}>{{ __('lang.newest') }}</option>
+                                    <option value="oldest" {{ request('sortby') == 'oldest' ? 'selected' : '' }}>{{ __('lang.oldest') }}</option>
+                                    <option value="price_low" {{ request('sortby') == 'price_low' ? 'selected' : '' }}>{{ __('lang.price_low_to_high') }}</option>
+                                    <option value="price_high" {{ request('sortby') == 'price_high' ? 'selected' : '' }}>{{ __('lang.price_high_to_low') }}</option>
+                                    <option value="area_low" {{ request('sortby') == 'area_low' ? 'selected' : '' }}>{{ __('lang.area_low_to_high') }}</option>
+                                    <option value="area_high" {{ request('sortby') == 'area_high' ? 'selected' : '' }}>{{ __('lang.area_high_to_low') }}</option>
                                 </select>
                             </div>
                             <div class="d-none d-md-block">
@@ -375,6 +379,72 @@ $(document).ready(function() {
     
     // Set initial state
     $('#listViewBtn').addClass('opacity-2');
+    
+    // Sort by change - auto submit
+    $('.sortby-select').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
+        var sortby = $(this).val();
+        if (sortby) {
+            var url = new URL(window.location.href);
+            url.searchParams.set('sortby', sortby);
+            window.location.href = url.toString();
+        }
+    });
+    
+    // Also bind on native change event as fallback
+    $('#sortbySelect').on('change', function() {
+        var sortby = $(this).val();
+        if (sortby) {
+            var url = new URL(window.location.href);
+            url.searchParams.set('sortby', sortby);
+            window.location.href = url.toString();
+        }
+    });
+    
+    // Filter dropdowns - auto submit on change
+    $('#offerFilterForm select.selectpicker').on('changed.bs.select', function() {
+        $('#offerFilterForm').submit();
+    });
+    
+    // SQFT Range Slider
+    var sqftMin = {{ request('sqft_min', 50) }};
+    var sqftMax = {{ request('sqft_max', 15000) }};
+    var sqftLabel = "{{ __('lang.sqft') }}";
+    var toLabel = "{{ __('lang.to') }}";
+    
+    $("#sqft-slider").slider({
+        range: true,
+        min: 50,
+        max: 15000,
+        step: 50,
+        values: [sqftMin, sqftMax],
+        slide: function(event, ui) {
+            $("#sqft-range-display").text(ui.values[0] + " " + sqftLabel + " " + toLabel + " " + ui.values[1] + " " + sqftLabel);
+        },
+        stop: function(event, ui) {
+            $("#sqft_min").val(ui.values[0]);
+            $("#sqft_max").val(ui.values[1]);
+        }
+    });
+    
+    // SQM Range Slider
+    var sqmMin = {{ request('sqm_min', 5) }};
+    var sqmMax = {{ request('sqm_max', 1400) }};
+    var sqmLabel = "{{ __('lang.sqm') }}";
+    
+    $("#sqm-slider").slider({
+        range: true,
+        min: 5,
+        max: 1400,
+        step: 5,
+        values: [sqmMin, sqmMax],
+        slide: function(event, ui) {
+            $("#sqm-range-display").text(ui.values[0] + " " + sqmLabel + " " + toLabel + " " + ui.values[1] + " " + sqmLabel);
+        },
+        stop: function(event, ui) {
+            $("#sqm_min").val(ui.values[0]);
+            $("#sqm_max").val(ui.values[1]);
+        }
+    });
 });
 </script>
 @endsection

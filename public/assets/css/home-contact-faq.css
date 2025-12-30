@@ -248,19 +248,49 @@
 
 /* Responsive */
 @media (max-width: 992px) {
+    .home-contact-faq-section .row {
+        flex-direction: column;
+    }
+    
+    .home-contact-faq-section .col-lg-5,
+    .home-contact-faq-section .col-lg-7 {
+        width: 100%;
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+    
+    .contact-card-wrapper {
+        margin-bottom: 30px;
+    }
+    
     .contact-image-card {
-        height: 400px;
+        height: auto;
+    }
+    
+    .contact-image-card img {
+        object-fit: contain;
+        width: 100%;
+        height: auto;
+        max-height: none;
     }
     
     .contact-phone-card {
-        bottom: -20px;
-        right: 20px;
+        position: relative;
+        bottom: auto;
+        right: auto;
+        margin-top: 20px;
         padding: 20px 25px;
+        display: inline-flex;
+        flex-direction: column;
+    }
+    
+    [dir="rtl"] .contact-phone-card {
+        left: auto;
     }
     
     .faq-wrapper {
         padding-left: 0;
-        padding-top: 50px;
+        padding-top: 20px;
     }
     
     [dir="rtl"] .faq-wrapper {
@@ -269,44 +299,26 @@
 }
 
 @media (max-width: 768px) {
+    .home-contact-faq-section {
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+    
+    .contact-card-wrapper {
+        margin-bottom: 25px;
+        text-align: center;
+    }
+    
     .contact-image-card {
-        height: 350px;
+        display: inline-block;
+        width: 100%;
     }
     
-    .contact-image-title {
-        font-size: 26px;
-    }
-    
-    .contact-phone-card {
-        position: relative;
-        bottom: 0;
-        right: 0;
-        margin-top: -40px;
-        margin-left: 20px;
-        margin-right: 20px;
-    }
-    
-    [dir="rtl"] .contact-phone-card {
-        left: 0;
-    }
-    
-    .faq-button {
-        padding: 15px 20px;
-    }
-    
-    .faq-question {
-        font-size: 15px;
-    }
-    
-    .faq-body {
-        padding: 0 20px 15px 20px;
-        font-size: 13px;
-    }
-}
-
-@media (max-width: 576px) {
-    .contact-image-card {
-        height: 300px;
+    .contact-image-card img {
+        object-fit: contain;
+        width: 100%;
+        height: auto;
+        max-height: none;
     }
     
     .contact-image-title {
@@ -317,6 +329,141 @@
         top: 20px;
         left: 20px;
         right: 20px;
+    }
+    
+    .contact-phone-card {
+        margin-top: 20px;
+        padding: 18px 25px;
+        min-width: auto;
+    }
+    
+    .contact-phone-title {
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+    
+    .phone-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .phone-icon i {
+        font-size: 16px;
+    }
+    
+    .phone-number {
+        font-size: 14px;
+    }
+    
+    .faq-wrapper {
+        padding-top: 15px;
+    }
+    
+    .faq-button {
+        padding: 15px 18px;
+    }
+    
+    .faq-question {
+        font-size: 14px;
+    }
+    
+    .faq-body {
+        padding: 0 18px 15px 18px;
+        font-size: 13px;
+    }
+    
+    .faq-icon {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .faq-icon i {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 576px) {
+    .home-contact-faq-section {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+    
+    .contact-card-wrapper {
+        margin-bottom: 20px;
+    }
+    
+    .contact-image-card img {
+        object-fit: contain;
+        width: 100%;
+        height: auto;
+        max-height: none;
+    }
+    
+    .contact-image-title {
+        font-size: 18px;
+    }
+    
+    .contact-image-content {
+        top: 15px;
+        left: 15px;
+        right: 15px;
+    }
+    
+    .contact-phone-card {
+        margin-top: 15px;
+        padding: 15px 20px;
+    }
+    
+    .contact-phone-title {
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+    
+    .phone-icon {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .phone-icon i {
+        font-size: 14px;
+    }
+    
+    .phone-number {
+        font-size: 13px;
+    }
+    
+    .faq-item {
+        margin-bottom: 10px;
+        border-radius: 10px;
+    }
+    
+    .faq-button {
+        padding: 12px 15px;
+    }
+    
+    .faq-question {
+        font-size: 13px;
+        padding-right: 10px;
+    }
+    
+    [dir="rtl"] .faq-question {
+        padding-right: 0;
+        padding-left: 10px;
+    }
+    
+    .faq-body {
+        padding: 0 15px 12px 15px;
+        font-size: 12px;
+        line-height: 1.7;
+    }
+    
+    .faq-icon {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .faq-icon i {
+        font-size: 10px;
     }
 }
 
