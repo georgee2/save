@@ -11,9 +11,9 @@
                 <p class="mb-0">{{ __('lang.news_bio') }}</p>
             </div>
             <div class="col-md-5 text-md-right mt-4 mt-md-0">
-                <a href="{{ route('blogs.index') }}" class="btn btn-lg btn-primary rounded-lg px-5">
+                <a href="{{ route('blogs.index') }}" class="btn fs-14 text-secondary btn-accent py-3 lh-15 px-7 mb-6 mb-lg-0">
                     {{ __('lang.view_all_news') }}
-                    <span class="ml-2"><i class="fas fa-arrow-right"></i></span>
+                    <i class="far fa-long-arrow-right ml-1"></i>
                 </a>
             </div>
         </div>

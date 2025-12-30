@@ -36,6 +36,40 @@ class OffersController extends Controller
     }
     
     /**
+     * Apply sorting to the query
+     */
+    private function applySorting($query, Request $request)
+    {
+        $sortby = $request->get('sortby', 'newest');
+        
+        switch ($sortby) {
+            case 'oldest':
+                $query->orderBy('offers.created_at', 'ASC');
+                break;
+            case 'price_low':
+                // Order by minimum price using subquery
+                $query->orderByRaw('(SELECT MIN(price) FROM offer_prices WHERE offer_prices.offer_id = offers.id AND offer_prices.status = 0) ASC');
+                break;
+            case 'price_high':
+                // Order by maximum price using subquery
+                $query->orderByRaw('(SELECT MAX(price) FROM offer_prices WHERE offer_prices.offer_id = offers.id AND offer_prices.status = 0) DESC');
+                break;
+            case 'area_low':
+                $query->orderBy('offers.sqft', 'ASC');
+                break;
+            case 'area_high':
+                $query->orderBy('offers.sqft', 'DESC');
+                break;
+            case 'newest':
+            default:
+                $query->orderBy('offers.created_at', 'DESC');
+                break;
+        }
+        
+        return $query;
+    }
+    
+    /**
      * Apply common filters to the query
      */
     private function applyFilters($query, Request $request, $selectedEmirateId = null)
@@ -182,10 +216,13 @@ class OffersController extends Controller
         // Apply filters
         $query = $this->applyFilters($query, $request);
         
+        // Apply sorting
+        $query = $this->applySorting($query, $request);
+        
         // Get paginated results
         $selectedEmirateId = $request->emirate_id;
         $offers = $this->processOffers(
-            $query->orderBy('created_at', 'DESC')->paginate(12)->withQueryString(),
+            $query->paginate(12)->withQueryString(),
             $selectedEmirateId
         );
         
@@ -218,10 +255,13 @@ class OffersController extends Controller
         // Apply additional filters (except category since we're filtering by it)
         $query = $this->applyFilters($query, $request);
         
+        // Apply sorting
+        $query = $this->applySorting($query, $request);
+        
         // Get paginated results
         $selectedEmirateId = $request->emirate_id;
         $offers = $this->processOffers(
-            $query->orderBy('created_at', 'DESC')->paginate(12)->withQueryString(),
+            $query->paginate(12)->withQueryString(),
             $selectedEmirateId
         );
         
@@ -257,10 +297,13 @@ class OffersController extends Controller
         // Apply additional filters (except subcategory since we're filtering by it)
         $query = $this->applyFilters($query, $request);
         
+        // Apply sorting
+        $query = $this->applySorting($query, $request);
+        
         // Get paginated results
         $selectedEmirateId = $request->emirate_id;
         $offers = $this->processOffers(
-            $query->orderBy('created_at', 'DESC')->paginate(12)->withQueryString(),
+            $query->paginate(12)->withQueryString(),
             $selectedEmirateId
         );
         

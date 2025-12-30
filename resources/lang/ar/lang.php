@@ -58,6 +58,10 @@ return [
     'sortby' => 'ترتيب حسب',
     'newest' => 'الأحدث',
     'oldest' => 'الأقدم',
+    'price_low_to_high' => 'السعر: من الأقل للأعلى',
+    'price_high_to_low' => 'السعر: من الأعلى للأقل',
+    'area_low_to_high' => 'المساحة: من الأصغر للأكبر',
+    'area_high_to_low' => 'المساحة: من الأكبر للأصغر',
     'top_selling' => 'الأكثر مبيعاً',
     'most_viewed' => 'الأكثر مشاهدة',
     'featured' => 'مميز',
@@ -194,5 +198,7 @@ return [
     'view_all' => 'عرض الكل',
     'projects' => 'مشاريع',
     'all_projects' => 'جميع المشاريع',
+    'loading' => 'جاري التحميل',
+    'to' => 'إلى',
 ];
 

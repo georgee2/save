@@ -95,7 +95,7 @@
                                 </div>
                                 
                                 {{-- Badges --}}
-                                <div class="position-absolute" style="top: 20px; left: 20px; z-index: 5;">
+                                <div class="position-absolute" style="top: 20px; right: 20px; left: auto; z-index: 5;">
                                     <span class="badge badge-offer" style="background: linear-gradient(135deg, #e1273d 0%, #c41f33 100%); padding: 8px 16px; font-size: 12px; border-radius: 25px;">
                                         {{ __('lang.special_offer') }}
                                     </span>
@@ -607,7 +607,7 @@
 @endsection
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('/assets/css/offer-show.css') }}">
+<link rel="stylesheet" href="{{ asset('/assets/css/offer-show.css') }}?v={{ time() }}">
 @endsection
 
 @section('js')
