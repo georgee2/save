@@ -11,11 +11,12 @@ class ServiceController extends Controller
     public function index()
     {
         // Get all main services (is_sub_service = 0) that are published
+        // SoftDeletes handles deleted_at automatically
         $mainServices = Service::where('is_sub_service', 0)
                               ->where('publish_status', 0)
-                              ->whereNull('deleted_at')
                               ->with(['subServices' => function($query) {
-                                  $query->orderBy('created_at', 'asc');
+                                  $query->where('publish_status', 0)
+                                        ->orderBy('created_at', 'asc');
                               }])
                               ->orderBy('created_at', 'asc')
                               ->get();
@@ -39,7 +40,10 @@ class ServiceController extends Controller
                              'blocks', 
                              'faqs', 
                              'sectionOrders.block', 
-                             'subServices', 
+                             'subServices' => function($query) {
+                                 $query->where('publish_status', 0)
+                                       ->orderBy('created_at', 'asc');
+                             }, 
                              'parentService'
                          ])
                          ->firstOrFail();

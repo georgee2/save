@@ -24,14 +24,8 @@
                                 </ul>
                             </li>
 
-                            <li class="has_sub">
-                                <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-18px mdi-folder-multiple"></i><span> Project Types <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
-                                <ul class="list-unstyled">
-                                    <li><a href="{{route('projecttype.create')}}">Add New Project Type</a></li>
-                                    <li><a href="{{route('projecttype.index')}}">Project Types List</a></li>
-                                    <li><a href="{{route('projecttype.trashed')}}">Trashed Project Types</a></li>
-                                </ul>
-                            </li>
+                            <li style="color:#e8e8e8" class="menu-title">Projects Master</li>
+                            
 
                             <li class="has_sub">
                                 <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-18px mdi-grid"></i><span> Eng.Categories <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
@@ -48,6 +42,46 @@
                                     <li><a href="{{route('engineeringsubcategory.create')}}">Add New Sub Category</a></li>
                                     <li><a href="{{route('engineeringsubcategory.index')}}">Sub Categories List</a></li>
                                     <li><a href="{{route('engineeringsubcategory.trashed')}}">Trashed Sub Categories</a></li>
+                                </ul>
+                            </li>
+
+                            <li style="color:#e8e8e8" class="menu-title">Offers Master</li>
+                            <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-18px mdi-tag-multiple"></i><span> Offer Categories <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                                <ul class="list-unstyled">
+                                    <li><a href="{{route('offercategory.create')}}">Add New Category</a></li>
+                                    <li><a href="{{route('offercategory.index')}}">Categories List</a></li>
+                                    <li><a href="{{route('offercategory.trashed')}}">Trashed Categories</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-18px mdi-tag-outline"></i><span> <small>Offer Sub Categories</small>  <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                                <ul class="list-unstyled">
+                                    <li><a href="{{route('offersubcategory.create')}}">Add New Sub Category</a></li>
+                                    <li><a href="{{route('offersubcategory.index')}}">Sub Categories List</a></li>
+                                    <li><a href="{{route('offersubcategory.trashed')}}">Trashed Sub Categories</a></li>
+                                </ul>
+                            </li>
+
+
+                            <li style="color:#e8e8e8" class="menu-title">Master Data</li>
+
+                            <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-18px mdi-folder-multiple"></i><span> Project Types <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                                <ul class="list-unstyled">
+                                    <li><a href="{{route('projecttype.create')}}">Add New Project Type</a></li>
+                                    <li><a href="{{route('projecttype.index')}}">Project Types List</a></li>
+                                    <li><a href="{{route('projecttype.trashed')}}">Trashed Project Types</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-18px mdi-map-marker"></i><span> Emirates <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                                <ul class="list-unstyled">
+                                    <li><a href="{{route('emirate.create')}}">Add New Emirate</a></li>
+                                    <li><a href="{{route('emirate.index')}}">Emirates List</a></li>
+                                    <li><a href="{{route('emirate.trashed')}}">Trashed Emirates</a></li>
                                 </ul>
                             </li>
 
@@ -68,6 +102,7 @@
                                     <li><a href="{{route('amenity.trashed')}}">Trashed Amenities</a></li>
                                 </ul>
                             </li>
+
 
                             <li class="has_sub">
                                 <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-18px mdi-cube-outline"></i><span> Building Comp. <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
@@ -150,7 +185,7 @@
                                 </ul>
                             </li>
 
-                            <li class="has_sub">
+                            <li class="has_sub" hidden>
                                 <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-18px mdi-briefcase"></i><span> Portfolio Types <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
                                 <ul class="list-unstyled">
                                     <li><a href="{{route('portfoliotype.create')}}">Add New Portfolio Type</a></li>
@@ -158,6 +193,9 @@
                                     <li><a href="{{route('portfoliotype.trashed')}}">Trashed Portfolio Types</a></li>
                                 </ul>
                             </li>
+
+
+                            <li style="color:#e8e8e8" class="menu-title">Jobs Data</li>
 
                             <li class="has_sub">
                                 <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-18px mdi-account-card-details"></i><span> Job Titles <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
@@ -186,6 +224,9 @@
                                 </ul>
                             </li>
 
+
+                            <li style="color:#e8e8e8" class="menu-title">Language Data</li>
+
                             <li class="has_sub">
                                 <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-18px mdi-translate"></i><span> Language Manager <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
                                 <ul class="list-unstyled">
@@ -193,32 +234,9 @@
                                 </ul>
                             </li>
 
-                            <li class="has_sub">
-                                <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-18px mdi-map-marker"></i><span> Emirates <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
-                                <ul class="list-unstyled">
-                                    <li><a href="{{route('emirate.create')}}">Add New Emirate</a></li>
-                                    <li><a href="{{route('emirate.index')}}">Emirates List</a></li>
-                                    <li><a href="{{route('emirate.trashed')}}">Trashed Emirates</a></li>
-                                </ul>
-                            </li>
+                            
 
-                            <li class="has_sub">
-                                <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-18px mdi-tag-multiple"></i><span> Offer Categories <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
-                                <ul class="list-unstyled">
-                                    <li><a href="{{route('offercategory.create')}}">Add New Category</a></li>
-                                    <li><a href="{{route('offercategory.index')}}">Categories List</a></li>
-                                    <li><a href="{{route('offercategory.trashed')}}">Trashed Categories</a></li>
-                                </ul>
-                            </li>
-
-                            <li class="has_sub">
-                                <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-18px mdi-tag-outline"></i><span> <small>Offer Sub Categories</small>  <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
-                                <ul class="list-unstyled">
-                                    <li><a href="{{route('offersubcategory.create')}}">Add New Sub Category</a></li>
-                                    <li><a href="{{route('offersubcategory.index')}}">Sub Categories List</a></li>
-                                    <li><a href="{{route('offersubcategory.trashed')}}">Trashed Sub Categories</a></li>
-                                </ul>
-                            </li>
+                            
 
                         </ul>
                     </div>

@@ -63,6 +63,7 @@
                                     <th>ID</th>
                                     <th>Name (English)</th>
                                     <th>Name (Arabic)</th>
+                                    <th>Board Director</th>
                                     <th>Created At</th>
                                     <th>#Actions</th>
                                 </tr>
@@ -73,6 +74,13 @@
                                 <td>{{ $rank->id }}</td>
                                 <td>{{ $rank->name_english }}</td>
                                 <td>{{ $rank->name_arabic }}</td>
+                                <td>
+                                    @if($rank->is_board_director)
+                                        <span class="badge badge-success"><i class="fa fa-check"></i> Yes</span>
+                                    @else
+                                        <span class="badge badge-secondary"><i class="fa fa-times"></i> No</span>
+                                    @endif
+                                </td>
                                 <td>{{ \Carbon\Carbon::parse($rank->created_at)->format('M d, Y') }}</td>
                                 <td>
                                     <a href="{{ route('rank.edit', ['id' => $rank->id]) }}" class="btn btn-warning btn-sm mr-2" title="Edit">

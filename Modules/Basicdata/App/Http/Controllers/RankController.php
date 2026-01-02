@@ -44,6 +44,8 @@ class RankController extends Controller
             'name_english' => 'required|string|max:255',
             'name_arabic' => 'required|string|max:255',
         ]);
+        
+        $data['is_board_director'] = $request->has('is_board_director') ? true : false;
 
         Rank::create($data);
 
@@ -73,6 +75,8 @@ class RankController extends Controller
             'name_english' => 'required|string|max:255',
             'name_arabic' => 'required|string|max:255',
         ]);
+        
+        $data['is_board_director'] = $request->has('is_board_director') ? true : false;
 
         $rank->update($data);
 

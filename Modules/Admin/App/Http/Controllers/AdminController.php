@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 // Import all models
 use App\Models\Service;
 use App\Models\Project;
-use App\Models\Portfolio;
+use App\Models\Offer;
 use App\Models\News;
 use App\Models\Newscategory;
 use App\Models\Team;
@@ -26,6 +26,9 @@ use App\Models\Card;
 use App\Models\HomeFaq;
 use App\Models\AboutFeature;
 use App\Models\AboutCustomBlock;
+use App\Models\ContactUs;
+use App\Models\JobsPosting;
+use App\Models\JobApplication;
 
 class AdminController extends Controller
 {
@@ -45,9 +48,9 @@ class AdminController extends Controller
             'projects_published' => Project::whereNull('deleted_at')->where('publish_status', 0)->count(),
             'projects_featured' => Project::whereNull('deleted_at')->where('home_status', 0)->count(),
             
-            'portfolios' => Portfolio::whereNull('deleted_at')->count(),
-            'portfolios_published' => Portfolio::whereNull('deleted_at')->where('status', 0)->count(),
-            'portfolios_featured' => Portfolio::whereNull('deleted_at')->where('home_status', 0)->count(),
+            'offers' => Offer::whereNull('deleted_at')->count(),
+            'offers_published' => Offer::whereNull('deleted_at')->where('publish_status', 0)->count(),
+            'offers_featured' => Offer::whereNull('deleted_at')->where('home_status', 0)->count(),
             
             'news' => News::count(),
             'news_categories' => Newscategory::whereNull('deleted_at')->count(),
@@ -70,13 +73,21 @@ class AdminController extends Controller
             
             'about_features' => AboutFeature::whereNull('deleted_at')->count(),
             'about_custom_blocks' => AboutCustomBlock::whereNull('deleted_at')->count(),
+            
+            // Contact & Careers
+            'contact_submissions' => ContactUs::count(),
+            'contact_pending' => ContactUs::where('status', 'Pending')->count(),
+            'jobs_postings' => JobsPosting::whereNull('deleted_at')->count(),
+            'jobs_active' => JobsPosting::whereNull('deleted_at')->where('status', 'Publish')->count(),
+            'job_applications' => JobApplication::count(),
+            'job_applications_pending' => JobApplication::where('status', 'Received')->count(),
         ];
         
         // Get recent activity (last 30 days)
         $recentActivity = [
             'services' => Service::whereNull('deleted_at')->where('created_at', '>=', now()->subDays(30))->count(),
             'projects' => Project::whereNull('deleted_at')->where('created_at', '>=', now()->subDays(30))->count(),
-            'portfolios' => Portfolio::whereNull('deleted_at')->where('created_at', '>=', now()->subDays(30))->count(),
+            'offers' => Offer::whereNull('deleted_at')->where('created_at', '>=', now()->subDays(30))->count(),
             'news' => News::where('created_at', '>=', now()->subDays(30))->count(),
             'team_members' => Team::whereNull('deleted_at')->where('created_at', '>=', now()->subDays(30))->count(),
         ];
@@ -101,7 +112,7 @@ class AdminController extends Controller
         $months = [];
         $services = [];
         $projects = [];
-        $portfolios = [];
+        $offers = [];
         $news = [];
         
         for ($i = 5; $i >= 0; $i--) {
@@ -119,7 +130,7 @@ class AdminController extends Controller
                 ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
                 ->count();
                 
-            $portfolios[] = Portfolio::whereNull('deleted_at')
+            $offers[] = Offer::whereNull('deleted_at')
                 ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
                 ->count();
                 
@@ -131,7 +142,7 @@ class AdminController extends Controller
             'months' => $months,
             'services' => $services,
             'projects' => $projects,
-            'portfolios' => $portfolios,
+            'offers' => $offers,
             'news' => $news,
         ];
     }
@@ -168,9 +179,9 @@ class AdminController extends Controller
                 'published' => Project::whereNull('deleted_at')->where('publish_status', 0)->count(),
                 'unpublished' => Project::whereNull('deleted_at')->where('publish_status', 1)->count(),
             ],
-            'portfolios' => [
-                'published' => Portfolio::whereNull('deleted_at')->where('status', 0)->count(),
-                'unpublished' => Portfolio::whereNull('deleted_at')->where('status', 1)->count(),
+            'offers' => [
+                'published' => Offer::whereNull('deleted_at')->where('publish_status', 0)->count(),
+                'unpublished' => Offer::whereNull('deleted_at')->where('publish_status', 1)->count(),
             ],
         ];
     }
