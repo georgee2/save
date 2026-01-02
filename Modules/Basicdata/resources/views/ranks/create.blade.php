@@ -46,6 +46,19 @@
                                 @enderror
                             </div>
                         </div>
+                        
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label class="text-capitalize d-block">Board Director</label>
+                                <div class="checkbox checkbox-primary">
+                                    <input type="checkbox" id="is_board_director" name="is_board_director" {{ old('is_board_director') ? 'checked' : '' }}>
+                                    <label for="is_board_director">
+                                        <span class="badge badge-info">Mark as Board Director</span>
+                                    </label>
+                                </div>
+                                <small class="text-muted d-block mt-1">Enable this if the rank belongs to board of directors</small>
+                            </div>
+                        </div>
 
                         <hr>
                         <div class="form-group mb-0">

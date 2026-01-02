@@ -9,10 +9,6 @@
                          class="d-inline-block d-lg-none">
             </a>
             <div class="d-flex d-lg-none ml-auto">
-              <a class="mr-4 position-relative text-white p-2" href="#">
-                <i class="fal fa-heart fs-large-4"></i>
-                <span class="badge badge-primary badge-circle badge-absolute">1</span>
-              </a>
               <button class="navbar-toggler border-0 px-0" type="button" data-toggle="collapse"
                             data-target="#primaryMenu01"
                             aria-controls="primaryMenu01" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,8 +21,59 @@
                 <li id="navbar-item-home" aria-haspopup="false" aria-expanded="false"
         class="nav-item py-2 py-lg-5 px-0 px-lg-4">
                   <a class="nav-link p-0" href="{{ route('index') }}">
-                    Home
+                    {{ __('lang.home') }}
                   </a>
+                </li>
+                <!-- Services Nav with Parent and Sub Services -->
+                <li id="navbar-item-services" aria-haspopup="true" aria-expanded="false"
+        class="nav-item dropdown py-2 py-lg-5 px-0 px-lg-4">
+                  <a class="nav-link dropdown-toggle p-0"
+           href="{{ route('services.index') }}" data-toggle="dropdown">
+                    {{ __('lang.services') }}
+                    <span class="caret"></span>
+                  </a>
+                  <ul class="dropdown-menu pt-3 pb-0 pb-lg-3" aria-labelledby="navbar-item-services" style="min-width: 320px;">
+                    <li class="dropdown-item">
+                      <a class="dropdown-link font-weight-600" href="{{ route('services.index') }}">
+                        <i class="fal fa-th-large mr-2"></i>
+                        {{ __('lang.all_services') }}
+                      </a>
+                    </li>
+                    <li class="dropdown-divider"></li>
+                    @if(isset($headerServices) && $headerServices->count() > 0)
+                      @foreach($headerServices as $headerService)
+                        <li class="dropdown-item dropdown dropright">
+                          <a id="navbar-link-service-{{ $headerService->id }}"
+                       class="dropdown-link @if($headerService->subServices && $headerService->subServices->count() > 0) dropdown-toggle @endif"
+                       href="{{ route('services.show', $headerService->slug) }}">
+                            @if($headerService->icon)
+                              <img src="{{ asset('storage' . $headerService->icon) }}" alt="" style="width: 18px; height: 18px; margin-right: 8px; object-fit: contain;">
+                            @else
+                              <i class="fal fa-cog mr-2"></i>
+                            @endif
+                            {{ app()->getLocale() == 'ar' ? $headerService->title_arabic : $headerService->title_english }}
+                          </a>
+                          @if($headerService->subServices && $headerService->subServices->count() > 0)
+                            <ul class="dropdown-menu dropdown-submenu pt-3 pb-0 pb-lg-3" style="min-width: 280px;"
+                        aria-labelledby="navbar-link-service-{{ $headerService->id }}">
+                              @foreach($headerService->subServices as $subService)
+                                <li class="dropdown-item">
+                                  <a class="dropdown-link" href="{{ route('services.show', $subService->slug) }}">
+                                    @if($subService->icon)
+                                      <img src="{{ asset('storage' . $subService->icon) }}" alt="" style="width: 16px; height: 16px; margin-right: 6px; object-fit: contain;">
+                                    @else
+                                      <i class="fal fa-angle-right mr-2"></i>
+                                    @endif
+                                    {{ app()->getLocale() == 'ar' ? $subService->title_arabic : $subService->title_english }}
+                                  </a>
+                                </li>
+                              @endforeach
+                            </ul>
+                          @endif
+                        </li>
+                      @endforeach
+                    @endif
+                  </ul>
                 </li>
                 <!-- Offers Nav with Categories and Subcategories -->
                 <li id="navbar-item-offers" aria-haspopup="true" aria-expanded="false"
@@ -155,6 +202,15 @@
                     @endif
                   </ul>
                 </li>
+                <!-- Careers Nav (No Child) - Only show if there are active jobs -->
+                @if(isset($hasActiveJobs) && $hasActiveJobs)
+                <li id="navbar-item-careers" aria-haspopup="false" aria-expanded="false"
+        class="nav-item py-2 py-lg-5 px-0 px-lg-4">
+                  <a class="nav-link p-0" href="{{ route('careers.index') }}">
+                    {{ __('lang.careers') }}
+                  </a>
+                </li>
+                @endif
                 <!-- About Nav (No Child) -->
                 <li id="navbar-item-about" aria-haspopup="false" aria-expanded="false"
         class="nav-item py-2 py-lg-5 px-0 px-lg-4">
@@ -167,53 +223,6 @@
         class="nav-item py-2 py-lg-5 px-0 px-lg-4">
                   <a class="nav-link p-0" href="{{ route('contact') }}">
                     {{ __('lang.contact_us') }}
-                  </a>
-                </li>
-              </ul>
-              <div class="d-block d-lg-none">
-                <ul class="navbar-nav flex-row justify-content-lg-end d-flex flex-wrap py-2">
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle mr-md-2 pr-2 pl-0 pl-lg-2"
-           href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      ENG
-                    </a>
-                    <div class="dropdown-menu dropdown-sm dropdown-menu-left">
-                      <a class="dropdown-item" href="#">VN</a>
-                      <a class="dropdown-item active" href="#">ENG</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">ARB</a>
-                      <a class="dropdown-item" href="#">KR</a>
-                      <a class="dropdown-item" href="#">JN</a>
-                    </div>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link  px-2" data-toggle="modal" href="#login-register-modal">SIGN IN</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="d-none d-lg-block">
-              <ul class="navbar-nav flex-row justify-content-lg-end d-flex flex-wrap text-body py-2">
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle mr-md-2 pr-2 pl-0 pl-lg-2"
-           href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    ENG
-                  </a>
-                  <div class="dropdown-menu dropdown-sm dropdown-menu-right">
-                    <a class="dropdown-item" href="#">VN</a>
-                    <a class="dropdown-item active" href="#">ENG</a>
-                    <a class="dropdown-item" href="#">ARB</a>
-                    <a class="dropdown-item" href="#">KR</a>
-                    <a class="dropdown-item" href="#">JN</a>
-                  </div>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link  px-2" data-toggle="modal" href="#login-register-modal">SIGN IN</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link px-2 position-relative" href="#">
-                    <i class="fal fa-heart fs-large-4"></i>
-                    <span class="badge badge-primary badge-circle badge-absolute">1</span>
                   </a>
                 </li>
               </ul>

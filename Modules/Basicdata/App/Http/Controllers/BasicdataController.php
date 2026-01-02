@@ -27,6 +27,9 @@ use App\Models\PortfolioType;
 use App\Models\JobTitle;
 use App\Models\JobCategory;
 use App\Models\Rank;
+use App\Models\Emirate;
+use App\Models\OfferCategory;
+use App\Models\OfferSubCategory;
 
 class BasicdataController extends Controller
 {
@@ -42,6 +45,11 @@ class BasicdataController extends Controller
             'engineering_categories' => EngineeringCategory::whereNull('deleted_at')->count(),
             'engineering_subcategories' => EngineeringSubCategory::whereNull('deleted_at')->count(),
             'project_styles' => ProjectStyle::whereNull('deleted_at')->count(),
+            
+            // Location & Offers
+            'emirates' => Emirate::whereNull('deleted_at')->count(),
+            'offer_categories' => OfferCategory::whereNull('deleted_at')->count(),
+            'offer_subcategories' => OfferSubCategory::whereNull('deleted_at')->count(),
             
             // Components
             'amenities' => Amenity::whereNull('deleted_at')->count(),
@@ -71,6 +79,8 @@ class BasicdataController extends Controller
             'building_components' => BuildingComponent::whereNull('deleted_at')->where('created_at', '>=', now()->subDays(30))->count(),
             'amenities' => Amenity::whereNull('deleted_at')->where('created_at', '>=', now()->subDays(30))->count(),
             'specifications' => Specification::whereNull('deleted_at')->where('created_at', '>=', now()->subDays(30))->count(),
+            'emirates' => Emirate::whereNull('deleted_at')->where('created_at', '>=', now()->subDays(30))->count(),
+            'offer_categories' => OfferCategory::whereNull('deleted_at')->where('created_at', '>=', now()->subDays(30))->count(),
         ];
         
         // Get monthly data for charts (last 6 months)
@@ -82,7 +92,10 @@ class BasicdataController extends Controller
         // Get component types distribution
         $componentDistribution = $this->getComponentDistribution();
         
-        return view('basicdata::index', compact('stats', 'recentActivity', 'monthlyData', 'categoryDistribution', 'componentDistribution'));
+        // Calculate total items
+        $totalItems = array_sum($stats);
+        
+        return view('basicdata::index', compact('stats', 'recentActivity', 'monthlyData', 'categoryDistribution', 'componentDistribution', 'totalItems'));
     }
     
     /**

@@ -6,7 +6,9 @@ use Illuminate\View\View;
 use App\Models\EngineeringCategory;
 use App\Models\OfferCategory;
 use App\Models\ContactInformation;
+use App\Models\Service;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class HeaderComposer
 {
@@ -53,11 +55,33 @@ class HeaderComposer
             ->orderBy('newscategories.name_english', 'ASC')
             ->get();
 
+        // Get main services with their sub-services for services menu
+        $headerServices = Service::with(['subServices' => function($query) {
+            $query->where('publish_status', 0)
+                  ->orderBy('created_at', 'ASC');
+        }])
+            ->where('is_sub_service', 0)
+            ->where('publish_status', 0)
+            ->whereNull('deleted_at')
+            ->orderBy('created_at', 'ASC')
+            ->get();
+
+        // Check if there are active job postings for careers menu visibility
+        $today = Carbon::today();
+        $hasActiveJobs = DB::table('jobs_postings')
+            ->where('status', 'Publish')
+            ->whereDate('registration_start_date', '<=', $today)
+            ->whereDate('registration_end_date', '>=', $today)
+            ->whereNull('deleted_at')
+            ->exists();
+
         $view->with([
             'headerProjectCategories' => $headerProjectCategories,
             'headerOfferCategories' => $headerOfferCategories,
             'footerContactInfo' => $footerContactInfo,
             'headerNewsCategories' => $headerNewsCategories,
+            'headerServices' => $headerServices,
+            'hasActiveJobs' => $hasActiveJobs,
         ]);
     }
 }

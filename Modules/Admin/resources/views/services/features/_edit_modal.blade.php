@@ -44,12 +44,16 @@
                         </div>
                         
                         <div class="form-group col-md-6">
-                            <label>Feature Image (400x300px)</label>
+                            <label>Feature Image</label>
                             @if($feature->image)
                                 <input type="file" class="form-control dropify" name="image" accept="image/*" data-default-file="{{url('/storage' . $feature->image)}}" data-max-file-size="2M">
                             @else
                                 <input type="file" class="form-control dropify" name="image" accept="image/*" data-max-file-size="2M">
                             @endif
+                            <small class="text-info d-block mt-1">
+                                <i class="mdi mdi-information-outline"></i> 
+                                Recommended: <strong>600x220px</strong> (or wider). Image will be auto-cropped to fit the card.
+                            </small>
                         </div>
                     </div>
                 </div>

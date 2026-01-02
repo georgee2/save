@@ -20,7 +20,7 @@ class Rank extends Model
     public static function list()
     {
         return DB::table('ranks')
-            ->select('id', 'name_english', 'name_arabic', 'created_at', 'updated_at')
+            ->select('id', 'name_english', 'name_arabic', 'is_board_director', 'created_at', 'updated_at')
             ->whereNull('deleted_at')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -32,7 +32,7 @@ class Rank extends Model
     public static function trashed()
     {
         return DB::table('ranks')
-            ->select('id', 'name_english', 'name_arabic', 'deleted_at')
+            ->select('id', 'name_english', 'name_arabic', 'is_board_director', 'deleted_at')
             ->whereNotNull('deleted_at')
             ->orderBy('deleted_at', 'desc')
             ->get();
@@ -47,6 +47,19 @@ class Rank extends Model
             ->where('id', $id)
             ->whereNull('deleted_at')
             ->first();
+    }
+    
+    /**
+     * Get board director ranks
+     */
+    public static function getBoardDirectors()
+    {
+        return DB::table('ranks')
+            ->select('id', 'name_english', 'name_arabic')
+            ->where('is_board_director', true)
+            ->whereNull('deleted_at')
+            ->orderBy('name_english', 'asc')
+            ->get();
     }
 }
 

@@ -45,7 +45,7 @@
                                 </ul>
                             </li>
 
-                            <li class="has_sub">
+                            <li class="has_sub" hidden>
                                 <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-folder-open"></i><span> Portfolio <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
                                 <ul class="list-unstyled">
                                     <li><a href="{{route('portfolio.create')}}">Add New Portfolio</a></li>

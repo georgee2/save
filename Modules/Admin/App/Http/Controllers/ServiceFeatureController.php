@@ -33,10 +33,13 @@ class ServiceFeatureController extends Controller
             $data['icon'] = "/uploads/features/icons/{$iconName}";
         }
 
-        // Image Upload (optional)
+        // Image Upload (optional) - Fit to card dimensions (600x220 for slider cards)
         if ($request->hasFile('image')) {
             $imageFile = $request->file('image');
-            $image = Image::make($imageFile)->resize(400, 300)->encode('webp', 80);
+            // Use fit() to crop and resize to exact dimensions for consistent card display
+            $image = Image::make($imageFile)->fit(600, 220, function ($constraint) {
+                $constraint->upsize(); // Prevent upsizing small images
+            })->encode('webp', 85);
             $imageName = Str::random() . ".webp";
             Storage::disk('public')->put('/uploads/features/images/' . $imageName, (string) $image);
             $data['image'] = "/uploads/features/images/{$imageName}";
@@ -75,7 +78,7 @@ class ServiceFeatureController extends Controller
             $data['icon'] = "/uploads/features/icons/{$iconName}";
         }
 
-        // Image Upload (optional)
+        // Image Upload (optional) - Fit to card dimensions (600x220 for slider cards)
         if ($request->hasFile('image')) {
             // Delete old image
             if ($feature->image && Storage::disk('public')->exists($feature->image)) {
@@ -83,7 +86,10 @@ class ServiceFeatureController extends Controller
             }
 
             $imageFile = $request->file('image');
-            $image = Image::make($imageFile)->resize(400, 300)->encode('webp', 80);
+            // Use fit() to crop and resize to exact dimensions for consistent card display
+            $image = Image::make($imageFile)->fit(600, 220, function ($constraint) {
+                $constraint->upsize(); // Prevent upsizing small images
+            })->encode('webp', 85);
             $imageName = Str::random() . ".webp";
             Storage::disk('public')->put('/uploads/features/images/' . $imageName, (string) $image);
             $data['image'] = "/uploads/features/images/{$imageName}";

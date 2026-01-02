@@ -186,13 +186,17 @@ class Service extends Model
         return $this->hasMany(ServiceSectionOrder::class)->orderBy('order');
     }
     
-    // Relationship for sub-services
+    // Relationship for sub-services (published only)
     public function subServices()
     {
         return $this->hasMany(Service::class, 'service_id', 'id')
-                    ->where('is_sub_service', 1)
-                    ->where('publish_status', 0)
-                    ->whereNull('deleted_at');
+                    ->where('publish_status', 0);
+    }
+    
+    // Relationship for all sub-services (including unpublished)
+    public function allSubServices()
+    {
+        return $this->hasMany(Service::class, 'service_id', 'id');
     }
     
     // Relationship for parent service
