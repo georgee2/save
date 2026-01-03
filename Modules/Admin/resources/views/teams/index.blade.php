@@ -54,6 +54,29 @@
                     </div>
                     <hr>
                     
+                    <!-- Nav tabs for Team Members and Board -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#allMembers" role="tab">
+                                <i class="fa fa-users"></i> All Members ({{ count($teams) }})
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#regularOrder" role="tab">
+                                <i class="fa fa-sort"></i> Regular Members Order ({{ count($regularMembers) }})
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#boardOrder" role="tab">
+                                <i class="fa fa-star"></i> Board of Directors Order ({{ count($boardMembers) }})
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content mt-3">
+                        <!-- All Members Tab -->
+                        <div class="tab-pane fade show active" id="allMembers" role="tabpanel">
+                    
                     <table id="datatable" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                         <thead>
                             <tr>
@@ -63,8 +86,8 @@
                                 <th>Name (Arabic)</th>
                                 <th>Job Title</th>
                                 <th>Rank</th>
+                                <th>Board</th>
                                 <th>Email</th>
-                                <th>Mobile</th>
                                 <th>Created At</th>
                                 <th>#Actions</th>
                             </tr>
@@ -86,8 +109,14 @@
                                 <td>{{ $team->name_arabic }}</td>
                                 <td>{{ $team->job_title_english ?? 'N/A' }}</td>
                                 <td>{{ $team->rank_english ?? 'N/A' }}</td>
+                                <td>
+                                    @if($team->is_board_director)
+                                        <span class="badge badge-success"><i class="fa fa-star"></i> Board</span>
+                                    @else
+                                        <span class="badge badge-secondary">Regular</span>
+                                    @endif
+                                </td>
                                 <td>{{ $team->email }}</td>
-                                <td>{{ $team->mobile }}</td>
                                 <td>{{ \Carbon\Carbon::parse($team->created_at)->format('M d, Y') }}</td>
                                 <td>
                                     <a href="{{ route('admin.team.show', ['id' => $team->id]) }}" class="btn btn-info btn-sm mr-2" title="View Details">
@@ -127,10 +156,206 @@
                             @endforeach
                         </tbody>
                     </table>
+                        </div>
+                        <!-- End All Members Tab -->
+                        
+                        <!-- Regular Members Order Tab -->
+                        <div class="tab-pane fade" id="regularOrder" role="tabpanel">
+                            <div class="alert alert-info">
+                                <i class="fa fa-info-circle"></i> Drag and drop to reorder regular team members. Changes are saved automatically.
+                            </div>
+                            <div id="regularMembersList" class="sortable-list">
+                                @foreach($regularMembers as $index => $member)
+                                <div class="sortable-item card mb-2" data-id="{{ $member->id }}">
+                                    <div class="card-body d-flex align-items-center py-2">
+                                        <span class="drag-handle mr-3" style="cursor: move; font-size: 18px;">
+                                            <i class="fa fa-bars text-muted"></i>
+                                        </span>
+                                        <span class="badge badge-primary mr-3" style="min-width: 30px;">{{ $index + 1 }}</span>
+                                        @if($member->main_image)
+                                            <img style="width:40px; height: 40px; object-fit: cover; border-radius: 50%;" src="{{url('/storage'.$member->main_image)}}" alt="Team Member" class="mr-3">
+                                        @else
+                                            <div style="width:40px; height: 40px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center;" class="mr-3">
+                                                <i class="fa fa-user text-muted"></i>
+                                            </div>
+                                        @endif
+                                        <div>
+                                            <strong>{{ $member->name_english }}</strong>
+                                            <br><small class="text-muted">{{ $member->job_title_english }} - {{ $member->rank_english }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                            @if(count($regularMembers) == 0)
+                                <div class="alert alert-warning">
+                                    <i class="fa fa-exclamation-triangle"></i> No regular team members found.
+                                </div>
+                            @endif
+                        </div>
+                        <!-- End Regular Members Order Tab -->
+                        
+                        <!-- Board of Directors Order Tab -->
+                        <div class="tab-pane fade" id="boardOrder" role="tabpanel">
+                            <div class="alert alert-info">
+                                <i class="fa fa-info-circle"></i> Drag and drop to reorder board of directors. Changes are saved automatically.
+                            </div>
+                            <div id="boardMembersList" class="sortable-list">
+                                @foreach($boardMembers as $index => $member)
+                                <div class="sortable-item card mb-2" data-id="{{ $member->id }}">
+                                    <div class="card-body d-flex align-items-center py-2">
+                                        <span class="drag-handle mr-3" style="cursor: move; font-size: 18px;">
+                                            <i class="fa fa-bars text-muted"></i>
+                                        </span>
+                                        <span class="badge badge-success mr-3" style="min-width: 30px;">{{ $index + 1 }}</span>
+                                        @if($member->main_image)
+                                            <img style="width:40px; height: 40px; object-fit: cover; border-radius: 50%;" src="{{url('/storage'.$member->main_image)}}" alt="Team Member" class="mr-3">
+                                        @else
+                                            <div style="width:40px; height: 40px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center;" class="mr-3">
+                                                <i class="fa fa-user text-muted"></i>
+                                            </div>
+                                        @endif
+                                        <div>
+                                            <strong>{{ $member->name_english }}</strong> <span class="badge badge-success ml-2"><i class="fa fa-star"></i> Board</span>
+                                            <br><small class="text-muted">{{ $member->job_title_english }} - {{ $member->rank_english }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                            @if(count($boardMembers) == 0)
+                                <div class="alert alert-warning">
+                                    <i class="fa fa-exclamation-triangle"></i> No board of directors members found.
+                                </div>
+                            @endif
+                        </div>
+                        <!-- End Board of Directors Order Tab -->
+                        
+                    </div>
+                    <!-- End Tab Content -->
                 </div>
             </div>
         </div>
     </div>
 </div>
+@endsection
+
+@section('css')
+<style>
+    .sortable-item {
+        transition: all 0.2s ease;
+        border: 1px solid #e9ecef;
+    }
+    .sortable-item:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .sortable-item.sortable-ghost {
+        opacity: 0.4;
+        background: #f8f9fa;
+    }
+    .sortable-item.sortable-chosen {
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .drag-handle:hover i {
+        color: #333 !important;
+    }
+    .nav-tabs .nav-link.active {
+        font-weight: 600;
+        border-bottom: 3px solid #007bff;
+    }
+</style>
+@endsection
+
+@section('js')
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Initialize Sortable for Regular Members
+    var regularList = document.getElementById('regularMembersList');
+    if (regularList) {
+        new Sortable(regularList, {
+            animation: 150,
+            handle: '.drag-handle',
+            ghostClass: 'sortable-ghost',
+            chosenClass: 'sortable-chosen',
+            onEnd: function(evt) {
+                updateRegularOrder();
+            }
+        });
+    }
+    
+    // Initialize Sortable for Board Members
+    var boardList = document.getElementById('boardMembersList');
+    if (boardList) {
+        new Sortable(boardList, {
+            animation: 150,
+            handle: '.drag-handle',
+            ghostClass: 'sortable-ghost',
+            chosenClass: 'sortable-chosen',
+            onEnd: function(evt) {
+                updateBoardOrder();
+            }
+        });
+    }
+    
+    // Update Regular Members Order
+    function updateRegularOrder() {
+        var orders = [];
+        $('#regularMembersList .sortable-item').each(function(index) {
+            orders.push({
+                id: $(this).data('id'),
+                position: index + 1
+            });
+            // Update badge number
+            $(this).find('.badge-primary').text(index + 1);
+        });
+        
+        $.ajax({
+            url: '{{ route("admin.team.update-display-order") }}',
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                orders: orders
+            },
+            success: function(response) {
+                // Optional: show toast/notification
+                console.log('Display order updated');
+            },
+            error: function(xhr) {
+                console.error('Error updating display order');
+            }
+        });
+    }
+    
+    // Update Board Members Order
+    function updateBoardOrder() {
+        var orders = [];
+        $('#boardMembersList .sortable-item').each(function(index) {
+            orders.push({
+                id: $(this).data('id'),
+                position: index + 1
+            });
+            // Update badge number
+            $(this).find('.badge-success').first().text(index + 1);
+        });
+        
+        $.ajax({
+            url: '{{ route("admin.team.update-board-order") }}',
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                orders: orders
+            },
+            success: function(response) {
+                // Optional: show toast/notification
+                console.log('Board order updated');
+            },
+            error: function(xhr) {
+                console.error('Error updating board order');
+            }
+        });
+    }
+});
+</script>
 @endsection
 

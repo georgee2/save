@@ -13,7 +13,11 @@
                 <div class="col-lg-4 col-md-6 mb-5 mb-lg-0">
                     <div class="footer-widget footer-about">
                         <a href="{{ url('/') }}" class="footer-logo">
-                            <img src="{{ url('/pic/svgwhite.svg') }}" alt="{{ env('APP_NAME') }}">
+                            @if(app()->getLocale() == 'ar')
+                            <img src="{{ url('/pic/logos/logoarfooter.png') }}" alt="{{ env('APP_NAME') }}">
+                            @else
+                            <img src="{{ url('/pic/logos/logoenfooter.png') }}" alt="{{ env('APP_NAME') }}">
+                            @endif
                         </a>
                         @if($footerContactInfo && ($footerContactInfo->footer_bio_english || $footerContactInfo->footer_bio_arabic))
                         <p class="footer-bio">
@@ -63,43 +67,94 @@
                     </div>
                 </div>
 
-                {{-- Categories Column --}}
+                {{-- Quick Links Column --}}
                 <div class="col-lg-2 col-md-6 mb-5 mb-lg-0">
                     <div class="footer-widget">
-                        <h4 class="footer-widget-title">{{ __('lang.categories') }}</h4>
+                        <h4 class="footer-widget-title">{{ __('lang.quick_links') }}</h4>
                         <ul class="footer-links">
-                            @if(isset($headerProjectCategories))
-                                @foreach($headerProjectCategories->take(6) as $category)
-                                <li>
-                                    <a href="{{ route('category.show', $category->slug) }}">
-                                        <i class="fas fa-chevron-right"></i>
-                                        {{ app()->getLocale() == 'ar' ? $category->title_arabic : $category->title_english }}
-                                    </a>
-                                </li>
-                                @endforeach
-                            @endif
+                            <li>
+                                <a href="{{ route('index') }}">
+                                    <i class="fas fa-chevron-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}"></i>
+                                    {{ __('lang.home') }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('services.index') }}">
+                                    <i class="fas fa-chevron-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}"></i>
+                                    {{ __('lang.services') }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('offers.index') }}">
+                                    <i class="fas fa-chevron-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}"></i>
+                                    {{ __('lang.offers') }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('projects.index') }}">
+                                    <i class="fas fa-chevron-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}"></i>
+                                    {{ __('lang.projects') }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('blogs.index') }}">
+                                    <i class="fas fa-chevron-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}"></i>
+                                    {{ __('lang.news') }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('contact') }}">
+                                    <i class="fas fa-chevron-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}"></i>
+                                    {{ __('lang.contact_us') }}
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
 
-                {{-- Resources Column --}}
+                {{-- Company Column --}}
                 <div class="col-lg-2 col-md-6 mb-5 mb-lg-0">
                     <div class="footer-widget">
-                        <h4 class="footer-widget-title">{{ __('lang.resources') }}</h4>
+                        <h4 class="footer-widget-title">{{ __('lang.company') }}</h4>
                         <ul class="footer-links">
                             <li>
-                                <a href="{{ route('blogs.index') }}">
-                                    <i class="fas fa-chevron-right"></i>
-                                    {{ __('lang.news_and_articles') }}
+                                <a href="{{ route('about') }}">
+                                    <i class="fas fa-chevron-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}"></i>
+                                    {{ __('lang.about_us') }}
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ url('/sitemap.xml') }}" target="_blank">
-                                    <i class="fas fa-chevron-right"></i>
-                                    {{ __('lang.sitemap') }}
+                                <a href="{{ route('team.board') }}">
+                                    <i class="fas fa-chevron-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}"></i>
+                                    {{ __('lang.board_of_directors') }}
                                 </a>
                             </li>
-                            {{-- Add more resource links here --}}
+                            <li>
+                                <a href="{{ route('team.index') }}">
+                                    <i class="fas fa-chevron-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}"></i>
+                                    {{ __('lang.our_team') }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('partners.index') }}">
+                                    <i class="fas fa-chevron-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}"></i>
+                                    {{ __('lang.our_partners') }}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('branches.index') }}">
+                                    <i class="fas fa-chevron-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}"></i>
+                                    {{ __('lang.our_branches') }}
+                                </a>
+                            </li>
+                            @if(isset($hasActiveJobs) && $hasActiveJobs)
+                            <li>
+                                <a href="{{ route('careers.index') }}">
+                                    <i class="fas fa-chevron-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}"></i>
+                                    {{ __('lang.careers') }}
+                                </a>
+                            </li>
+                            @endif
                         </ul>
                     </div>
                 </div>
@@ -149,6 +204,17 @@
                                     </div>
                                 </li>
                                 @endif
+                                @if($footerContactInfo->working_hours_english || $footerContactInfo->working_hours_arabic)
+                                <li>
+                                    <div class="contact-icon">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="contact-text">
+                                        <span class="contact-label">{{ __('lang.working_hours') }}</span>
+                                        <p>{{ app()->getLocale() == 'ar' ? $footerContactInfo->working_hours_arabic : $footerContactInfo->working_hours_english }}</p>
+                                    </div>
+                                </li>
+                                @endif
                             @endif
                         </ul>
                     </div>
@@ -161,18 +227,19 @@
     <div class="footer-bottom">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-md-6 text-center text-md-left">
+                <div class="col-md-6 text-center text-md-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }}">
                     <p class="copyright">
                         &copy; {{ date('Y') }} {{ env('APP_NAME') }}. {{ __('lang.all_rights_reserved') }}
                     </p>
                 </div>
-                <div class="col-md-6 text-center text-md-right">
+                <div class="col-md-6 text-center text-md-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}">
                     <ul class="footer-bottom-links">
-                        <li><a href="{{ url('/sitemap.xml') }}" target="_blank">{{ __('lang.sitemap') }}</a></li>
+                        <li><a href="{{ route('about') }}">{{ __('lang.about_us') }}</a></li>
+                        <li><a href="{{ route('contact') }}">{{ __('lang.contact_us') }}</a></li>
+                        <li><a href="{{ route('sitemap') }}" target="_blank">{{ __('lang.sitemap') }}</a></li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 </footer>
-

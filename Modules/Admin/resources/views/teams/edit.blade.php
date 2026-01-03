@@ -82,10 +82,24 @@
                                     @foreach($ranks as $rank)
                                         <option value="{{ $rank->id }}" {{ old('rank_id', $team->rank_id) == $rank->id ? 'selected' : '' }}>
                                             {{ $rank->name_english }} - {{ $rank->name_arabic }}
+                                            @if($rank->is_board_director) (Board Director) @endif
                                         </option>
                                     @endforeach
                                 </select>
                                 @error('rank_id')<span class="text-danger mt-1">{{ $message }}</span>@enderror
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label class="text-capitalize">Board of Directors</label>
+                                <div class="mt-2">
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" name="is_board_director" value="1" {{ old('is_board_director', $team->is_board_director) ? 'checked' : '' }}>
+                                        <span class="custom-control-label">Yes, this member is part of the Board of Directors</span>
+                                    </label>
+                                </div>
+                                <small class="text-muted">Board members will be displayed separately and can be ordered independently</small>
                             </div>
                         </div>
 

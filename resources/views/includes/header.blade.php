@@ -2,11 +2,18 @@
       <div class="sticky-area">
         <div class="container">
           <nav class="navbar navbar-expand-lg px-0">
-            <a class="navbar-brand" href=".">
-              <img style="max-width: 200px;max-height: 90px" src="{{url('/pic/logo.png')}}" alt="HomeID"
+            <a class="navbar-brand" href="{{ route('index') }}">
+              @if(app()->getLocale() == 'ar')
+              <img style="max-width: 200px;max-height: 90px" src="{{ url('/pic/logos/logoar.png') }}" alt="{{ env('APP_NAME') }}"
                          class="d-none d-lg-inline-block">
-              <img src="images/logo-white.png" alt="HomeID"
+              <img style="max-width: 150px;max-height: 70px" src="{{ url('/pic/logos/logoar.png') }}" alt="{{ env('APP_NAME') }}"
                          class="d-inline-block d-lg-none">
+              @else
+              <img style="max-width: 200px;max-height: 90px" src="{{ url('/pic/logos/logoen.png') }}" alt="{{ env('APP_NAME') }}"
+                         class="d-none d-lg-inline-block">
+              <img style="max-width: 150px;max-height: 70px" src="{{ url('/pic/logos/logoen.png') }}" alt="{{ env('APP_NAME') }}"
+                         class="d-inline-block d-lg-none">
+              @endif
             </a>
             <div class="d-flex d-lg-none ml-auto">
               <button class="navbar-toggler border-0 px-0" type="button" data-toggle="collapse"
@@ -202,6 +209,58 @@
                     @endif
                   </ul>
                 </li>
+                
+                <!-- About Nav with Team as Child -->
+                <li id="navbar-item-about" aria-haspopup="true" aria-expanded="false"
+        class="nav-item dropdown py-2 py-lg-5 px-0 px-lg-4">
+                  <a class="nav-link dropdown-toggle p-0"
+           href="{{ route('about') }}" data-toggle="dropdown">
+                    {{ __('lang.about_us') }}
+                    <span class="caret"></span>
+                  </a>
+                  <ul class="dropdown-menu pt-3 pb-0 pb-lg-3" aria-labelledby="navbar-item-about" style="min-width: 250px;">
+                    <li class="dropdown-item">
+                      <a class="dropdown-link font-weight-600" href="{{ route('about') }}">
+                        <i class="fal fa-info-circle mr-2"></i>
+                        {{ __('lang.about_company') }}
+                      </a>
+                    </li>
+                    <li class="dropdown-divider"></li>
+                    <li class="dropdown-item">
+                      <a class="dropdown-link" href="{{ route('team.board') }}">
+                        <i class="fal fa-user-tie mr-2"></i>
+                        {{ __('lang.board_of_directors') }}
+                      </a>
+                    </li>
+                    <li class="dropdown-item">
+                      <a class="dropdown-link" href="{{ route('team.index') }}">
+                        <i class="fal fa-users mr-2"></i>
+                        {{ __('lang.our_team') }}
+                      </a>
+                    </li>
+                    <li class="dropdown-item">
+                      <a class="dropdown-link" href="{{ route('partners.index') }}">
+                        <i class="fal fa-handshake mr-2"></i>
+                        {{ __('lang.our_partners') }}
+                      </a>
+                    </li>
+                    <li class="dropdown-divider"></li>
+                    <li class="dropdown-item">
+                      <a class="dropdown-link" href="{{ route('branches.index') }}">
+                        <i class="fal fa-building mr-2"></i>
+                        {{ __('lang.our_branches') }}
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <!-- Contact Nav (No Child) -->
+                <li id="navbar-item-contact" aria-haspopup="false" aria-expanded="false"
+        class="nav-item py-2 py-lg-5 px-0 px-lg-4">
+                  <a class="nav-link p-0" href="{{ route('contact') }}">
+                    {{ __('lang.contact_us') }}
+                  </a>
+                </li>
+
                 <!-- Careers Nav (No Child) - Only show if there are active jobs -->
                 @if(isset($hasActiveJobs) && $hasActiveJobs)
                 <li id="navbar-item-careers" aria-haspopup="false" aria-expanded="false"
@@ -211,20 +270,6 @@
                   </a>
                 </li>
                 @endif
-                <!-- About Nav (No Child) -->
-                <li id="navbar-item-about" aria-haspopup="false" aria-expanded="false"
-        class="nav-item py-2 py-lg-5 px-0 px-lg-4">
-                  <a class="nav-link p-0" href="{{ route('about') }}">
-                    {{ __('lang.about_us') }}
-                  </a>
-                </li>
-                <!-- Contact Nav (No Child) -->
-                <li id="navbar-item-contact" aria-haspopup="false" aria-expanded="false"
-        class="nav-item py-2 py-lg-5 px-0 px-lg-4">
-                  <a class="nav-link p-0" href="{{ route('contact') }}">
-                    {{ __('lang.contact_us') }}
-                  </a>
-                </li>
               </ul>
             </div>
           </nav>

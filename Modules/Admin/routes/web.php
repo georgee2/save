@@ -221,6 +221,7 @@ Route::group(
                 Route::get('/show/{id}', [PartnerController::class, 'show'])->name('partner.show');
                 Route::get('/trashed', [PartnerController::class, 'trashed'])->name('partner.trashed');
                 Route::post('/restore/{id}', [PartnerController::class, 'restore'])->name('partner.restore');
+                Route::post('/update-order', [PartnerController::class, 'updateOrder'])->name('partner.update-order');
             });
             
             // Slider Routes
@@ -429,6 +430,8 @@ Route::group(
                 Route::post('/delete/{id}', [TeamController::class, 'destroy'])->name('delete');
                 Route::get('/trashed', [TeamController::class, 'trashed'])->name('trashed');
                 Route::post('/restore/{id}', [TeamController::class, 'restore'])->name('restore');
+                Route::post('/update-display-order', [TeamController::class, 'updateDisplayOrder'])->name('update-display-order');
+                Route::post('/update-board-order', [TeamController::class, 'updateBoardOrder'])->name('update-board-order');
             });
 
             // Home Blocks Routes

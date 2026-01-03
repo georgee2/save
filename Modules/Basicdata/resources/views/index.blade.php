@@ -338,7 +338,7 @@
         .header-stat {
             flex: 1;
             min-width: 100px;
-        }
+    }
     }
 
     @media (max-width: 768px) {
@@ -348,8 +348,8 @@
         
         .dashboard-header h2 {
             font-size: 22px;
-        }
-        
+    }
+
         .quick-actions-grid {
             grid-template-columns: repeat(3, 1fr);
         }
@@ -369,7 +369,7 @@
         <div class="dashboard-header" style="margin-top:70px">
             <div class="row align-items-center">
                 <div class="col-lg-8">
-                    <h2><i class="fa fa-database"></i> Basic Data Dashboard</h2>
+            <h2><i class="fa fa-database"></i> Basic Data Dashboard</h2>
                     <p>Manage and configure all foundational data for projects, offers, and system components</p>
                     
                     <div class="header-stats">
@@ -551,7 +551,7 @@
                     @if($recentActivity['emirates'] > 0)
                     <span class="badge-info">+{{ $recentActivity['emirates'] }} new</span>
                     @endif
-                </div>
+                    </div>
             </div>
         </div>
 
@@ -745,11 +745,11 @@
 
 @section('js')
 <script>
-$(document).ready(function() {
-    if (typeof Chart === 'undefined') {
-        console.error('Chart.js is not loaded');
-        return;
-    }
+    $(document).ready(function() {
+        if (typeof Chart === 'undefined') {
+            console.error('Chart.js is not loaded');
+            return;
+        }
 
     // Color palette
     var primaryColor = '#1a7d6b';
@@ -763,69 +763,69 @@ $(document).ready(function() {
     var dataOverviewCtx = document.getElementById('dataOverviewChart');
     if (dataOverviewCtx) {
         new Chart(dataOverviewCtx.getContext('2d'), {
-            type: 'bar',
-            data: {
+        type: 'bar',
+        data: {
                 labels: ['Project Types', 'Categories', 'Emirates', 'Components', 'Amenities', 'Specifications'],
-                datasets: [{
-                    label: 'Total Items',
-                    data: [
-                        {{ $stats['project_types'] }},
-                        {{ $stats['engineering_categories'] }},
+            datasets: [{
+                label: 'Total Items',
+                data: [
+                    {{ $stats['project_types'] }},
+                    {{ $stats['engineering_categories'] }},
                         {{ $stats['emirates'] }},
-                        {{ $stats['building_components'] }},
-                        {{ $stats['amenities'] }},
+                    {{ $stats['building_components'] }},
+                    {{ $stats['amenities'] }},
                         {{ $stats['specifications'] }}
-                    ],
-                    backgroundColor: [
+                ],
+                backgroundColor: [
                         primaryColor,
                         accentColor,
                         successColor,
                         infoColor,
                         warningColor,
                         dangerColor
-                    ],
-                    borderWidth: 0,
-                    borderRadius: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
+                ],
+                borderWidth: 0,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
                     legend: { display: false }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
                         grid: { color: 'rgba(0, 0, 0, 0.05)' },
                         ticks: { precision: 0 }
-                    },
-                    x: {
+                },
+                x: {
                         grid: { display: false }
-                    }
                 }
             }
-        });
+        }
+    });
     }
 
     // Recent Activity Chart
     var recentActivityCtx = document.getElementById('recentActivityChart');
     if (recentActivityCtx) {
         new Chart(recentActivityCtx.getContext('2d'), {
-            type: 'doughnut',
-            data: {
+        type: 'doughnut',
+        data: {
                 labels: ['Project Types', 'Categories', 'Components', 'Amenities', 'Specifications', 'Emirates', 'Offer Categories'],
-                datasets: [{
-                    data: [
-                        {{ $recentActivity['project_types'] }},
-                        {{ $recentActivity['engineering_categories'] }},
-                        {{ $recentActivity['building_components'] }},
-                        {{ $recentActivity['amenities'] }},
+            datasets: [{
+                data: [
+                    {{ $recentActivity['project_types'] }},
+                    {{ $recentActivity['engineering_categories'] }},
+                    {{ $recentActivity['building_components'] }},
+                    {{ $recentActivity['amenities'] }},
                         {{ $recentActivity['specifications'] }},
                         {{ $recentActivity['emirates'] }},
                         {{ $recentActivity['offer_categories'] }}
-                    ],
-                    backgroundColor: [
+                ],
+                backgroundColor: [
                         primaryColor,
                         accentColor,
                         successColor,
@@ -833,102 +833,102 @@ $(document).ready(function() {
                         warningColor,
                         dangerColor,
                         '#8b5cf6'
-                    ],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
                         labels: { padding: 12, usePointStyle: true, font: { size: 11 } }
-                    }
                 }
             }
-        });
+        }
+    });
     }
 
     // Monthly Growth Chart
     var monthlyGrowthCtx = document.getElementById('monthlyGrowthChart');
     if (monthlyGrowthCtx) {
         new Chart(monthlyGrowthCtx.getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: {!! json_encode($monthlyData['months']) !!},
-                datasets: [
-                    {
-                        label: 'Project Types',
-                        data: {!! json_encode($monthlyData['project_types']) !!},
+        type: 'line',
+        data: {
+            labels: {!! json_encode($monthlyData['months']) !!},
+            datasets: [
+                {
+                    label: 'Project Types',
+                    data: {!! json_encode($monthlyData['project_types']) !!},
                         borderColor: primaryColor,
                         backgroundColor: 'rgba(26, 125, 107, 0.1)',
-                        borderWidth: 3,
-                        tension: 0.4,
-                        fill: true
-                    },
-                    {
-                        label: 'Categories',
-                        data: {!! json_encode($monthlyData['categories']) !!},
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: 'Categories',
+                    data: {!! json_encode($monthlyData['categories']) !!},
                         borderColor: accentColor,
                         backgroundColor: 'rgba(232, 184, 94, 0.1)',
-                        borderWidth: 3,
-                        tension: 0.4,
-                        fill: true
-                    },
-                    {
-                        label: 'Components',
-                        data: {!! json_encode($monthlyData['components']) !!},
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: 'Components',
+                    data: {!! json_encode($monthlyData['components']) !!},
                         borderColor: successColor,
                         backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                        borderWidth: 3,
-                        tension: 0.4,
-                        fill: true
-                    },
-                    {
-                        label: 'Amenities',
-                        data: {!! json_encode($monthlyData['amenities']) !!},
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: 'Amenities',
+                    data: {!! json_encode($monthlyData['amenities']) !!},
                         borderColor: infoColor,
                         backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        borderWidth: 3,
-                        tension: 0.4,
-                        fill: true
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'bottom',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom',
                         labels: { padding: 15, usePointStyle: true }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
                         grid: { color: 'rgba(0, 0, 0, 0.05)' }
-                    },
-                    x: {
+                },
+                x: {
                         grid: { display: false }
-                    }
                 }
             }
-        });
+        }
+    });
     }
 
     // Category Distribution Chart
     var categoryDistributionCtx = document.getElementById('categoryDistributionChart');
     if (categoryDistributionCtx) {
         new Chart(categoryDistributionCtx.getContext('2d'), {
-            type: 'pie',
-            data: {
-                labels: {!! json_encode($categoryDistribution['labels']) !!},
-                datasets: [{
-                    data: {!! json_encode($categoryDistribution['data']) !!},
-                    backgroundColor: [
+        type: 'pie',
+        data: {
+            labels: {!! json_encode($categoryDistribution['labels']) !!},
+            datasets: [{
+                data: {!! json_encode($categoryDistribution['data']) !!},
+                backgroundColor: [
                         primaryColor,
                         accentColor,
                         successColor,
@@ -937,55 +937,55 @@ $(document).ready(function() {
                         dangerColor,
                         '#8b5cf6',
                         '#ec4899'
-                    ],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
                         labels: { padding: 10, usePointStyle: true, font: { size: 11 } }
-                    }
                 }
             }
-        });
+        }
+    });
     }
 
     // Component Distribution Chart
     var componentDistributionCtx = document.getElementById('componentDistributionChart');
     if (componentDistributionCtx) {
         new Chart(componentDistributionCtx.getContext('2d'), {
-            type: 'doughnut',
-            data: {
-                labels: {!! json_encode($componentDistribution['labels']) !!},
-                datasets: [{
-                    data: {!! json_encode($componentDistribution['data']) !!},
-                    backgroundColor: [
+        type: 'doughnut',
+        data: {
+            labels: {!! json_encode($componentDistribution['labels']) !!},
+            datasets: [{
+                data: {!! json_encode($componentDistribution['data']) !!},
+                backgroundColor: [
                         primaryColor,
                         accentColor,
                         successColor,
                         infoColor,
                         warningColor
-                    ],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
                         labels: { padding: 15, usePointStyle: true }
-                    }
                 }
             }
-        });
+        }
+    });
     }
-
+    
 });
 </script>
 @endsection

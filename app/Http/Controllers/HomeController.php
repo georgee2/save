@@ -25,6 +25,7 @@ use App\Models\ProjectImage;
 use App\Models\ProjectSpecification;
 use App\Models\Offer;
 use App\Models\EngineeringCategory;
+use App\Models\Partner;
 
 class HomeController extends Controller
 {
@@ -151,11 +152,24 @@ class HomeController extends Controller
                 return $category;
             });
         
-        // Fetch team members with their job titles
-        $teamMembers = Team::with('jobTitle')
+        // Fetch board of directors ordered by board_order
+        $boardMembers = Team::with(['jobTitle', 'rank'])
             ->whereNull('deleted_at')
+            ->where('is_board_director', true)
+            ->orderBy('board_order', 'asc')
             ->orderBy('created_at', 'asc')
             ->get();
+        
+        // Fetch regular team members ordered by display_order
+        $teamMembers = Team::with(['jobTitle', 'rank'])
+            ->whereNull('deleted_at')
+            ->where('is_board_director', false)
+            ->orderBy('display_order', 'asc')
+            ->orderBy('created_at', 'asc')
+            ->get();
+        
+        // Combine board first, then team for the slider
+        $allTeamMembers = $boardMembers->concat($teamMembers);
         
         // Fetch active portfolio types for tabs
         $portfolioTypes = PortfolioType::where('status', 0)
@@ -248,6 +262,9 @@ class HomeController extends Controller
                 return $offer;
             });
         
-        return view('index', compact('sliders', 'aboutBlock', 'aboutCards', 'services', 'showcases', 'facts', 'defaultProcess', 'processCards', 'whyChooseUsBlock', 'whyChooseUsCards', 'engineeringProjects', 'teamMembers', 'portfolioTypes', 'portfolios', 'homeContact', 'contactInfo', 'homeFaqs', 'blogs', 'defaultBanner', 'engineeringSubCategories', 'featuredProjects', 'featuredOffers', 'projectCategories'));
+        // Fetch government partners for slider
+        $governmentPartners = Partner::getGovernmentPartners();
+        
+        return view('index', compact('sliders', 'aboutBlock', 'aboutCards', 'services', 'showcases', 'facts', 'defaultProcess', 'processCards', 'whyChooseUsBlock', 'whyChooseUsCards', 'engineeringProjects', 'teamMembers', 'boardMembers', 'allTeamMembers', 'portfolioTypes', 'portfolios', 'homeContact', 'contactInfo', 'homeFaqs', 'blogs', 'defaultBanner', 'engineeringSubCategories', 'featuredProjects', 'featuredOffers', 'projectCategories', 'governmentPartners'));
     }
 }

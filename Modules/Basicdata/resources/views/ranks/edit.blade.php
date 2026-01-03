@@ -46,17 +46,17 @@
                                 @enderror
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize d-block">Board Director</label>
-                                <div class="checkbox checkbox-primary">
-                                    <input type="checkbox" id="is_board_director" name="is_board_director" {{ old('is_board_director', $rank->is_board_director) ? 'checked' : '' }}>
-                                    <label for="is_board_director">
-                                        <span class="badge badge-info">Mark as Board Director</span>
+                                <label class="text-capitalize">Board Director</label>
+                                <div class="mt-2">
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" name="is_board_director" value="1" {{ old('is_board_director', $rank->is_board_director) ? 'checked' : '' }}>
+                                        <span class="custom-control-label">Yes, this is a Board Director rank</span>
                                     </label>
                                 </div>
-                                <small class="text-muted d-block mt-1">Enable this if the rank belongs to board of directors</small>
+                                <small class="text-muted">Enable this if the rank belongs to board of directors</small>
                             </div>
                         </div>
 

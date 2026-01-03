@@ -15,6 +15,9 @@ use App\Http\Controllers\CareerController;
 use App\Http\Controllers\EngineeringSubCategoryController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OffersController;
+use App\Http\Controllers\BranchController;
+use App\Http\Controllers\PartnerPageController;
+use App\Http\Controllers\SitemapController;
 
 
 
@@ -100,8 +103,17 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 	// Team Routes Group
 	Route::prefix('team')->name('team.')->group(function () {
 		Route::get('/', [TeamController::class, 'index'])->name('index');
+		Route::get('/board-of-directors', [TeamController::class, 'board'])->name('board');
 		Route::get('/{id}', [TeamController::class, 'show'])->name('member');
 	});
+
+	// Branches Routes
+	Route::get('/branches', [BranchController::class, 'index'])->name('branches.index');
+	Route::get('/branches/{id}', [BranchController::class, 'show'])->name('branches.show');
+
+	// Partners Routes
+	Route::get('/partners', [PartnerPageController::class, 'index'])->name('partners.index');
+	Route::get('/partners/{id}', [PartnerPageController::class, 'show'])->name('partners.show');
 
 	// Contact Routes
 	Route::get('/contact', [ContactController::class, 'index'])->name('contact');
@@ -115,3 +127,6 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 	});
 
 });
+
+// Sitemap Route (outside localization group for clean URL)
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');

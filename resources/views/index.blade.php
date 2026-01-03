@@ -17,8 +17,11 @@
 	@include('home.partials.section-divider')
 	@include('home.projects')
 	@include('home.partials.section-divider')
+	@include('home.team')
+	@include('home.partials.section-divider')
 	@include('home.contactfaq')
 	@include('home.partials.section-divider')
 	@include('home.news')
+	@include('home.government-partners')
 @endsection
 

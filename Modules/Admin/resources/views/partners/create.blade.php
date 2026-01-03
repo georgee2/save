@@ -48,8 +48,23 @@
                     <form enctype="multipart/form-data" action="{{ route('partner.store') }}" method="POST">
                         @csrf
                         
+                        <!-- Type Selection -->
+                        <h5 class="mb-3 text-primary">Type Selection</h5>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label class="text-capitalize">Type <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                <select class="form-control" name="partner_type" id="partner_type" required>
+                                    <option value="partner" {{ old('partner_type') == 'partner' ? 'selected' : '' }}>Partner</option>
+                                    <option value="branch" {{ old('partner_type') == 'branch' ? 'selected' : '' }}>Branch</option>
+                                    <option value="government" {{ old('partner_type') == 'government' ? 'selected' : '' }}>Government Partner</option>
+                                </select>
+                                @error('partner_type')<span class="text-danger mt-1">{{ $message }}</span>@enderror
+                                <small class="text-muted" id="type-hint">Select partner type. Government partners only require name and logo.</small>
+                            </div>
+                        </div>
+                        
                         <!-- Basic Information -->
-                        <h5 class="mb-3 text-primary">Basic Information</h5>
+                        <h5 class="mb-3 mt-4 text-primary">Basic Information</h5>
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label class="text-capitalize">English Name <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
@@ -63,17 +78,18 @@
                             </div>
                         </div>
 
-                        <!-- Contact Information -->
+                        <!-- Contact Information - Hidden for Government -->
+                        <div id="contact-section" class="partner-section">
                         <h5 class="mb-3 mt-4 text-primary">Contact Information</h5>
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label class="text-capitalize">Email <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
-                                <input class="form-control" value="{{old('email')}}" type="email" name="email" required>
+                                <label class="text-capitalize">Email <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger required-icon"></i></label>
+                                <input class="form-control" value="{{old('email')}}" type="email" name="email" id="email_field">
                                 @error('email')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-4">
-                                <label class="text-capitalize">Mobile <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
-                                <input class="form-control" value="{{old('mobile')}}" type="text" name="mobile" required>
+                                <label class="text-capitalize">Mobile <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger required-icon"></i></label>
+                                <input class="form-control" value="{{old('mobile')}}" type="text" name="mobile" id="mobile_field">
                                 @error('mobile')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-4">
@@ -92,8 +108,10 @@
                                 @error('opening_hours')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                         </div>
+                        </div>
 
-                        <!-- Location Information -->
+                        <!-- Location Information - Hidden for Government -->
+                        <div id="location-section" class="partner-section">
                         <h5 class="mb-3 mt-4 text-primary">Location Information</h5>
                         <div class="row">
                             <div class="form-group col-md-6">
@@ -108,12 +126,14 @@
                             </div>
                             <div class="form-group col-md-12">
                                 <label class="text-capitalize">Map URL</label>
-                                <input class="form-control" value="{{old('map_url')}}" type="text" name="map_url" placeholder="Google Maps embed URL">
+                                <textarea class="form-control" name="map_url" rows="3" placeholder="Google Maps embed URL or iframe code">{{old('map_url')}}</textarea>
                                 @error('map_url')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                         </div>
+                        </div>
 
-                        <!-- Social Media Links -->
+                        <!-- Social Media Links - Hidden for Government -->
+                        <div id="social-section" class="partner-section">
                         <h5 class="mb-3 mt-4 text-primary">Social Media Links</h5>
                         <div class="row">
                             <div class="form-group col-md-6">
@@ -142,23 +162,37 @@
                                 @error('twitter_url')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                         </div>
+                        </div>
 
                         <!-- Logos -->
                         <h5 class="mb-3 mt-4 text-primary">Logos</h5>
+                        <div class="alert alert-light border mb-3" style="background: #f8f9fa;">
+                            <i class="fa fa-info-circle text-info mr-2"></i>
+                            <strong>Logo Guidelines:</strong>
+                            <ul class="mb-0 mt-2" style="font-size: 13px;">
+                                <li><strong>Recommended Size:</strong> <code>200 x 80 px</code> (or proportional)</li>
+                                <li><strong>Format:</strong> PNG with transparent background preferred</li>
+                                <li><strong>Max File Size:</strong> 2MB</li>
+                                <li><strong>Usage:</strong> Partner/Branch logos will be displayed in sliders, cards, and listing pages</li>
+                            </ul>
+                        </div>
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label class="text-capitalize">Logo (English) <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
                                 <input accept="image/*" class="form-control dropify" type="file" name="logo_english" required>
+                                <small class="text-muted">Recommended: <strong>200x80px</strong>, PNG transparent</small>
                                 @error('logo_english')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-6">
                                 <label class="text-capitalize">Logo (Arabic) <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
                                 <input accept="image/*" class="form-control dropify" type="file" name="logo_arabic" required>
+                                <small class="text-muted">Recommended: <strong>200x80px</strong>, PNG transparent</small>
                                 @error('logo_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                         </div>
 
-                        <!-- About, Mission, Vision -->
+                        <!-- About, Mission, Vision - Hidden for Government -->
+                        <div id="about-section" class="partner-section">
                         <h5 class="mb-3 mt-4 text-primary">About, Mission & Vision</h5>
                         <div class="row">
                             <div class="form-group col-md-12">
@@ -192,8 +226,10 @@
                                 @error('vision_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                         </div>
+                        </div>
 
-                        <!-- SEO Information -->
+                        <!-- SEO Information - Hidden for Government -->
+                        <div id="seo-section" class="partner-section">
                         <h5 class="mb-3 mt-4 text-primary">SEO Information</h5>
                         <div class="row">
                             <div class="form-group col-md-12">
@@ -211,6 +247,7 @@
                                 <textarea name="seo_description_arabic" class="form-control" maxlength="225" rows="3">{{old('seo_description_arabic')}}</textarea>
                                 @error('seo_description_arabic')<span class="text-danger">{{ $message }}</span>@enderror
                             </div>
+                        </div>
                         </div>
 
                         <hr>
@@ -238,6 +275,40 @@
 
 <script>
     $('.dropify').dropify();
+    
+    // Toggle sections based on partner type
+    function togglePartnerSections() {
+        var partnerType = $('#partner_type').val();
+        var isGovernment = partnerType === 'government';
+        
+        if (isGovernment) {
+            // Hide all extra sections for government partners
+            $('.partner-section').slideUp(300);
+            // Remove required from email and mobile
+            $('#email_field').removeAttr('required');
+            $('#mobile_field').removeAttr('required');
+            // Update hint text
+            $('#type-hint').html('<i class="fa fa-building text-success"></i> Government partner - only name and logo required.');
+        } else {
+            // Show all sections for partners/branches
+            $('.partner-section').slideDown(300);
+            // Add required back to email and mobile
+            $('#email_field').attr('required', true);
+            $('#mobile_field').attr('required', true);
+            // Update hint text
+            $('#type-hint').html('Select partner type. Government partners only require name and logo.');
+        }
+    }
+    
+    // Run on page load
+    $(document).ready(function() {
+        togglePartnerSections();
+        
+        // Run on change
+        $('#partner_type').on('change', function() {
+            togglePartnerSections();
+        });
+    });
 </script>
 
 <script>
