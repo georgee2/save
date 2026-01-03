@@ -26,9 +26,13 @@ class TeamController extends Controller
     public function index()
     {
         $teams = $this->team->list();
+        $regularMembers = $this->team->getRegularMembers();
+        $boardMembers = $this->team->getBoardMembers();
         
         return view('admin::teams.index', [
-            'teams' => $teams
+            'teams' => $teams,
+            'regularMembers' => $regularMembers,
+            'boardMembers' => $boardMembers
         ]);
     }
 
@@ -82,6 +86,18 @@ class TeamController extends Controller
             $pageName = Str::random() . ".webp";
             Storage::disk('public')->put('/uploads/teams/pages/' . $pageName, (string) $pageImage);
             $data['page_image'] = "/uploads/teams/pages/{$pageName}";
+        }
+
+        // Handle Board Director flag
+        $data['is_board_director'] = $request->has('is_board_director') ? true : false;
+        
+        // Set initial order
+        if ($data['is_board_director']) {
+            $maxBoardOrder = Team::where('is_board_director', true)->max('board_order') ?? 0;
+            $data['board_order'] = $maxBoardOrder + 1;
+        } else {
+            $maxDisplayOrder = Team::where('is_board_director', false)->max('display_order') ?? 0;
+            $data['display_order'] = $maxDisplayOrder + 1;
         }
 
         Team::create($data);
@@ -169,9 +185,54 @@ class TeamController extends Controller
             $data['page_image'] = "/uploads/teams/pages/{$pageName}";
         }
 
+        // Handle Board Director flag
+        $wasBoardDirector = $team->is_board_director;
+        $data['is_board_director'] = $request->has('is_board_director') ? true : false;
+        
+        // If status changed, update order accordingly
+        if ($wasBoardDirector != $data['is_board_director']) {
+            if ($data['is_board_director']) {
+                $maxBoardOrder = Team::where('is_board_director', true)->max('board_order') ?? 0;
+                $data['board_order'] = $maxBoardOrder + 1;
+                $data['display_order'] = 0;
+            } else {
+                $maxDisplayOrder = Team::where('is_board_director', false)->max('display_order') ?? 0;
+                $data['display_order'] = $maxDisplayOrder + 1;
+                $data['board_order'] = 0;
+            }
+        }
+
         $team->update($data);
 
         return redirect()->route('admin.team.index')->with('success', 'Team member updated successfully!');
+    }
+    
+    /**
+     * Update display order for regular team members
+     */
+    public function updateDisplayOrder(Request $request)
+    {
+        $orders = $request->input('orders', []);
+        
+        foreach ($orders as $order) {
+            Team::where('id', $order['id'])->update(['display_order' => $order['position']]);
+        }
+        
+        return response()->json(['success' => true, 'message' => 'Display order updated successfully!']);
+    }
+    
+    /**
+     * Update board order for board of directors
+     */
+    public function updateBoardOrder(Request $request)
+    {
+        $orders = $request->input('orders', []);
+        
+        foreach ($orders as $order) {
+            Team::where('id', $order['id'])->update(['board_order' => $order['position']]);
+        }
+        
+        return response()->json(['success' => true, 'message' => 'Board order updated successfully!']);
     }
 
     /**

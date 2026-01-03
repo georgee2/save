@@ -7,6 +7,8 @@ use App\Models\AboutInformation;
 use App\Models\ContactInformation;
 use App\Models\AboutFeature;
 use App\Models\AboutCustomBlock;
+use App\Models\Team;
+use App\Models\Partner;
 
 class AboutController extends Controller
 {
@@ -20,6 +22,28 @@ class AboutController extends Controller
         $features = AboutFeature::getActive();
         $customBlocks = AboutCustomBlock::getActive();
         
-        return view('pages.about.index', compact('aboutInfo', 'contactInfo', 'features', 'customBlocks'));
+        // Fetch board of directors ordered by board_order
+        $boardMembers = Team::with(['jobTitle', 'rank'])
+            ->whereNull('deleted_at')
+            ->where('is_board_director', true)
+            ->orderBy('board_order', 'asc')
+            ->orderBy('created_at', 'asc')
+            ->get();
+        
+        // Fetch regular team members ordered by display_order
+        $teamMembers = Team::with(['jobTitle', 'rank'])
+            ->whereNull('deleted_at')
+            ->where('is_board_director', false)
+            ->orderBy('display_order', 'asc')
+            ->orderBy('created_at', 'asc')
+            ->get();
+        
+        // Combine board first, then team for the slider
+        $allTeamMembers = $boardMembers->concat($teamMembers);
+        
+        // Fetch government partners for slider
+        $governmentPartners = Partner::getGovernmentPartners();
+        
+        return view('pages.about.index', compact('aboutInfo', 'contactInfo', 'features', 'customBlocks', 'allTeamMembers', 'governmentPartners'));
     }
 }

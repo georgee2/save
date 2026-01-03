@@ -13,16 +13,45 @@ class TeamController extends Controller
      */
     public function index()
     {
-        // Get all team members with their job titles and ranks
-        $teams = Team::with(['jobTitle', 'rank'])
+        // Get board of directors ordered by board_order
+        $boardMembers = Team::with(['jobTitle', 'rank'])
             ->whereNull('deleted_at')
-            ->orderBy('created_at', 'desc')
+            ->where('is_board_director', true)
+            ->orderBy('board_order', 'asc')
+            ->orderBy('created_at', 'asc')
+            ->get();
+        
+        // Get regular team members ordered by display_order
+        $teamMembers = Team::with(['jobTitle', 'rank'])
+            ->whereNull('deleted_at')
+            ->where('is_board_director', false)
+            ->orderBy('display_order', 'asc')
+            ->orderBy('created_at', 'asc')
             ->get();
 
         // Get page banner for team page
         $pageBanner = PageBanner::getByTarget('team');
 
-        return view('pages.team.index', compact('teams', 'pageBanner'));
+        return view('pages.team.index', compact('boardMembers', 'teamMembers', 'pageBanner'));
+    }
+
+    /**
+     * Display board of directors page.
+     */
+    public function board()
+    {
+        // Get board of directors ordered by board_order
+        $boardMembers = Team::with(['jobTitle', 'rank'])
+            ->whereNull('deleted_at')
+            ->where('is_board_director', true)
+            ->orderBy('board_order', 'asc')
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        // Get page banner for team page
+        $pageBanner = PageBanner::getByTarget('team');
+
+        return view('pages.team.board', compact('boardMembers', 'pageBanner'));
     }
 
     /**

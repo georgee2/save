@@ -714,9 +714,9 @@
                     <div class="title">System Users</div>
                     <div class="value">{{ $stats['users'] }}</div>
                     <div class="subtitle">Admin users</div>
-                </div>
-            </div>
-        </div>
+                                        </div>
+                                    </div>
+                                </div>
 
         <!-- Team & Partners -->
         <h3 class="section-title">Team & Partners</h3>
@@ -838,7 +838,7 @@
                     <div class="value">{{ $stats['home_faqs'] }}</div>
                     <div class="subtitle">Homepage FAQs</div>
                 </div>
-            </div>
+                            </div>
 
             <!-- About Features -->
             <div class="col-md-6 col-xl-3">
@@ -997,8 +997,8 @@
                             pointBackgroundColor: colors.accent,
                             pointRadius: 5,
                             pointHoverRadius: 7
-                        },
-                        {
+                },
+                {
                             label: 'Offers',
                             data: {!! json_encode($monthlyData['offers']) !!},
                             borderColor: colors.success,
@@ -1175,7 +1175,7 @@
                             '#8b5cf6',
                             '#ec4899',
                             colors.secondary
-                        ],
+                ],
                         borderWidth: 0,
                         hoverOffset: 10
             }]
@@ -1282,7 +1282,7 @@
                             colors.success,
                             colors.info,
                             colors.warning
-                        ],
+                ],
                         borderWidth: 0,
                         hoverOffset: 10
             }]

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ App::getLocale() }}">
+<html lang="{{ App::getLocale() }}" dir="{{ App::getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
 
     <head>
         <meta content="@yield('seo_desc')" name="description">
@@ -55,7 +55,11 @@
           <link rel="stylesheet" href="{{asset('/assets/css/area-slider.css')}}">
           <!-- Preloader CSS -->
           <link rel="stylesheet" href="{{asset('/assets/css/preloader.css')}}">
-                
+          
+          <!-- RTL CSS for Arabic -->
+          @if(app()->getLocale() == 'ar')
+          <link rel="stylesheet" href="{{asset('/assets/css/rtl.css')}}?v={{ time() }}">
+          @endif
 
         @yield('css')
 
@@ -72,6 +76,7 @@
 
       </main>
       @include('includes.footer')
+      @include('includes.language-switcher')
 
 
 
