@@ -1,124 +1,302 @@
-<section>
-        <div class="slick-slider mx-0" data-slick-options='{"slidesToShow": 1, "autoplay":false,"dots":false,"arrows":false}'>
-          <div class="box px-0 d-flex flex-column">
-            <div class="bg-cover custom-vh-04 d-flex align-items-center" style="background-image: url('assets/images/properties-slider-04.jpg')">
-              <div class="container">
-                <div class="row">
-                  <div class="col-lg-5 offset-lg-7 col-md-6 offset-md-3 col-sm-8 offset-sm-2 mt-xl-1 py-8 pt-lg-12">
-                    <div class="bg-white  px-7 pt-6 pb-4 rounded-lg ml-lg-n1 mb-xl-15" data-animate="flipInX">
-                      <div class="mt-n7 position-absolute">
-                        <span class="badge badge-orange">Featured</span>
-                      </div>
-                      <h2 class="my-0"><a href="single-property-1.html" class="fs-30 lh-12 text-dark hover-primary">Villa on Hollywood Boulevard</a></h2>
-                      <p class="my-3 font-weight-500 text-gray-light lh-15">1421 San Pedro St, Los Angeles</p>
-                      <p class="fs-14 font-weight-500 letter-spacing-087 text-primary text-uppercase lh-15 mb-1">
-                        For Sale</p>
-                      <p class="fs-22 font-weight-bold text-heading">$1.250.000</p>
-                      <ul class="list-inline d-flex mb-0 flex-wrap border-top justify-content-between pt-4 mr-n2">
-                        <li class="list-inline-item text-gray font-weight-500 fs-13 d-flex align-items-center mr-2" data-toggle="tooltip" title="3 Bedroom">
-                          <svg class="icon icon-bedroom fs-18 text-primary mr-2">
-                            <use xlink:href="#icon-bedroom"></use>
-                          </svg>
-                          3 Bedrooms
-                        </li>
-                        <li class="list-inline-item text-gray font-weight-500 fs-13 d-flex align-items-center mr-2" data-toggle="tooltip" title="3 Bathrooms">
-                          <svg class="icon icon-shower fs-18 text-primary mr-2">
-                            <use xlink:href="#icon-shower"></use>
-                          </svg>
-                          3 Bathrooms
-                        </li>
-                        <li class="list-inline-item text-gray font-weight-500 fs-13 d-flex align-items-center mr-2" data-toggle="tooltip" title="Size">
-                          <svg class="icon icon-square fs-18 text-primary mr-2">
-                            <use xlink:href="#icon-square"></use>
-                          </svg>
-                          2300 Sq.Ft
-                        </li>
-                      </ul>
+{{-- Home Slider Section --}}
+@if(isset($sliders) && $sliders->count() > 0)
+<section class="home-slider-wrapper position-relative">
+    <div class="slick-slider arrow-inner mx-0" data-slick-options='{"slidesToShow": 1, "autoplay": true, "autoplaySpeed": 5000, "dots": false, "arrows": true, "fade": true, "pauseOnHover": false, "infinite": true}'>
+        
+        @foreach($sliders as $slider)
+        @php
+            // Determine background image
+            $bgImage = $slider->image ? url('/storage' . $slider->image) : '';
+            
+            if ($slider->slider_type == 'project' && $slider->project) {
+                if (!$bgImage && $slider->project->cover_image) {
+                    $bgImage = url('/storage' . $slider->project->cover_image);
+                } elseif (!$bgImage && $slider->project->main_image) {
+                    $bgImage = url('/storage' . $slider->project->main_image);
+                }
+            } elseif ($slider->slider_type == 'offer' && $slider->offer) {
+                if (!$bgImage && $slider->offer->cover_image) {
+                    $bgImage = url('/storage' . $slider->offer->cover_image);
+                } elseif (!$bgImage && $slider->offer->main_image) {
+                    $bgImage = url('/storage' . $slider->offer->main_image);
+                }
+            }
+        @endphp
+        
+        <div class="box px-0 d-flex flex-column">
+            <div class="bg-cover custom-vh-04 d-flex align-items-center" style="background-image: url('{{ $bgImage }}')">
+                <div class="container">
+                    <div class="row">
+                        {{-- Default Slider Type - Content on Left --}}
+                        @if(($slider->slider_type ?? 'default') == 'default')
+                        <div class="col-lg-6 col-md-8 col-sm-10 mt-xl-1 py-8 pt-lg-12">
+                            <div class="slider-default-content" data-animate="fadeInUp">
+                                <h1 class="text-white fs-48 lh-12 mb-3 font-weight-bold slider-title-shadow">
+                                    {{ app()->getLocale() == 'ar' ? $slider->title_arabic : $slider->title_english }}
+                                </h1>
+                                @if($slider->bio_english || $slider->bio_arabic)
+                                <p class="text-white fs-18 lh-17 mb-5 opacity-90">
+                                    {{ app()->getLocale() == 'ar' ? $slider->bio_arabic : $slider->bio_english }}
+                                </p>
+                                @endif
+                                @if($slider->button_text_english || $slider->button_text_arabic)
+                                <a href="{{ app()->getLocale() == 'ar' ? ($slider->url_arabic ?? $slider->url_english ?? '#') : ($slider->url_english ?? '#') }}" 
+                                   class="btn btn-primary btn-lg px-6">
+                                    {{ app()->getLocale() == 'ar' ? ($slider->button_text_arabic ?? $slider->button_text_english) : $slider->button_text_english }}
+                                    <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'left ml-2' : 'right ml-2' }}"></i>
+                                </a>
+                                @endif
+                            </div>
+                        </div>
+                        
+                        {{-- Project Slider Type - Card on Right --}}
+                        @elseif($slider->slider_type == 'project' && $slider->project)
+                        @php $project = $slider->project; @endphp
+                        <div class="col-lg-5 offset-lg-7 col-md-6 offset-md-3 col-sm-8 offset-sm-2 mt-xl-1 py-8 pt-lg-12 d-none d-md-block">
+                            <div class="bg-white px-7 pt-6 pb-4 rounded-lg ml-lg-n1 mb-xl-15" data-animate="flipInX">
+                                <div class="mt-n7 position-absolute d-flex">
+                                    @if($project->home_status == 0)
+                                    <span class="badge badge-orange mr-2">{{ __('lang.featured') }}</span>
+                                    @endif
+                                    @if($project->category)
+                                    <span class="badge badge-primary">
+                                        {{ app()->getLocale() == 'ar' ? $project->category->title_arabic : $project->category->title_english }}
+                                    </span>
+                                    @endif
+                                </div>
+                                <h2 class="my-0">
+                                    <a href="{{ route('projects.show', $project->slug) }}" class="fs-30 lh-12 text-dark hover-primary">
+                                        {{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}
+                                    </a>
+                                </h2>
+                                @if($project->location_english || $project->location_arabic)
+                                <p class="my-3 font-weight-500 text-gray-light lh-15">
+                                    <i class="fas fa-map-marker-alt text-primary mr-1"></i>
+                                    {{ app()->getLocale() == 'ar' ? ($project->location_arabic ?? $project->location_english) : ($project->location_english ?? $project->location_arabic) }}
+                                </p>
+                                @endif
+                                <p class="fs-14 font-weight-500 letter-spacing-087 text-primary text-uppercase lh-15 mb-1">
+                                    {{ __('lang.project') }}
+                                </p>
+                                @if($project->sqft)
+                                <p class="fs-22 font-weight-bold text-heading mb-3">
+                                    {{ number_format($project->sqft) }} {{ __('lang.sqft') }}
+                                </p>
+                                @endif
+                                
+                                {{-- Specifications --}}
+                                @if($project->specifications && $project->specifications->count() > 0)
+                                <ul class="list-inline d-flex mb-0 flex-wrap border-top justify-content-between pt-4 mr-n2">
+                                    @foreach($project->specifications->take(3) as $spec)
+                                    @if($spec->specification)
+                                    <li class="list-inline-item text-gray font-weight-500 fs-13 d-flex align-items-center mr-2" 
+                                        data-toggle="tooltip" 
+                                        title="{{ app()->getLocale() == 'ar' ? $spec->specification->title_arabic : $spec->specification->title_english }}">
+                                        @if($spec->specification->icon)
+                                        <img src="{{ url('/storage' . $spec->specification->icon) }}" 
+                                             alt="" class="mr-2" 
+                                             style="width: 18px; height: 18px; object-fit: contain;">
+                                        @else
+                                        <i class="fas fa-check-circle fs-18 text-primary mr-2"></i>
+                                        @endif
+                                        {{ app()->getLocale() == 'ar' ? $spec->value_arabic : $spec->value_english }}
+                                    </li>
+                                    @endif
+                                    @endforeach
+                                </ul>
+                                @endif
+                                
+                                <a href="{{ route('projects.show', $project->slug) }}" class="btn btn-primary btn-block mt-4">
+                                    {{ __('lang.view_project') }}
+                                    <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'left ml-2' : 'right ml-2' }}"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        {{-- Offer Slider Type - Card on Right --}}
+                        @elseif($slider->slider_type == 'offer' && $slider->offer)
+                        @php 
+                            $offer = $slider->offer;
+                            $defaultPrice = $offer->prices ? $offer->prices->where('status', 0)->first() : null;
+                        @endphp
+                        <div class="col-lg-5 offset-lg-7 col-md-6 offset-md-3 col-sm-8 offset-sm-2 mt-xl-1 py-8 pt-lg-12 d-none d-md-block">
+                            <div class="bg-white px-7 pt-6 pb-4 rounded-lg ml-lg-n1 mb-xl-15" data-animate="flipInX">
+                                <div class="mt-n7 position-absolute d-flex">
+                                    @if($offer->home_status == 0)
+                                    <span class="badge badge-orange mr-2">{{ __('lang.featured') }}</span>
+                                    @endif
+                                    @if($offer->category)
+                                    <span class="badge badge-primary mr-2">
+                                        {{ app()->getLocale() == 'ar' ? $offer->category->title_arabic : $offer->category->title_english }}
+                                    </span>
+                                    @endif
+                                    <span class="badge badge-secondary">{{ __('lang.special_offer') }}</span>
+                                </div>
+                                <h2 class="my-0">
+                                    <a href="{{ route('offers.show', $offer->slug) }}" class="fs-30 lh-12 text-dark hover-primary">
+                                        {{ app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english }}
+                                    </a>
+                                </h2>
+                                @if($offer->location_english || $offer->location_arabic)
+                                <p class="my-3 font-weight-500 text-gray-light lh-15">
+                                    <i class="fas fa-map-marker-alt text-primary mr-1"></i>
+                                    {{ app()->getLocale() == 'ar' ? ($offer->location_arabic ?? $offer->location_english) : ($offer->location_english ?? $offer->location_arabic) }}
+                                </p>
+                                @endif
+                                <p class="fs-14 font-weight-500 letter-spacing-087 text-secondary text-uppercase lh-15 mb-1">
+                                    {{ __('lang.for_sale') }}
+                                </p>
+                                @if($defaultPrice || $offer->project_cost)
+                                <p class="fs-22 font-weight-bold text-heading mb-3">
+                                    {{ $offer->currency ? $offer->currency->abbreviation : 'AED' }}
+                                    {{ number_format($defaultPrice ? $defaultPrice->price : $offer->project_cost) }}
+                                </p>
+                                @endif
+                                
+                                {{-- Specifications --}}
+                                @if($offer->specifications && $offer->specifications->count() > 0)
+                                <ul class="list-inline d-flex mb-0 flex-wrap border-top justify-content-between pt-4 mr-n2">
+                                    @foreach($offer->specifications->take(3) as $spec)
+                                    @if($spec->specification)
+                                    <li class="list-inline-item text-gray font-weight-500 fs-13 d-flex align-items-center mr-2" 
+                                        data-toggle="tooltip" 
+                                        title="{{ app()->getLocale() == 'ar' ? $spec->specification->title_arabic : $spec->specification->title_english }}">
+                                        @if($spec->specification->icon)
+                                        <img src="{{ url('/storage' . $spec->specification->icon) }}" 
+                                             alt="" class="mr-2" 
+                                             style="width: 18px; height: 18px; object-fit: contain;">
+                                        @else
+                                        <i class="fas fa-check-circle fs-18 text-primary mr-2"></i>
+                                        @endif
+                                        {{ app()->getLocale() == 'ar' ? $spec->value_arabic : $spec->value_english }}
+                                    </li>
+                                    @endif
+                                    @endforeach
+                                </ul>
+                                @endif
+                                
+                                <a href="{{ route('offers.show', $offer->slug) }}" class="btn btn-secondary btn-block mt-4">
+                                    {{ __('lang.view_offer') }}
+                                    <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'left ml-2' : 'right ml-2' }}"></i>
+                                </a>
+                            </div>
+                        </div>
+                        @endif
                     </div>
-                  </div>
                 </div>
-              </div>
             </div>
-          </div>
-          <div class="box px-0 d-flex flex-column">
-            <div class="bg-cover custom-vh-04 d-flex align-items-center" style="background-image: url('assets/images/properties-slider-05.jpg')">
-              <div class="container">
-                <div class="row">
-                  <div class="col-lg-5 offset-lg-7 col-md-6 offset-md-3 col-sm-8 offset-sm-2 mt-xl-1 py-8 pt-lg-12">
-                    <div class="bg-white  px-7 pt-6 pb-4 rounded-lg ml-lg-n1 mb-xl-15" data-animate="flipInX">
-                      <div class="mt-n7 position-absolute">
-                        <span class="badge badge-orange">Featured</span>
-                      </div>
-                      <h2 class="my-0"><a href="single-property-1.html" class="fs-30 lh-12 text-dark hover-primary">Hollywood Boulevard</a></h2>
-                      <p class="my-3 font-weight-500 text-gray-light lh-15">1421 San Pedro St, Los Angeles</p>
-                      <p class="fs-14 font-weight-500 letter-spacing-087 text-primary text-uppercase lh-15 mb-1">
-                        For Sale</p>
-                      <p class="fs-22 font-weight-bold text-heading">$1.250.000</p>
-                      <ul class="list-inline d-flex mb-0 flex-wrap border-top justify-content-between pt-4 mr-n2">
-                        <li class="list-inline-item text-gray font-weight-500 fs-13 d-flex align-items-center mr-2" data-toggle="tooltip" title="3 Bedroom">
-                          <svg class="icon icon-bedroom fs-18 text-primary mr-2">
-                            <use xlink:href="#icon-bedroom"></use>
-                          </svg>
-                          3 Bedrooms
-                        </li>
-                        <li class="list-inline-item text-gray font-weight-500 fs-13 d-flex align-items-center mr-2" data-toggle="tooltip" title="3 Bathrooms">
-                          <svg class="icon icon-shower fs-18 text-primary mr-2">
-                            <use xlink:href="#icon-shower"></use>
-                          </svg>
-                          3 Bathrooms
-                        </li>
-                        <li class="list-inline-item text-gray font-weight-500 fs-13 d-flex align-items-center mr-2" data-toggle="tooltip" title="Size">
-                          <svg class="icon icon-square fs-18 text-primary mr-2">
-                            <use xlink:href="#icon-square"></use>
-                          </svg>
-                          2300 Sq.Ft
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="box px-0 d-flex flex-column">
-            <div class="bg-cover custom-vh-04 d-flex align-items-center" style="background-image: url('assets/images/properties-slider-06.jpg')">
-              <div class="container">
-                <div class="row">
-                  <div class="col-lg-5 offset-lg-7 col-md-6 offset-md-3 col-sm-8 offset-sm-2 mt-xl-1 py-8 pt-lg-12">
-                    <div class="bg-white  px-7 pt-6 pb-4 rounded-lg ml-lg-n1 mb-xl-15" data-animate="flipInX">
-                      <div class="mt-n7 position-absolute">
-                        <span class="badge badge-orange">Featured</span>
-                      </div>
-                      <h2 class="my-0"><a href="single-property-1.html" class="fs-30 lh-12 text-dark hover-primary">Villa on Hollywood Boulevard</a></h2>
-                      <p class="my-3 font-weight-500 text-gray-light lh-15">1421 San Pedro St, Los Angeles</p>
-                      <p class="fs-14 font-weight-500 letter-spacing-087 text-primary text-uppercase lh-15 mb-1">
-                        For Sale</p>
-                      <p class="fs-22 font-weight-bold text-heading">$1.250.000</p>
-                      <ul class="list-inline d-flex mb-0 flex-wrap border-top justify-content-between pt-4 mr-n2">
-                        <li class="list-inline-item text-gray font-weight-500 fs-13 d-flex align-items-center mr-2" data-toggle="tooltip" title="3 Bedroom">
-                          <svg class="icon icon-bedroom fs-18 text-primary mr-2">
-                            <use xlink:href="#icon-bedroom"></use>
-                          </svg>
-                          3 Bedrooms
-                        </li>
-                        <li class="list-inline-item text-gray font-weight-500 fs-13 d-flex align-items-center mr-2" data-toggle="tooltip" title="3 Bathrooms">
-                          <svg class="icon icon-shower fs-18 text-primary mr-2">
-                            <use xlink:href="#icon-shower"></use>
-                          </svg>
-                          3 Bathrooms
-                        </li>
-                        <li class="list-inline-item text-gray font-weight-500 fs-13 d-flex align-items-center mr-2" data-toggle="tooltip" title="Size">
-                          <svg class="icon icon-square fs-18 text-primary mr-2">
-                            <use xlink:href="#icon-square"></use>
-                          </svg>
-                          2300 Sq.Ft
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-      </section>
+        @endforeach
+        
+    </div>
+</section>
+
+<style>
+/* Home Slider - Image dimensions: 1890x883 */
+.home-slider-wrapper {
+    position: relative;
+}
+
+/* Override custom-vh-04 to use exact aspect ratio from backend */
+.home-slider-wrapper .custom-vh-04 {
+    min-height: auto !important;
+    aspect-ratio: 1890 / 883;
+    background-position: center;
+    background-size: cover;
+}
+
+.home-slider-wrapper .slider-title-shadow {
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.home-slider-wrapper .slider-default-content {
+    max-width: 600px;
+}
+
+.home-slider-wrapper .opacity-90 {
+    opacity: 0.9;
+}
+
+/* Override arrow positioning for this slider */
+.home-slider-wrapper .slick-arrow {
+    z-index: 100;
+}
+
+.home-slider-wrapper .slick-prev {
+    left: 30px !important;
+}
+
+.home-slider-wrapper .slick-next {
+    right: 30px !important;
+}
+
+/* RTL Support */
+[dir="rtl"] .home-slider-wrapper .slider-default-content {
+    text-align: right;
+}
+
+[dir="rtl"] .home-slider-wrapper .ml-lg-n1 {
+    margin-left: 0 !important;
+    margin-right: -0.25rem !important;
+}
+
+/* Responsive - maintain aspect ratio but set min-height for small screens */
+@media (max-width: 1199px) {
+    .home-slider-wrapper .custom-vh-04 {
+        aspect-ratio: 1890 / 883;
+    }
+}
+
+@media (max-width: 991px) {
+    .home-slider-wrapper .fs-48 {
+        font-size: 36px !important;
+    }
+    
+    .home-slider-wrapper .slick-arrow {
+        display: none !important;
+    }
+    
+    .home-slider-wrapper .custom-vh-04 {
+        aspect-ratio: 1890 / 883;
+        min-height: 400px;
+    }
+}
+
+@media (max-width: 767px) {
+    .home-slider-wrapper .fs-48 {
+        font-size: 28px !important;
+    }
+    
+    .home-slider-wrapper .fs-18 {
+        font-size: 15px !important;
+    }
+    
+    .home-slider-wrapper .custom-vh-04 {
+        aspect-ratio: 1890 / 883;
+        min-height: 300px;
+    }
+}
+
+@media (max-width: 575px) {
+    .home-slider-wrapper .custom-vh-04 {
+        min-height: 250px;
+    }
+    
+    .home-slider-wrapper .fs-48 {
+        font-size: 24px !important;
+    }
+}
+</style>
+@else
+{{-- Fallback if no sliders --}}
+<section class="bg-cover custom-vh-04 d-flex align-items-center" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto text-center py-8">
+                <h1 class="text-white fs-48 font-weight-bold mb-4">{{ __('lang.welcome') }}</h1>
+                <p class="text-white opacity-75 fs-18">{{ __('lang.site_description') }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+@endif

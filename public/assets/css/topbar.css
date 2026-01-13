@@ -1,0 +1,139 @@
+/**
+ * Site Top Bar
+ * Primary: #19868b | Secondary: #e1273d
+ */
+
+.site-topbar {
+    background: linear-gradient(135deg, #0d1b2a 0%, #1b3a4b 100%);
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.topbar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Social Icons */
+.topbar-social {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.topbar-social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    font-size: 12px;
+    transition: all 0.3s ease;
+}
+
+.topbar-social a:hover {
+    background: #19868b;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* Contact Info */
+.topbar-contact {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.topbar-phone,
+.topbar-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.topbar-phone i,
+.topbar-whatsapp i {
+    font-size: 14px;
+}
+
+.topbar-phone:hover {
+    color: #19868b;
+}
+
+.topbar-whatsapp {
+    background: #25D366;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+.topbar-whatsapp:hover {
+    background: #1fb855;
+    color: #ffffff;
+}
+
+/* RTL Support */
+[dir="rtl"] .topbar-content {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .topbar-social {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .topbar-contact {
+    flex-direction: row-reverse;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .site-topbar {
+        padding: 6px 0;
+    }
+    
+    .topbar-social {
+        gap: 8px;
+    }
+    
+    .topbar-social a {
+        width: 24px;
+        height: 24px;
+        font-size: 11px;
+    }
+    
+    .topbar-contact {
+        gap: 12px;
+    }
+    
+    .topbar-phone span,
+    .topbar-whatsapp span {
+        display: none;
+    }
+    
+    .topbar-phone,
+    .topbar-whatsapp {
+        padding: 4px 8px;
+    }
+    
+    .topbar-whatsapp {
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .topbar-social a:nth-child(n+4) {
+        display: none;
+    }
+}
+

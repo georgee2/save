@@ -33,16 +33,17 @@
 
 {{-- Board of Directors Section --}}
 @if($boardMembers && $boardMembers->count() > 0)
-<section class="board-section py-12">
+<section class="board-section">
     <div class="container">
         {{-- Section Header --}}
         <div class="text-center mb-10" data-animate="fadeInUp">
-            <div class="section-label justify-content-center">
-                <span class="label-line"></span>
-                <span class="label-text">{{ __('lang.leadership') }}</span>
-                <span class="label-line"></span>
+            <div class="board-section-header">
+                <div class="board-icon-wrapper">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <span class="board-label-text">{{ __('lang.leadership') }}</span>
             </div>
-            <h2 class="section-title">{{ __('lang.board_of_directors') }}</h2>
+            <h2 class="section-title board-title-special">{{ __('lang.board_of_directors') }}</h2>
             <p class="section-subtitle">{{ __('lang.board_subtitle') }}</p>
         </div>
         
@@ -50,52 +51,47 @@
         <div class="board-grid">
             @foreach($boardMembers as $member)
             <div class="board-card" data-animate="fadeInUp" data-delay="{{ $loop->index * 100 }}">
-                <a href="{{ route('team.member', $member->id) }}" class="board-card-link">
-                    <div class="board-card-inner">
-                        {{-- Image Section --}}
-                        <div class="board-image-wrapper">
-                            @if($member->main_image)
-                            <img src="{{ asset('storage' . $member->main_image) }}" 
-                                 alt="{{ app()->getLocale() == 'ar' ? $member->name_arabic : $member->name_english }}" 
-                                 class="board-image">
-                            @else
-                            <div class="board-image-placeholder">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            @endif
-                            <div class="board-image-overlay"></div>
-                            
-                            {{-- Rank Badge --}}
-                            @if($member->rank)
-                            <div class="board-rank-badge">
-                                <span>{{ app()->getLocale() == 'ar' ? $member->rank->name_arabic : $member->rank->name_english }}</span>
-                            </div>
-                            @endif
+                <div class="board-card-inner">
+                    {{-- Image Section --}}
+                    <div class="board-image-wrapper">
+                        @if($member->main_image)
+                        <img src="{{ asset('storage' . $member->main_image) }}" 
+                             alt="{{ app()->getLocale() == 'ar' ? $member->name_arabic : $member->name_english }}" 
+                             class="board-image">
+                        @else
+                        <div class="board-image-placeholder">
+                            <i class="fas fa-user"></i>
                         </div>
+                        @endif
                         
-                        {{-- Content Section --}}
-                        <div class="board-content">
-                            <h3 class="board-name">
-                                {{ app()->getLocale() == 'ar' ? $member->name_arabic : $member->name_english }}
-                            </h3>
-                            
-                            @if($member->jobTitle)
-                            <p class="board-title">
-                                {{ app()->getLocale() == 'ar' ? $member->jobTitle->name_arabic : $member->jobTitle->name_english }}
-                            </p>
-                            @endif
-                            
-                            {{-- View Profile Link --}}
-                            <span class="board-view-profile">
-                                {{ __('lang.view_profile') }}
-                                <i class="fas fa-arrow-right {{ app()->getLocale() == 'ar' ? 'fa-flip-horizontal' : '' }}"></i>
-                            </span>
+                        {{-- Star Badge --}}
+                        <div class="board-star-badge">
+                            <i class="fas fa-star"></i>
                         </div>
-                        
-                        {{-- Decorative Element --}}
-                        <div class="board-accent"></div>
                     </div>
-                </a>
+                    
+                    {{-- Content Section --}}
+                    <div class="board-content">
+                        <h3 class="board-name">
+                            {{ app()->getLocale() == 'ar' ? $member->name_arabic : $member->name_english }}
+                        </h3>
+                        
+                        @if($member->rank)
+                        <span class="board-rank-label">
+                            {{ app()->getLocale() == 'ar' ? $member->rank->name_arabic : $member->rank->name_english }}
+                        </span>
+                        @endif
+                        
+                        @if($member->jobTitle)
+                        <p class="board-title">
+                            {{ app()->getLocale() == 'ar' ? $member->jobTitle->name_arabic : $member->jobTitle->name_english }}
+                        </p>
+                        @endif
+                    </div>
+                    
+                    {{-- Decorative Element --}}
+                    <div class="board-accent"></div>
+                </div>
             </div>
             @endforeach
         </div>
@@ -105,7 +101,7 @@
 
 {{-- Team Members Section --}}
 @if($teamMembers && $teamMembers->count() > 0)
-<section class="team-section py-12 {{ $boardMembers && $boardMembers->count() > 0 ? 'bg-light' : '' }}">
+<section class="team-section {{ $boardMembers && $boardMembers->count() > 0 ? 'bg-light' : '' }}">
     <div class="container">
         {{-- Section Header --}}
         <div class="text-center mb-10" data-animate="fadeInUp">
@@ -121,7 +117,7 @@
         {{-- Team Members Grid --}}
         <div class="team-grid">
             @foreach($teamMembers as $member)
-            <a href="{{ route('team.member', $member->id) }}" class="team-card" data-animate="fadeInUp" data-delay="{{ $loop->index * 50 }}">
+            <div class="team-card" data-animate="fadeInUp" data-delay="{{ $loop->index * 50 }}">
                 {{-- Image --}}
                 <div class="team-image-wrapper">
                     @if($member->main_image)
@@ -133,16 +129,6 @@
                         <i class="fas fa-user"></i>
                     </div>
                     @endif
-                    
-                    {{-- Hover Overlay --}}
-                    <div class="team-overlay">
-                        <div class="team-overlay-content">
-                            <span class="team-view-btn">
-                                {{ __('lang.view_profile') }}
-                                <i class="fas fa-arrow-right {{ app()->getLocale() == 'ar' ? 'fa-flip-horizontal ml-2' : 'mr-2' }}"></i>
-                            </span>
-                        </div>
-                    </div>
                 </div>
                 
                 {{-- Content --}}
@@ -163,7 +149,7 @@
                     </span>
                     @endif
                 </div>
-            </a>
+            </div>
             @endforeach
         </div>
     </div>

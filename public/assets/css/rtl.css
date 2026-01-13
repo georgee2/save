@@ -10,9 +10,72 @@
     text-align: right;
 }
 
+[dir="rtl"] html,
 [dir="rtl"] body {
     direction: rtl;
     text-align: right;
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+/* ===========================================
+   Header RTL - Keep Logo on Left (same as English)
+   =========================================== */
+[dir="rtl"] .main-header {
+    direction: ltr !important;
+}
+
+[dir="rtl"] .main-header .navbar {
+    direction: ltr !important;
+    flex-direction: row !important;
+}
+
+[dir="rtl"] .main-header .navbar-brand {
+    order: 0 !important;
+    margin-right: 30px !important;
+    margin-left: 0 !important;
+}
+
+[dir="rtl"] .main-header .navbar-collapse {
+    order: 1 !important;
+    direction: rtl !important;
+}
+
+[dir="rtl"] .main-header .navbar-nav {
+    direction: rtl !important;
+    flex-direction: row !important;
+}
+
+[dir="rtl"] .main-header .nav-item {
+    direction: rtl !important;
+}
+
+[dir="rtl"] .main-header .mobile-toggle {
+    order: 2 !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+}
+
+[dir="rtl"] .main-header .dropdown-menu {
+    direction: rtl !important;
+    text-align: right !important;
+}
+
+/* Topbar RTL - Keep same layout */
+[dir="rtl"] .site-topbar {
+    direction: ltr !important;
+}
+
+[dir="rtl"] .site-topbar .topbar-content {
+    direction: ltr !important;
+}
+
+[dir="rtl"] .site-topbar .topbar-social {
+    direction: ltr !important;
+}
+
+[dir="rtl"] .site-topbar .topbar-contact {
+    direction: rtl !important;
 }
 
 /* ===========================================

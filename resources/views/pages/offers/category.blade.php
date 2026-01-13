@@ -94,16 +94,8 @@
                                 </div>
                                 @endif
                                 
-                                {{-- Top Badges --}}
-                                <div class="offer-badges position-absolute">
-                                    <span class="badge badge-offer">{{ __('lang.special_offer') }}</span>
-                                    @if($offer->sqft)
-                                    <span class="badge badge-area">{{ number_format($offer->sqft) }} {{ __('lang.sqft') }}</span>
-                                    @endif
-                                </div>
-                                
                                 {{-- Media Count --}}
-                                <div class="offer-media-count position-absolute">
+                                <a href="{{ $offerUrl($offer->slug) }}" class="offer-media-count position-absolute">
                                     @if($offer->total_images > 0)
                                     <span class="media-item" data-toggle="tooltip" title="{{ $offer->total_images }} {{ __('lang.images') }}">
                                         <i class="far fa-images"></i> {{ $offer->total_images }}
@@ -114,8 +106,32 @@
                                         <i class="far fa-play-circle"></i> {{ $offer->video_count }}
                                     </span>
                                     @endif
+                                </a>
+                            </div>
+                            
+                            {{-- Offer Code Badge with Copy & Share --}}
+                            @if($offer->offer_code)
+                            <div class="offer-code-badge">
+                                <span class="code-value">{{ $offer->offer_code }}</span>
+                                <div class="code-actions">
+                                    <button type="button" class="code-action-btn copy-code-btn" 
+                                            data-code="{{ $offer->offer_code }}" 
+                                            data-toggle="tooltip" 
+                                            data-placement="left"
+                                            title="{{ __('lang.copy_code') }}">
+                                        <i class="far fa-copy"></i>
+                                    </button>
+                                    <a href="https://wa.me/?text={{ urlencode($offerUrl($offer->slug)) }}" 
+                                       target="_blank" 
+                                       class="code-action-btn whatsapp-share-btn" 
+                                       data-toggle="tooltip" 
+                                       data-placement="left"
+                                       title="{{ __('lang.share_whatsapp') }}">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </a>
                                 </div>
                             </div>
+                            @endif
                             
                             {{-- Offer Content --}}
                             <div class="offer-card-body bg-white p-4">
@@ -171,8 +187,8 @@
                             {{-- Footer with CTA --}}
                             <div class="card-footer bg-transparent d-flex justify-content-between align-items-center py-3">
                                 <p class="fs-17 font-weight-bold text-heading mb-0">
-                                    @if($offer->sqm)
-                                    {{ number_format($offer->sqm) }} <span class="text-gray-light font-weight-500 fs-14">{{ __('lang.sqm') }}</span>
+                                    @if($offer->sqft)
+                                    {{ number_format($offer->sqft) }} <span class="text-gray-light font-weight-500 fs-14">{{ __('lang.sqft') }}</span>
                                     @endif
                                 </p>
                                 <a href="{{ $offerUrl($offer->slug) }}" class="btn btn-primary btn-sm px-4 py-2 rounded-lg">
@@ -216,13 +232,8 @@
                                         </div>
                                         @endif
                                         
-                                        {{-- Top Badges --}}
-                                        <div class="offer-badges position-absolute">
-                                            <span class="badge badge-offer">{{ __('lang.special_offer') }}</span>
-                                        </div>
-                                        
                                         {{-- Media Count --}}
-                                        <div class="offer-media-count position-absolute">
+                                        <a href="{{ $offerUrl($offer->slug) }}" class="offer-media-count position-absolute">
                                             @if($offer->total_images > 0)
                                             <span class="media-item">
                                                 <i class="far fa-images"></i> {{ $offer->total_images }}
@@ -233,7 +244,7 @@
                                                 <i class="far fa-play-circle"></i> {{ $offer->video_count }}
                                             </span>
                                             @endif
-                                        </div>
+                                        </a>
                                     </div>
                                 </div>
                                 <div class="col-md-7">
@@ -288,8 +299,8 @@
                                         
                                         <div class="mt-auto pt-3 d-flex justify-content-between align-items-center">
                                             <p class="fs-17 font-weight-bold text-heading mb-0">
-                                                @if($offer->sqm)
-                                                {{ number_format($offer->sqm) }} <span class="text-gray-light font-weight-500 fs-14">{{ __('lang.sqm') }}</span>
+                                                @if($offer->sqft)
+                                                {{ number_format($offer->sqft) }} <span class="text-gray-light font-weight-500 fs-14">{{ __('lang.sqft') }}</span>
                                                 @endif
                                             </p>
                                             <a href="{{ $offerUrl($offer->slug) }}" class="btn btn-primary btn-sm px-4 py-2 rounded-lg">
@@ -357,6 +368,23 @@
 
 @section('js')
 <script>
+// Copy Code functionality
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.copy-code-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var code = this.getAttribute('data-code');
+            navigator.clipboard.writeText(code).then(function() {
+                btn.classList.add('copied');
+                btn.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(function() {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = '<i class="far fa-copy"></i>';
+                }, 2000);
+            });
+        });
+    });
+});
+
 $(document).ready(function() {
     // View toggle functionality
     $('.view-toggle').on('click', function(e) {

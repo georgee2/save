@@ -160,7 +160,7 @@
                     <i class="fas fa-briefcase"></i>
                 </div>
                 <div class="experience-text">
-                    {!! nl2br(e(app()->getLocale() == 'ar' ? $team->work_experience_arabic : $team->work_experience_english)) !!}
+                    {!! app()->getLocale() == 'ar' ? $team->work_experience_arabic : $team->work_experience_english !!}
                 </div>
             </div>
         </div>

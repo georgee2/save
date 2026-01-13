@@ -95,6 +95,8 @@ class News extends Model
                 news.title_arabic,
                 news.bio_english,
                 news.bio_arabic,
+                news.body_english,
+                news.body_arabic,
                 news.image,
                 newscategories.name_english AS "caten",
                 newscategories.name_arabic AS "catar",

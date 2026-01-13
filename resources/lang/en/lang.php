@@ -17,6 +17,8 @@ return [
     'featured_projects_available' => 'featured projects available',
     'no_featured_projects' => 'No featured projects found.',
     'view_project' => 'View',
+    'project' => 'Project',
+    'for_sale' => 'For Sale',
     
     // Featured Offers Section
     'special_deals' => 'Special Deals',
@@ -124,6 +126,8 @@ return [
     'download' => 'Download',
     'floor_plans' => 'Floor Plans',
     'floor' => 'Floor',
+    'floors' => 'Floors',
+    'other_areas' => 'Other Areas',
     'count' => 'Count',
     '2d_floor_plan' => '2D Floor Plan',
     '3d_visualization' => '3D Visualization',
@@ -490,5 +494,14 @@ return [
     'quick_links' => 'Quick Links',
     'company' => 'Company',
     'projects' => 'Projects',
+    
+    // Topbar
+    'whatsapp' => 'WhatsApp',
+    
+    // Offer Code Actions
+    'copy_code' => 'Copy Code',
+    'share_whatsapp' => 'Share on WhatsApp',
+    'check_this_offer' => 'Check this offer',
+    'code_copied' => 'Code Copied!',
 ];
 

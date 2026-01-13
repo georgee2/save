@@ -45,6 +45,46 @@
     font-size: 10px;
 }
 
+/* Smaller Price Tag for Show Page */
+.offer-price-tag.offer-price-tag-show {
+    padding: 8px 12px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(25, 134, 139, 0.4);
+}
+
+.offer-price-tag.offer-price-tag-show .price-label {
+    font-size: 9px;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.offer-price-tag.offer-price-tag-show .price-value {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.offer-price-tag.offer-price-tag-show .price-emirate {
+    font-size: 9px;
+    margin-top: 2px;
+}
+
+.offer-price-tag.offer-price-tag-show .price-emirate::before {
+    font-size: 9px;
+    margin-right: 4px;
+}
+
+/* RTL Support for show page price tag */
+[dir="rtl"] .offer-price-tag.offer-price-tag-show {
+    right: auto;
+    left: 20px;
+}
+
+[dir="rtl"] .offer-price-tag.offer-price-tag-show .price-emirate::before {
+    margin-right: 0;
+    margin-left: 4px;
+}
+
 /* ===================================================
    Emirate Price List Styles
    =================================================== */

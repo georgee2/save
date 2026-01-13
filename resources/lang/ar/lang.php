@@ -17,6 +17,8 @@ return [
     'featured_projects_available' => 'مشاريع مميزة متاحة',
     'no_featured_projects' => 'لا توجد مشاريع مميزة.',
     'view_project' => 'عرض',
+    'project' => 'مشروع',
+    'for_sale' => 'للبيع',
     
     // Featured Offers Section
     'special_deals' => 'عروض خاصة',
@@ -124,6 +126,8 @@ return [
     'download' => 'تحميل',
     'floor_plans' => 'مخططات الطوابق',
     'floor' => 'طابق',
+    'floors' => 'طوابق',
+    'other_areas' => 'مناطق أخرى',
     'count' => 'العدد',
     '2d_floor_plan' => 'مخطط الطابق ثنائي الأبعاد',
     '3d_visualization' => 'العرض ثلاثي الأبعاد',
@@ -490,5 +494,14 @@ return [
     'quick_links' => 'روابط سريعة',
     'company' => 'الشركة',
     'projects' => 'المشاريع',
+    
+    // Topbar
+    'whatsapp' => 'واتساب',
+    
+    // Offer Code Actions
+    'copy_code' => 'نسخ الكود',
+    'share_whatsapp' => 'مشاركة على واتساب',
+    'check_this_offer' => 'شاهد هذا العرض',
+    'code_copied' => 'تم نسخ الكود!',
 ];
 

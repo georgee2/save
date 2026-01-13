@@ -26,20 +26,20 @@
                         <img src="{{ url('/storage' . $project->main_image) }}" 
                              alt="{{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}">
                         <div class="card-img-overlay p-2 d-flex flex-column">
-                            <div>
-                                <span class="badge mr-2 badge-primary">{{ __('lang.featured_projects_title') }}</span>
+                            <div class="d-flex justify-content-end">
+                                <span class="badge badge-primary">{{ __('lang.featured') }}</span>
                             </div>
                             <ul class="list-inline mb-0 mt-auto hover-image">
                                 @if($project->total_images > 0)
                                 <li class="list-inline-item mr-2" data-toggle="tooltip" title="{{ $project->total_images }} {{ __('lang.images') }}">
-                                    <a href="#" class="text-white hover-primary">
+                                    <a href="{{ route('projects.show', $project->slug) }}" class="text-white hover-primary">
                                         <i class="far fa-images"></i><span class="pl-1">{{ $project->total_images }}</span>
                                     </a>
                                 </li>
                                 @endif
                                 @if($project->video_count > 0)
                                 <li class="list-inline-item" data-toggle="tooltip" title="{{ $project->video_count }} {{ __('lang.videos') }}">
-                                    <a href="#" class="text-white hover-primary">
+                                    <a href="{{ route('projects.show', $project->slug) }}" class="text-white hover-primary">
                                         <i class="far fa-play-circle"></i><span class="pl-1">{{ $project->video_count }}</span>
                                     </a>
                                 </li>
@@ -107,4 +107,24 @@
         </div>
     </div>
 </section>
+
+<style>
+/* Home Featured Projects - Fixed Height Cards */
+.featured-projects-section .slick-slider .card.shadow-hover-2 {
+    height: 580px;
+    display: flex;
+    flex-direction: column;
+}
+
+.featured-projects-section .slick-slider .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.featured-projects-section .slick-slider .card-footer {
+    margin-top: auto;
+}
+</style>
 @endif
