@@ -22,7 +22,7 @@
              data-slick-options='{"slidesToShow": 6, "slidesToScroll": 1, "autoplay": true, "autoplaySpeed": 2000, "speed": 500, "dots": true, "arrows": true, "infinite": true, "pauseOnHover": false, "responsive": [{"breakpoint": 1400, "settings": {"slidesToShow": 5}}, {"breakpoint": 1200, "settings": {"slidesToShow": 4}}, {"breakpoint": 992, "settings": {"slidesToShow": 3}}, {"breakpoint": 768, "settings": {"slidesToShow": 2}}, {"breakpoint": 480, "settings": {"slidesToShow": 1}}]}'>
             @foreach($allTeamMembers as $member)
             <div class="box px-2 pb-6 pt-2">
-                <a href="{{ route('team.member', $member->id) }}" class="home-team-card d-block text-decoration-none">
+                <div class="home-team-card d-block">
                     <div class="team-card-inner bg-white rounded-lg overflow-hidden shadow-hover-3 text-center p-4">
                         {{-- Member Icon (100x100) --}}
                         <div class="team-icon-wrapper mx-auto mb-3 position-relative">
@@ -65,7 +65,7 @@
                         </p>
                         @endif
                     </div>
-                </a>
+                </div>
             </div>
             @endforeach
         </div>

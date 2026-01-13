@@ -1,0 +1,210 @@
+/**
+ * Header Styles
+ * Primary: #19868b | Secondary: #e1273d
+ */
+
+/* Prevent horizontal scroll */
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
+/* Main Header - Transparent by default */
+.main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: transparent;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 100vw;
+}
+
+/* Account for topbar height */
+.main-header {
+    top: 44px;
+}
+
+/* Sticky Header on Scroll */
+.main-header.is-sticky {
+    top: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+}
+
+.main-header.is-sticky .sticky-area {
+    background: transparent;
+}
+
+/* Hide topbar on scroll */
+body.scrolled .site-topbar {
+    transform: translateY(-100%);
+    opacity: 0;
+}
+
+.site-topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1001;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    width: 100%;
+    max-width: 100vw;
+}
+
+/* Navbar Layout */
+.main-header .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row !important;
+    flex-wrap: nowrap;
+}
+
+.main-header .navbar-brand {
+    order: 0 !important;
+    margin-right: 30px !important;
+    margin-left: 0 !important;
+    flex-shrink: 0;
+}
+
+.main-header .navbar-collapse {
+    order: 1 !important;
+    flex-grow: 1;
+}
+
+.main-header .mobile-toggle {
+    order: 2 !important;
+    margin-left: auto !important;
+}
+
+/* RTL styles are handled in rtl.css */
+
+/* Nav links styling */
+.main-header .nav-link {
+    color: #ffffff;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.main-header .nav-link:hover {
+    color: #19868b;
+}
+
+/* Sticky state - dark text */
+.main-header.is-sticky .nav-link {
+    color: #333333;
+}
+
+.main-header.is-sticky .nav-link:hover {
+    color: #19868b;
+}
+
+/* Mobile menu toggle */
+.main-header .mobile-toggle {
+    margin-left: auto;
+}
+
+[dir="rtl"] .main-header .mobile-toggle {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.main-header .navbar-toggler span {
+    color: #ffffff;
+    transition: color 0.3s ease;
+}
+
+.main-header.is-sticky .navbar-toggler span {
+    color: #333333;
+}
+
+/* Dropdown menus */
+.main-header .dropdown-menu {
+    background: #ffffff;
+    border: none;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+}
+
+.main-header .dropdown-link {
+    color: #333333;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+}
+
+.main-header .dropdown-link:hover {
+    color: #19868b;
+    background: rgba(25, 134, 139, 0.08);
+}
+
+/* Body padding to account for fixed header */
+body {
+    padding-top: 134px; /* topbar (44px) + header (~90px) */
+}
+
+body.scrolled {
+    padding-top: 90px; /* only header when topbar is hidden */
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+    .main-header {
+        top: 40px;
+    }
+    
+    body {
+        padding-top: 120px;
+    }
+    
+    body.scrolled {
+        padding-top: 80px;
+    }
+    
+    .main-header .navbar-collapse {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        margin-top: 10px;
+    }
+    
+    .main-header .navbar-collapse .nav-link {
+        color: #333333;
+    }
+    
+    /* RTL mobile adjustments */
+    [dir="rtl"] .main-header .d-flex.d-lg-none {
+        margin-left: auto !important;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-header {
+        top: 36px;
+    }
+    
+    body {
+        padding-top: 106px;
+    }
+    
+    body.scrolled {
+        padding-top: 70px;
+    }
+}
+
+@media (max-width: 576px) {
+    body {
+        padding-top: 100px;
+    }
+    
+    body.scrolled {
+        padding-top: 65px;
+    }
+}
+

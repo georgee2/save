@@ -46,9 +46,19 @@
                                     {{ app()->getLocale() == 'ar' ? $news->title_arabic : $news->title_english }}
                                 </a>
                             </h3>
+                            @php
+                                $excerpt = app()->getLocale() == 'ar' ? $news->bio_arabic : $news->bio_english;
+                                // If bio is 'none' or empty, use stripped body content instead
+                                if (empty($excerpt) || strtolower($excerpt) == 'none') {
+                                    $bodyContent = app()->getLocale() == 'ar' ? $news->body_arabic : $news->body_english;
+                                    $excerpt = strip_tags($bodyContent);
+                                }
+                            @endphp
+                            @if(!empty($excerpt) && strtolower($excerpt) != 'none')
                             <p class="news-excerpt">
-                                {{ Str::limit(app()->getLocale() == 'ar' ? $news->bio_arabic : $news->bio_english, 100) }}
+                                {{ Str::limit($excerpt, 100) }}
                             </p>
+                            @endif
                             <a href="{{ route('blogs.show', $news->slug) }}" class="news-read-more">
                                 {{ __('lang.read_more') }}
                                 <i class="fas fa-arrow-right"></i>

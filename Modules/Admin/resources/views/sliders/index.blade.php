@@ -72,9 +72,9 @@
                             <tr>
                                 <th style="width: 50px; text-align: center;"><i class="fa fa-arrows-v"></i></th>
                                 <th style="width: 60px;">ID</th>
+                                <th style="width: 90px;">Type</th>
                                 <th style="width: 140px;">Image</th>
-                                <th>Title (English)</th>
-                                <th>Title (Arabic)</th>
+                                <th>Title / Item</th>
                                 <th style="width: 80px; text-align: center;">Order</th>
                                 <th style="width: 130px;">Status</th>
                                 <th style="width: 110px;">Created Date</th>
@@ -89,10 +89,43 @@
                                 </td>
                                 <td>{{ $slider->id }}</td>
                                 <td>
-                                    <img src="{{ asset('storage' . $slider->image) }}" alt="{{ $slider->title_english }}" class="slider-image-thumb">
+                                    @if(($slider->slider_type ?? 'default') == 'default')
+                                        <span class="badge badge-primary"><i class="fa fa-image"></i> Default</span>
+                                    @elseif($slider->slider_type == 'project')
+                                        <span class="badge badge-success"><i class="fa fa-building"></i> Project</span>
+                                    @elseif($slider->slider_type == 'offer')
+                                        <span class="badge badge-warning"><i class="fa fa-tags"></i> Offer</span>
+                                    @endif
                                 </td>
-                                <td><strong>{{ $slider->title_english }}</strong></td>
-                                <td dir="rtl"><strong>{{ $slider->title_arabic }}</strong></td>
+                                <td>
+                                    @php
+                                        $imageUrl = $slider->image ? asset('storage' . $slider->image) : '';
+                                        if (!$imageUrl && $slider->slider_type == 'project' && $slider->project) {
+                                            $imageUrl = asset('storage' . $slider->project->main_image);
+                                        } elseif (!$imageUrl && $slider->slider_type == 'offer' && $slider->offer) {
+                                            $imageUrl = asset('storage' . $slider->offer->main_image);
+                                        }
+                                    @endphp
+                                    @if($imageUrl)
+                                    <img src="{{ $imageUrl }}" alt="" class="slider-image-thumb">
+                                    @else
+                                    <span class="text-muted">No image</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if(($slider->slider_type ?? 'default') == 'default')
+                                        <strong>{{ $slider->title_english }}</strong>
+                                        <br><small class="text-muted" dir="rtl">{{ $slider->title_arabic }}</small>
+                                    @elseif($slider->slider_type == 'project' && $slider->project)
+                                        <strong>{{ $slider->project->title_english }}</strong>
+                                        <br><small class="text-muted" dir="rtl">{{ $slider->project->title_arabic }}</small>
+                                    @elseif($slider->slider_type == 'offer' && $slider->offer)
+                                        <strong>{{ $slider->offer->title_english }}</strong>
+                                        <br><small class="text-muted" dir="rtl">{{ $slider->offer->title_arabic }}</small>
+                                    @else
+                                        <span class="text-muted">N/A</span>
+                                    @endif
+                                </td>
                                 <td style="text-align: center;"><span class="badge badge-info ordering-badge">{{ $slider->ordering }}</span></td>
                                 <td>
                                     <form action="{{ route('slider.toggle-status', ['id' => $slider->id]) }}" method="POST" style="display:inline;" class="toggle-status-form">
@@ -116,7 +149,7 @@
                                         </a>
                                         <form action="{{ route('slider.delete', ['id' => $slider->id]) }}" method="POST" style="display:inline;" class="delete-form">
                                             @csrf
-                                            <button type="button" class="btn btn-sm btn-danger delete-btn" data-slider-id="{{ $slider->id }}" data-slider-title="{{ $slider->title_english }}">
+                                            <button type="button" class="btn btn-sm btn-danger delete-btn" data-slider-id="{{ $slider->id }}" data-slider-title="{{ $slider->title_english ?? ($slider->project->title_english ?? ($slider->offer->title_english ?? 'Slider')) }}">
                                                 <i class="fa fa-trash"></i>
                                             </button>
                                         </form>

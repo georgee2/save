@@ -260,30 +260,17 @@
     line-height: 1.6;
 }
 
-/* Branch Contact */
-.branch-contact {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 25px;
-}
-
-.contact-item {
+/* Branch Hours */
+.branch-hours {
     display: flex;
     align-items: center;
     gap: 12px;
+    margin-bottom: 20px;
     color: #5a5a5a;
     font-size: 15px;
-    transition: color 0.3s ease;
-    text-decoration: none;
 }
 
-a.contact-item:hover {
-    color: #19868b;
-    text-decoration: none;
-}
-
-.contact-item i {
+.branch-hours i {
     width: 36px;
     height: 36px;
     display: flex;
@@ -294,12 +281,6 @@ a.contact-item:hover {
     color: #19868b;
     font-size: 14px;
     flex-shrink: 0;
-    transition: all 0.3s ease;
-}
-
-a.contact-item:hover i {
-    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
-    color: #ffffff;
 }
 
 /* Branch Actions */

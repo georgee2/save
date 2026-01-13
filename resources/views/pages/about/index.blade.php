@@ -255,7 +255,7 @@
              data-slick-options='{"slidesToShow": 5, "slidesToScroll": 1, "autoplay": true, "autoplaySpeed": 2000, "speed": 500, "dots": true, "arrows": true, "infinite": true, "pauseOnHover": false, "responsive": [{"breakpoint": 1200, "settings": {"slidesToShow": 4}}, {"breakpoint": 992, "settings": {"slidesToShow": 3}}, {"breakpoint": 768, "settings": {"slidesToShow": 2}}, {"breakpoint": 480, "settings": {"slidesToShow": 1}}]}'>
             @foreach($allTeamMembers as $member)
             <div class="about-team-slide px-2 pb-4">
-                <a href="{{ route('team.member', $member->id) }}" class="about-team-card d-block">
+                <div class="about-team-card d-block">
                     <div class="about-team-card-inner">
                         {{-- Member Icon --}}
                         <div class="about-team-icon mx-auto mb-3">
@@ -296,7 +296,7 @@
                         </p>
                         @endif
                     </div>
-                </a>
+                </div>
             </div>
             @endforeach
         </div>

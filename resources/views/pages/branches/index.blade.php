@@ -49,9 +49,6 @@
         <div class="branches-grid">
             @foreach($branches as $index => $branch)
             <div class="branch-card" data-animate="fadeInUp" data-delay="{{ $index * 100 }}">
-                {{-- View Details Link --}}
-                <a href="{{ route('branches.show', $branch->id) }}" class="branch-card-link"></a>
-                
                 {{-- Branch Header --}}
                 <div class="branch-header">
                     <div class="branch-logo-wrapper">
@@ -90,46 +87,23 @@
                     </div>
                     @endif
                     
-                    {{-- Contact Info --}}
-                    <div class="branch-contact">
-                        @if($branch->mobile)
-                        <a href="tel:{{ $branch->mobile }}" class="contact-item">
-                            <i class="fas fa-phone"></i>
-                            <span>{{ $branch->mobile }}</span>
-                        </a>
-                        @endif
-                        
-                        @if($branch->email)
-                        <a href="mailto:{{ $branch->email }}" class="contact-item">
-                            <i class="fas fa-envelope"></i>
-                            <span>{{ $branch->email }}</span>
-                        </a>
-                        @endif
-                        
-                        @if($branch->opening_hours)
-                        <div class="contact-item">
-                            <i class="fas fa-clock"></i>
-                            <span>{{ $branch->opening_hours }}</span>
-                        </div>
-                        @endif
+                    {{-- Opening Hours --}}
+                    @if($branch->opening_hours)
+                    <div class="branch-hours">
+                        <i class="fas fa-clock"></i>
+                        <span>{{ $branch->opening_hours }}</span>
                     </div>
+                    @endif
                     
-                    {{-- Action Buttons --}}
+                    {{-- Get Directions Button --}}
+                    @if($branch->map_url)
                     <div class="branch-actions">
-                        @if($branch->map_url)
                         <a href="{{ $branch->map_url }}" target="_blank" class="btn-branch btn-directions">
                             <i class="fas fa-directions"></i>
                             <span>{{ __('lang.get_directions') }}</span>
                         </a>
-                        @endif
-                        
-                        @if($branch->mobile)
-                        <a href="tel:{{ $branch->mobile }}" class="btn-branch btn-call">
-                            <i class="fas fa-phone"></i>
-                            <span>{{ __('lang.call_now') }}</span>
-                        </a>
-                        @endif
                     </div>
+                    @endif
                 </div>
                 
                 {{-- Map Preview (if available) --}}

@@ -2,6 +2,7 @@
 @section('title', 'Create Slider')
 
 @section('css')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
     .word-count {
         font-size: 12px;
@@ -11,6 +12,49 @@
     .word-count.error {
         color: #dc3545;
         font-weight: bold;
+    }
+    .slider-type-section {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .slider-type-btn {
+        padding: 15px 25px;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        background: #fff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        margin: 5px;
+        flex: 1;
+    }
+    .slider-type-btn:hover {
+        border-color: #007bff;
+    }
+    .slider-type-btn.active {
+        border-color: #007bff;
+        background: #e7f1ff;
+    }
+    .slider-type-btn i {
+        font-size: 24px;
+        display: block;
+        margin-bottom: 8px;
+    }
+    .slider-type-btn.type-default i { color: #007bff; }
+    .slider-type-btn.type-project i { color: #28a745; }
+    .slider-type-btn.type-offer i { color: #ffc107; }
+    .type-section {
+        display: none;
+    }
+    .type-section.active {
+        display: block;
+    }
+    .select2-container--default .select2-selection--single {
+        height: 38px;
+        padding: 5px;
+        border: 1px solid #ced4da;
     }
 </style>
 @endsection
@@ -46,91 +90,162 @@
                     <form action="{{ route('slider.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         
-                        <div class="row">
-                            <!-- English Title -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>English Title <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 4 Words)</small></label>
-                                    <input type="text" class="form-control" name="title_english" value="{{ old('title_english') }}" required maxlength="255" id="title_english">
-                                    <div class="word-count" id="title_english_count">0 / 4 words</div>
+                        {{-- Slider Type Selection --}}
+                        <div class="slider-type-section">
+                            <label class="mb-3"><strong>Slider Type</strong> <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                            <div class="d-flex flex-wrap">
+                                <div class="slider-type-btn type-default active" data-type="default">
+                                    <i class="fa fa-image"></i>
+                                    <strong>Default</strong>
+                                    <small class="d-block text-muted">Custom content with image</small>
+                                </div>
+                                <div class="slider-type-btn type-project" data-type="project">
+                                    <i class="fa fa-building"></i>
+                                    <strong>Project</strong>
+                                    <small class="d-block text-muted">Display project with card</small>
+                                </div>
+                                <div class="slider-type-btn type-offer" data-type="offer">
+                                    <i class="fa fa-tags"></i>
+                                    <strong>Offer</strong>
+                                    <small class="d-block text-muted">Display offer with card</small>
                                 </div>
                             </div>
-                            
-                            <!-- Arabic Title -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Arabic Title <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 4 Words)</small></label>
-                                    <input type="text" class="form-control" name="title_arabic" value="{{ old('title_arabic') }}" required maxlength="255" dir="rtl" id="title_arabic">
-                                    <div class="word-count" id="title_arabic_count">0 / 4 words</div>
+                            <input type="hidden" name="slider_type" id="slider_type" value="default">
+                        </div>
+                        
+                        {{-- Project Selection (for project type) --}}
+                        <div class="type-section project-section" id="project-section">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Select Project <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                        <select class="form-control select2" name="project_id" id="project_id">
+                                            <option value="">-- Select Project --</option>
+                                            @foreach($projects as $project)
+                                            <option value="{{ $project->id }}" 
+                                                    data-image="{{ asset('storage' . $project->main_image) }}"
+                                                    {{ old('project_id') == $project->id ? 'selected' : '' }}>
+                                                {{ $project->title_english }} - {{ $project->title_arabic }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        <small class="form-text text-muted">The project's cover image will be used as slider background. Project details will be shown in a card overlay.</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="row">
-                            <!-- English Bio -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>English Bio <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 500 characters)</small></label>
-                                    <textarea class="form-control" name="bio_english" rows="5" required maxlength="500" id="bio_english">{{ old('bio_english') }}</textarea>
-                                    <div class="word-count" id="bio_english_count">0 / 500 characters</div>
-                                </div>
-                            </div>
-                            
-                            <!-- Arabic Bio -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Arabic Bio <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 500 characters)</small></label>
-                                    <textarea class="form-control" name="bio_arabic" rows="5" required maxlength="500" dir="rtl" id="bio_arabic">{{ old('bio_arabic') }}</textarea>
-                                    <div class="word-count" id="bio_arabic_count">0 / 500 characters</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <!-- English Button Text -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Button Text (English) <small>(Optional, Max 2 Words)</small></label>
-                                    <input type="text" class="form-control" name="button_text_english" value="{{ old('button_text_english') }}" maxlength="50" id="button_text_english">
-                                    <div class="word-count" id="button_text_english_count">0 / 2 words</div>
-                                </div>
-                            </div>
-                            
-                            <!-- Arabic Button Text -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Button Text (Arabic) <small>(Optional, Max 2 Words)</small></label>
-                                    <input type="text" class="form-control" name="button_text_arabic" value="{{ old('button_text_arabic') }}" maxlength="50" dir="rtl" id="button_text_arabic">
-                                    <div class="word-count" id="button_text_arabic_count">0 / 2 words</div>
+                        {{-- Offer Selection (for offer type) --}}
+                        <div class="type-section offer-section" id="offer-section">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Select Offer <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                        <select class="form-control select2" name="offer_id" id="offer_id">
+                                            <option value="">-- Select Offer --</option>
+                                            @foreach($offers as $offer)
+                                            <option value="{{ $offer->id }}" 
+                                                    data-image="{{ asset('storage' . $offer->main_image) }}"
+                                                    {{ old('offer_id') == $offer->id ? 'selected' : '' }}>
+                                                {{ $offer->title_english }} - {{ $offer->title_arabic }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                        <small class="form-text text-muted">The offer's cover image will be used as slider background. Offer details will be shown in a card overlay.</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="row">
-                            <!-- English URL -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>URL (English) <small>(Optional)</small></label>
-                                    <input type="url" class="form-control" name="url_english" value="{{ old('url_english') }}" maxlength="255" placeholder="https://example.com">
+                        {{-- Default Content Section --}}
+                        <div class="type-section default-section active" id="default-section">
+                            <div class="row">
+                                <!-- English Title -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>English Title <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 4 Words)</small></label>
+                                        <input type="text" class="form-control" name="title_english" value="{{ old('title_english') }}" maxlength="255" id="title_english">
+                                        <div class="word-count" id="title_english_count">0 / 4 words</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Arabic Title -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Arabic Title <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 4 Words)</small></label>
+                                        <input type="text" class="form-control" name="title_arabic" value="{{ old('title_arabic') }}" maxlength="255" dir="rtl" id="title_arabic">
+                                        <div class="word-count" id="title_arabic_count">0 / 4 words</div>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <!-- Arabic URL -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>URL (Arabic) <small>(Optional)</small></label>
-                                    <input type="url" class="form-control" name="url_arabic" value="{{ old('url_arabic') }}" maxlength="255" placeholder="https://example.com" dir="rtl">
+                            <div class="row">
+                                <!-- English Bio -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>English Bio <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 500 characters)</small></label>
+                                        <textarea class="form-control" name="bio_english" rows="5" maxlength="500" id="bio_english">{{ old('bio_english') }}</textarea>
+                                        <div class="word-count" id="bio_english_count">0 / 500 characters</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Arabic Bio -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Arabic Bio <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 500 characters)</small></label>
+                                        <textarea class="form-control" name="bio_arabic" rows="5" maxlength="500" dir="rtl" id="bio_arabic">{{ old('bio_arabic') }}</textarea>
+                                        <div class="word-count" id="bio_arabic_count">0 / 500 characters</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <!-- English Button Text -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Button Text (English) <small>(Optional, Max 2 Words)</small></label>
+                                        <input type="text" class="form-control" name="button_text_english" value="{{ old('button_text_english') }}" maxlength="50" id="button_text_english">
+                                        <div class="word-count" id="button_text_english_count">0 / 2 words</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Arabic Button Text -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Button Text (Arabic) <small>(Optional, Max 2 Words)</small></label>
+                                        <input type="text" class="form-control" name="button_text_arabic" value="{{ old('button_text_arabic') }}" maxlength="50" dir="rtl" id="button_text_arabic">
+                                        <div class="word-count" id="button_text_arabic_count">0 / 2 words</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <!-- English URL -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>URL (English) <small>(Optional)</small></label>
+                                        <input type="url" class="form-control" name="url_english" value="{{ old('url_english') }}" maxlength="255" placeholder="https://example.com">
+                                    </div>
+                                </div>
+                                
+                                <!-- Arabic URL -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>URL (Arabic) <small>(Optional)</small></label>
+                                        <input type="url" class="form-control" name="url_arabic" value="{{ old('url_arabic') }}" maxlength="255" placeholder="https://example.com" dir="rtl">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
+                        {{-- Common Fields --}}
                         <div class="row">
                             <!-- Image Upload -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Slider Image <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Will be converted to WebP 1890x883 - Quality 80%)</small></label>
-                                    <input accept="image/*" class="form-control dropify" type="file" name="image" required>
-                                    <small class="form-text text-muted">Max size: 5MB. Will be converted to WebP 1890x883px</small>
+                                    <label>Slider Image <span id="image-required"><i class="mdi mdi-18px mdi-alert-octagon text-danger"></i></span> <small>(Will be converted to WebP 1890x883 - Quality 80%)</small></label>
+                                    <input accept="image/*" class="form-control dropify" type="file" name="image" id="slider_image">
+                                    <small class="form-text text-muted" id="image-help">Max size: 5MB. Will be converted to WebP 1890x883px</small>
                                     @error('image')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                                 </div>
                             </div>
@@ -176,11 +291,43 @@
 
 @section('js')
 <script src="{{ asset('/js/dropify.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
     $(document).ready(function() {
         // Initialize Dropify
-        $('.dropify').dropify();
+        var drEvent = $('.dropify').dropify();
+        
+        // Initialize Select2
+        $('.select2').select2({
+            placeholder: 'Select an option',
+            allowClear: true
+        });
+        
+        // Slider Type Selection
+        $('.slider-type-btn').on('click', function() {
+            var type = $(this).data('type');
+            
+            // Update active state
+            $('.slider-type-btn').removeClass('active');
+            $(this).addClass('active');
+            
+            // Update hidden input
+            $('#slider_type').val(type);
+            
+            // Show/hide sections
+            $('.type-section').removeClass('active');
+            $('#' + type + '-section').addClass('active');
+            
+            // Update image field requirements
+            if (type === 'default') {
+                $('#image-required').html('<i class="mdi mdi-18px mdi-alert-octagon text-danger"></i>');
+                $('#image-help').text('Max size: 5MB. Will be converted to WebP 1890x883px');
+            } else {
+                $('#image-required').html('<small class="text-muted">(Optional - uses cover image if empty)</small>');
+                $('#image-help').text('Leave empty to use the ' + type + ' cover image automatically. Or upload a custom image.');
+            }
+        });
         
         // Word count validation for titles and button text
         function countWords(str) {
@@ -235,4 +382,3 @@
     });
 </script>
 @endsection
-

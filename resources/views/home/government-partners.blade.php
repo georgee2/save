@@ -29,17 +29,19 @@
                 <div class="govt-partner-card">
                     <div class="card-glow"></div>
                     <div class="partner-logo-wrapper">
-                        @if($partner->logo_english && app()->getLocale() == 'en')
-                        <img src="{{ asset('storage' . $partner->logo_english) }}" 
-                             alt="{{ $partner->name_english }}" 
-                             class="partner-logo">
-                        @elseif($partner->logo_arabic && app()->getLocale() == 'ar')
-                        <img src="{{ asset('storage' . $partner->logo_arabic) }}" 
-                             alt="{{ $partner->name_arabic }}" 
-                             class="partner-logo">
-                        @elseif($partner->logo_english)
-                        <img src="{{ asset('storage' . $partner->logo_english) }}" 
-                             alt="{{ $partner->name_english }}" 
+                        @php
+                            $logoPath = null;
+                            if (app()->getLocale() == 'ar' && $partner->logo_arabic) {
+                                $logoPath = $partner->logo_arabic;
+                            } elseif ($partner->logo_english) {
+                                $logoPath = $partner->logo_english;
+                            } elseif ($partner->logo_arabic) {
+                                $logoPath = $partner->logo_arabic;
+                            }
+                        @endphp
+                        @if($logoPath)
+                        <img src="{{ url('/storage' . $logoPath) }}" 
+                             alt="{{ app()->getLocale() == 'ar' ? $partner->name_arabic : $partner->name_english }}" 
                              class="partner-logo">
                         @else
                         <div class="partner-logo-placeholder">
@@ -158,6 +160,7 @@
 /* Partner Card */
 .govt-partner-slide {
     padding: 10px;
+    height: auto;
 }
 
 .govt-partner-card {
@@ -170,6 +173,11 @@
     transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
+    height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .govt-partner-card:hover {
@@ -194,34 +202,34 @@
 }
 
 .govt-partner-card .partner-logo-wrapper {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     margin: 0 auto 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
     padding: 15px;
     transition: all 0.4s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .govt-partner-card:hover .partner-logo-wrapper {
-    background: rgba(25, 134, 139, 0.15);
+    background: #ffffff;
     transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(25, 134, 139, 0.2);
 }
 
 .govt-partner-card .partner-logo {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
-    filter: brightness(0) invert(1);
-    opacity: 0.9;
     transition: all 0.3s ease;
 }
 
 .govt-partner-card:hover .partner-logo {
-    opacity: 1;
+    transform: scale(1.05);
 }
 
 .govt-partner-card .partner-logo-placeholder {
@@ -248,6 +256,10 @@
     color: #ffffff;
     margin-bottom: 10px;
     line-height: 1.4;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .govt-partner-card .partner-type {
@@ -356,15 +368,18 @@
     
     .govt-partner-card {
         padding: 30px 20px;
+        height: 250px;
     }
     
     .govt-partner-card .partner-logo-wrapper {
-        width: 80px;
-        height: 80px;
+        width: 100px;
+        height: 100px;
+        padding: 12px;
     }
     
     .govt-partner-card .partner-name {
         font-size: 14px;
+        min-height: 40px;
     }
 }
 </style>
@@ -380,7 +395,7 @@ document.addEventListener('DOMContentLoaded', function() {
             autoplay: true,
             autoplaySpeed: 3000,
             pauseOnHover: true,
-            slidesToShow: 5,
+            slidesToShow: 3,
             slidesToScroll: 1,
             prevArrow: $('.govt-slider-prev'),
             nextArrow: $('.govt-slider-next'),
@@ -388,27 +403,14 @@ document.addEventListener('DOMContentLoaded', function() {
             rtl: $('html').attr('dir') === 'rtl',
             responsive: [
                 {
-                    breakpoint: 1200,
-                    settings: {
-                        slidesToShow: 4
-                    }
-                },
-                {
                     breakpoint: 992,
-                    settings: {
-                        slidesToShow: 3,
-                        arrows: false
-                    }
-                },
-                {
-                    breakpoint: 768,
                     settings: {
                         slidesToShow: 2,
                         arrows: false
                     }
                 },
                 {
-                    breakpoint: 480,
+                    breakpoint: 576,
                     settings: {
                         slidesToShow: 1,
                         arrows: false

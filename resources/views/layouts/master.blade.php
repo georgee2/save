@@ -55,6 +55,10 @@
           <link rel="stylesheet" href="{{asset('/assets/css/area-slider.css')}}">
           <!-- Preloader CSS -->
           <link rel="stylesheet" href="{{asset('/assets/css/preloader.css')}}">
+          <!-- Topbar CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/css/topbar.css')}}?v={{ time() }}">
+          <!-- Header CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/css/header.css')}}?v={{ time() }}">
           
           <!-- RTL CSS for Arabic -->
           @if(app()->getLocale() == 'ar')
@@ -67,6 +71,7 @@
 
     <body>
       @include('includes.preloader')
+      @include('includes.topbar')
       @include('includes.header')
 
       <main id="content">
@@ -135,6 +140,25 @@
                         });
                     });
                 }
+            })();
+        </script>
+        
+        <!-- Sticky Header Script -->
+        <script>
+            (function() {
+                var header = document.querySelector('.main-header');
+                var body = document.body;
+                var scrollThreshold = 50;
+                
+                window.addEventListener('scroll', function() {
+                    if (window.pageYOffset > scrollThreshold) {
+                        header.classList.add('is-sticky');
+                        body.classList.add('scrolled');
+                    } else {
+                        header.classList.remove('is-sticky');
+                        body.classList.remove('scrolled');
+                    }
+                });
             })();
         </script>
    

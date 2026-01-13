@@ -1,0 +1,71 @@
+/* ===========================================
+   Mobile Hero Optimization
+   =========================================== */
+
+/* Optimize hero/slider performance on mobile */
+@media (max-width: 767px) {
+    /* Reduce animation complexity on mobile */
+    .home-slider-section .slider-slide {
+        will-change: auto;
+    }
+    
+    /* Optimize background images */
+    .slider-slide,
+    .bg-cover {
+        background-attachment: scroll !important;
+    }
+    
+    /* Reduce overlay complexity */
+    .slider-overlay {
+        background: rgba(0, 0, 0, 0.5) !important;
+    }
+    
+    /* Hide complex elements on mobile for performance */
+    .slider-card {
+        display: none !important;
+    }
+    
+    /* Optimize text rendering */
+    .slider-title,
+    .slider-bio {
+        text-shadow: none;
+    }
+    
+    /* Reduce transform animations */
+    .btn-slider-cta:hover {
+        transform: none;
+    }
+}
+
+/* Prevent layout shift during slider load */
+.home-slider-section {
+    min-height: 300px;
+}
+
+@media (min-width: 768px) {
+    .home-slider-section {
+        min-height: 400px;
+    }
+}
+
+@media (min-width: 992px) {
+    .home-slider-section {
+        min-height: 500px;
+    }
+}
+
+/* Optimize slick slider on mobile */
+@media (max-width: 767px) {
+    .slick-slider {
+        touch-action: pan-y;
+    }
+    
+    .slick-track {
+        will-change: auto;
+    }
+    
+    .slick-slide {
+        backface-visibility: hidden;
+    }
+}
+

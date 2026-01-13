@@ -26,6 +26,9 @@
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid rgba(0,0,0,0.08);
     box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    height: 720px;
+    display: flex;
+    flex-direction: column;
 }
 
 .offer-card:hover {
@@ -71,41 +74,43 @@
 /* Price Tag - Using Primary Color - Enhanced */
 .offer-price-tag {
     position: absolute;
-    bottom: 20px;
-    left: 20px;
+    top: 15px;
+    right: 15px;
+    left: auto;
+    bottom: auto;
     background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
     color: #fff;
-    padding: 14px 20px;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(25, 134, 139, 0.5);
+    padding: 8px 12px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(25, 134, 139, 0.4);
     z-index: 3;
     backdrop-filter: blur(5px);
 }
 
 .offer-price-tag .price-label {
     display: block;
-    font-size: 10px;
+    font-size: 9px;
     opacity: 0.9;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
     font-weight: 500;
 }
 
 .offer-price-tag .price-value {
     display: block;
-    font-size: 24px;
+    font-size: 16px;
     font-weight: 700;
     line-height: 1.1;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.3px;
 }
 
 .offer-price-tag .price-emirate {
     display: flex;
     align-items: center;
-    font-size: 11px;
+    font-size: 9px;
     opacity: 0.9;
-    margin-top: 4px;
+    margin-top: 2px;
     font-weight: 500;
 }
 
@@ -169,13 +174,19 @@
     box-shadow: 0 4px 15px rgba(25, 134, 139, 0.4);
 }
 
-/* Media Count - Enhanced */
+/* Media Count - Enhanced - Show on hover only */
 .offer-media-count {
     bottom: 20px;
     right: 20px;
     display: flex;
     gap: 15px;
     z-index: 3;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.offer-card:hover .offer-media-count {
+    opacity: 1;
 }
 
 .offer-media-count .media-item {
@@ -193,10 +204,117 @@
     margin-right: 5px;
 }
 
+/* Offer Code Badge - Between image and content */
+.offer-code-badge {
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.offer-code-badge .code-value {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    flex: 1;
+    text-align: center;
+}
+
+.offer-code-badge .code-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.offer-code-badge .code-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.offer-code-badge .code-action-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+    color: #ffffff;
+}
+
+.offer-code-badge .copy-code-btn.copied {
+    background: #25D366;
+}
+
+.offer-code-badge .whatsapp-share-btn:hover {
+    background: #25D366;
+}
+
+/* Fix tooltip in offer code badge and slider */
+.tooltip {
+    z-index: 999999 !important;
+}
+
+.tooltip .tooltip-inner {
+    max-width: 250px;
+    white-space: normal;
+    text-align: center;
+    padding: 8px 12px;
+    font-size: 13px;
+    background: #333;
+}
+
+/* Ensure slider doesn't clip tooltips */
+.offers-slider,
+.offers-slider .slick-list,
+.offers-slider .slick-track,
+.offers-slider .slick-slide,
+.offers-slider .box,
+.offer-card,
+.offer-code-badge {
+    overflow: visible !important;
+}
+
+.offers-section {
+    overflow: visible !important;
+}
+
+/* Container overflow fix */
+.offers-section .container,
+.offers-section .container-xxl {
+    overflow: visible !important;
+}
+
+/* Force tooltip to show on left for right-side buttons */
+.offer-code-badge .code-action-btn[data-toggle="tooltip"] {
+    position: relative;
+}
+
+/* Custom tooltip styling to prevent clipping */
+.bs-tooltip-top,
+.bs-tooltip-bottom,
+.bs-tooltip-left,
+.bs-tooltip-right {
+    pointer-events: none;
+}
+
 /* Card Body - Enhanced padding and styling */
 .offer-card-body {
     position: relative;
     padding: 20px !important;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Category text with accent color */
@@ -238,6 +356,7 @@
 /* Specifications - Enhanced layout */
 .offer-specs {
     min-height: 40px;
+    flex: 1;
 }
 
 .offer-specs .list-inline-item {
@@ -371,8 +490,8 @@
 
 /* RTL Support */
 [dir="rtl"] .offer-price-tag {
-    left: auto;
-    right: 20px;
+    right: auto;
+    left: 20px;
 }
 
 [dir="rtl"] .offer-badges {
@@ -481,6 +600,9 @@
     border: 1px solid rgba(0,0,0,0.08);
     box-shadow: 0 4px 15px rgba(0,0,0,0.06);
     overflow: hidden;
+    height: 720px;
+    display: flex;
+    flex-direction: column;
 }
 
 .offers-page .offer-card:hover {
@@ -575,6 +697,10 @@
 
 /* Responsive for offers page */
 @media (max-width: 992px) {
+    .offers-page .offer-card {
+        height: 650px;
+    }
+    
     .offers-page #gridView .offer-card-image {
         padding-bottom: 100%; /* Square on tablets */
     }
@@ -585,6 +711,10 @@
 }
 
 @media (max-width: 768px) {
+    .offers-page .offer-card {
+        height: 580px;
+    }
+    
     .offers-page #gridView .offer-card-image {
         padding-bottom: 80%; /* Landscape on mobile */
     }
@@ -599,5 +729,11 @@
     
     .offers-page .offer-price-tag .price-value {
         font-size: 18px;
+    }
+}
+
+@media (max-width: 576px) {
+    .offers-page .offer-card {
+        height: 520px;
     }
 }

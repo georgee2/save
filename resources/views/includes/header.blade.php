@@ -1,4 +1,4 @@
-<header class="main-header navbar-light header-sticky header-sticky-smart header-mobile-lg">
+<header class="main-header navbar-light header-mobile-lg">
       <div class="sticky-area">
         <div class="container">
           <nav class="navbar navbar-expand-lg px-0">
@@ -15,11 +15,11 @@
                          class="d-inline-block d-lg-none">
               @endif
             </a>
-            <div class="d-flex d-lg-none ml-auto">
+            <div class="d-flex d-lg-none mobile-toggle">
               <button class="navbar-toggler border-0 px-0" type="button" data-toggle="collapse"
                             data-target="#primaryMenu01"
                             aria-controls="primaryMenu01" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="text-white fs-24"><i class="fal fa-bars"></i></span>
+                <span class="fs-24"><i class="fal fa-bars"></i></span>
               </button>
             </div>
             <div class="collapse navbar-collapse mt-3 mt-lg-0 mx-auto flex-grow-0" id="primaryMenu01">

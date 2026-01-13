@@ -64,14 +64,19 @@
     opacity: 0.9;
 }
 
-/* Image/Video Count Badges - Always visible */
-.home-projects-section .hover-image {
-    opacity: 1 !important;
-    visibility: visible !important;
+/* Image/Video Count Badges - Show on hover only */
+.home-projects-section .project-media-count {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-.home-projects-section .hover-image .list-inline-item {
-    opacity: 1 !important;
+.home-projects-section .project-card-square:hover .project-media-count {
+    opacity: 1;
+    visibility: visible;
+}
+
+.home-projects-section .project-media-count .list-inline-item {
     margin-right: 8px;
 }
 

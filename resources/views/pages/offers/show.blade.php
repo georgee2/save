@@ -101,9 +101,9 @@
                                     </span>
                                 </div>
                                 
-                                {{-- Price Tag on Image --}}
+                                {{-- Price Tag on Image - Top Right --}}
                                 @if($offer->selected_price)
-                                <div class="offer-price-tag position-absolute" id="galleryPriceTag" style="bottom: 20px; left: 20px; z-index: 5;">
+                                <div class="offer-price-tag offer-price-tag-show position-absolute" id="galleryPriceTag" style="top: 20px; right: 20px; left: auto; bottom: auto; z-index: 5;">
                                     <div class="price-label">{{ __('lang.starting_from') }}</div>
                                     <div class="price-value">
                                         {{ $offer->currency->abbreviation ?? 'AED' }} <span id="galleryPriceAmount">{{ number_format($offer->selected_price->price) }}</span>

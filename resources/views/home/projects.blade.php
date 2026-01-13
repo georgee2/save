@@ -48,32 +48,32 @@
                             <img src="{{ url('/storage' . $project->main_image) }}" class="card-img"
                                  alt="{{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}">
                             <div class="card-img-overlay d-flex flex-column position-relative-sm">
-                                <div class="d-flex">
-                                    <div class="mr-auto h-24 d-flex">
-                                        @if($project->category)
-                                        <span class="badge badge-primary mr-2">
-                                            {{ app()->getLocale() == 'ar' ? $project->category->title_arabic : $project->category->title_english }}
-                                        </span>
-                                        @endif
-                                    </div>
-                                    <ul class="list-inline mb-0 d-flex justify-content-center align-items-center h-100 hover-image">
+                                <div class="d-flex justify-content-between">
+                                    <ul class="list-inline mb-0 d-flex justify-content-center align-items-center h-100 hover-image project-media-count">
                                         @if($imgCount > 0)
                                         <li class="list-inline-item">
-                                            <span class="w-40px h-40 rounded-circle d-inline-flex align-items-center justify-content-center text-white bg-dark-opacity-03"
+                                            <a href="{{ route('projects.show', $project->slug) }}" class="w-40px h-40 rounded-circle d-inline-flex align-items-center justify-content-center text-white bg-dark-opacity-03"
                                                   data-toggle="tooltip" title="{{ $imgCount }} {{ __('lang.images') }}">
                                                 <i class="far fa-images"></i>
-                                            </span>
+                                            </a>
                                         </li>
                                         @endif
                                         @if($vidCount > 0)
                                         <li class="list-inline-item">
-                                            <span class="w-40px h-40 rounded-circle d-inline-flex align-items-center justify-content-center text-white bg-dark-opacity-03"
+                                            <a href="{{ route('projects.show', $project->slug) }}" class="w-40px h-40 rounded-circle d-inline-flex align-items-center justify-content-center text-white bg-dark-opacity-03"
                                                   data-toggle="tooltip" title="{{ $vidCount }} {{ __('lang.videos') }}">
                                                 <i class="far fa-play-circle"></i>
-                                            </span>
+                                            </a>
                                         </li>
                                         @endif
                                     </ul>
+                                    <div class="ml-auto h-24 d-flex">
+                                        @if($project->category)
+                                        <span class="badge badge-primary">
+                                            {{ app()->getLocale() == 'ar' ? $project->category->title_arabic : $project->category->title_english }}
+                                        </span>
+                                        @endif
+                                    </div>
                                 </div>
                                 <div class="mt-auto px-2">
                                     @if($project->sqft)
@@ -126,32 +126,32 @@
                             <img src="{{ url('/storage' . $project->main_image) }}" class="card-img"
                                  alt="{{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}">
                             <div class="card-img-overlay d-flex flex-column position-relative-sm">
-                                <div class="d-flex">
-                                    <div class="mr-auto h-24 d-flex">
-                                        @if($project->subcategory)
-                                        <span class="badge badge-primary mr-2">
-                                            {{ app()->getLocale() == 'ar' ? $project->subcategory->title_arabic : $project->subcategory->title_english }}
-                                        </span>
-                                        @endif
-                                    </div>
-                                    <ul class="list-inline mb-0 d-flex justify-content-center align-items-center h-100 hover-image">
+                                <div class="d-flex justify-content-between">
+                                    <ul class="list-inline mb-0 d-flex justify-content-center align-items-center h-100 hover-image project-media-count">
                                         @if($imgCount > 0)
                                         <li class="list-inline-item">
-                                            <span class="w-40px h-40 rounded-circle d-inline-flex align-items-center justify-content-center text-white bg-dark-opacity-03"
+                                            <a href="{{ route('projects.show', $project->slug) }}" class="w-40px h-40 rounded-circle d-inline-flex align-items-center justify-content-center text-white bg-dark-opacity-03"
                                                   data-toggle="tooltip" title="{{ $imgCount }} {{ __('lang.images') }}">
                                                 <i class="far fa-images"></i>
-                                            </span>
+                                            </a>
                                         </li>
                                         @endif
                                         @if($vidCount > 0)
                                         <li class="list-inline-item">
-                                            <span class="w-40px h-40 rounded-circle d-inline-flex align-items-center justify-content-center text-white bg-dark-opacity-03"
+                                            <a href="{{ route('projects.show', $project->slug) }}" class="w-40px h-40 rounded-circle d-inline-flex align-items-center justify-content-center text-white bg-dark-opacity-03"
                                                   data-toggle="tooltip" title="{{ $vidCount }} {{ __('lang.videos') }}">
                                                 <i class="far fa-play-circle"></i>
-                                            </span>
+                                            </a>
                                         </li>
                                         @endif
                                     </ul>
+                                    <div class="ml-auto h-24 d-flex">
+                                        @if($project->subcategory)
+                                        <span class="badge badge-primary">
+                                            {{ app()->getLocale() == 'ar' ? $project->subcategory->title_arabic : $project->subcategory->title_english }}
+                                        </span>
+                                        @endif
+                                    </div>
                                 </div>
                                 <div class="mt-auto px-2">
                                     @if($project->sqft)
