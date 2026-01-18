@@ -16,20 +16,31 @@
 
 @section('content')
 
-
-<section class="pb-8 page-title shadow">
-    <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb pt-6 pt-lg-2 lh-15 pb-5">
-                <li class="breadcrumb-item"><a href="{{ route('index') }}">{{ __('lang.home') }}</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('offers.index') }}">{{ __('lang.offers') }}</a></li>
-                @if($currentCategory)
-                <li class="breadcrumb-item"><a href="{{ route('offers.category', $currentCategory->slug) }}">{{ app()->getLocale() == 'ar' ? $currentCategory->title_arabic : $currentCategory->title_english }}</a></li>
-                @endif
-                <li class="breadcrumb-item active" aria-current="page">{{ app()->getLocale() == 'ar' ? $currentSubcategory->title_arabic : $currentSubcategory->title_english }}</li>
-            </ol>
-            <h1 class="fs-30 lh-1 mb-0 text-heading font-weight-600">{{ app()->getLocale() == 'ar' ? $currentSubcategory->title_arabic : $currentSubcategory->title_english }}</h1>
-        </nav>
+{{-- Hero Section with Page Banner --}}
+<section class="offers-hero-section position-relative">
+    @if($pageBanner && $pageBanner->cover)
+    <div class="offers-hero-bg" style="background-image: url('{{ asset($pageBanner->cover) }}');"></div>
+    @else
+    <div class="offers-hero-bg offers-hero-gradient"></div>
+    @endif
+    <div class="offers-hero-overlay"></div>
+    <div class="container position-relative">
+        <div class="offers-hero-content text-center">
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb justify-content-center">
+                    <li class="breadcrumb-item"><a href="{{ route('index') }}">{{ __('lang.home') }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('offers.index') }}">{{ __('lang.offers') }}</a></li>
+                    @if($currentCategory)
+                    <li class="breadcrumb-item"><a href="{{ route('offers.category', $currentCategory->slug) }}">{{ app()->getLocale() == 'ar' ? $currentCategory->title_arabic : $currentCategory->title_english }}</a></li>
+                    @endif
+                    <li class="breadcrumb-item active" aria-current="page">{{ app()->getLocale() == 'ar' ? $currentSubcategory->title_arabic : $currentSubcategory->title_english }}</li>
+                </ol>
+            </nav>
+            <h1 class="offers-hero-title">{{ app()->getLocale() == 'ar' ? $currentSubcategory->title_arabic : $currentSubcategory->title_english }}</h1>
+            @if($currentSubcategory->bio_english || $currentSubcategory->bio_arabic)
+            <p hidden class="offers-hero-subtitle">{{ app()->getLocale() == 'ar' ? $currentSubcategory->bio_arabic : $currentSubcategory->bio_english }}</p>
+            @endif
+        </div>
     </div>
 </section>
 
@@ -124,6 +135,35 @@
                                             title="{{ __('lang.copy_code') }}">
                                         <i class="far fa-copy"></i>
                                     </button>
+                                    {{-- Share Slide Out --}}
+                                    <div class="share-slide-wrapper">
+                                        <button type="button" class="code-action-btn share-slide-btn">
+                                            <i class="fas fa-share-alt"></i>
+                                        </button>
+                                        <div class="share-slide-icons">
+                                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode($offerUrl($offer->slug)) }}" 
+                                               target="_blank" class="code-action-btn facebook-btn">
+                                                <i class="fab fa-facebook-f"></i>
+                                            </a>
+                                            <a href="https://twitter.com/intent/tweet?url={{ urlencode($offerUrl($offer->slug)) }}&text={{ urlencode(app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english) }}" 
+                                               target="_blank" class="code-action-btn twitter-btn">
+                                                <i class="fab fa-twitter"></i>
+                                            </a>
+                                            <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode($offerUrl($offer->slug)) }}" 
+                                               target="_blank" class="code-action-btn linkedin-btn">
+                                                <i class="fab fa-linkedin-in"></i>
+                                            </a>
+                                            <a href="https://www.instagram.com/" 
+                                               target="_blank" class="code-action-btn instagram-btn">
+                                                <i class="fab fa-instagram"></i>
+                                            </a>
+                                            <a href="mailto:?subject={{ rawurlencode(app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english) }}&body={{ urlencode($offerUrl($offer->slug)) }}" 
+                                               class="code-action-btn email-btn">
+                                                <i class="fas fa-envelope"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    {{-- WhatsApp Separate --}}
                                     <a href="https://wa.me/?text={{ urlencode($offerUrl($offer->slug)) }}" 
                                        target="_blank" 
                                        class="code-action-btn whatsapp-share-btn" 

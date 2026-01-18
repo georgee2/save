@@ -7,6 +7,7 @@ use App\Models\ContactInformation;
 use App\Models\ContactUs;
 use App\Models\Service;
 use App\Models\PageBanner;
+use App\Models\Partner;
 
 class ContactController extends Controller
 {
@@ -27,8 +28,11 @@ class ContactController extends Controller
 
         // Get page banner for contact page
         $pageBanner = PageBanner::getByTarget('contact');
+        
+        // Get branches
+        $branches = Partner::getBranches();
 
-        return view('pages.contact.contact', compact('contactInfo', 'services', 'pageBanner'));
+        return view('pages.contact.contact', compact('contactInfo', 'services', 'pageBanner', 'branches'));
     }
 
     /**
@@ -43,6 +47,7 @@ class ContactController extends Controller
             'phone' => 'nullable|string|max:255',
             'message' => 'required|string',
             'service_id' => 'nullable|exists:services,id',
+            'source' => 'nullable|string|max:50',
         ]);
 
         ContactUs::create([
@@ -58,6 +63,14 @@ class ContactController extends Controller
         $successMessage = app()->getLocale() == 'en' 
             ? 'Your message has been sent successfully! We will contact you soon.' 
             : 'تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.';
+
+        // Handle AJAX requests
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $successMessage
+            ]);
+        }
 
         return back()->with('success', $successMessage);
     }

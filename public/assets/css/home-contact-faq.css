@@ -119,6 +119,336 @@
     opacity: 0.8;
 }
 
+/* Contact Popup Button */
+.btn-contact-popup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px 20px;
+    background: #1a1a2e;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-contact-popup i {
+    font-size: 16px;
+}
+
+.btn-contact-popup:hover {
+    background: #e1273d;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(225, 39, 61, 0.3);
+}
+
+/* =====================================================
+   Home Contact Modal Popup
+   ===================================================== */
+
+.home-contact-modal-content {
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
+}
+
+/* Modal Header */
+.home-contact-modal-header {
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+    padding: 25px 30px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-header-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.modal-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-icon i {
+    font-size: 22px;
+    color: #ffffff;
+}
+
+.modal-title-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.home-contact-modal-header .modal-title {
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.home-contact-modal-header .modal-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    margin: 5px 0 0 0;
+}
+
+.modal-close-btn {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: all 0.3s ease;
+    padding: 0;
+    margin: 0;
+}
+
+.modal-close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+.modal-close-btn i {
+    font-size: 16px;
+    color: #ffffff;
+}
+
+/* Modal Body */
+.home-contact-modal-body {
+    padding: 30px;
+    background: #ffffff;
+}
+
+/* Form Styles */
+.home-contact-form .form-group {
+    margin-bottom: 20px;
+}
+
+.home-contact-form label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+}
+
+.home-contact-form label .text-danger {
+    color: #e1273d;
+}
+
+/* Input with Icon */
+.input-icon-wrapper {
+    position: relative;
+}
+
+.input-icon-wrapper i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #19868b;
+    font-size: 14px;
+    z-index: 1;
+}
+
+[dir="rtl"] .input-icon-wrapper i {
+    left: auto;
+    right: 15px;
+}
+
+.input-icon-wrapper.textarea-wrapper i {
+    top: 18px;
+    transform: none;
+}
+
+.input-icon-wrapper .form-control {
+    padding-left: 45px;
+    height: 48px;
+    border: 2px solid #e8e8e8;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+[dir="rtl"] .input-icon-wrapper .form-control {
+    padding-left: 15px;
+    padding-right: 45px;
+}
+
+.input-icon-wrapper textarea.form-control {
+    height: auto;
+    min-height: 120px;
+    padding-top: 12px;
+}
+
+.input-icon-wrapper .form-control:focus {
+    border-color: #19868b;
+    box-shadow: 0 0 0 4px rgba(25, 134, 139, 0.1);
+}
+
+.input-icon-wrapper select.form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 12px;
+    padding-right: 40px;
+}
+
+[dir="rtl"] .input-icon-wrapper select.form-control {
+    background-position: left 15px center;
+    padding-right: 45px;
+    padding-left: 40px;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e8e8e8;
+}
+
+.btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 25px;
+    background: #f5f5f5;
+    color: #666;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background: #e8e8e8;
+    color: #333;
+}
+
+.btn-submit-popup {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-submit-popup:hover {
+    background: linear-gradient(135deg, #0d6b6f 0%, #19868b 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(25, 134, 139, 0.3);
+    color: #ffffff;
+}
+
+/* Modal Responsive */
+@media (max-width: 768px) {
+    .home-contact-modal-header {
+        padding: 20px;
+    }
+    
+    .modal-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .modal-icon i {
+        font-size: 18px;
+    }
+    
+    .home-contact-modal-header .modal-title {
+        font-size: 18px;
+    }
+    
+    .home-contact-modal-header .modal-subtitle {
+        font-size: 12px;
+    }
+    
+    .home-contact-modal-body {
+        padding: 20px;
+    }
+    
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+    
+    .btn-cancel,
+    .btn-submit-popup {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .modal-header-content {
+        gap: 10px;
+    }
+    
+    .modal-icon {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .modal-icon i {
+        font-size: 16px;
+    }
+    
+    .home-contact-modal-header .modal-title {
+        font-size: 16px;
+    }
+    
+    .modal-close-btn {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .modal-close-btn i {
+        font-size: 14px;
+    }
+    
+    .input-icon-wrapper .form-control {
+        height: 44px;
+        font-size: 13px;
+    }
+    
+    .btn-contact-popup {
+        padding: 12px 15px;
+        font-size: 13px;
+        margin-top: 15px;
+    }
+}
+
 /* FAQ Wrapper */
 .faq-wrapper {
     padding-left: 20px;

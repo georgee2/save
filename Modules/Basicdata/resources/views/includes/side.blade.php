@@ -45,6 +45,17 @@
                                 </ul>
                             </li>
 
+                            <li style="color:#e8e8e8" class="menu-title">Interior</li>
+
+                            <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-18px mdi-home-variant"></i><span> Int.Categories <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                                <ul class="list-unstyled">
+                                    <li><a href="{{route('interiorcategory.create')}}">Add New Category</a></li>
+                                    <li><a href="{{route('interiorcategory.index')}}">Categories List</a></li>
+                                    <li><a href="{{route('interiorcategory.trashed')}}">Trashed Categories</a></li>
+                                </ul>
+                            </li>
+
                             <li style="color:#e8e8e8" class="menu-title">Offers Master</li>
                             <li class="has_sub">
                                 <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-18px mdi-tag-multiple"></i><span> Offer Categories <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>

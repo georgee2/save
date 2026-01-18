@@ -73,6 +73,35 @@
                                     title="{{ __('lang.copy_code') }}">
                                 <i class="far fa-copy"></i>
                             </button>
+                            {{-- Share Slide Out --}}
+                            <div class="share-slide-wrapper">
+                                <button type="button" class="code-action-btn share-slide-btn">
+                                    <i class="fas fa-share-alt"></i>
+                                </button>
+                                <div class="share-slide-icons">
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('offers.show', $offer->slug)) }}" 
+                                       target="_blank" class="code-action-btn facebook-btn">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    <a href="https://twitter.com/intent/tweet?url={{ urlencode(route('offers.show', $offer->slug)) }}&text={{ urlencode(app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english) }}" 
+                                       target="_blank" class="code-action-btn twitter-btn">
+                                        <i class="fab fa-twitter"></i>
+                                    </a>
+                                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(route('offers.show', $offer->slug)) }}" 
+                                       target="_blank" class="code-action-btn linkedin-btn">
+                                        <i class="fab fa-linkedin-in"></i>
+                                    </a>
+                                    <a href="https://www.instagram.com/" 
+                                       target="_blank" class="code-action-btn instagram-btn">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="mailto:?subject={{ rawurlencode(app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english) }}&body={{ urlencode(route('offers.show', $offer->slug)) }}" 
+                                       class="code-action-btn email-btn">
+                                        <i class="fas fa-envelope"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            {{-- WhatsApp Separate --}}
                             <a href="https://wa.me/?text={{ urlencode(route('offers.show', $offer->slug)) }}" 
                                target="_blank" 
                                class="code-action-btn whatsapp-share-btn" 

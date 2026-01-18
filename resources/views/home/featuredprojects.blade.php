@@ -47,6 +47,50 @@
                             </ul>
                         </div>
                     </div>
+                    
+                    {{-- Share Badge --}}
+                    <div class="project-share-badge">
+                        <div class="share-actions">
+                            {{-- Share Slide Out --}}
+                            <div class="share-slide-wrapper">
+                                <button type="button" class="share-action-btn share-slide-btn">
+                                    <i class="fas fa-share-alt"></i>
+                                </button>
+                                <div class="share-slide-icons">
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('projects.show', $project->slug)) }}" 
+                                       target="_blank" class="share-action-btn facebook-btn">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    <a href="https://twitter.com/intent/tweet?url={{ urlencode(route('projects.show', $project->slug)) }}&text={{ urlencode(app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english) }}" 
+                                       target="_blank" class="share-action-btn twitter-btn">
+                                        <i class="fab fa-twitter"></i>
+                                    </a>
+                                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(route('projects.show', $project->slug)) }}" 
+                                       target="_blank" class="share-action-btn linkedin-btn">
+                                        <i class="fab fa-linkedin-in"></i>
+                                    </a>
+                                    <a href="https://www.instagram.com/" 
+                                       target="_blank" class="share-action-btn instagram-btn">
+                                        <i class="fab fa-instagram"></i>
+                                    </a>
+                                    <a href="mailto:?subject={{ rawurlencode(app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english) }}&body={{ urlencode(route('projects.show', $project->slug)) }}" 
+                                       class="share-action-btn email-btn">
+                                        <i class="fas fa-envelope"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            {{-- WhatsApp Separate --}}
+                            <a href="https://wa.me/?text={{ urlencode(route('projects.show', $project->slug)) }}" 
+                               target="_blank" 
+                               class="share-action-btn whatsapp-share-btn" 
+                               data-toggle="tooltip" 
+                               data-placement="top"
+                               title="{{ __('lang.share_whatsapp') }}">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
                     <div class="card-body pt-3">
                         <h2 class="card-title fs-16 lh-2 mb-0">
                             <a href="{{ route('projects.show', $project->slug) }}" class="text-dark hover-primary">
@@ -111,7 +155,7 @@
 <style>
 /* Home Featured Projects - Fixed Height Cards */
 .featured-projects-section .slick-slider .card.shadow-hover-2 {
-    height: 580px;
+    height: 650px;
     display: flex;
     flex-direction: column;
 }
@@ -125,6 +169,150 @@
 
 .featured-projects-section .slick-slider .card-footer {
     margin-top: auto;
+}
+
+/* Project Share Badge */
+.project-share-badge {
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible !important;
+    position: relative;
+    z-index: 10;
+}
+
+/* Ensure card doesn't clip dropdown */
+.featured-projects-section .card.shadow-hover-2 {
+    overflow: visible !important;
+}
+
+.featured-projects-section .hover-change-image {
+    overflow: hidden !important;
+    border-radius: 0 !important;
+}
+
+.featured-projects-section .card-img-top {
+    border-radius: 0 !important;
+}
+
+.project-share-badge .share-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.project-share-badge .share-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.project-share-badge .share-action-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+    color: #ffffff;
+}
+
+.project-share-badge .whatsapp-share-btn:hover {
+    background: #25D366;
+}
+
+/* Share Slide Out for Projects */
+.project-share-badge .share-slide-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.project-share-badge .share-slide-btn {
+    background: rgba(255, 255, 255, 0.2) !important;
+    z-index: 2;
+    position: relative;
+}
+
+.project-share-badge .share-slide-btn:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+}
+
+.project-share-badge .share-slide-icons {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 6px 10px;
+    margin-right: 6px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+}
+
+.project-share-badge .share-slide-wrapper:hover .share-slide-icons {
+    opacity: 1;
+    visibility: visible;
+}
+
+.project-share-badge .share-slide-icons .share-action-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 11px;
+}
+
+.project-share-badge .share-slide-icons .facebook-btn {
+    background: #3b5998;
+}
+
+.project-share-badge .share-slide-icons .facebook-btn:hover {
+    background: #2d4373;
+}
+
+.project-share-badge .share-slide-icons .twitter-btn {
+    background: #1da1f2;
+}
+
+.project-share-badge .share-slide-icons .twitter-btn:hover {
+    background: #0c85d0;
+}
+
+.project-share-badge .share-slide-icons .linkedin-btn {
+    background: #0077b5;
+}
+
+.project-share-badge .share-slide-icons .linkedin-btn:hover {
+    background: #005885;
+}
+
+.project-share-badge .share-slide-icons .instagram-btn {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.project-share-badge .share-slide-icons .instagram-btn:hover {
+    background: linear-gradient(45deg, #e08323 0%, #d6582c 25%, #cc1733 50%, #bc1356 75%, #ac0878 100%);
+}
+
+.project-share-badge .share-slide-icons .email-btn {
+    background: #6c757d;
+}
+
+.project-share-badge .share-slide-icons .email-btn:hover {
+    background: #545b62;
 }
 </style>
 @endif

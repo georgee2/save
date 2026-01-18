@@ -42,6 +42,7 @@ return [
     // Offers Page
     'offers' => 'Offers',
     'all_offers' => 'All Offers',
+    'offers_subtitle' => 'Discover our exclusive engineering offers and special packages with competitive pricing tailored for your needs.',
     'offers_seo_desc' => 'Explore our exclusive engineering offers and special packages with competitive pricing.',
     'offers_available' => 'offers available for you',
     'no_offers_found' => 'No offers found.',
@@ -174,6 +175,14 @@ return [
     'phone_number' => 'Phone Number',
     'interested_message' => 'Your message...',
     'interested_in_offer' => 'Hello, I am interested in :offer',
+    
+    // Interior Design Gallery Section
+    'interior_design' => 'Interior Design',
+    'interior_gallery_title' => 'Our Interior Gallery',
+    'interior_gallery_bio' => 'Explore our stunning collection of interior design projects showcasing elegance, creativity, and modern aesthetics.',
+    'view_all_gallery' => 'View All Gallery',
+    'design_style' => 'Design Style',
+    'related_project' => 'Related Project',
     
     // Services Section
     'what_we_do' => 'What We Do',
@@ -503,5 +512,12 @@ return [
     'share_whatsapp' => 'Share on WhatsApp',
     'check_this_offer' => 'Check this offer',
     'code_copied' => 'Code Copied!',
+    
+    // General Actions & Messages
+    'success' => 'Success!',
+    'error' => 'Error',
+    'cancel' => 'Cancel',
+    'something_went_wrong' => 'Something went wrong. Please try again.',
+    'message_sent_successfully' => 'Your message has been sent successfully. We will get back to you soon!',
 ];
 

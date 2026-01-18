@@ -10,6 +10,7 @@ use App\Models\ProjectStyle;
 use App\Models\ProjectType;
 use App\Models\Specification;
 use App\Models\Emirate;
+use App\Models\PageBanner;
 
 class OffersController extends Controller
 {
@@ -226,8 +227,11 @@ class OffersController extends Controller
             $selectedEmirateId
         );
         
+        // Get page banner for offers page
+        $pageBanner = PageBanner::getByTarget('offers');
+        
         return view('pages.offers.index', array_merge(
-            ['offers' => $offers],
+            ['offers' => $offers, 'pageBanner' => $pageBanner],
             $filterData
         ));
     }
@@ -265,8 +269,11 @@ class OffersController extends Controller
             $selectedEmirateId
         );
         
+        // Get page banner for offers page
+        $pageBanner = PageBanner::getByTarget('offers');
+        
         return view('pages.offers.category', array_merge(
-            ['offers' => $offers, 'currentCategory' => $currentCategory],
+            ['offers' => $offers, 'currentCategory' => $currentCategory, 'pageBanner' => $pageBanner],
             $filterData
         ));
     }
@@ -307,8 +314,11 @@ class OffersController extends Controller
             $selectedEmirateId
         );
         
+        // Get page banner for offers page
+        $pageBanner = PageBanner::getByTarget('offers');
+        
         return view('pages.offers.subcategory', array_merge(
-            ['offers' => $offers, 'currentCategory' => $currentCategory, 'currentSubcategory' => $currentSubcategory],
+            ['offers' => $offers, 'currentCategory' => $currentCategory, 'currentSubcategory' => $currentSubcategory, 'pageBanner' => $pageBanner],
             $filterData
         ));
     }

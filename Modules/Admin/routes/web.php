@@ -48,6 +48,7 @@ use Modules\Admin\App\Http\Controllers\ShowcaseTeamController;
 use Modules\Admin\App\Http\Controllers\ShowcaseNewController;
 use Modules\Admin\App\Http\Controllers\HomeFaqController;
 use Modules\Admin\App\Http\Controllers\PageBannerController;
+use Modules\Admin\App\Http\Controllers\HomeSectionController;
 use Modules\Admin\App\Http\Controllers\SiteSettingsController;
 use Modules\Admin\App\Http\Controllers\FactController;
 use Modules\Admin\App\Http\Controllers\DefaultProcessController;
@@ -65,6 +66,7 @@ use Modules\Admin\App\Http\Controllers\OfferIncomeComponentController;
 use Modules\Admin\App\Http\Controllers\OfferConstructionCostController;
 use Modules\Admin\App\Http\Controllers\OfferSpecificationController;
 use Modules\Admin\App\Http\Controllers\OfferFeasibilityStudyController;
+use Modules\Admin\App\Http\Controllers\InteriorDesignGalleryController;
 
 
 /*
@@ -724,6 +726,36 @@ Route::group(
                     Route::post('/delete/{id}', [OfferFloorAmenityController::class, 'destroy']);
                     Route::post('/restore/{id}', [OfferFloorAmenityController::class, 'restore']);
                 });
+            });
+
+            // Interior Design Gallery Routes
+            Route::prefix('interior-design-gallery')->group(function () {
+                Route::get('/index', [InteriorDesignGalleryController::class, 'index'])->name('interior-design-gallery.index');
+                Route::get('/create', [InteriorDesignGalleryController::class, 'create'])->name('interior-design-gallery.create');
+                Route::post('/store', [InteriorDesignGalleryController::class, 'store'])->name('interior-design-gallery.store');
+                Route::get('/show/{id}', [InteriorDesignGalleryController::class, 'show'])->name('interior-design-gallery.show');
+                Route::get('/edit/{id}', [InteriorDesignGalleryController::class, 'edit'])->name('interior-design-gallery.edit');
+                Route::post('/update/{id}', [InteriorDesignGalleryController::class, 'update'])->name('interior-design-gallery.update');
+                Route::post('/delete/{id}', [InteriorDesignGalleryController::class, 'destroy'])->name('interior-design-gallery.delete');
+                Route::get('/trashed', [InteriorDesignGalleryController::class, 'trashed'])->name('interior-design-gallery.trashed');
+                Route::post('/restore/{id}', [InteriorDesignGalleryController::class, 'restore'])->name('interior-design-gallery.restore');
+                Route::post('/toggle-publish/{id}', [InteriorDesignGalleryController::class, 'togglePublish'])->name('interior-design-gallery.toggle-publish');
+                Route::post('/toggle-home/{id}', [InteriorDesignGalleryController::class, 'toggleHomeStatus'])->name('interior-design-gallery.toggle-home');
+            });
+
+            // Home Sections Management Routes
+            Route::prefix('home-sections')->group(function () {
+                Route::get('/index', [HomeSectionController::class, 'index'])->name('home-sections.index');
+                Route::get('/edit/{id}', [HomeSectionController::class, 'edit'])->name('home-sections.edit');
+                Route::post('/update/{id}', [HomeSectionController::class, 'update'])->name('home-sections.update');
+                Route::post('/toggle-status/{id}', [HomeSectionController::class, 'toggleStatus'])->name('home-sections.toggle-status');
+                Route::post('/toggle-divider/{id}', [HomeSectionController::class, 'toggleDivider'])->name('home-sections.toggle-divider');
+                Route::post('/update-order', [HomeSectionController::class, 'updateOrder'])->name('home-sections.update-order');
+                Route::post('/move-up/{id}', [HomeSectionController::class, 'moveUp'])->name('home-sections.move-up');
+                Route::post('/move-down/{id}', [HomeSectionController::class, 'moveDown'])->name('home-sections.move-down');
+                Route::post('/delete/{id}', [HomeSectionController::class, 'destroy'])->name('home-sections.delete');
+                Route::get('/trashed', [HomeSectionController::class, 'trashed'])->name('home-sections.trashed');
+                Route::post('/restore/{id}', [HomeSectionController::class, 'restore'])->name('home-sections.restore');
             });
 
         });

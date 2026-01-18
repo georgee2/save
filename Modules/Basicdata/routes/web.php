@@ -24,6 +24,7 @@ use Modules\Basicdata\App\Http\Controllers\LanguageController;
 use Modules\Basicdata\App\Http\Controllers\EmirateController;
 use Modules\Basicdata\App\Http\Controllers\OfferCategoryController;
 use Modules\Basicdata\App\Http\Controllers\OfferSubCategoryController;
+use Modules\Basicdata\App\Http\Controllers\InteriorCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -309,6 +310,19 @@ Route::group(
                 Route::post('/delete/{id}', [OfferSubCategoryController::class, 'destroy'])->name('offersubcategory.delete');
                 Route::get('/trashed', [OfferSubCategoryController::class, 'trashed'])->name('offersubcategory.trashed');
                 Route::post('/restore/{id}', [OfferSubCategoryController::class, 'restore'])->name('offersubcategory.restore');
+            });
+
+            // Interior Categories Routes
+            Route::prefix('interiorcategory')->group(function () {
+                Route::get('/index', [InteriorCategoryController::class, 'index'])->name('interiorcategory.index');
+                Route::get('/create', [InteriorCategoryController::class, 'create'])->name('interiorcategory.create');
+                Route::post('/store', [InteriorCategoryController::class, 'store'])->name('interiorcategory.store');
+                Route::get('/show/{id}', [InteriorCategoryController::class, 'show'])->name('interiorcategory.show');
+                Route::get('/edit/{id}', [InteriorCategoryController::class, 'edit'])->name('interiorcategory.edit');
+                Route::post('/update/{id}', [InteriorCategoryController::class, 'update'])->name('interiorcategory.update');
+                Route::post('/delete/{id}', [InteriorCategoryController::class, 'destroy'])->name('interiorcategory.delete');
+                Route::get('/trashed', [InteriorCategoryController::class, 'trashed'])->name('interiorcategory.trashed');
+                Route::post('/restore/{id}', [InteriorCategoryController::class, 'restore'])->name('interiorcategory.restore');
             });
 
         });
