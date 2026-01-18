@@ -26,6 +26,8 @@ use App\Models\ProjectSpecification;
 use App\Models\Offer;
 use App\Models\EngineeringCategory;
 use App\Models\Partner;
+use App\Models\InteriorDesignGallery;
+use App\Models\HomeSection;
 
 class HomeController extends Controller
 {
@@ -265,6 +267,19 @@ class HomeController extends Controller
         // Fetch government partners for slider
         $governmentPartners = Partner::getGovernmentPartners();
         
-        return view('index', compact('sliders', 'aboutBlock', 'aboutCards', 'services', 'showcases', 'facts', 'defaultProcess', 'processCards', 'whyChooseUsBlock', 'whyChooseUsCards', 'engineeringProjects', 'teamMembers', 'boardMembers', 'allTeamMembers', 'portfolioTypes', 'portfolios', 'homeContact', 'contactInfo', 'homeFaqs', 'blogs', 'defaultBanner', 'engineeringSubCategories', 'featuredProjects', 'featuredOffers', 'projectCategories', 'governmentPartners'));
+        // Fetch Interior Design Gallery items (published and shown on home)
+        $interiorGallery = InteriorDesignGallery::with(['projectType', 'project', 'projectStyle', 'emirate'])
+            ->where('publish_status', 0) // Published
+            ->where('home_status', 0)    // Shown on home
+            ->whereNull('deleted_at')
+            ->orderBy('ordering', 'asc')
+            ->orderBy('created_at', 'desc')
+            ->limit(12)
+            ->get();
+        
+        // Fetch active home sections ordered by ordering field
+        $homeSections = HomeSection::getActiveSections();
+        
+        return view('index', compact('sliders', 'aboutBlock', 'aboutCards', 'services', 'showcases', 'facts', 'defaultProcess', 'processCards', 'whyChooseUsBlock', 'whyChooseUsCards', 'engineeringProjects', 'teamMembers', 'boardMembers', 'allTeamMembers', 'portfolioTypes', 'portfolios', 'homeContact', 'contactInfo', 'homeFaqs', 'blogs', 'defaultBanner', 'engineeringSubCategories', 'featuredProjects', 'featuredOffers', 'projectCategories', 'governmentPartners', 'interiorGallery', 'homeSections'));
     }
 }

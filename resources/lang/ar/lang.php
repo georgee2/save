@@ -42,6 +42,7 @@ return [
     // Offers Page
     'offers' => 'العروض',
     'all_offers' => 'جميع العروض',
+    'offers_subtitle' => 'اكتشف عروضنا الهندسية الحصرية والباقات الخاصة بأسعار تنافسية مصممة لتلبية احتياجاتك.',
     'offers_seo_desc' => 'استكشف عروضنا الهندسية الحصرية والباقات الخاصة بأسعار تنافسية.',
     'offers_available' => 'عروض متاحة لك',
     'no_offers_found' => 'لا توجد عروض.',
@@ -174,6 +175,14 @@ return [
     'phone_number' => 'رقم الهاتف',
     'interested_message' => 'رسالتك...',
     'interested_in_offer' => 'مرحباً، أنا مهتم بـ :offer',
+    
+    // Interior Design Gallery Section
+    'interior_design' => 'التصميم الداخلي',
+    'interior_gallery_title' => 'معرض التصميم الداخلي',
+    'interior_gallery_bio' => 'استكشف مجموعتنا المذهلة من مشاريع التصميم الداخلي التي تعرض الأناقة والإبداع والجماليات العصرية.',
+    'view_all_gallery' => 'عرض كل المعرض',
+    'design_style' => 'نمط التصميم',
+    'related_project' => 'المشروع المرتبط',
     
     // Services Section
     'what_we_do' => 'ماذا نقدم',
@@ -503,5 +512,12 @@ return [
     'share_whatsapp' => 'مشاركة على واتساب',
     'check_this_offer' => 'شاهد هذا العرض',
     'code_copied' => 'تم نسخ الكود!',
+    
+    // General Actions & Messages
+    'success' => 'تم بنجاح!',
+    'error' => 'خطأ',
+    'cancel' => 'إلغاء',
+    'something_went_wrong' => 'حدث خطأ ما. يرجى المحاولة مرة أخرى.',
+    'message_sent_successfully' => 'تم إرسال رسالتك بنجاح. سنتواصل معك قريباً!',
 ];
 

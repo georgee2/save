@@ -39,6 +39,8 @@
           <link rel="stylesheet" href="{{asset('/assets/css/offers-section.css')}}?v={{ time() }}">
           <!-- Services Section CSS -->
           <link rel="stylesheet" href="{{asset('/assets/css/services-section.css')}}">
+          <!-- Interior Gallery CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/css/interior-gallery.css')}}?v={{ time() }}">
           <!-- Section Divider CSS -->
           <link rel="stylesheet" href="{{asset('/assets/css/section-divider.css')}}">
           <!-- Why Choose Us CSS -->
@@ -64,6 +66,9 @@
           @if(app()->getLocale() == 'ar')
           <link rel="stylesheet" href="{{asset('/assets/css/rtl.css')}}?v={{ time() }}">
           @endif
+          
+          {{-- SweetAlert2 CSS - Global --}}
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
         @yield('css')
 
@@ -162,6 +167,8 @@
             })();
         </script>
    
+    {{-- SweetAlert2 - Global --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     @yield('js')
 

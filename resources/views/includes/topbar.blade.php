@@ -38,7 +38,7 @@
                 @endif
             </div>
 
-            {{-- Contact Info - Right Side --}}
+            {{-- Contact Info & Links - Right Side --}}
             <div class="topbar-contact">
                 @if(isset($footerContactInfo) && $footerContactInfo->mobile)
                 <a href="tel:{{ $footerContactInfo->mobile }}" class="topbar-phone">
@@ -52,6 +52,18 @@
                     <span>{{ __('lang.whatsapp') }}</span>
                 </a>
                 @endif
+                
+                {{-- Quick Links --}}
+                <div class="topbar-links">
+                    <a href="{{ route('blogs.index') }}" class="topbar-link">
+                        <i class="fas fa-newspaper"></i>
+                        <span>{{ __('lang.news') }}</span>
+                    </a>
+                    <a href="{{ route('careers.index') }}" class="topbar-link">
+                        <i class="fas fa-briefcase"></i>
+                        <span>{{ __('lang.careers') }}</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

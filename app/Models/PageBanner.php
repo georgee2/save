@@ -23,6 +23,7 @@ class PageBanner extends Model
             'services' => 'Services',
             'portfolios' => 'Portfolios',
             'projects' => 'Projects',
+            'offers' => 'Offers',
             'showcases' => 'Showcases',
             'blogs' => 'Blogs',
             'careers' => 'Careers',

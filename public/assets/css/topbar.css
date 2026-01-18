@@ -4,7 +4,7 @@
  */
 
 .site-topbar {
-    background: linear-gradient(135deg, #0d1b2a 0%, #1b3a4b 100%);
+    background: #19868b !important;
     padding: 8px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -36,9 +36,56 @@
 }
 
 .topbar-social a:hover {
-    background: #19868b;
+    background: rgba(255, 255, 255, 0.25);
     color: #ffffff;
     transform: translateY(-2px);
+}
+
+/* Quick Links */
+.topbar-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: 20px;
+    padding-left: 20px;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.topbar-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    padding: 4px 0;
+    position: relative;
+}
+
+.topbar-link i {
+    font-size: 12px;
+    color: #ffffff;
+}
+
+.topbar-link:hover {
+    color: #ffffff;
+}
+
+.topbar-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #ffffff;
+    transition: width 0.3s ease;
+}
+
+.topbar-link:hover::after {
+    width: 100%;
 }
 
 /* Contact Info */
@@ -66,7 +113,8 @@
 }
 
 .topbar-phone:hover {
-    color: #19868b;
+    color: #ffffff;
+    opacity: 0.8;
 }
 
 .topbar-whatsapp {
@@ -89,11 +137,40 @@
     flex-direction: row-reverse;
 }
 
+[dir="rtl"] .topbar-links {
+    flex-direction: row-reverse;
+    margin-left: 0;
+    margin-right: 20px;
+    padding-left: 0;
+    padding-right: 20px;
+    border-left: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+[dir="rtl"] .topbar-link {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .topbar-link::after {
+    left: auto;
+    right: 0;
+}
+
 [dir="rtl"] .topbar-contact {
     flex-direction: row-reverse;
 }
 
 /* Responsive */
+@media (max-width: 991px) {
+    .topbar-links {
+        gap: 15px;
+    }
+    
+    .topbar-link {
+        font-size: 12px;
+    }
+}
+
 @media (max-width: 768px) {
     .site-topbar {
         padding: 6px 0;
@@ -107,6 +184,10 @@
         width: 24px;
         height: 24px;
         font-size: 11px;
+    }
+    
+    .topbar-links {
+        display: none;
     }
     
     .topbar-contact {

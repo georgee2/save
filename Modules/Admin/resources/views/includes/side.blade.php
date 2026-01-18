@@ -64,6 +64,23 @@
                             </li>
 
                             <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-paint-brush"></i><span> Interior Gallery <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                                <ul class="list-unstyled">
+                                    <li><a href="{{route('interior-design-gallery.create')}}">Add New Gallery</a></li>
+                                    <li><a href="{{route('interior-design-gallery.index')}}">Gallery List</a></li>
+                                    <li><a href="{{route('interior-design-gallery.trashed')}}">Trashed Galleries</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-th-list"></i><span> Home Sections <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                                <ul class="list-unstyled">
+                                    <li><a href="{{route('home-sections.index')}}">Manage Sections</a></li>
+                                    <li><a href="{{route('home-sections.trashed')}}">Trashed Sections</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="has_sub">
                                 <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-star"></i><span> Showcases <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
                                 <ul class="list-unstyled">
                                     <li><a href="{{route('showcase.create')}}">Add New Showcase</a></li>

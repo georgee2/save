@@ -4,6 +4,138 @@
    Main Image: 903x1146 (portrait aspect ratio ~0.79:1)
    =================================================== */
 
+/* ===================================================
+   Offers Hero Section - Page Banner
+   =================================================== */
+
+.offers-hero-section {
+    min-height: 450px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.offers-hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.offers-hero-gradient {
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 50%, #095456 100%);
+}
+
+.offers-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+.offers-hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 100px 0;
+}
+
+.offers-hero-section .breadcrumb {
+    background: transparent;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.offers-hero-section .breadcrumb-item a {
+    color: rgba(255, 255, 255, 0.8);
+    transition: color 0.3s ease;
+}
+
+.offers-hero-section .breadcrumb-item a:hover {
+    color: #ffffff;
+}
+
+.offers-hero-section .breadcrumb-item.active {
+    color: #ffffff;
+}
+
+.offers-hero-section .breadcrumb-item + .breadcrumb-item::before {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.offers-hero-title {
+    font-size: 52px;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 18px;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.offers-hero-subtitle {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Responsive Hero Section */
+@media (max-width: 992px) {
+    .offers-hero-title {
+        font-size: 40px;
+    }
+    
+    .offers-hero-subtitle {
+        font-size: 17px;
+    }
+}
+
+@media (max-width: 768px) {
+    .offers-hero-section {
+        min-height: 350px;
+    }
+    
+    .offers-hero-content {
+        padding: 70px 0;
+    }
+    
+    .offers-hero-title {
+        font-size: 32px;
+    }
+    
+    .offers-hero-subtitle {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .offers-hero-section {
+        min-height: 300px;
+    }
+    
+    .offers-hero-content {
+        padding: 50px 0;
+    }
+    
+    .offers-hero-title {
+        font-size: 26px;
+    }
+    
+    .offers-hero-subtitle {
+        font-size: 14px;
+    }
+}
+
+/* ===================================================
+   End Offers Hero Section
+   =================================================== */
+
 /* Section Background */
 .offers-section {
     background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
@@ -207,18 +339,18 @@
 /* Offer Code Badge - Between image and content */
 .offer-code-badge {
     background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
-    padding: 10px 20px;
+    padding: 8px 15px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 15px;
+    gap: 10px;
 }
 
 .offer-code-badge .code-value {
     color: #ffffff;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 2px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
     flex: 1;
     text-align: center;
@@ -227,15 +359,15 @@
 .offer-code-badge .code-actions {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .offer-code-badge .code-action-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.2);
     color: #ffffff;
@@ -243,7 +375,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
     text-decoration: none;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .offer-code-badge .code-action-btn:hover {
@@ -258,6 +390,210 @@
 
 .offer-code-badge .whatsapp-share-btn:hover {
     background: #25D366;
+}
+
+/* Share Slide Out - Horizontal icons appearing from right */
+.share-slide-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.share-slide-btn {
+    background: rgba(255, 255, 255, 0.2) !important;
+    z-index: 2;
+    position: relative;
+}
+
+.share-slide-btn:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+}
+
+.share-slide-icons {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 6px 10px;
+    margin-right: 6px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+}
+
+.share-slide-wrapper:hover .share-slide-icons {
+    opacity: 1;
+    visibility: visible;
+}
+
+.share-slide-icons .code-action-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 11px;
+}
+
+.share-slide-icons .facebook-btn {
+    background: #3b5998;
+}
+
+.share-slide-icons .facebook-btn:hover {
+    background: #2d4373;
+}
+
+.share-slide-icons .twitter-btn {
+    background: #1da1f2;
+}
+
+.share-slide-icons .twitter-btn:hover {
+    background: #0c85d0;
+}
+
+.share-slide-icons .linkedin-btn {
+    background: #0077b5;
+}
+
+.share-slide-icons .linkedin-btn:hover {
+    background: #005885;
+}
+
+.share-slide-icons .instagram-btn {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.share-slide-icons .instagram-btn:hover {
+    background: linear-gradient(45deg, #e08323 0%, #d6582c 25%, #cc1733 50%, #bc1356 75%, #ac0878 100%);
+}
+
+.share-slide-icons .email-btn {
+    background: #6c757d;
+}
+
+.share-slide-icons .email-btn:hover {
+    background: #545b62;
+}
+
+/* Keep dropdown styles for other pages */
+.share-dropdown {
+    position: relative;
+    display: inline-block;
+    z-index: 100;
+}
+
+.share-dropdown-btn {
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.share-dropdown-btn:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+}
+
+.share-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    padding: 8px;
+    opacity: 0;
+    visibility: hidden;
+    flex-direction: row;
+    gap: 6px;
+    margin-top: 8px;
+    z-index: 999999;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    display: flex;
+}
+
+.share-dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 0;
+    right: 0;
+    height: 15px;
+    background: transparent;
+}
+
+.share-dropdown-menu::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #fff;
+}
+
+.share-dropdown:hover .share-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+}
+
+.share-dropdown-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: #fff;
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.3s ease;
+}
+
+.share-dropdown-item:hover {
+    transform: scale(1.1);
+    color: #fff;
+}
+
+.share-dropdown-item.facebook {
+    background: #3b5998;
+}
+
+.share-dropdown-item.facebook:hover {
+    background: #2d4373;
+}
+
+.share-dropdown-item.twitter {
+    background: #1da1f2;
+}
+
+.share-dropdown-item.twitter:hover {
+    background: #0c85d0;
+}
+
+.share-dropdown-item.linkedin {
+    background: #0077b5;
+}
+
+.share-dropdown-item.linkedin:hover {
+    background: #005885;
+}
+
+.share-dropdown-item.instagram {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.share-dropdown-item.instagram:hover {
+    background: linear-gradient(45deg, #e08323 0%, #d6582c 25%, #cc1733 50%, #bc1356 75%, #ac0878 100%);
+}
+
+.share-dropdown-item.email {
+    background: #6c757d;
+}
+
+.share-dropdown-item.email:hover {
+    background: #545b62;
 }
 
 /* Fix tooltip in offer code badge and slider */
