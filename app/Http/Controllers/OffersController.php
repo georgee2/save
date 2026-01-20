@@ -33,7 +33,27 @@ class OffersController extends Controller
         $emirates = Emirate::whereNull('deleted_at')->orderBy('title_english')->get();
         $specifications = Specification::whereNull('deleted_at')->orderBy('title_english')->get();
         
-        return compact('categories', 'subcategories', 'styles', 'types', 'emirates', 'specifications');
+        // Categories with offer counts for slider filter (main index page)
+        $categoriesWithCount = OfferCategory::withCount(['offers' => function($query) {
+                $query->where('publish_status', 0)->whereNull('deleted_at');
+            }])
+            ->whereNull('deleted_at')
+            ->orderBy('title_english')
+            ->get();
+        
+        // Subcategories with offer counts for slider filter
+        $subcategoriesWithCountQuery = OfferSubCategory::withCount(['offers' => function($query) {
+                $query->where('publish_status', 0)->whereNull('deleted_at');
+            }])
+            ->whereNull('deleted_at')
+            ->orderBy('title_english');
+        
+        if ($categoryId) {
+            $subcategoriesWithCountQuery->where('category_id', $categoryId);
+        }
+        $subcategoriesWithCount = $subcategoriesWithCountQuery->get();
+        
+        return compact('categories', 'subcategories', 'styles', 'types', 'emirates', 'specifications', 'categoriesWithCount', 'subcategoriesWithCount');
     }
     
     /**

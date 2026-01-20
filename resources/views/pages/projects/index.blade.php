@@ -17,23 +17,90 @@
         </div>
       </section>
 
+      {{-- Subcategory Filter Slider --}}
+      @if(isset($subcategoriesWithCount) && $subcategoriesWithCount->count() > 0)
+      <section class="subcategory-filter-section">
+        <div class="container">
+          <div class="subcategory-filter-slider slick-slider" 
+               data-slick-options='{"slidesToShow": 6, "slidesToScroll": 2, "autoplay": false, "dots": false, "arrows": true, "infinite": false, "responsive":[{"breakpoint": 1400,"settings": {"slidesToShow": 5, "arrows": true}},{"breakpoint": 1200,"settings": {"slidesToShow": 4, "arrows": true}},{"breakpoint": 992,"settings": {"slidesToShow": 4, "arrows": true}},{"breakpoint": 768,"settings": {"slidesToShow": 3, "arrows": true}},{"breakpoint": 576,"settings": {"slidesToShow": 2, "arrows": false}}]}'>
+            
+            {{-- All Categories Option --}}
+            <div class="box">
+              <a href="{{ route('projects.index', request()->except('subcategory_id')) }}" 
+                 class="subcategory-filter-item all-item {{ !request('subcategory_id') ? 'active' : '' }}">
+                <div class="subcategory-filter-icon">
+                  <i class="fas fa-th-large"></i>
+                </div>
+                <p class="subcategory-filter-title">{{ __('lang.all') }}</p>
+                <span class="subcategory-filter-count">{{ $projects->total() }} {{ __('lang.projects') }}</span>
+              </a>
+            </div>
+            
+            {{-- Subcategory Items --}}
+            @foreach($subcategoriesWithCount as $subcat)
+            <div class="box">
+              <a href="{{ route('projects.index', array_merge(request()->except('subcategory_id', 'page'), ['subcategory_id' => $subcat->id])) }}" 
+                 class="subcategory-filter-item {{ request('subcategory_id') == $subcat->id ? 'active' : '' }}">
+                <div class="subcategory-filter-icon">
+                  @if($subcat->icon)
+                  <img src="{{ url('/storage' . $subcat->icon) }}" 
+                       alt="{{ app()->getLocale() == 'ar' ? $subcat->title_arabic : $subcat->title_english }}">
+                  @else
+                  <i class="fas fa-folder"></i>
+                  @endif
+                </div>
+                <p class="subcategory-filter-title">{{ app()->getLocale() == 'ar' ? $subcat->title_arabic : $subcat->title_english }}</p>
+                <span class="subcategory-filter-count">{{ $subcat->projects_count }} {{ __('lang.projects') }}</span>
+              </a>
+            </div>
+            @endforeach
+            
+          </div>
+        </div>
+      </section>
+      @endif
+
 
 
 
       <section class="pt-8 pb-11">
         <div class="container">
+          {{-- Mobile Filter Overlay --}}
+          <div class="mobile-filter-overlay" id="mobileFilterOverlay"></div>
+          
           <div class="row">
-            <div class="col-lg-8 mb-8 mb-lg-0">
+            {{-- Main Projects Container --}}
+            <div class="projects-main-container filter-hidden mb-8 mb-lg-0" id="projectsContainer">
               <div class="row align-items-sm-center mb-6">
                 <div class="col-md-6">
                   <h2 class="fs-15 text-dark mb-0">{{ __('lang.we_found') }} <span class="text-primary">{{ $projects->total() }}</span> {{ __('lang.projects_available') }}</h2>
                 </div>
                 <div class="col-md-6 mt-6 mt-md-0">
-                  <div class="d-flex justify-content-md-end align-items-center">
+                  <div class="d-flex justify-content-md-end align-items-center flex-wrap">
+                    {{-- Filter Toggle Button --}}
+                    <button type="button" class="filter-toggle-btn mr-3" id="filterToggleBtn">
+                      <i class="fas fa-filter"></i>
+                      <span class="d-none d-sm-inline">{{ __('lang.filter') }}</span>
+                      @php
+                        $activeFilters = 0;
+                        if(request('keyword')) $activeFilters++;
+                        if(request('category_id')) $activeFilters++;
+                        if(request('subcategory_id')) $activeFilters++;
+                        if(request('style_id')) $activeFilters++;
+                        if(request('type_id')) $activeFilters++;
+                        if(request('sqft_min') || request('sqft_max')) $activeFilters++;
+                        if(request('sqm_min') || request('sqm_max')) $activeFilters++;
+                        if(request('specification_id')) $activeFilters++;
+                      @endphp
+                      @if($activeFilters > 0)
+                      <span class="filter-count">{{ $activeFilters }}</span>
+                      @endif
+                    </button>
+                    
                     <div class="input-group border rounded input-group-lg w-auto bg-white mr-3">
                       <label class="input-group-text bg-transparent border-0 text-uppercase letter-spacing-093 pr-1 pl-3"
 								       for="sortbySelect"><i
-										class="fas fa-align-left fs-16 pr-2"></i>{{ __('lang.sortby') }}:</label>
+										class="fas fa-align-left fs-16 pr-2"></i><span class="d-none d-sm-inline">{{ __('lang.sortby') }}:</span></label>
                       <select class="form-control border-0 bg-transparent shadow-none p-0 selectpicker sortby-select"
 								        data-style="bg-transparent border-0 font-weight-600 btn-lg pl-0 pr-3"
 								        id="sortbySelect" name="sortby">
@@ -328,6 +395,17 @@
               </nav>
               @endif
             </div>
+            
+            {{-- Filter Sidebar Wrapper --}}
+            <div class="filter-sidebar-wrapper hidden" id="filterSidebarWrapper">
+                {{-- Mobile Filter Header --}}
+                <div class="mobile-filter-header d-lg-none">
+                    <h4>{{ __('lang.filter') }}</h4>
+                    <button type="button" class="mobile-filter-close" id="mobileFilterClose">
+                        <i class="fal fa-times"></i>
+                    </button>
+                </div>
+                
             @include('pages.projects.partials.filter-sidebar', [
                 'formAction' => route('projects.index'),
                 'categories' => $categories,
@@ -337,6 +415,7 @@
                 'specifications' => $specifications,
                 'specificationValues' => $specificationValues ?? []
             ])
+            </div>
           </div>
         </div>
       </section>
@@ -347,11 +426,67 @@
 @section('css')
 <link rel="stylesheet" href="{{ asset('/assets/css/category-page.css') }}">
 <link rel="stylesheet" href="{{ asset('/assets/css/area-slider.css') }}?v={{ time() }}">
+<link rel="stylesheet" href="{{ asset('/assets/css/projects-filter.css') }}?v={{ time() }}">
+<link rel="stylesheet" href="{{ asset('/assets/css/projects-responsive.css') }}?v={{ time() }}">
 @endsection
 
 @section('js')
 <script>
 $(document).ready(function() {
+    // Filter Toggle Functionality
+    var filterToggleBtn = $('#filterToggleBtn');
+    var filterSidebar = $('#filterSidebarWrapper');
+    var projectsContainer = $('#projectsContainer');
+    var mobileFilterOverlay = $('#mobileFilterOverlay');
+    var mobileFilterClose = $('#mobileFilterClose');
+    var body = $('body');
+    
+    // Check if we're on mobile
+    function isMobile() {
+        return window.innerWidth <= 991;
+    }
+    
+    // Toggle filter visibility
+    filterToggleBtn.on('click', function() {
+        if (isMobile()) {
+            // Mobile: slide in panel
+            filterSidebar.toggleClass('visible hidden');
+            mobileFilterOverlay.toggleClass('active');
+            body.toggleClass('filter-open');
+        } else {
+            // Desktop: toggle sidebar visibility
+            filterSidebar.toggleClass('visible hidden');
+            projectsContainer.toggleClass('filter-visible filter-hidden');
+        }
+        
+        $(this).toggleClass('active');
+    });
+    
+    // Close mobile filter
+    mobileFilterClose.on('click', function() {
+        filterSidebar.removeClass('visible').addClass('hidden');
+        mobileFilterOverlay.removeClass('active');
+        body.removeClass('filter-open');
+        filterToggleBtn.removeClass('active');
+    });
+    
+    // Close on overlay click
+    mobileFilterOverlay.on('click', function() {
+        filterSidebar.removeClass('visible').addClass('hidden');
+        mobileFilterOverlay.removeClass('active');
+        body.removeClass('filter-open');
+        filterToggleBtn.removeClass('active');
+    });
+    
+    // Handle window resize
+    $(window).on('resize', function() {
+        if (!isMobile()) {
+            // Reset mobile states when switching to desktop
+            mobileFilterOverlay.removeClass('active');
+            body.removeClass('filter-open');
+        }
+    });
+    
     // View toggle functionality
     $('.view-toggle').on('click', function(e) {
         e.preventDefault();
@@ -516,7 +651,16 @@ $(document).ready(function() {
             $('#projectFilterForm').submit();
         }
     });
+    
+    // Close filter on escape key
+    $(document).on('keydown', function(e) {
+        if (e.key === 'Escape' && filterSidebar.hasClass('visible') && isMobile()) {
+            filterSidebar.removeClass('visible').addClass('hidden');
+            mobileFilterOverlay.removeClass('active');
+            body.removeClass('filter-open');
+            filterToggleBtn.removeClass('active');
+        }
+    });
 });
 </script>
 @endsection
-

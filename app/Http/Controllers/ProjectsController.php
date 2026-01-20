@@ -121,6 +121,13 @@ class ProjectsController extends Controller
             'styles' => ProjectStyle::whereNull('deleted_at')->orderBy('title_english')->get(),
             'types' => ProjectType::whereNull('deleted_at')->where('status', 0)->orderBy('name_english')->get(),
             'specifications' => Specification::whereNull('deleted_at')->orderBy('title_english')->get(),
+            // Subcategories with project counts for slider filter
+            'subcategoriesWithCount' => EngineeringSubCategory::withCount(['projects' => function($query) {
+                    $query->where('publish_status', 0)->whereNull('deleted_at');
+                }])
+                ->whereNull('deleted_at')
+                ->orderBy('title_english')
+                ->get(),
         ];
     }
     
@@ -217,7 +224,9 @@ class ProjectsController extends Controller
         // Get page banner for projects page
         $pageBanner = PageBanner::getByTarget('projects');
         
-        return view('pages.projects.index', compact('projects', 'categories', 'subcategories', 'styles', 'types', 'specifications', 'specificationValues', 'pageBanner'));
+        $subcategoriesWithCount = $filterData['subcategoriesWithCount'];
+        
+        return view('pages.projects.index', compact('projects', 'categories', 'subcategories', 'subcategoriesWithCount', 'styles', 'types', 'specifications', 'specificationValues', 'pageBanner'));
     }
     
     /**
@@ -286,8 +295,10 @@ class ProjectsController extends Controller
         // Get page banner for featured projects page
         $pageBanner = PageBanner::getByTarget('featured-projects');
         
+        $subcategoriesWithCount = $filterData['subcategoriesWithCount'];
+        
         return view('pages.projects.featured.featured', compact(
-            'projects', 'categories', 'subcategories', 'styles', 'types', 'specifications', 'specificationValues', 'pageBanner'
+            'projects', 'categories', 'subcategories', 'subcategoriesWithCount', 'styles', 'types', 'specifications', 'specificationValues', 'pageBanner'
         ));
     }
     

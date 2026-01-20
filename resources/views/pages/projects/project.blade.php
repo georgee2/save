@@ -34,22 +34,51 @@
               @endif
               <li class="list-inline-item mr-2 mt-2 mt-sm-0"><i class="fal fa-clock mr-1"></i>{{ $project->created_at->diffForHumans() }}</li>
             </ul>
-            <ul class="list-inline mb-0 mr-n2 my-4 my-md-0">
-              <li class="list-inline-item mr-2">
-                <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->url()) }}" 
-                   target="_blank" 
-                   class="btn btn-outline-light px-3 text-body d-flex align-items-center h-32 border">
-                  <i class="fab fa-facebook-f mr-2 fs-15" style="color: #1877f2;"></i>{{ __('lang.facebook') }}
-                </a>
-              </li>
-              <li class="list-inline-item mr-2">
-                <a href="https://www.instagram.com/" 
-                   target="_blank" 
-                   class="btn btn-outline-light px-3 text-body d-flex align-items-center h-32 border">
-                  <i class="fab fa-instagram mr-2 fs-15" style="color: #e4405f;"></i>{{ __('lang.instagram') }}
-                </a>
-              </li>
-            </ul>
+            <div class="social-share-buttons d-flex flex-wrap my-4 my-md-0">
+              <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->url()) }}" 
+                 target="_blank" 
+                 class="social-share-btn facebook"
+                 data-toggle="tooltip" title="Facebook">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a href="https://twitter.com/intent/tweet?url={{ urlencode(request()->url()) }}&text={{ urlencode(app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english) }}" 
+                 target="_blank" 
+                 class="social-share-btn twitter"
+                 data-toggle="tooltip" title="X">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </a>
+              <a href="https://wa.me/?text={{ urlencode((app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english) . ' - ' . request()->url()) }}" 
+                 target="_blank" 
+                 class="social-share-btn whatsapp"
+                 data-toggle="tooltip" title="WhatsApp">
+                <i class="fab fa-whatsapp"></i>
+              </a>
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(request()->url()) }}&title={{ urlencode(app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english) }}" 
+                 target="_blank" 
+                 class="social-share-btn linkedin"
+                 data-toggle="tooltip" title="LinkedIn">
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+              <a href="https://pinterest.com/pin/create/button/?url={{ urlencode(request()->url()) }}&media={{ urlencode(url('/storage' . $project->main_image)) }}&description={{ urlencode(app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english) }}" 
+                 target="_blank" 
+                 class="social-share-btn pinterest"
+                 data-toggle="tooltip" title="Pinterest">
+                <i class="fab fa-pinterest-p"></i>
+              </a>
+              <a href="mailto:?subject={{ rawurlencode(app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english) }}&body={{ urlencode(request()->url()) }}" 
+                 class="social-share-btn email"
+                 data-toggle="tooltip" title="Email">
+                <i class="fas fa-envelope"></i>
+              </a>
+              <button type="button" 
+                 class="social-share-btn copy-link copy-link-btn"
+                 data-url="{{ request()->url() }}"
+                 data-toggle="tooltip" title="{{ __('lang.copy_link') }}">
+                <i class="fas fa-link"></i>
+              </button>
+            </div>
           </div>
           <div class="d-md-flex justify-content-md-between mb-6">
             <div>
@@ -385,4 +414,149 @@
         </div>
       </div>
 
+@endsection
+
+@section('css')
+<style>
+/* Social Share Buttons */
+.social-share-buttons {
+    gap: 8px;
+}
+
+.social-share-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 15px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.social-share-btn.facebook {
+    background: #1877f2;
+    color: #fff;
+}
+.social-share-btn.facebook:hover {
+    background: #0d65d9;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(24, 119, 242, 0.4);
+}
+
+.social-share-btn.twitter {
+    background: #000000;
+    color: #fff;
+}
+.social-share-btn.twitter:hover {
+    background: #333333;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+.social-share-btn.twitter svg {
+    width: 14px;
+    height: 14px;
+}
+
+.social-share-btn.whatsapp {
+    background: #25d366;
+    color: #fff;
+}
+.social-share-btn.whatsapp:hover {
+    background: #1da851;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+}
+
+.social-share-btn.linkedin {
+    background: #0077b5;
+    color: #fff;
+}
+.social-share-btn.linkedin:hover {
+    background: #005e93;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 119, 181, 0.4);
+}
+
+.social-share-btn.pinterest {
+    background: #bd081c;
+    color: #fff;
+}
+.social-share-btn.pinterest:hover {
+    background: #a00718;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(189, 8, 28, 0.4);
+}
+
+.social-share-btn.email {
+    background: #ea4335;
+    color: #fff;
+}
+.social-share-btn.email:hover {
+    background: #d33426;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(234, 67, 53, 0.4);
+}
+
+.social-share-btn.copy-link {
+    background: #19868b;
+    color: #fff;
+}
+.social-share-btn.copy-link:hover {
+    background: #0d6d71;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(25, 134, 139, 0.4);
+}
+
+.social-share-btn.copy-link.copied {
+    background: #28a745;
+}
+
+/* RTL Support */
+[dir="rtl"] .social-share-buttons {
+    flex-direction: row-reverse;
+}
+</style>
+@endsection
+
+@section('js')
+<script>
+$(document).ready(function() {
+    // Copy link functionality
+    $('.copy-link-btn').on('click', function() {
+        var url = $(this).data('url');
+        var $btn = $(this);
+        
+        // Copy to clipboard
+        navigator.clipboard.writeText(url).then(function() {
+            // Show success feedback
+            var originalTitle = $btn.attr('data-original-title') || $btn.attr('title');
+            $btn.attr('data-original-title', '{{ __("lang.link_copied") }}').tooltip('show');
+            
+            // Change icon and add copied class
+            $btn.find('i').removeClass('fa-link').addClass('fa-check');
+            $btn.addClass('copied');
+            
+            // Reset after 2 seconds
+            setTimeout(function() {
+                $btn.attr('data-original-title', originalTitle).tooltip('hide');
+                $btn.find('i').removeClass('fa-check').addClass('fa-link');
+                $btn.removeClass('copied');
+            }, 2000);
+        }).catch(function(err) {
+            console.error('Failed to copy: ', err);
+        });
+    });
+});
+</script>
 @endsection
