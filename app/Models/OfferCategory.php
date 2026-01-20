@@ -24,6 +24,14 @@ class OfferCategory extends Model
     }
     
     /**
+     * Get all offers in this category
+     */
+    public function offers()
+    {
+        return $this->hasMany(Offer::class, 'category_id');
+    }
+    
+    /**
      * Boot the model
      */
     protected static function boot()

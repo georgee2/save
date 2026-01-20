@@ -110,6 +110,13 @@ class EngineeringSubCategoryController extends Controller
             'styles' => ProjectStyle::whereNull('deleted_at')->orderBy('title_english')->get(),
             'types' => ProjectType::whereNull('deleted_at')->where('status', 0)->orderBy('name_english')->get(),
             'specifications' => Specification::whereNull('deleted_at')->orderBy('title_english')->get(),
+            // Subcategories with project counts for slider filter
+            'subcategoriesWithCount' => EngineeringSubCategory::withCount(['projects' => function($query) {
+                    $query->where('publish_status', 0)->whereNull('deleted_at');
+                }])
+                ->whereNull('deleted_at')
+                ->orderBy('title_english')
+                ->get(),
         ];
     }
     
@@ -128,6 +135,7 @@ class EngineeringSubCategoryController extends Controller
         $filterData = $this->getFilterData();
         $categories = $filterData['categories'];
         $subcategories = $filterData['subcategories'];
+        $subcategoriesWithCount = $filterData['subcategoriesWithCount'];
         $styles = $filterData['styles'];
         $types = $filterData['types'];
         $specifications = $filterData['specifications'];
@@ -186,7 +194,7 @@ class EngineeringSubCategoryController extends Controller
         $pageBanner = PageBanner::getByTarget('subcategory');
         
         return view('pages.projects.subcategories.subcategories', compact(
-            'subcategory', 'projects', 'categories', 'subcategories', 'styles', 'types', 'specifications', 'specificationValues', 'pageBanner'
+            'subcategory', 'projects', 'categories', 'subcategories', 'subcategoriesWithCount', 'styles', 'types', 'specifications', 'specificationValues', 'pageBanner'
         ));
     }
 }

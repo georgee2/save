@@ -61,6 +61,8 @@
           <link rel="stylesheet" href="{{asset('/assets/css/topbar.css')}}?v={{ time() }}">
           <!-- Header CSS -->
           <link rel="stylesheet" href="{{asset('/assets/css/header.css')}}?v={{ time() }}">
+          <!-- Mobile Header CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/css/mobile-header.css')}}?v={{ time() }}">
           
           <!-- RTL CSS for Arabic -->
           @if(app()->getLocale() == 'ar')

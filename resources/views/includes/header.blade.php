@@ -1,28 +1,16 @@
-<header class="main-header navbar-light header-mobile-lg">
+{{-- Desktop Header - Hidden on mobile/tablet --}}
+<header class="main-header navbar-light header-desktop">
       <div class="sticky-area">
         <div class="container">
           <nav class="navbar navbar-expand-lg px-0">
             <a class="navbar-brand" href="{{ route('index') }}">
               @if(app()->getLocale() == 'ar')
-              <img style="max-width: 200px;max-height: 90px" src="{{ url('/pic/logos/logoar.png') }}" alt="{{ env('APP_NAME') }}"
-                         class="d-none d-lg-inline-block">
-              <img style="max-width: 150px;max-height: 70px" src="{{ url('/pic/logos/logoar.png') }}" alt="{{ env('APP_NAME') }}"
-                         class="d-inline-block d-lg-none">
+              <img style="max-width: 200px;max-height: 90px" src="{{ url('/pic/logos/logoar.png') }}" alt="{{ env('APP_NAME') }}">
               @else
-              <img style="max-width: 200px;max-height: 90px" src="{{ url('/pic/logos/logoen.png') }}" alt="{{ env('APP_NAME') }}"
-                         class="d-none d-lg-inline-block">
-              <img style="max-width: 150px;max-height: 70px" src="{{ url('/pic/logos/logoen.png') }}" alt="{{ env('APP_NAME') }}"
-                         class="d-inline-block d-lg-none">
+              <img style="max-width: 200px;max-height: 90px" src="{{ url('/pic/logos/logoen.png') }}" alt="{{ env('APP_NAME') }}">
               @endif
             </a>
-            <div class="d-flex d-lg-none mobile-toggle">
-              <button class="navbar-toggler border-0 px-0" type="button" data-toggle="collapse"
-                            data-target="#primaryMenu01"
-                            aria-controls="primaryMenu01" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="fs-24"><i class="fal fa-bars"></i></span>
-              </button>
-            </div>
-            <div class="collapse navbar-collapse mt-3 mt-lg-0 mx-auto flex-grow-0" id="primaryMenu01">
+            <div class="collapse navbar-collapse mt-lg-0 mx-auto flex-grow-0" id="primaryMenu01">
               <ul class="navbar-nav hover-menu main-menu px-0 mx-lg-n4">
                 <!-- Home Nav (No Child) -->
                 <li id="navbar-item-home" aria-haspopup="false" aria-expanded="false"
@@ -276,3 +264,431 @@
         </div>
       </div>
     </header>
+
+{{-- Mobile Header - Only visible on tablet and mobile --}}
+<div class="mobile-header">
+    <div class="mobile-header-content">
+        {{-- Hamburger Menu Button --}}
+        <button class="mobile-hamburger" id="mobileMenuToggle" aria-label="Toggle menu">
+            <span class="hamburger-icon">
+                <span></span>
+                <span></span>
+                <span></span>
+            </span>
+        </button>
+        
+        {{-- Logo (Center) --}}
+        <a href="{{ route('index') }}" class="mobile-header-logo">
+            @if(app()->getLocale() == 'ar')
+            <img src="{{ url('/pic/logos/logoar.png') }}" alt="{{ env('APP_NAME') }}">
+            @else
+            <img src="{{ url('/pic/logos/logoen.png') }}" alt="{{ env('APP_NAME') }}">
+            @endif
+        </a>
+        
+        {{-- Icons (Right) --}}
+        <div class="mobile-header-icons">
+            <a href="{{ route('contact') }}" class="mobile-header-icon" title="{{ __('lang.contact_us') }}">
+                <i class="fal fa-envelope"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+{{-- Mobile Sidebar Menu --}}
+<div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+<nav class="mobile-sidebar" id="mobileSidebar">
+    {{-- Sidebar Header --}}
+    <div class="mobile-sidebar-header">
+        <a href="{{ route('index') }}" class="mobile-sidebar-logo">
+            @if(app()->getLocale() == 'ar')
+            <img src="{{ url('/pic/logos/logoar.png') }}" alt="{{ env('APP_NAME') }}">
+            @else
+            <img src="{{ url('/pic/logos/logoen.png') }}" alt="{{ env('APP_NAME') }}">
+            @endif
+        </a>
+        <button class="mobile-sidebar-close" id="mobileMenuClose" aria-label="Close menu">
+            <i class="fal fa-times"></i>
+        </button>
+    </div>
+    
+    {{-- Sidebar Navigation --}}
+    <div class="mobile-sidebar-nav">
+        {{-- Home --}}
+        <div class="mobile-nav-item">
+            <a href="{{ route('index') }}" class="mobile-nav-link">
+                {{ __('lang.home') }}
+            </a>
+        </div>
+        
+        {{-- Services --}}
+        <div class="mobile-nav-item">
+            <a href="javascript:void(0);" class="mobile-nav-link mobile-nav-toggle">
+                {{ __('lang.services') }}
+                <i class="fal fa-chevron-right"></i>
+            </a>
+            <ul class="mobile-submenu">
+                <li class="mobile-submenu-item">
+                    <a href="{{ route('services.index') }}" class="mobile-submenu-link">
+                        <i class="fal fa-th-large"></i>
+                        {{ __('lang.all_services') }}
+                    </a>
+                </li>
+                @if(isset($headerServices) && $headerServices->count() > 0)
+                    @foreach($headerServices as $headerService)
+                        @if($headerService->subServices && $headerService->subServices->count() > 0)
+                        <li class="mobile-submenu-item">
+                            <a href="javascript:void(0);" class="mobile-submenu-link mobile-nav-toggle">
+                                @if($headerService->icon)
+                                <img src="{{ asset('storage' . $headerService->icon) }}" alt="">
+                                @else
+                                <i class="fal fa-cog"></i>
+                                @endif
+                                {{ app()->getLocale() == 'ar' ? $headerService->title_arabic : $headerService->title_english }}
+                                <i class="fal fa-chevron-right" style="margin-left: auto;"></i>
+                            </a>
+                            <ul class="mobile-nested-submenu">
+                                <li>
+                                    <a href="{{ route('services.show', $headerService->slug) }}" class="mobile-nested-link">
+                                        <i class="fal fa-arrow-right"></i>
+                                        {{ __('lang.view_all') }}
+                                    </a>
+                                </li>
+                                @foreach($headerService->subServices as $subService)
+                                <li>
+                                    <a href="{{ route('services.show', $subService->slug) }}" class="mobile-nested-link">
+                                        @if($subService->icon)
+                                        <img src="{{ asset('storage' . $subService->icon) }}" alt="">
+                                        @else
+                                        <i class="fal fa-angle-right"></i>
+                                        @endif
+                                        {{ app()->getLocale() == 'ar' ? $subService->title_arabic : $subService->title_english }}
+                                    </a>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </li>
+                        @else
+                        <li class="mobile-submenu-item">
+                            <a href="{{ route('services.show', $headerService->slug) }}" class="mobile-submenu-link">
+                                @if($headerService->icon)
+                                <img src="{{ asset('storage' . $headerService->icon) }}" alt="">
+                                @else
+                                <i class="fal fa-cog"></i>
+                                @endif
+                                {{ app()->getLocale() == 'ar' ? $headerService->title_arabic : $headerService->title_english }}
+                            </a>
+                        </li>
+                        @endif
+                    @endforeach
+                @endif
+            </ul>
+        </div>
+        
+        {{-- Offers --}}
+        <div class="mobile-nav-item">
+            <a href="javascript:void(0);" class="mobile-nav-link mobile-nav-toggle">
+                {{ __('lang.offers') }}
+                <i class="fal fa-chevron-right"></i>
+            </a>
+            <ul class="mobile-submenu">
+                <li class="mobile-submenu-item">
+                    <a href="{{ route('offers.index') }}" class="mobile-submenu-link">
+                        <i class="fal fa-th-large"></i>
+                        {{ __('lang.all_offers') }}
+                    </a>
+                </li>
+                @if(isset($headerOfferCategories) && $headerOfferCategories->count() > 0)
+                    @foreach($headerOfferCategories as $offerCategory)
+                        @if($offerCategory->subCategories && $offerCategory->subCategories->count() > 0)
+                        <li class="mobile-submenu-item">
+                            <a href="javascript:void(0);" class="mobile-submenu-link mobile-nav-toggle">
+                                @if($offerCategory->icon)
+                                <img src="{{ url('/storage' . $offerCategory->icon) }}" alt="">
+                                @else
+                                <i class="fal fa-tag"></i>
+                                @endif
+                                {{ app()->getLocale() == 'ar' ? $offerCategory->title_arabic : $offerCategory->title_english }}
+                                <i class="fal fa-chevron-right" style="margin-left: auto;"></i>
+                            </a>
+                            <ul class="mobile-nested-submenu">
+                                <li>
+                                    <a href="{{ route('offers.category', $offerCategory->slug) }}" class="mobile-nested-link">
+                                        <i class="fal fa-arrow-right"></i>
+                                        {{ __('lang.view_all') }}
+                                    </a>
+                                </li>
+                                @foreach($offerCategory->subCategories as $offerSubCategory)
+                                <li>
+                                    <a href="{{ route('offers.subcategory', $offerSubCategory->slug) }}" class="mobile-nested-link">
+                                        @if($offerSubCategory->icon)
+                                        <img src="{{ url('/storage' . $offerSubCategory->icon) }}" alt="">
+                                        @else
+                                        <i class="fal fa-angle-right"></i>
+                                        @endif
+                                        {{ app()->getLocale() == 'ar' ? $offerSubCategory->title_arabic : $offerSubCategory->title_english }}
+                                    </a>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </li>
+                        @else
+                        <li class="mobile-submenu-item">
+                            <a href="{{ route('offers.category', $offerCategory->slug) }}" class="mobile-submenu-link">
+                                @if($offerCategory->icon)
+                                <img src="{{ url('/storage' . $offerCategory->icon) }}" alt="">
+                                @else
+                                <i class="fal fa-tag"></i>
+                                @endif
+                                {{ app()->getLocale() == 'ar' ? $offerCategory->title_arabic : $offerCategory->title_english }}
+                            </a>
+                        </li>
+                        @endif
+                    @endforeach
+                @endif
+            </ul>
+        </div>
+        
+        {{-- Projects --}}
+        <div class="mobile-nav-item">
+            <a href="javascript:void(0);" class="mobile-nav-link mobile-nav-toggle">
+                {{ __('lang.projects') }}
+                <i class="fal fa-chevron-right"></i>
+            </a>
+            <ul class="mobile-submenu">
+                <li class="mobile-submenu-item">
+                    <a href="{{ route('projects.index') }}" class="mobile-submenu-link">
+                        <i class="fal fa-th-large"></i>
+                        {{ __('lang.all_projects') }}
+                    </a>
+                </li>
+                @if(isset($headerProjectCategories) && $headerProjectCategories->count() > 0)
+                    @foreach($headerProjectCategories as $category)
+                        @if($category->subCategories && $category->subCategories->count() > 0)
+                        <li class="mobile-submenu-item">
+                            <a href="javascript:void(0);" class="mobile-submenu-link mobile-nav-toggle">
+                                @if($category->icon)
+                                <img src="{{ url('/storage' . $category->icon) }}" alt="">
+                                @endif
+                                {{ app()->getLocale() == 'ar' ? $category->title_arabic : $category->title_english }}
+                                <i class="fal fa-chevron-right" style="margin-left: auto;"></i>
+                            </a>
+                            <ul class="mobile-nested-submenu">
+                                <li>
+                                    <a href="{{ route('category.show', $category->slug) }}" class="mobile-nested-link">
+                                        <i class="fal fa-arrow-right"></i>
+                                        {{ __('lang.view_all') }}
+                                    </a>
+                                </li>
+                                @foreach($category->subCategories as $subCategory)
+                                <li>
+                                    <a href="{{ route('subcategory.show', $subCategory->slug) }}" class="mobile-nested-link">
+                                        @if($subCategory->icon)
+                                        <img src="{{ url('/storage' . $subCategory->icon) }}" alt="">
+                                        @endif
+                                        {{ app()->getLocale() == 'ar' ? $subCategory->title_arabic : $subCategory->title_english }}
+                                    </a>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </li>
+                        @else
+                        <li class="mobile-submenu-item">
+                            <a href="{{ route('category.show', $category->slug) }}" class="mobile-submenu-link">
+                                @if($category->icon)
+                                <img src="{{ url('/storage' . $category->icon) }}" alt="">
+                                @endif
+                                {{ app()->getLocale() == 'ar' ? $category->title_arabic : $category->title_english }}
+                            </a>
+                        </li>
+                        @endif
+                    @endforeach
+                @endif
+            </ul>
+        </div>
+        
+        {{-- News --}}
+        <div class="mobile-nav-item">
+            <a href="javascript:void(0);" class="mobile-nav-link mobile-nav-toggle">
+                {{ __('lang.news') }}
+                <i class="fal fa-chevron-right"></i>
+            </a>
+            <ul class="mobile-submenu">
+                <li class="mobile-submenu-item">
+                    <a href="{{ route('blogs.index') }}" class="mobile-submenu-link">
+                        <i class="fal fa-newspaper"></i>
+                        {{ __('lang.all_news') }}
+                    </a>
+                </li>
+                @if(isset($headerNewsCategories) && count($headerNewsCategories) > 0)
+                    @foreach($headerNewsCategories as $newsCategory)
+                    <li class="mobile-submenu-item">
+                        <a href="{{ route('blogs.index', ['category' => $newsCategory->id]) }}" class="mobile-submenu-link">
+                            <i class="fal fa-folder"></i>
+                            {{ app()->getLocale() == 'ar' ? $newsCategory->name_arabic : $newsCategory->name_english }}
+                        </a>
+                    </li>
+                    @endforeach
+                @endif
+            </ul>
+        </div>
+        
+        {{-- About --}}
+        <div class="mobile-nav-item">
+            <a href="javascript:void(0);" class="mobile-nav-link mobile-nav-toggle">
+                {{ __('lang.about_us') }}
+                <i class="fal fa-chevron-right"></i>
+            </a>
+            <ul class="mobile-submenu">
+                <li class="mobile-submenu-item">
+                    <a href="{{ route('about') }}" class="mobile-submenu-link">
+                        <i class="fal fa-info-circle"></i>
+                        {{ __('lang.about_company') }}
+                    </a>
+                </li>
+                <li class="mobile-submenu-item">
+                    <a href="{{ route('team.board') }}" class="mobile-submenu-link">
+                        <i class="fal fa-user-tie"></i>
+                        {{ __('lang.board_of_directors') }}
+                    </a>
+                </li>
+                <li class="mobile-submenu-item">
+                    <a href="{{ route('team.index') }}" class="mobile-submenu-link">
+                        <i class="fal fa-users"></i>
+                        {{ __('lang.our_team') }}
+                    </a>
+                </li>
+                <li class="mobile-submenu-item">
+                    <a href="{{ route('partners.index') }}" class="mobile-submenu-link">
+                        <i class="fal fa-handshake"></i>
+                        {{ __('lang.our_partners') }}
+                    </a>
+                </li>
+                <li class="mobile-submenu-item">
+                    <a href="{{ route('branches.index') }}" class="mobile-submenu-link">
+                        <i class="fal fa-building"></i>
+                        {{ __('lang.our_branches') }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        {{-- Contact --}}
+        <div class="mobile-nav-item">
+            <a href="{{ route('contact') }}" class="mobile-nav-link">
+                {{ __('lang.contact_us') }}
+            </a>
+        </div>
+        
+        {{-- Careers (if active jobs) --}}
+        @if(isset($hasActiveJobs) && $hasActiveJobs)
+        <div class="mobile-nav-item">
+            <a href="{{ route('careers.index') }}" class="mobile-nav-link">
+                {{ __('lang.careers') }}
+            </a>
+        </div>
+        @endif
+    </div>
+    
+    {{-- Sidebar Footer --}}
+    <div class="mobile-sidebar-footer">
+        <div class="mobile-sidebar-contact">
+            @if(isset($contactInfo) && $contactInfo)
+                @if($contactInfo->phone)
+                <a href="tel:{{ $contactInfo->phone }}">
+                    <i class="fal fa-phone"></i>
+                    <span>{{ $contactInfo->phone }}</span>
+                </a>
+                @endif
+                @if($contactInfo->email)
+                <a href="mailto:{{ $contactInfo->email }}">
+                    <i class="fal fa-envelope"></i>
+                    <span>{{ $contactInfo->email }}</span>
+                </a>
+                @endif
+            @endif
+        </div>
+        <div class="mobile-sidebar-social">
+            @if(isset($contactInfo) && $contactInfo)
+                @if($contactInfo->facebook)
+                <a href="{{ $contactInfo->facebook }}" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                @endif
+                @if($contactInfo->instagram)
+                <a href="{{ $contactInfo->instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>
+                @endif
+                @if($contactInfo->twitter)
+                <a href="{{ $contactInfo->twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>
+                @endif
+                @if($contactInfo->linkedin)
+                <a href="{{ $contactInfo->linkedin }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                @endif
+                @if($contactInfo->youtube)
+                <a href="{{ $contactInfo->youtube }}" target="_blank"><i class="fab fa-youtube"></i></a>
+                @endif
+            @endif
+        </div>
+    </div>
+</nav>
+
+{{-- Mobile Menu JavaScript --}}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const menuToggle = document.getElementById('mobileMenuToggle');
+    const menuClose = document.getElementById('mobileMenuClose');
+    const sidebar = document.getElementById('mobileSidebar');
+    const overlay = document.getElementById('mobileMenuOverlay');
+    const body = document.body;
+    
+    // Toggle menu
+    function openMenu() {
+        menuToggle.classList.add('active');
+        sidebar.classList.add('active');
+        overlay.classList.add('active');
+        body.classList.add('mobile-menu-open');
+    }
+    
+    function closeMenu() {
+        menuToggle.classList.remove('active');
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+        body.classList.remove('mobile-menu-open');
+    }
+    
+    if (menuToggle) {
+        menuToggle.addEventListener('click', function() {
+            if (sidebar.classList.contains('active')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+    }
+    
+    if (menuClose) {
+        menuClose.addEventListener('click', closeMenu);
+    }
+    
+    if (overlay) {
+        overlay.addEventListener('click', closeMenu);
+    }
+    
+    // Submenu toggles
+    const navToggles = document.querySelectorAll('.mobile-nav-toggle');
+    navToggles.forEach(function(toggle) {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            const parent = this.closest('.mobile-nav-item, .mobile-submenu-item');
+            if (parent) {
+                parent.classList.toggle('open');
+            }
+        });
+    });
+    
+    // Close menu on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+            closeMenu();
+        }
+    });
+});
+</script>

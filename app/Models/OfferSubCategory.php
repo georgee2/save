@@ -45,6 +45,14 @@ class OfferSubCategory extends Model
     }
     
     /**
+     * Get all offers in this subcategory
+     */
+    public function offers()
+    {
+        return $this->hasMany(Offer::class, 'subcategory_id');
+    }
+    
+    /**
      * Get all offer sub categories for listing
      */
     public static function list()

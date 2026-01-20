@@ -114,12 +114,24 @@ class CategoryController extends Controller
             $subcategoriesQuery->where('category_id', $categoryId);
         }
         
+        // Subcategories with project counts for slider filter
+        $subcategoriesWithCountQuery = EngineeringSubCategory::withCount(['projects' => function($query) {
+                $query->where('publish_status', 0)->whereNull('deleted_at');
+            }])
+            ->whereNull('deleted_at')
+            ->orderBy('title_english');
+        
+        if ($categoryId) {
+            $subcategoriesWithCountQuery->where('category_id', $categoryId);
+        }
+        
         return [
             'categories' => EngineeringCategory::whereNull('deleted_at')->orderBy('title_english')->get(),
             'subcategories' => $subcategoriesQuery->get(),
             'styles' => ProjectStyle::whereNull('deleted_at')->orderBy('title_english')->get(),
             'types' => ProjectType::whereNull('deleted_at')->where('status', 0)->orderBy('name_english')->get(),
             'specifications' => Specification::whereNull('deleted_at')->orderBy('title_english')->get(),
+            'subcategoriesWithCount' => $subcategoriesWithCountQuery->get(),
         ];
     }
     
@@ -137,6 +149,7 @@ class CategoryController extends Controller
         $filterData = $this->getFilterData($category->id);
         $categories = $filterData['categories'];
         $subcategories = $filterData['subcategories'];
+        $subcategoriesWithCount = $filterData['subcategoriesWithCount'];
         $styles = $filterData['styles'];
         $types = $filterData['types'];
         $specifications = $filterData['specifications'];
@@ -195,7 +208,7 @@ class CategoryController extends Controller
         $pageBanner = PageBanner::getByTarget('category');
         
         return view('pages.projects.categories.categories', compact(
-            'projects', 'category', 'categories', 'subcategories', 'styles', 'types', 'specifications', 'specificationValues', 'pageBanner'
+            'projects', 'category', 'categories', 'subcategories', 'subcategoriesWithCount', 'styles', 'types', 'specifications', 'specificationValues', 'pageBanner'
         ));
     }
 }

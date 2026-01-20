@@ -47,29 +47,6 @@
                   </div>
                   @endif
 
-                  {{-- Type --}}
-                  @if($project->type)
-                  <div class="col-lg-3 col-sm-4 mb-6">
-                    <div class="media">
-                      <div class="p-2 shadow-xxs-1 rounded-lg mr-2 d-flex align-items-center justify-content-center" style="width: 52px; height: 52px;">
-                        @if($project->type->icon)
-                        <img src="{{ url('/storage' . $project->type->icon) }}" 
-                             alt="{{ app()->getLocale() == 'ar' ? $project->type->name_arabic : $project->type->name_english }}"
-                             style="width: 32px; height: 32px; object-fit: contain;">
-                        @else
-                        <i class="fal fa-building fs-32 text-primary"></i>
-                        @endif
-                      </div>
-                      <div class="media-body">
-                        <h5 class="my-1 fs-14 text-uppercase letter-spacing-093 font-weight-normal">{{ __('lang.type') }}</h5>
-                        <p class="mb-0 fs-13 font-weight-bold text-heading">
-                          {{ app()->getLocale() == 'ar' ? $project->type->name_arabic : $project->type->name_english }}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  @endif
-
                   {{-- Style --}}
                   @if($project->style)
                   <div class="col-lg-3 col-sm-4 mb-6">

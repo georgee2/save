@@ -137,9 +137,38 @@ body.scrolled .site-topbar {
     transition: all 0.3s ease;
 }
 
-.main-header .dropdown-link:hover {
+.main-header .dropdown-link:hover,
+.main-header .dropdown-link:focus {
     color: #19868b;
     background: rgba(25, 134, 139, 0.08);
+}
+
+/* Override default dropdown-item hover styles */
+.main-header .dropdown-menu .dropdown-item:hover,
+.main-header .dropdown-menu .dropdown-item:focus,
+.main-header .dropdown-menu .dropdown-item.active {
+    background-color: rgba(25, 134, 139, 0.08) !important;
+}
+
+.main-header .dropdown-menu .dropdown-item:hover .dropdown-link,
+.main-header .dropdown-menu .dropdown-item:focus .dropdown-link,
+.main-header .dropdown-menu .dropdown-item.active .dropdown-link,
+.main-header .dropdown-menu .dropdown-item:hover > a,
+.main-header .dropdown-menu .dropdown-item:focus > a,
+.main-header .dropdown-menu .dropdown-item.active > a {
+    color: #19868b !important;
+    background: transparent !important;
+}
+
+/* Ensure nested dropdown items also have consistent hover */
+.main-header .dropdown-submenu .dropdown-item:hover,
+.main-header .dropdown-submenu .dropdown-item:focus {
+    background-color: rgba(25, 134, 139, 0.08) !important;
+}
+
+.main-header .dropdown-submenu .dropdown-item:hover .dropdown-link,
+.main-header .dropdown-submenu .dropdown-item:focus .dropdown-link {
+    color: #19868b !important;
 }
 
 /* Body padding to account for fixed header */
@@ -151,60 +180,15 @@ body.scrolled {
     padding-top: 90px; /* only header when topbar is hidden */
 }
 
-/* Responsive adjustments */
+/* Desktop header class */
+.main-header.header-desktop {
+    display: block;
+}
+
+/* Responsive adjustments - Desktop header hidden on mobile/tablet */
 @media (max-width: 991px) {
-    .main-header {
-        top: 40px;
-    }
-    
-    body {
-        padding-top: 120px;
-    }
-    
-    body.scrolled {
-        padding-top: 80px;
-    }
-    
-    .main-header .navbar-collapse {
-        background: #ffffff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-        margin-top: 10px;
-    }
-    
-    .main-header .navbar-collapse .nav-link {
-        color: #333333;
-    }
-    
-    /* RTL mobile adjustments */
-    [dir="rtl"] .main-header .d-flex.d-lg-none {
-        margin-left: auto !important;
-        margin-right: 0;
-    }
-}
-
-@media (max-width: 768px) {
-    .main-header {
-        top: 36px;
-    }
-    
-    body {
-        padding-top: 106px;
-    }
-    
-    body.scrolled {
-        padding-top: 70px;
-    }
-}
-
-@media (max-width: 576px) {
-    body {
-        padding-top: 100px;
-    }
-    
-    body.scrolled {
-        padding-top: 65px;
+    .main-header.header-desktop {
+        display: none !important;
     }
 }
 

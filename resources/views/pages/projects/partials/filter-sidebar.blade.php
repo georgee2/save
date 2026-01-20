@@ -1,5 +1,5 @@
 {{-- Projects Filter Sidebar --}}
-<div class="col-lg-4 primary-sidebar sidebar-sticky" id="sidebar">
+<div class="primary-sidebar sidebar-sticky" id="sidebar">
     <div class="primary-sidebar-inner">
         <div class="card border-0 mb-4">
             <div class="card-body pl-0 pl-lg-6 pr-0 pt-2 pb-4">

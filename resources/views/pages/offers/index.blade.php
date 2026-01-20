@@ -16,42 +16,99 @@
 
 @section('content')
 
-{{-- Hero Section with Page Banner --}}
-<section class="offers-hero-section position-relative">
-    @if($pageBanner && $pageBanner->cover)
-    <div class="offers-hero-bg" style="background-image: url('{{ asset($pageBanner->cover) }}');"></div>
-    @else
-    <div class="offers-hero-bg offers-hero-gradient"></div>
-    @endif
-    <div class="offers-hero-overlay"></div>
-    <div class="container position-relative">
-        <div class="offers-hero-content text-center">
-            <nav aria-label="breadcrumb" class="mb-4">
-                <ol class="breadcrumb justify-content-center">
-                    <li class="breadcrumb-item"><a href="{{ route('index') }}">{{ __('lang.home') }}</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">{{ __('lang.offers') }}</li>
-                </ol>
-            </nav>
-            <h1 class="offers-hero-title">{{ __('lang.offers') }}</h1>
-            <p class="offers-hero-subtitle">{{ __('lang.offers_subtitle') }}</p>
-        </div>
+<section class="pb-8 page-title shadow">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb pt-6 pt-lg-2 lh-15 pb-5">
+                <li class="breadcrumb-item"><a href="{{ route('index') }}">{{ __('lang.home') }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ __('lang.offers') }}</li>
+            </ol>
+            <h1 class="fs-30 lh-1 mb-0 text-heading font-weight-600">{{ __('lang.offers') }}</h1>
+        </nav>
     </div>
 </section>
 
+{{-- Subcategory Filter Slider --}}
+@if(isset($subcategoriesWithCount) && $subcategoriesWithCount->count() > 0)
+<section class="subcategory-filter-section">
+    <div class="container">
+        <div class="subcategory-filter-slider slick-slider" 
+             data-slick-options='{"slidesToShow": 6, "slidesToScroll": 2, "autoplay": false, "dots": false, "arrows": true, "infinite": false, "responsive":[{"breakpoint": 1400,"settings": {"slidesToShow": 5, "arrows": true}},{"breakpoint": 1200,"settings": {"slidesToShow": 4, "arrows": true}},{"breakpoint": 992,"settings": {"slidesToShow": 4, "arrows": true}},{"breakpoint": 768,"settings": {"slidesToShow": 3, "arrows": true}},{"breakpoint": 576,"settings": {"slidesToShow": 2, "arrows": false}}]}'>
+            
+            {{-- All Subcategories Option --}}
+            <div class="box">
+                <a href="{{ route('offers.index', request()->except('subcategory_id')) }}" 
+                   class="subcategory-filter-item all-item {{ !request('subcategory_id') ? 'active' : '' }}">
+                    <div class="subcategory-filter-icon">
+                        <i class="fas fa-th-large"></i>
+                    </div>
+                    <p class="subcategory-filter-title">{{ __('lang.all') }}</p>
+                    <span class="subcategory-filter-count">{{ $offers->total() }} {{ __('lang.offers') }}</span>
+                </a>
+            </div>
+            
+            {{-- Subcategory Items --}}
+            @foreach($subcategoriesWithCount as $subcat)
+            <div class="box">
+                <a href="{{ route('offers.index', array_merge(request()->except('subcategory_id', 'page'), ['subcategory_id' => $subcat->id])) }}" 
+                   class="subcategory-filter-item {{ request('subcategory_id') == $subcat->id ? 'active' : '' }}">
+                    <div class="subcategory-filter-icon">
+                        @if($subcat->icon)
+                        <img src="{{ url('/storage' . $subcat->icon) }}" 
+                             alt="{{ app()->getLocale() == 'ar' ? $subcat->title_arabic : $subcat->title_english }}">
+                        @else
+                        <i class="fas fa-folder"></i>
+                        @endif
+                    </div>
+                    <p class="subcategory-filter-title">{{ app()->getLocale() == 'ar' ? $subcat->title_arabic : $subcat->title_english }}</p>
+                    <span class="subcategory-filter-count">{{ $subcat->offers_count }} {{ __('lang.offers') }}</span>
+                </a>
+            </div>
+            @endforeach
+            
+        </div>
+    </div>
+</section>
+@endif
 
 <section class="pt-8 pb-11 offers-page">
     <div class="container">
+        {{-- Mobile Filter Overlay --}}
+        <div class="mobile-filter-overlay" id="mobileFilterOverlay"></div>
+        
         <div class="row">
-            <div class="col-lg-8 mb-8 mb-lg-0">
+            {{-- Main Offers Container --}}
+            <div class="offers-main-container filter-hidden mb-8 mb-lg-0" id="offersContainer">
                 <div class="row align-items-sm-center mb-6">
                     <div class="col-md-6">
                         <h2 class="fs-15 text-dark mb-0">{{ __('lang.we_found') }} <span class="text-primary">{{ $offers->total() }}</span> {{ __('lang.offers_available') }}</h2>
                     </div>
                     <div class="col-md-6 mt-6 mt-md-0">
-                        <div class="d-flex justify-content-md-end align-items-center">
+                        <div class="d-flex justify-content-md-end align-items-center flex-wrap">
+                            {{-- Filter Toggle Button --}}
+                            <button type="button" class="filter-toggle-btn mr-3" id="filterToggleBtn">
+                                <i class="fas fa-filter"></i>
+                                <span class="d-none d-sm-inline">{{ __('lang.filter') }}</span>
+                                @php
+                                    $activeFilters = 0;
+                                    if(request('keyword')) $activeFilters++;
+                                    if(request('category_id')) $activeFilters++;
+                                    if(request('subcategory_id')) $activeFilters++;
+                                    if(request('style_id')) $activeFilters++;
+                                    if(request('type_id')) $activeFilters++;
+                                    if(request('emirate_id')) $activeFilters++;
+                                    if(request('sqft_min') || request('sqft_max')) $activeFilters++;
+                                    if(request('sqm_min') || request('sqm_max')) $activeFilters++;
+                                    if(request('price_min') || request('price_max')) $activeFilters++;
+                                @endphp
+                                @if($activeFilters > 0)
+                                <span class="filter-count">{{ $activeFilters }}</span>
+                                @endif
+                            </button>
+                            
                             <div class="input-group border rounded input-group-lg w-auto bg-white mr-3">
                                 <label class="input-group-text bg-transparent border-0 text-uppercase letter-spacing-093 pr-1 pl-3"
-                                       for="sortbySelect"><i class="fas fa-align-left fs-16 pr-2"></i>{{ __('lang.sortby') }}:</label>
+                                       for="sortbySelect"><i class="fas fa-align-left fs-16 pr-2"></i><span class="d-none d-sm-inline">{{ __('lang.sortby') }}:</span></label>
                                 <select class="form-control border-0 bg-transparent shadow-none p-0 selectpicker sortby-select"
                                         data-style="bg-transparent border-0 font-weight-600 btn-lg pl-0 pr-3"
                                         id="sortbySelect" name="sortby">
@@ -388,7 +445,26 @@
                 </nav>
                 @endif
             </div>
-            @include('pages.offers.partials.filter-sidebar', ['formAction' => route('offers.index')])
+            
+            {{-- Filter Sidebar Wrapper --}}
+            <div class="filter-sidebar-wrapper hidden" id="filterSidebarWrapper">
+                {{-- Mobile Filter Header --}}
+                <div class="mobile-filter-header d-lg-none">
+                    <h4>{{ __('lang.filter') }}</h4>
+                    <button type="button" class="mobile-filter-close" id="mobileFilterClose">
+                        <i class="fal fa-times"></i>
+                    </button>
+                </div>
+                
+                @include('pages.offers.partials.new-filter-sidebar', [
+                    'formAction' => route('offers.index'),
+                    'categories' => $categories,
+                    'subcategories' => $subcategories,
+                    'types' => $types,
+                    'styles' => $styles,
+                    'emirates' => $emirates
+                ])
+            </div>
         </div>
     </div>
 </section>
@@ -397,7 +473,8 @@
 @endsection
 
 @section('css')
-{{-- offers-section.css is already included in master layout --}}
+<link rel="stylesheet" href="{{ asset('/assets/css/offers-filter.css') }}?v={{ time() }}">
+<link rel="stylesheet" href="{{ asset('/assets/css/area-slider.css') }}?v={{ time() }}">
 @endsection
 
 @section('js')
@@ -420,6 +497,60 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 $(document).ready(function() {
+    // Filter Toggle Functionality
+    var filterToggleBtn = $('#filterToggleBtn');
+    var filterSidebar = $('#filterSidebarWrapper');
+    var offersContainer = $('#offersContainer');
+    var mobileFilterOverlay = $('#mobileFilterOverlay');
+    var mobileFilterClose = $('#mobileFilterClose');
+    var body = $('body');
+    
+    // Check if we're on mobile
+    function isMobile() {
+        return window.innerWidth <= 991;
+    }
+    
+    // Toggle filter visibility
+    filterToggleBtn.on('click', function() {
+        if (isMobile()) {
+            // Mobile: slide in panel
+            filterSidebar.toggleClass('visible hidden');
+            mobileFilterOverlay.toggleClass('active');
+            body.toggleClass('filter-open');
+        } else {
+            // Desktop: toggle sidebar visibility
+            filterSidebar.toggleClass('visible hidden');
+            offersContainer.toggleClass('filter-visible filter-hidden');
+        }
+        
+        $(this).toggleClass('active');
+    });
+    
+    // Close mobile filter
+    mobileFilterClose.on('click', function() {
+        filterSidebar.removeClass('visible').addClass('hidden');
+        mobileFilterOverlay.removeClass('active');
+        body.removeClass('filter-open');
+        filterToggleBtn.removeClass('active');
+    });
+    
+    // Close on overlay click
+    mobileFilterOverlay.on('click', function() {
+        filterSidebar.removeClass('visible').addClass('hidden');
+        mobileFilterOverlay.removeClass('active');
+        body.removeClass('filter-open');
+        filterToggleBtn.removeClass('active');
+    });
+    
+    // Handle window resize
+    $(window).on('resize', function() {
+        if (!isMobile()) {
+            // Reset mobile states when switching to desktop
+            mobileFilterOverlay.removeClass('active');
+            body.removeClass('filter-open');
+        }
+    });
+    
     // View toggle functionality
     $('.view-toggle').on('click', function(e) {
         e.preventDefault();
@@ -442,6 +573,56 @@ $(document).ready(function() {
     // Set initial state
     $('#listViewBtn').addClass('opacity-2');
     
+    // Initialize SQFT Range Slider
+    var sqftMinDefault = 50;
+    var sqftMaxDefault = 15000;
+    var sqftMinVal = {{ request('sqft_min', 50) ?: 50 }};
+    var sqftMaxVal = {{ request('sqft_max', 15000) ?: 15000 }};
+    
+    $("#sqft-slider").slider({
+        range: true,
+        min: sqftMinDefault,
+        max: sqftMaxDefault,
+        values: [sqftMinVal, sqftMaxVal],
+        slide: function(event, ui) {
+            $("#sqft-range-display").text(ui.values[0] + " {{ __('lang.sqft') }} {{ __('lang.to') }} " + ui.values[1] + " {{ __('lang.sqft') }}");
+            $("#sqft_min").val(ui.values[0]);
+            $("#sqft_max").val(ui.values[1]);
+        },
+        stop: function(event, ui) {
+            // Submit form after slider stops
+            if (ui.values[0] !== sqftMinDefault || ui.values[1] !== sqftMaxDefault) {
+                $('#offerFilterForm').submit();
+            }
+        }
+    });
+    $("#sqft-range-display").text(sqftMinVal + " {{ __('lang.sqft') }} {{ __('lang.to') }} " + sqftMaxVal + " {{ __('lang.sqft') }}");
+    
+    // Initialize SQM Range Slider
+    var sqmMinDefault = 5;
+    var sqmMaxDefault = 1400;
+    var sqmMinVal = {{ request('sqm_min', 5) ?: 5 }};
+    var sqmMaxVal = {{ request('sqm_max', 1400) ?: 1400 }};
+    
+    $("#sqm-slider").slider({
+        range: true,
+        min: sqmMinDefault,
+        max: sqmMaxDefault,
+        values: [sqmMinVal, sqmMaxVal],
+        slide: function(event, ui) {
+            $("#sqm-range-display").text(ui.values[0] + " {{ __('lang.sqm') }} {{ __('lang.to') }} " + ui.values[1] + " {{ __('lang.sqm') }}");
+            $("#sqm_min").val(ui.values[0]);
+            $("#sqm_max").val(ui.values[1]);
+        },
+        stop: function(event, ui) {
+            // Submit form after slider stops
+            if (ui.values[0] !== sqmMinDefault || ui.values[1] !== sqmMaxDefault) {
+                $('#offerFilterForm').submit();
+            }
+        }
+    });
+    $("#sqm-range-display").text(sqmMinVal + " {{ __('lang.sqm') }} {{ __('lang.to') }} " + sqmMaxVal + " {{ __('lang.sqm') }}");
+    
     // Sort by change - auto submit
     $('.sortby-select').on('changed.bs.select', function(e, clickedIndex, isSelected, previousValue) {
         var sortby = $(this).val();
@@ -462,49 +643,40 @@ $(document).ready(function() {
         }
     });
     
-    // Filter dropdowns - auto submit on change
-    $('#offerFilterForm select.selectpicker').on('changed.bs.select', function() {
+    // Auto-submit for filter dropdowns
+    $('.filter-select').on('changed.bs.select', function() {
         $('#offerFilterForm').submit();
     });
     
-    // SQFT Range Slider
-    var sqftMin = {{ request('sqft_min', 50) }};
-    var sqftMax = {{ request('sqft_max', 15000) }};
-    var sqftLabel = "{{ __('lang.sqft') }}";
-    var toLabel = "{{ __('lang.to') }}";
-    
-    $("#sqft-slider").slider({
-        range: true,
-        min: 50,
-        max: 15000,
-        step: 50,
-        values: [sqftMin, sqftMax],
-        slide: function(event, ui) {
-            $("#sqft-range-display").text(ui.values[0] + " " + sqftLabel + " " + toLabel + " " + ui.values[1] + " " + sqftLabel);
-        },
-        stop: function(event, ui) {
-            $("#sqft_min").val(ui.values[0]);
-            $("#sqft_max").val(ui.values[1]);
+    // Dynamic subcategory filtering based on category selection
+    $('#category_id').on('changed.bs.select', function() {
+        var categoryId = $(this).val();
+        if (categoryId) {
+            // Filter subcategories based on selected category
+            $('#subcategory_id option').each(function() {
+                var $option = $(this);
+                var optionCategoryId = $option.data('category');
+                if (optionCategoryId && optionCategoryId != categoryId) {
+                    $option.hide();
+                } else {
+                    $option.show();
+                }
+            });
+            $('#subcategory_id').selectpicker('refresh');
+        } else {
+            // Show all subcategories
+            $('#subcategory_id option').show();
+            $('#subcategory_id').selectpicker('refresh');
         }
     });
     
-    // SQM Range Slider
-    var sqmMin = {{ request('sqm_min', 5) }};
-    var sqmMax = {{ request('sqm_max', 1400) }};
-    var sqmLabel = "{{ __('lang.sqm') }}";
-    
-    $("#sqm-slider").slider({
-        range: true,
-        min: 5,
-        max: 1400,
-        step: 5,
-        values: [sqmMin, sqmMax],
-        slide: function(event, ui) {
-            $("#sqm-range-display").text(ui.values[0] + " " + sqmLabel + " " + toLabel + " " + ui.values[1] + " " + sqmLabel);
-        },
-        stop: function(event, ui) {
-            $("#sqm_min").val(ui.values[0]);
-            $("#sqm_max").val(ui.values[1]);
+    // Close filter on escape key
+    $(document).on('keydown', function(e) {
+        if (e.key === 'Escape' && filterSidebar.hasClass('visible') && isMobile()) {
+            filterSidebar.removeClass('visible').addClass('hidden');
+            mobileFilterOverlay.removeClass('active');
+            body.removeClass('filter-open');
+            filterToggleBtn.removeClass('active');
         }
     });
 });
