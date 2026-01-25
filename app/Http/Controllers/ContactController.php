@@ -8,6 +8,7 @@ use App\Models\ContactUs;
 use App\Models\Service;
 use App\Models\PageBanner;
 use App\Models\Partner;
+use App\Models\AboutInformation;
 
 class ContactController extends Controller
 {
@@ -18,6 +19,9 @@ class ContactController extends Controller
     {
         // Get contact information
         $contactInfo = ContactInformation::getContactInfo();
+        
+        // Get about information (for company profile download)
+        $aboutInfo = AboutInformation::getAboutInfo();
         
         // Get main services for the dropdown
         $services = Service::where('deleted_at', null)
@@ -32,7 +36,7 @@ class ContactController extends Controller
         // Get branches
         $branches = Partner::getBranches();
 
-        return view('pages.contact.contact', compact('contactInfo', 'services', 'pageBanner', 'branches'));
+        return view('pages.contact.contact', compact('contactInfo', 'aboutInfo', 'services', 'pageBanner', 'branches'));
     }
 
     /**

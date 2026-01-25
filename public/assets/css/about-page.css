@@ -1058,3 +1058,83 @@
     }
 }
 
+/* ===========================================
+   Company Profile Download Button
+   =========================================== */
+.company-profile-download {
+    margin-top: 30px;
+}
+
+.btn-company-profile {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, #e1273d 0%, #c41e32 100%);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 8px 25px rgba(225, 39, 61, 0.3);
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-company-profile::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-company-profile:hover::before {
+    left: 100%;
+}
+
+.btn-company-profile:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(225, 39, 61, 0.4);
+    color: #ffffff;
+    text-decoration: none;
+    background: linear-gradient(135deg, #c41e32 0%, #a91828 100%);
+}
+
+.btn-company-profile i:first-child {
+    font-size: 20px;
+}
+
+.btn-company-profile i:last-child {
+    font-size: 14px;
+    opacity: 0.9;
+    transition: transform 0.3s ease;
+}
+
+.btn-company-profile:hover i:last-child {
+    transform: translateY(3px);
+}
+
+/* RTL Support */
+[dir="rtl"] .btn-company-profile {
+    flex-direction: row-reverse;
+}
+
+@media (max-width: 767px) {
+    .btn-company-profile {
+        padding: 14px 24px;
+        font-size: 14px;
+        gap: 10px;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .btn-company-profile i:first-child {
+        font-size: 18px;
+    }
+}

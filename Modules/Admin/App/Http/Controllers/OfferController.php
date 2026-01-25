@@ -36,6 +36,7 @@ class OfferController extends Controller
             ->select(
                 'offers.id',
                 'offers.offer_code',
+                'offers.offer_number',
                 'offers.title_english',
                 'offers.title_arabic',
                 'oc.title_english as category_name',
@@ -51,6 +52,9 @@ class OfferController extends Controller
         // Apply filters
         if ($request->filled('offer_id')) {
             $query->where('offers.id', $request->offer_id);
+        }
+        if ($request->filled('offer_number')) {
+            $query->where('offers.offer_number', 'like', '%' . $request->offer_number . '%');
         }
         if ($request->filled('offer_code')) {
             $query->where('offers.offer_code', 'like', '%' . $request->offer_code . '%');
@@ -125,6 +129,7 @@ class OfferController extends Controller
         $data = $request->validate([
             'title_english' => 'required|string|max:255',
             'title_arabic' => 'required|string|max:255',
+            'offer_number' => 'nullable|string|max:50',
             'category_id' => 'required|exists:offer_categories,id',
             'subcategory_id' => 'nullable|exists:offer_sub_categories,id',
             'currency_id' => 'nullable|exists:currencies,id',
@@ -174,11 +179,10 @@ class OfferController extends Controller
             $data['seo_tags'] = tags($request->seo_tags);
         }
 
-        $offer = Offer::create($data);
+        // Generate offer code using category, subcategory, and offer number
+        $data['offer_code'] = Offer::generateOfferCode($data['category_id'], $data['subcategory_id'] ?? null, $data['offer_number'] ?? null);
 
-        // Generate offer code after creation to use the offer ID
-        $offer->offer_code = Offer::generateOfferCode($offer->id, $offer->category_id, $offer->subcategory_id);
-        $offer->save();
+        $offer = Offer::create($data);
 
         return redirect()->route('offer.index')->with('success', 'Offer created successfully!');
     }
@@ -197,7 +201,7 @@ class OfferController extends Controller
         
         // Generate offer code if it's null (for existing offers without codes)
         if (is_null($offer->offer_code)) {
-            $offer->offer_code = Offer::generateOfferCode($offer->id, $offer->category_id, $offer->subcategory_id);
+            $offer->offer_code = Offer::generateOfferCode($offer->category_id, $offer->subcategory_id, $offer->offer_number);
             $offer->save();
         }
         
@@ -214,6 +218,7 @@ class OfferController extends Controller
         $data = $request->validate([
             'title_english' => 'required|string|max:255',
             'title_arabic' => 'required|string|max:255',
+            'offer_number' => 'nullable|string|max:50',
             'category_id' => 'required|exists:offer_categories,id',
             'subcategory_id' => 'nullable|exists:offer_sub_categories,id',
             'currency_id' => 'nullable|exists:currencies,id',
@@ -272,16 +277,17 @@ class OfferController extends Controller
             $data['seo_tags'] = tags($request->seo_tags);
         }
         
-        // Check if category or subcategory changed - need to regenerate offer code
+        // Check if category, subcategory, or offer_number changed - need to regenerate offer code
         $regenerateCode = (
             $offer->category_id != $data['category_id'] || 
             $offer->subcategory_id != ($data['subcategory_id'] ?? null) ||
+            $offer->offer_number != ($data['offer_number'] ?? null) ||
             is_null($offer->offer_code) // Also regenerate if code is null
         );
         
-        // Regenerate offer code if category/subcategory changed or if it's null
+        // Regenerate offer code if category/subcategory/offer_number changed or if it's null
         if ($regenerateCode) {
-            $data['offer_code'] = Offer::generateOfferCode($offer->id, $data['category_id'], $data['subcategory_id'] ?? null);
+            $data['offer_code'] = Offer::generateOfferCode($data['category_id'], $data['subcategory_id'] ?? null, $data['offer_number'] ?? null);
         }
 
         $offer->update($data);
@@ -385,6 +391,46 @@ class OfferController extends Controller
             ->get();
         
         return response()->json($subcategories);
+    }
+    
+    /**
+     * Live search for offers by offer number or offer code (AJAX)
+     */
+    public function liveSearch(Request $request)
+    {
+        $query = $request->get('q', '');
+        
+        if (strlen($query) < 1) {
+            return response()->json([]);
+        }
+        
+        $offers = Offer::query()
+            ->leftJoin('offer_categories as oc', 'offers.category_id', '=', 'oc.id')
+            ->select(
+                'offers.id',
+                'offers.offer_code',
+                'offers.offer_number',
+                'offers.title_english',
+                'offers.publish_status',
+                'oc.title_english as category_name'
+            )
+            ->whereNull('offers.deleted_at')
+            ->where(function($q) use ($query) {
+                $q->where('offers.offer_number', 'LIKE', '%' . $query . '%')
+                  ->orWhere('offers.offer_code', 'LIKE', '%' . $query . '%')
+                  ->orWhere('offers.title_english', 'LIKE', '%' . $query . '%');
+            })
+            ->orderByRaw("
+                CASE 
+                    WHEN offers.offer_number LIKE ? THEN 1
+                    WHEN offers.offer_code LIKE ? THEN 2
+                    ELSE 3
+                END
+            ", [$query . '%', $query . '%'])
+            ->limit(10)
+            ->get();
+        
+        return response()->json($offers);
     }
     
     /**

@@ -620,6 +620,7 @@ Route::group(
                 Route::post('/toggle-home-feature/{id}', [OfferController::class, 'toggleHomeFeature'])->name('offer.toggle-home-feature');
                 Route::post('/toggle-feasibility-studies/{id}', [OfferController::class, 'toggleFeasibilityStudies'])->name('offer.toggle-feasibility-studies');
                 Route::get('/subcategories', [OfferController::class, 'getSubcategories'])->name('offer.subcategories');
+                Route::get('/live-search', [OfferController::class, 'liveSearch'])->name('offer.live-search');
                 
                 // Offer Prices Sub-Routes (AJAX)
                 Route::prefix('{offerId}/prices')->group(function () {

@@ -60,6 +60,8 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Offer #</th>
+                                    <th>Offer Code</th>
                                     <th>Title (English)</th>
                                     <th>Title (Arabic)</th>
                                     <th>Category</th>
@@ -72,6 +74,14 @@
                                 @foreach($offers as $offer)
                                 <tr>
                                     <td>{{ $offer->id }}</td>
+                                    <td>{{ $offer->offer_number ?: 'N/A' }}</td>
+                                    <td>
+                                        @if($offer->offer_code)
+                                            <span class="badge badge-secondary">{{ $offer->offer_code }}</span>
+                                        @else
+                                            <span class="text-muted">N/A</span>
+                                        @endif
+                                    </td>
                                     <td>{{ $offer->title_english }}</td>
                                     <td>{{ $offer->title_arabic }}</td>
                                     <td>

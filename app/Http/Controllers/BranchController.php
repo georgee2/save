@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Partner;
 use App\Models\PageBanner;
+use App\Models\AboutInformation;
 
 class BranchController extends Controller
 {
@@ -18,8 +19,11 @@ class BranchController extends Controller
 
         // Get page banner for branches page
         $pageBanner = PageBanner::getByTarget('branches');
+        
+        // Get about information (for company profile download)
+        $aboutInfo = AboutInformation::getAboutInfo();
 
-        return view('pages.branches.index', compact('branches', 'pageBanner'));
+        return view('pages.branches.index', compact('branches', 'pageBanner', 'aboutInfo'));
     }
     
     /**

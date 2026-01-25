@@ -291,6 +291,43 @@
                             </div>
                         </div>
                         
+                        <!-- Company Profile Section -->
+                        <div class="form-section">
+                            <h5><i class="fa fa-file-pdf-o"></i> Company Profile</h5>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Company Profile PDF <small>(Max 15 MB)</small></label>
+                                        <input accept=".pdf,application/pdf" class="form-control dropify" type="file" name="company_profile" data-allowed-file-extensions="pdf" data-max-file-size="15M">
+                                        @if($aboutInfo->company_profile)
+                                            <div class="mt-3 p-3" style="background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
+                                                <div class="d-flex align-items-center">
+                                                    <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                                        <i class="fa fa-file-pdf-o text-white" style="font-size: 24px;"></i>
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <strong>Current Company Profile</strong>
+                                                        <br>
+                                                        <small class="text-muted">PDF Document</small>
+                                                    </div>
+                                                    <div>
+                                                        <a href="{{ asset('storage' . $aboutInfo->company_profile) }}" target="_blank" class="btn btn-sm btn-outline-primary mr-2">
+                                                            <i class="fa fa-eye"></i> View
+                                                        </a>
+                                                        <a href="{{ asset('storage' . $aboutInfo->company_profile) }}" download class="btn btn-sm btn-outline-success">
+                                                            <i class="fa fa-download"></i> Download
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        <small class="form-text text-muted">Upload your company profile in PDF format. Maximum file size: 15 MB</small>
+                                        @error('company_profile')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <hr>
                         
                         <div class="form-group text-center">
