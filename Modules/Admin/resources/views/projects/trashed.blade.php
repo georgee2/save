@@ -60,6 +60,8 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Code</th>
+                                    <th>Project #</th>
                                     <th>Title (English)</th>
                                     <th>Title (Arabic)</th>
                                     <th>Category</th>
@@ -72,6 +74,20 @@
                                 @foreach($projects as $project)
                                 <tr>
                                     <td>{{ $project->id }}</td>
+                                    <td>
+                                        @if($project->project_code)
+                                            <span class="badge" style="font-size: 11px; padding: 4px 8px; background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%); color: white;">{{ $project->project_code }}</span>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($project->project_number)
+                                            <span class="badge badge-secondary" style="font-size: 11px;">{{ $project->project_number }}</span>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
                                     <td>{{ $project->title_english }}</td>
                                     <td>{{ $project->title_arabic }}</td>
                                     <td>

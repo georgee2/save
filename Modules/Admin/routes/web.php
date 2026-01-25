@@ -293,6 +293,7 @@ Route::group(
                 Route::post('/toggle-home-feature/{id}', [ProjectController::class, 'toggleHomeFeature'])->name('project.toggle-home-feature');
                 Route::post('/toggle-feasibility-studies/{id}', [ProjectController::class, 'toggleFeasibilityStudies'])->name('project.toggle-feasibility-studies');
                 Route::get('/subcategories', [ProjectController::class, 'getSubcategories'])->name('project.subcategories');
+                Route::get('/live-search', [ProjectController::class, 'liveSearch'])->name('project.live-search');
                 
                 // Project Building Components Sub-Routes (AJAX)
                 Route::prefix('{projectId}/buildingcomponents')->group(function () {

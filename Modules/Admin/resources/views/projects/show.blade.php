@@ -370,6 +370,17 @@
                     </div>
                     @endif
                     
+                    @if($project->project_number)
+                    <div class="project-meta-item">
+                        <div class="project-meta-label">Project Number</div>
+                        <div class="project-meta-value">
+                            <span class="badge badge-secondary" style="font-size: 13px; padding: 6px 12px;">
+                                <i class="fa fa-list-ol"></i> {{ $project->project_number }}
+                            </span>
+                        </div>
+                    </div>
+                    @endif
+                    
                     <div class="project-meta-item">
                         <div class="project-meta-label">Category</div>
                         <div class="project-meta-value">
@@ -552,6 +563,19 @@
                                 </div>
                             </div>
                             @endif
+                            
+                            <div class="info-row">
+                                <div class="info-label">Project Number</div>
+                                <div class="info-value">
+                                    @if($project->project_number)
+                                        <span class="badge badge-secondary" style="font-size: 14px; padding: 8px 15px;">
+                                            <i class="fa fa-list-ol"></i> {{ $project->project_number }}
+                                        </span>
+                                    @else
+                                        <span class="text-muted">N/A</span>
+                                    @endif
+                                </div>
+                            </div>
                             
                             <div class="info-row">
                                 <div class="info-label">English Title</div>

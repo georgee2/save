@@ -99,12 +99,13 @@
     height: auto !important;
 }
 
-/* Image container - same aspect ratio for both 2 and 3 column views */
+/* Image container - complete 903x1146 image ratio */
 .offers-page .offer-card-image {
     position: relative;
     width: 100%;
-    padding-bottom: 126.9% !important; /* Portrait aspect ratio 1146/903 = 1.269 */
+    padding-bottom: 126.9%; /* 1146/903 = 1.269 - shows complete image */
     overflow: hidden;
+    height: 0;
 }
 
 .offers-page .offer-card-image img {
@@ -277,7 +278,7 @@
         max-width: 50% !important;
     }
     
-    /* Keep same image aspect ratio on tablet */
+    /* Keep complete image on tablet - 126.9% shows full 903x1146 */
     .offers-page .offer-card-image {
         padding-bottom: 126.9% !important;
     }
@@ -301,6 +302,11 @@
 }
 
 @media (max-width: 767px) {
+    /* Keep complete image on mobile - 126.9% shows full 903x1146 */
+    .offers-page .offer-card-image {
+        padding-bottom: 126.9% !important;
+    }
+    
     /* Offers page container padding for mobile */
     .offers-page .container {
         padding-left: 15px;
@@ -316,6 +322,49 @@
     .offers-main-container #gridView .col-md-6 {
         padding-left: 8px;
         padding-right: 8px;
+    }
+    
+    /* Smaller card elements on mobile */
+    .offers-page .offer-card-body {
+        padding: 12px !important;
+    }
+    
+    .offers-page .offer-card .card-footer {
+        padding: 10px 12px !important;
+    }
+    
+    .offers-page .offer-title {
+        font-size: 14px;
+        min-height: 36px;
+    }
+    
+    .offers-page .offer-price-tag {
+        padding: 6px 10px;
+        top: 10px;
+        right: 10px;
+    }
+    
+    .offers-page .offer-price-tag .price-value {
+        font-size: 14px;
+    }
+    
+    .offers-page .offer-price-tag .price-label,
+    .offers-page .offer-price-tag .price-emirate {
+        font-size: 8px;
+    }
+    
+    .offers-page .offer-code-badge {
+        padding: 5px 10px;
+    }
+    
+    .offers-page .offer-code-badge .code-value {
+        font-size: 10px;
+    }
+    
+    .offers-page .offer-code-badge .code-action-btn {
+        width: 22px;
+        height: 22px;
+        font-size: 9px;
     }
 }
 
@@ -337,15 +386,71 @@
         max-width: 100vw;
     }
     
-    /* On mobile single column, use landscape aspect ratio */
+    /* Keep complete image on small mobile - 126.9% shows full 903x1146 */
     .offers-page .offer-card-image {
-        padding-bottom: 80% !important;
+        padding-bottom: 126.9% !important;
     }
     
     /* Offers page container padding for small mobile */
     .offers-page .container {
         padding-left: 12px;
         padding-right: 12px;
+    }
+    
+    /* Smaller elements on small mobile */
+    .offers-page .offer-card-body {
+        padding: 10px !important;
+    }
+    
+    .offers-page .offer-card .card-footer {
+        padding: 8px 10px !important;
+    }
+    
+    .offers-page .offer-title {
+        font-size: 13px;
+        min-height: 32px;
+    }
+    
+    .offers-page .offer-category a {
+        font-size: 10px !important;
+    }
+    
+    .offers-page .offer-price-tag {
+        padding: 5px 8px;
+        top: 8px;
+        right: 8px;
+    }
+    
+    .offers-page .offer-price-tag .price-value {
+        font-size: 12px;
+    }
+    
+    .offers-page .offer-code-badge {
+        padding: 4px 8px;
+    }
+    
+    .offers-page .offer-code-badge .code-value {
+        font-size: 9px;
+    }
+    
+    .offers-page .offer-code-badge .code-action-btn {
+        width: 20px;
+        height: 20px;
+        font-size: 8px;
+    }
+    
+    .offers-page .offer-card .card-footer .fs-17 {
+        font-size: 12px !important;
+    }
+    
+    .offers-page .offer-card .card-footer .btn-sm {
+        font-size: 10px;
+        padding: 4px 8px !important;
+    }
+    
+    /* Hide specs on very small screens to save space */
+    .offers-page .offer-specs {
+        display: none;
     }
 }
 
