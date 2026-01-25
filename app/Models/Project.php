@@ -136,6 +136,8 @@ class Project extends Model
             ->leftJoin('project_types as pt', 'p.type_id', '=', 'pt.id')
             ->select(
                 'p.id',
+                'p.project_code',
+                'p.project_number',
                 'p.title_english',
                 'p.title_arabic',
                 'ec.title_english as category_name',
@@ -159,6 +161,8 @@ class Project extends Model
             ->leftJoin('project_types as pt', 'p.type_id', '=', 'pt.id')
             ->select(
                 'p.id',
+                'p.project_code',
+                'p.project_number',
                 'p.title_english',
                 'p.title_arabic',
                 'ec.title_english as category_name',
@@ -206,25 +210,18 @@ class Project extends Model
     }
     
     /**
-     * Generate project code: TYPE + CATEGORY + SUBCATEGORY + ID
+     * Generate project code: CATEGORY_ABBR + SUBCATEGORY_ABBR + PROJECT_NUMBER
+     * Format: CAT-SUBCAT-PROJNUM (e.g., VIL-LUX-001)
      */
-    public static function generateProjectCode($projectId, $typeId, $categoryId, $subcategoryId)
+    public static function generateProjectCode($categoryId, $subcategoryId, $projectNumber)
     {
-        $code = '';
-        
-        // Get type abbreviation (first 3 characters uppercase)
-        if ($typeId) {
-            $type = ProjectType::find($typeId);
-            if ($type) {
-                $code .= strtoupper(substr(preg_replace('/[^a-zA-Z]/', '', $type->name_english), 0, 3));
-            }
-        }
+        $parts = [];
         
         // Get category abbreviation (first 3 characters uppercase)
         if ($categoryId) {
             $category = EngineeringCategory::find($categoryId);
             if ($category) {
-                $code .= '-' . strtoupper(substr(preg_replace('/[^a-zA-Z]/', '', $category->title_english), 0, 3));
+                $parts[] = strtoupper(substr(preg_replace('/[^a-zA-Z]/', '', $category->title_english), 0, 3));
             }
         }
         
@@ -232,14 +229,17 @@ class Project extends Model
         if ($subcategoryId) {
             $subcategory = EngineeringSubCategory::find($subcategoryId);
             if ($subcategory) {
-                $code .= '-' . strtoupper(substr(preg_replace('/[^a-zA-Z]/', '', $subcategory->title_english), 0, 3));
+                $parts[] = strtoupper(substr(preg_replace('/[^a-zA-Z]/', '', $subcategory->title_english), 0, 3));
             }
         }
         
-        // Add project ID padded to 4 digits
-        $code .= '-' . str_pad($projectId, 4, '0', STR_PAD_LEFT);
+        // Add project number if provided
+        if ($projectNumber) {
+            $parts[] = $projectNumber;
+        }
         
-        return $code;
+        // Join parts with dash
+        return implode('-', $parts);
     }
 }
 

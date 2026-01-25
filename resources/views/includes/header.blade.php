@@ -170,7 +170,7 @@
                 </li>
             
                 <!-- News Nav with Categories -->
-                <li id="navbar-item-news" aria-haspopup="true" aria-expanded="false"
+                <li hidden id="navbar-item-news" aria-haspopup="true" aria-expanded="false"
         class="nav-item dropdown py-2 py-lg-5 px-0 px-lg-4">
                   <a class="nav-link dropdown-toggle p-0"
            href="{{ route('blogs.index') }}" data-toggle="dropdown">
@@ -251,7 +251,7 @@
 
                 <!-- Careers Nav (No Child) - Only show if there are active jobs -->
                 @if(isset($hasActiveJobs) && $hasActiveJobs)
-                <li id="navbar-item-careers" aria-haspopup="false" aria-expanded="false"
+                <li hidden id="navbar-item-careers" aria-haspopup="false" aria-expanded="false"
         class="nav-item py-2 py-lg-5 px-0 px-lg-4">
                   <a class="nav-link p-0" href="{{ route('careers.index') }}">
                     {{ __('lang.careers') }}

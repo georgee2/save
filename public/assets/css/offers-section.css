@@ -864,65 +864,169 @@
 }
 
 @media (max-width: 992px) {
-    .offer-card-image {
-        padding-bottom: 100%; /* Switch to square on tablets */
+    /* Keep full portrait image ratio on tablet */
+    .offers-section .offer-card-image {
+        padding-bottom: 126.9%; /* Keep complete image */
+    }
+    
+    .offers-section .offer-card {
+        height: auto;
+    }
+    
+    .offers-section .container-xxl {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    
+    .offers-slider .box {
+        padding: 10px 8px !important;
     }
 }
 
 @media (max-width: 768px) {
-    .offer-card-image {
-        padding-bottom: 80%; /* Landscape on mobile */
+    /* Keep full portrait image ratio on mobile */
+    .offers-section .offer-card-image {
+        padding-bottom: 126.9%; /* Show complete 903x1146 image */
+    }
+    
+    .offers-section .container-xxl {
+        padding-left: 15px;
+        padding-right: 15px;
     }
     
     .offer-price-tag {
-        padding: 10px 14px;
-        bottom: 15px;
-        left: 15px;
+        padding: 6px 10px;
+        top: 10px;
+        right: 10px;
     }
     
     .offer-price-tag .price-value {
-        font-size: 18px;
+        font-size: 14px;
+    }
+    
+    .offer-price-tag .price-label {
+        font-size: 8px;
+    }
+    
+    .offer-price-tag .price-emirate {
+        font-size: 8px;
     }
     
     .offer-badges {
-        top: 15px;
-        right: 15px;
+        top: 10px;
+        right: 10px;
         left: auto;
     }
     
     .badge-offer {
-        padding: 6px 12px;
-        font-size: 10px;
+        padding: 5px 10px;
+        font-size: 9px;
     }
     
     .offer-title {
-        font-size: 16px;
-        min-height: 46px;
+        font-size: 14px;
+        min-height: 38px;
     }
     
     .offer-card-body {
-        padding: 16px !important;
+        padding: 12px !important;
     }
     
     .offer-card .card-footer {
-        padding: 12px 16px !important;
+        padding: 10px 12px !important;
+    }
+    
+    /* Offer code badge on mobile */
+    .offer-code-badge {
+        padding: 5px 10px;
+    }
+    
+    .offer-code-badge .code-value {
+        font-size: 10px;
+        letter-spacing: 0.5px;
+    }
+    
+    .offer-code-badge .code-action-btn {
+        width: 22px;
+        height: 22px;
+        font-size: 9px;
+    }
+    
+    .offer-code-badge .code-actions {
+        gap: 3px;
+    }
+    
+    .offers-slider .box {
+        padding: 8px 5px !important;
     }
 }
 
 @media (max-width: 576px) {
-    .offer-card-image {
-        padding-bottom: 75%; /* More landscape on small mobile */
+    /* Keep full portrait image ratio on small mobile */
+    .offers-section .offer-card-image {
+        padding-bottom: 126.9%; /* Show complete 903x1146 image */
+    }
+    
+    .offers-section .container-xxl {
+        padding-left: 10px;
+        padding-right: 10px;
     }
     
     .offer-media-count {
-        bottom: 12px;
-        right: 12px;
-        gap: 10px;
+        bottom: 8px;
+        right: 8px;
+        gap: 6px;
     }
     
     .offer-media-count .media-item {
+        font-size: 10px;
+        padding: 3px 5px;
+    }
+    
+    .offer-price-tag {
+        padding: 5px 8px;
+        top: 8px;
+        right: 8px;
+    }
+    
+    .offer-price-tag .price-value {
         font-size: 12px;
-        padding: 4px 8px;
+    }
+    
+    .offer-title {
+        font-size: 13px;
+        min-height: 34px;
+    }
+    
+    .offer-card-body {
+        padding: 10px !important;
+    }
+    
+    .offer-card .card-footer {
+        padding: 8px 10px !important;
+    }
+    
+    .offer-card .card-footer .fs-17 {
+        font-size: 13px !important;
+    }
+    
+    .offer-card .card-footer .btn-sm {
+        font-size: 10px;
+        padding: 4px 8px !important;
+    }
+    
+    .offers-slider .box {
+        padding: 5px 3px !important;
+    }
+    
+    /* Category text */
+    .offer-category a {
+        font-size: 10px !important;
+    }
+    
+    /* Specifications - hide on small mobile to save space */
+    .offers-section .offer-specs {
+        display: none;
     }
 }
 

@@ -61,6 +61,12 @@
                                 <input class="form-control" value="{{old('title_arabic')}}" type="text" name="title_arabic" required>
                                 @error('title_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
+                            <div class="form-group col-md-6">
+                                <label class="text-capitalize">Project Number</label>
+                                <input class="form-control" value="{{old('project_number')}}" type="text" name="project_number" placeholder="e.g., 001, 2024-001">
+                                <small class="form-text text-muted">Enter project number. Project Code will be auto-generated as: <strong>CATEGORY-SUBCATEGORY-NUMBER</strong></small>
+                                @error('project_number')<span class="text-danger mt-1">{{ $message }}</span>@enderror
+                            </div>
                         </div>
 
                         <!-- Classifications -->

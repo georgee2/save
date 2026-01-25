@@ -40,6 +40,7 @@ class ProjectController extends Controller
             ->select(
                 'projects.id',
                 'projects.project_code',
+                'projects.project_number',
                 'projects.title_english',
                 'projects.title_arabic',
                 'projects.publish_status',
@@ -76,6 +77,10 @@ class ProjectController extends Controller
         
         if ($request->filled('project_code')) {
             $query->where('projects.project_code', 'LIKE', '%' . $request->project_code . '%');
+        }
+        
+        if ($request->filled('project_number')) {
+            $query->where('projects.project_number', 'LIKE', '%' . $request->project_number . '%');
         }
         
         if ($request->filled('project_id')) {
@@ -140,6 +145,7 @@ class ProjectController extends Controller
         $data = $request->validate([
             'title_english' => 'required|string|max:255',
             'title_arabic' => 'required|string|max:255',
+            'project_number' => 'nullable|string|max:100',
             'category_id' => 'required|exists:engineering_categories,id',
             'subcategory_id' => 'nullable|exists:engineering_sub_categories,id',
             'currency_id' => 'nullable|exists:currencies,id',
@@ -209,17 +215,17 @@ class ProjectController extends Controller
             $data['seo_tags'] = tags($request->seo_tags);
         }
 
+        // Auto-generate project code: CATEGORY_ABBR + SUBCATEGORY_ABBR + PROJECT_NUMBER
+        if (!empty($data['category_id']) || !empty($data['subcategory_id']) || !empty($data['project_number'])) {
+            $data['project_code'] = Project::generateProjectCode(
+                $data['category_id'],
+                $data['subcategory_id'] ?? null,
+                $data['project_number'] ?? null
+            );
+        }
+
         // Create project
         $project = Project::create($data);
-        
-        // Auto-generate project code: TYPE + CATEGORY + SUBCATEGORY + ID
-        $projectCode = Project::generateProjectCode(
-            $project->id,
-            $project->type_id,
-            $project->category_id,
-            $project->subcategory_id
-        );
-        $project->update(['project_code' => $projectCode]);
 
         return redirect()->route('project.index')->with('success', 'Project created successfully!');
     }
@@ -251,6 +257,7 @@ class ProjectController extends Controller
         $data = $request->validate([
             'title_english' => 'required|string|max:255',
             'title_arabic' => 'required|string|max:255',
+            'project_number' => 'nullable|string|max:100',
             'category_id' => 'required|exists:engineering_categories,id',
             'subcategory_id' => 'nullable|exists:engineering_sub_categories,id',
             'currency_id' => 'nullable|exists:currencies,id',
@@ -282,13 +289,13 @@ class ProjectController extends Controller
             'publish_status' => 'required|in:0,1',
         ]);
         
-        // Check if type, category, or subcategory changed - need to regenerate project code
+        // Check if category, subcategory, or project_number changed - need to regenerate project code
         // Also generate if project_code doesn't exist yet (for existing projects)
         $regenerateCode = (
             empty($project->project_code) ||
-            $project->type_id != $data['type_id'] || 
             $project->category_id != $data['category_id'] || 
-            $project->subcategory_id != ($data['subcategory_id'] ?? null)
+            $project->subcategory_id != ($data['subcategory_id'] ?? null) ||
+            $project->project_number != ($data['project_number'] ?? null)
         );
 
         // Auto-generate slug from English title
@@ -347,13 +354,12 @@ class ProjectController extends Controller
             $data['seo_tags'] = tags($request->seo_tags);
         }
         
-        // Regenerate project code if type/category/subcategory changed
+        // Regenerate project code if category/subcategory/project_number changed
         if ($regenerateCode) {
             $data['project_code'] = Project::generateProjectCode(
-                $project->id,
-                $data['type_id'],
                 $data['category_id'],
-                $data['subcategory_id'] ?? null
+                $data['subcategory_id'] ?? null,
+                $data['project_number'] ?? null
             );
         }
 
@@ -458,6 +464,46 @@ class ProjectController extends Controller
             ->get();
         
         return response()->json($subcategories);
+    }
+    
+    /**
+     * Live search projects by project_number or project_code (AJAX)
+     */
+    public function liveSearch(Request $request)
+    {
+        $query = $request->get('q', '');
+        
+        if (strlen($query) < 1) {
+            return response()->json([]);
+        }
+        
+        $projects = Project::query()
+            ->leftJoin('engineering_categories as ec', 'projects.category_id', '=', 'ec.id')
+            ->select(
+                'projects.id',
+                'projects.project_code',
+                'projects.project_number',
+                'projects.title_english',
+                'projects.publish_status',
+                'ec.title_english as category_name'
+            )
+            ->whereNull('projects.deleted_at')
+            ->where(function($q) use ($query) {
+                $q->where('projects.project_number', 'LIKE', '%' . $query . '%')
+                  ->orWhere('projects.project_code', 'LIKE', '%' . $query . '%')
+                  ->orWhere('projects.title_english', 'LIKE', '%' . $query . '%');
+            })
+            ->orderByRaw("
+                CASE 
+                    WHEN projects.project_number LIKE ? THEN 1
+                    WHEN projects.project_code LIKE ? THEN 2
+                    ELSE 3
+                END
+            ", [$query . '%', $query . '%'])
+            ->limit(10)
+            ->get();
+        
+        return response()->json($projects);
     }
     
     /**
