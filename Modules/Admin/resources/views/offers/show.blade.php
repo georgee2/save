@@ -335,6 +335,15 @@
                     <h4 class="offer-title">{{ $offer->title_english }}</h4>
                     <p class="text-muted mb-3">{{ $offer->title_arabic }}</p>
                     
+                    @if($offer->offer_number)
+                    <div class="offer-meta-item">
+                        <div class="offer-meta-label">Offer Number</div>
+                        <div class="offer-meta-value">
+                            <span class="badge badge-info">{{ $offer->offer_number }}</span>
+                        </div>
+                    </div>
+                    @endif
+                    
                     @if($offer->offer_code)
                     <div class="offer-meta-item">
                         <div class="offer-meta-label">Offer Code</div>
@@ -514,6 +523,17 @@
                             <div class="info-row">
                                 <div class="info-label">ID</div>
                                 <div class="info-value"><strong>#{{ $offer->id }}</strong></div>
+                            </div>
+                            
+                            <div class="info-row">
+                                <div class="info-label">Offer Number</div>
+                                <div class="info-value">
+                                    @if($offer->offer_number)
+                                        <span class="badge badge-info">{{ $offer->offer_number }}</span>
+                                    @else
+                                        <span class="text-muted">N/A</span>
+                                    @endif
+                                </div>
                             </div>
                             
                             <div class="info-row">

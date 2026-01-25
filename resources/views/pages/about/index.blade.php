@@ -63,6 +63,18 @@
                     <div class="about-text">
                         {!! nl2br(e(app()->getLocale() == 'ar' ? $aboutInfo->about_arabic : $aboutInfo->about_english)) !!}
                     </div>
+                    @if($aboutInfo->company_profile)
+                    <div class="company-profile-download mt-4">
+                        <a href="{{ asset('storage' . $aboutInfo->company_profile) }}" 
+                           class="btn btn-company-profile" 
+                           target="_blank" 
+                           download>
+                            <i class="fas fa-file-pdf"></i>
+                            <span>{{ __('lang.download_company_profile') }}</span>
+                            <i class="fas fa-download"></i>
+                        </a>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>

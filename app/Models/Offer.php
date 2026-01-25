@@ -107,6 +107,7 @@ class Offer extends Model
             ->select(
                 'o.id',
                 'o.offer_code',
+                'o.offer_number',
                 'o.title_english',
                 'o.title_arabic',
                 'oc.title_english as category_name',
@@ -131,6 +132,7 @@ class Offer extends Model
             ->select(
                 'o.id',
                 'o.offer_code',
+                'o.offer_number',
                 'o.title_english',
                 'o.title_arabic',
                 'oc.title_english as category_name',
@@ -143,23 +145,40 @@ class Offer extends Model
     }
     
     /**
-     * Generate a unique offer code based on category, subcategory, and ID.
-     * Format: SKU-CATEGORY-SUBCATEGORY-ID (e.g., SKU-VIL-LUX-0001)
+     * Generate a unique offer code based on category abbreviation, subcategory abbreviation, and offer number.
+     * Format: CATEGORY-SUBCATEGORY-NUMBER (e.g., VIL-LUX-001)
      *
-     * @param int $offerId
      * @param int $categoryId
      * @param int|null $subcategoryId
+     * @param string|null $offerNumber
      * @return string
      */
-    public static function generateOfferCode(int $offerId, int $categoryId, ?int $subcategoryId = null): string
+    public static function generateOfferCode($categoryId, $subcategoryId = null, $offerNumber = null)
     {
-        $category = OfferCategory::find($categoryId);
-        $subcategory = $subcategoryId ? OfferSubCategory::find($subcategoryId) : null;
+        $codeParts = [];
 
-        $categoryCode = Str::upper(Str::substr($category->title_english ?? 'UNK', 0, 3));
-        $subcategoryCode = $subcategory ? Str::upper(Str::substr($subcategory->title_english ?? 'UNK', 0, 3)) : 'NUL';
+        // Get category abbreviation (first 3 characters uppercase)
+        if ($categoryId) {
+            $category = OfferCategory::find($categoryId);
+            if ($category) {
+                $codeParts[] = strtoupper(substr(preg_replace('/[^a-zA-Z]/', '', $category->title_english), 0, 3));
+            }
+        }
 
-        return "SKU-{$categoryCode}-{$subcategoryCode}-" . str_pad($offerId, 4, '0', STR_PAD_LEFT);
+        // Get subcategory abbreviation (first 3 characters uppercase)
+        if ($subcategoryId) {
+            $subcategory = OfferSubCategory::find($subcategoryId);
+            if ($subcategory) {
+                $codeParts[] = strtoupper(substr(preg_replace('/[^a-zA-Z]/', '', $subcategory->title_english), 0, 3));
+            }
+        }
+
+        // Add offer number if available
+        if ($offerNumber) {
+            $codeParts[] = $offerNumber;
+        }
+
+        return implode('-', $codeParts);
     }
     
     /**

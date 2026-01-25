@@ -247,6 +247,9 @@ return [
     'ready_to_start' => 'Ready to Start Your Project?',
     'cta_description' => 'Let us help you bring your vision to life with our expert engineering solutions.',
     'contact_us' => 'Contact Us',
+    'download_company_profile' => 'Download Company Profile',
+    'company_profile' => 'Company Profile',
+    'company_profile_description' => 'Download our company profile to learn more about our services, projects, and expertise.',
 
     // News/Blogs Page
     'news' => 'News',

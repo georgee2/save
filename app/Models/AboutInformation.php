@@ -39,6 +39,7 @@ class AboutInformation extends Model
                 'values_arabic' => null,
                 'values_image' => null,
                 'page_cover_image' => null,
+                'company_profile' => null,
             ]);
         }
         

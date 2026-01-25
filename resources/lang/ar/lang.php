@@ -247,6 +247,9 @@ return [
     'ready_to_start' => 'هل أنت مستعد لبدء مشروعك؟',
     'cta_description' => 'دعنا نساعدك في تحقيق رؤيتك من خلال حلولنا الهندسية المتخصصة.',
     'contact_us' => 'تواصل معنا',
+    'download_company_profile' => 'تحميل ملف الشركة',
+    'company_profile' => 'ملف الشركة',
+    'company_profile_description' => 'قم بتحميل ملف الشركة لمعرفة المزيد عن خدماتنا ومشاريعنا وخبراتنا.',
 
     // News/Blogs Page
     'news' => 'الأخبار',

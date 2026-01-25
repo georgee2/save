@@ -60,10 +60,11 @@ class AboutInformationController extends Controller
             'values_arabic' => 'nullable|string|max:2000',
             'values_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'page_cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'company_profile' => 'nullable|file|mimes:pdf|max:15360',
         ]);
         
         $aboutInfo = AboutInformation::getAboutInfo();
-        $data = $request->except(['about_image', 'mission_image', 'vision_image', 'values_image', 'page_cover_image']);
+        $data = $request->except(['about_image', 'mission_image', 'vision_image', 'values_image', 'page_cover_image', 'company_profile']);
         
         // Handle About Image (850x795)
         if ($request->hasFile('about_image')) {
@@ -106,6 +107,15 @@ class AboutInformationController extends Controller
             $data['page_cover_image'] = $this->handleImageUpload($request->file('page_cover_image'), 1920, 450, 'cover');
         }
         
+        // Handle Company Profile PDF (Max 15MB)
+        if ($request->hasFile('company_profile')) {
+            // Delete old file
+            if ($aboutInfo->company_profile && Storage::exists('public' . $aboutInfo->company_profile)) {
+                Storage::delete('public' . $aboutInfo->company_profile);
+            }
+            $data['company_profile'] = $this->handlePdfUpload($request->file('company_profile'), 'company-profile');
+        }
+        
         AboutInformation::updateAboutInfo($data);
         
         return redirect()->route('about-information.index')->with('success', 'About Information updated successfully!');
@@ -129,6 +139,20 @@ class AboutInformationController extends Controller
         
         // Save image using Storage::disk('public')
         Storage::disk('public')->put('/uploads/about/' . $folder . '/' . $filename, (string) $image);
+        
+        return '/uploads/about/' . $folder . '/' . $filename;
+    }
+    
+    /**
+     * Handle PDF file upload
+     */
+    private function handlePdfUpload($file, $folder)
+    {
+        // Generate unique filename
+        $filename = time() . '_' . uniqid() . '.pdf';
+        
+        // Store the PDF file using Storage::disk('public')
+        Storage::disk('public')->put('/uploads/about/' . $folder . '/' . $filename, file_get_contents($file->getRealPath()));
         
         return '/uploads/about/' . $folder . '/' . $filename;
     }
