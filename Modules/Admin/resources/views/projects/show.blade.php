@@ -2264,7 +2264,9 @@
                 imagesInputName: 'images',
                 preloadedInputName: 'preloaded',
                 maxSize: 5 * 1024 * 1024, // 5MB
-                maxFiles: 30
+                maxFiles: 30,
+                extensions: ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp'],
+                mimes: ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml', 'image/webp']
             });
             
             // Update gallery count
@@ -2278,7 +2280,9 @@
                 imagesInputName: 'images',
                 preloadedInputName: 'preloaded',
                 maxSize: 5 * 1024 * 1024,
-                maxFiles: 30
+                maxFiles: 30,
+                extensions: ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp'],
+                mimes: ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml', 'image/webp']
             });
         });
     
