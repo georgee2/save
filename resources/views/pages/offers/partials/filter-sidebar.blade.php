@@ -79,10 +79,10 @@
                     
                     {{-- Emirate --}}
                     <div class="form-group">
-                        <label for="emirate_id" class="sr-only">{{ __('lang.emirate') }}</label>
-                        <select class="form-control border-0 shadow-none form-control-lg selectpicker"
+                        <label for="filter_emirate_id" class="sr-only">{{ __('lang.emirate') }}</label>
+                        <select class="form-control border-0 shadow-none form-control-lg selectpicker filter-emirate-select"
                                 title="{{ __('lang.all_emirates') }}" data-style="btn-lg py-2 h-52" 
-                                id="emirate_id" name="emirate_id">
+                                id="filter_emirate_id" name="emirate_id">
                             <option value="">{{ __('lang.all_emirates') }}</option>
                             @foreach($emirates as $emirate)
                             <option value="{{ $emirate->id }}" {{ request('emirate_id') == $emirate->id ? 'selected' : '' }}>

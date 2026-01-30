@@ -276,6 +276,20 @@
             </li>
 
 
+            <li style="color:#e8e8e8" class="menu-title">Settings</li>
+
+            <li class="has_sub">
+                <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-bars"></i><span> Menu Management <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                <ul class="list-unstyled">
+                    <li><a href="{{route('admin.menu.index')}}">Menus List</a></li>
+                    <li><a href="{{route('admin.menu.create')}}">Add New Menu</a></li>
+                    <li><a href="{{route('admin.menu.settings')}}">Menu Settings</a></li>
+                    <li><a href="{{route('admin.menu.trashed')}}">Trashed Menus</a></li>
+                    <li><a href="{{route('admin.menu.guide')}}"><i class="fa fa-book text-info"></i> User Guide</a></li>
+                </ul>
+            </li>
+
+
                         </ul>
                     </div>
                     <div class="clearfix"></div>

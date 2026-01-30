@@ -86,58 +86,119 @@
 }
 
 /* ===================================================
-   Emirate Price List Styles
+   Emirates Selector Grid Styles (3 per row)
    =================================================== */
-.emirate-price-item {
+.emirates-selector {
+    padding-top: 10px;
+}
+
+.emirates-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.emirate-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 10px;
+    background: #f8f9fa;
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
-    background: #f8f9fa;
-    border: 2px solid transparent !important;
+    border: 2px solid transparent;
+    text-align: center;
 }
 
-.emirate-price-item:hover {
+.emirate-item:hover {
     background: #fff;
-    border-color: rgba(25, 134, 139, 0.3) !important;
-    transform: translateX(5px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    border-color: rgba(25, 134, 139, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
 }
 
-.emirate-price-item.active-emirate {
-    background: linear-gradient(135deg, rgba(25, 134, 139, 0.1) 0%, rgba(25, 134, 139, 0.05) 100%);
-    border-color: #19868b !important;
-    box-shadow: 0 4px 15px rgba(25, 134, 139, 0.15);
+.emirate-item.active-emirate {
+    background: linear-gradient(135deg, rgba(25, 134, 139, 0.15) 0%, rgba(25, 134, 139, 0.05) 100%);
+    border-color: #19868b;
+    box-shadow: 0 4px 15px rgba(25, 134, 139, 0.2);
 }
 
-.emirate-price-item .emirate-name {
-    font-size: 14px;
-    color: #333;
-    font-weight: 500;
-}
-
-.emirate-price-item .emirate-price {
-    color: #19868b;
-    font-size: 15px;
-}
-
-.emirate-price-item.active-emirate .emirate-price {
-    color: #0d6b6f;
-}
-
-.emirate-price-item .emirate-icon-placeholder {
-    width: 24px;
-    height: 24px;
-    display: inline-flex;
+.emirate-item .emirate-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    display: flex;
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
-    color: #fff;
     border-radius: 50%;
-    font-size: 10px;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.emirate-item .emirate-icon-wrapper img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+}
+
+.emirate-item .emirate-icon-wrapper i {
+    color: #fff;
+    font-size: 16px;
+}
+
+.emirate-item:hover .emirate-icon-wrapper {
+    transform: scale(1.1);
+}
+
+.emirate-item.active-emirate .emirate-icon-wrapper {
+    background: linear-gradient(135deg, #0d6b6f 0%, #095456 100%);
+    box-shadow: 0 4px 12px rgba(25, 134, 139, 0.4);
+}
+
+.emirate-item .emirate-name {
+    font-size: 12px;
+    color: #333;
+    font-weight: 600;
+    line-height: 1.3;
+    word-break: break-word;
+}
+
+.emirate-item.active-emirate .emirate-name {
+    color: #19868b;
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 400px) {
+    .emirates-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .emirate-item {
+        padding: 12px 8px;
+    }
+    
+    .emirate-item .emirate-icon-wrapper {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .emirate-item .emirate-icon-wrapper img {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .emirate-item .emirate-name {
+        font-size: 11px;
+    }
 }
 
 /* RTL Support for emirate items */
-[dir="rtl"] .emirate-price-item:hover {
-    transform: translateX(-5px);
+[dir="rtl"] .emirate-item:hover {
+    transform: translateY(-3px);
 }
 
 [dir="rtl"] .offer-price-tag .price-emirate::before {

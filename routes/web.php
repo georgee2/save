@@ -18,6 +18,8 @@ use App\Http\Controllers\OffersController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\PartnerPageController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\InteriorGalleryController;
+use App\Http\Controllers\GlobalSearchController;
 
 
 
@@ -33,6 +35,17 @@ use App\Http\Controllers\SitemapController;
 */
 
 Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']] , function(){
+
+	// Global Search Routes
+	Route::prefix('search')->name('search.')->group(function () {
+		Route::get('/', [GlobalSearchController::class, 'search'])->name('index');
+		Route::get('/live', [GlobalSearchController::class, 'liveSearch'])->name('live');
+		Route::get('/emirates', [GlobalSearchController::class, 'getEmirates'])->name('emirates');
+		Route::get('/categories', [GlobalSearchController::class, 'getCategories'])->name('categories');
+		Route::get('/subcategories', [GlobalSearchController::class, 'getSubcategories'])->name('subcategories');
+		Route::get('/types', [GlobalSearchController::class, 'getTypes'])->name('types');
+		Route::get('/styles', [GlobalSearchController::class, 'getStyles'])->name('styles');
+	});
 
 
 	Route::get('/login', [LoginController::class, 'login'])->name('login');
@@ -124,6 +137,13 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 		Route::get('/', [CareerController::class, 'index'])->name('index');
 		Route::get('/{id}', [CareerController::class, 'show'])->name('show');
 		Route::post('/{id}/apply', [CareerController::class, 'apply'])->name('apply');
+	});
+
+	// Interior Design Gallery Routes
+	Route::prefix('interior-design')->name('interior.')->group(function () {
+		Route::get('/', [InteriorGalleryController::class, 'index'])->name('index');
+		Route::get('/category/{slug}', [InteriorGalleryController::class, 'category'])->name('category');
+		Route::get('/{slug}', [InteriorGalleryController::class, 'show'])->name('show');
 	});
 
 });

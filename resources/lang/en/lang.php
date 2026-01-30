@@ -100,6 +100,15 @@ return [
     'all_subcategories' => 'All Subcategories',
     'all_styles' => 'All Styles',
     'area_size' => 'Area Size',
+    'advanced_search' => 'Advanced Search',
+    'view_all_results' => 'View all results',
+    'search_in' => 'Search in',
+    'no_results_found' => 'No results found',
+    'project_code' => 'Project Code',
+    'offer' => 'Offer',
+    'project' => 'Project',
+    'search_placeholder' => 'Search offers and projects...',
+    'select_type' => 'Select Type',
     
     // Project Details Page
     'share' => 'Share',
@@ -184,6 +193,17 @@ return [
     'view_all_gallery' => 'View All Gallery',
     'design_style' => 'Design Style',
     'related_project' => 'Related Project',
+    'interior_design_seo_desc' => 'Explore our stunning collection of interior design projects showcasing elegance, creativity, and modern aesthetics.',
+    'find_your_design' => 'Find Your Design',
+    'designs_available' => 'designs available',
+    'designs' => 'designs',
+    'no_designs_found' => 'No designs found',
+    'title_a_z' => 'Title A-Z',
+    'title_z_a' => 'Title Z-A',
+    'all_interior_designs' => 'All Interior Designs',
+    'browse_by_category' => 'Browse by Category',
+    'interior_category' => 'Interior Category',
+    'view_category' => 'View Category',
     
     // Services Section
     'what_we_do' => 'What We Do',

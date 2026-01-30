@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('menu_settings', function (Blueprint $table) {
+            $table->id();
+            $table->string('key', 100)->unique();
+            $table->text('value')->nullable();
+            $table->string('type', 50)->default('string'); // string, boolean, integer, json, array
+            $table->string('group', 100)->default('general'); // For grouping settings
+            $table->string('label_english', 200)->nullable();
+            $table->string('label_arabic', 200)->nullable();
+            $table->text('description_english')->nullable();
+            $table->text('description_arabic')->nullable();
+            $table->boolean('is_system')->default(false); // System settings cannot be deleted
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('menu_settings');
+    }
+};

@@ -11,6 +11,7 @@ use App\Models\ProjectType;
 use App\Models\Specification;
 use App\Models\ProjectSpecification;
 use App\Models\PageBanner;
+use App\Models\Emirate;
 use Illuminate\Support\Facades\DB;
 
 class ProjectsController extends Controller
@@ -91,6 +92,11 @@ class ProjectsController extends Controller
             });
         }
         
+        // Emirate filter - filter projects by emirate_id
+        if ($request->filled('emirate_id')) {
+            $query->where('emirate_id', $request->emirate_id);
+        }
+        
         // Specifications filter with value
         if ($request->filled('specification_id')) {
             $specId = $request->specification_id;
@@ -121,6 +127,7 @@ class ProjectsController extends Controller
             'styles' => ProjectStyle::whereNull('deleted_at')->orderBy('title_english')->get(),
             'types' => ProjectType::whereNull('deleted_at')->where('status', 0)->orderBy('name_english')->get(),
             'specifications' => Specification::whereNull('deleted_at')->orderBy('title_english')->get(),
+            'emirates' => Emirate::whereNull('deleted_at')->orderBy('title_english')->get(),
             // Subcategories with project counts for slider filter
             'subcategoriesWithCount' => EngineeringSubCategory::withCount(['projects' => function($query) {
                     $query->where('publish_status', 0)->whereNull('deleted_at');
@@ -225,8 +232,9 @@ class ProjectsController extends Controller
         $pageBanner = PageBanner::getByTarget('projects');
         
         $subcategoriesWithCount = $filterData['subcategoriesWithCount'];
+        $emirates = $filterData['emirates'];
         
-        return view('pages.projects.index', compact('projects', 'categories', 'subcategories', 'subcategoriesWithCount', 'styles', 'types', 'specifications', 'specificationValues', 'pageBanner'));
+        return view('pages.projects.index', compact('projects', 'categories', 'subcategories', 'subcategoriesWithCount', 'styles', 'types', 'specifications', 'specificationValues', 'emirates', 'pageBanner'));
     }
     
     /**

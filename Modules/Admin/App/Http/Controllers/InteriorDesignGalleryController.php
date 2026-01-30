@@ -5,6 +5,7 @@ namespace Modules\Admin\App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\InteriorDesignGallery;
+use App\Models\InteriorCategory;
 use App\Models\Project;
 use App\Models\ProjectStyle;
 use App\Models\ProjectType;
@@ -39,6 +40,10 @@ class InteriorDesignGalleryController extends Controller
      */
     public function create()
     {
+        $categories = InteriorCategory::whereNull('deleted_at')
+            ->orderBy('title_english', 'asc')
+            ->get();
+            
         $projects = Project::whereNull('deleted_at')
             ->orderBy('title_english', 'asc')
             ->get();
@@ -56,6 +61,7 @@ class InteriorDesignGalleryController extends Controller
             ->get();
         
         return view('admin::interior-design-galleries.create', compact(
+            'categories',
             'projects', 
             'projectStyles', 
             'projectTypes', 
@@ -77,6 +83,7 @@ class InteriorDesignGalleryController extends Controller
             'publish_status' => 'required|in:0,1',
             'home_status' => 'required|in:0,1',
             'ordering' => 'required|integer|min:0',
+            'category_id' => 'nullable|exists:interior_categories,id',
             'project_id' => 'nullable|exists:projects,id',
             'project_style_id' => 'nullable|exists:project_styles,id',
             'project_type_id' => 'required|exists:project_types,id',
@@ -121,7 +128,7 @@ class InteriorDesignGalleryController extends Controller
      */
     public function show($id)
     {
-        $gallery = InteriorDesignGallery::with(['project', 'projectStyle', 'projectType', 'emirate'])->findOrFail($id);
+        $gallery = InteriorDesignGallery::with(['category', 'project', 'projectStyle', 'projectType', 'emirate'])->findOrFail($id);
         
         return view('admin::interior-design-galleries.show', [
             'gallery' => $gallery
@@ -134,6 +141,10 @@ class InteriorDesignGalleryController extends Controller
     public function edit($id)
     {
         $gallery = InteriorDesignGallery::findOrFail($id);
+        
+        $categories = InteriorCategory::whereNull('deleted_at')
+            ->orderBy('title_english', 'asc')
+            ->get();
         
         $projects = Project::whereNull('deleted_at')
             ->orderBy('title_english', 'asc')
@@ -153,6 +164,7 @@ class InteriorDesignGalleryController extends Controller
         
         return view('admin::interior-design-galleries.edit', compact(
             'gallery',
+            'categories',
             'projects', 
             'projectStyles', 
             'projectTypes', 
@@ -176,6 +188,7 @@ class InteriorDesignGalleryController extends Controller
             'publish_status' => 'required|in:0,1',
             'home_status' => 'required|in:0,1',
             'ordering' => 'required|integer|min:0',
+            'category_id' => 'nullable|exists:interior_categories,id',
             'project_id' => 'nullable|exists:projects,id',
             'project_style_id' => 'nullable|exists:project_styles,id',
             'project_type_id' => 'required|exists:project_types,id',

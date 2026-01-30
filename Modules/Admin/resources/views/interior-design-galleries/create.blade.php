@@ -85,6 +85,21 @@
 
                         <div class="row">
                             <div class="form-group col-md-6">
+                                <label class="text-capitalize">Category</label>
+                                <select class="form-control select2" name="category_id">
+                                    <option value="">Select Category (Optional)</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->title_english }} {{ $category->title_arabic ? '(' . $category->title_arabic . ')' : '' }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('category_id')
+                                <span class="text-danger mt-1">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="form-group col-md-6">
                                 <label class="text-capitalize">Project Type <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
                                 <select class="form-control select2" name="project_type_id" required>
                                     <option value="">Select Project Type</option>

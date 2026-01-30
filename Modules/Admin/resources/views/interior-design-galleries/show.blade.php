@@ -97,6 +97,13 @@
                         
                         <div class="col-md-6">
                             <div class="form-group">
+                                <label class="font-weight-bold">Category:</label>
+                                <p><span class="badge badge-primary">{{ $gallery->category->title_english ?? 'N/A' }}</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-group">
                                 <label class="font-weight-bold">Project Type:</label>
                                 <p><span class="badge badge-info">{{ $gallery->projectType->name_english ?? 'N/A' }}</span></p>
                             </div>

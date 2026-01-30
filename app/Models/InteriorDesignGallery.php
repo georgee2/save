@@ -42,6 +42,7 @@ class InteriorDesignGallery extends Model
     public static function list()
     {
         return DB::table('interior_design_galleries as idg')
+            ->leftJoin('interior_categories as ic', 'idg.category_id', '=', 'ic.id')
             ->leftJoin('projects as p', 'idg.project_id', '=', 'p.id')
             ->leftJoin('project_styles as ps', 'idg.project_style_id', '=', 'ps.id')
             ->leftJoin('project_types as pt', 'idg.project_type_id', '=', 'pt.id')
@@ -58,6 +59,7 @@ class InteriorDesignGallery extends Model
                 'idg.slug', 
                 'idg.created_at', 
                 'idg.updated_at',
+                'ic.title_english as category_name',
                 'p.title_english as project_name',
                 'ps.title_english as style_name',
                 'pt.name_english as type_name',
@@ -79,6 +81,14 @@ class InteriorDesignGallery extends Model
             ->whereNotNull('deleted_at')
             ->orderBy('deleted_at', 'desc')
             ->get();
+    }
+    
+    /**
+     * Relationship: Gallery belongs to Category
+     */
+    public function category()
+    {
+        return $this->belongsTo(InteriorCategory::class, 'category_id');
     }
     
     /**
