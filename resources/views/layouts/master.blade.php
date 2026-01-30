@@ -41,6 +41,8 @@
           <link rel="stylesheet" href="{{asset('/assets/css/services-section.css')}}">
           <!-- Interior Gallery CSS -->
           <link rel="stylesheet" href="{{asset('/assets/css/interior-gallery.css')}}?v={{ time() }}">
+          <!-- Global Search CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/css/global-search.css')}}?v={{ time() }}">
           <!-- Section Divider CSS -->
           <link rel="stylesheet" href="{{asset('/assets/css/section-divider.css')}}">
           <!-- Why Choose Us CSS -->

@@ -67,6 +67,7 @@ use Modules\Admin\App\Http\Controllers\OfferConstructionCostController;
 use Modules\Admin\App\Http\Controllers\OfferSpecificationController;
 use Modules\Admin\App\Http\Controllers\OfferFeasibilityStudyController;
 use Modules\Admin\App\Http\Controllers\InteriorDesignGalleryController;
+use Modules\Admin\App\Http\Controllers\MenuController;
 
 
 /*
@@ -758,6 +759,43 @@ Route::group(
                 Route::post('/delete/{id}', [HomeSectionController::class, 'destroy'])->name('home-sections.delete');
                 Route::get('/trashed', [HomeSectionController::class, 'trashed'])->name('home-sections.trashed');
                 Route::post('/restore/{id}', [HomeSectionController::class, 'restore'])->name('home-sections.restore');
+            });
+
+            // Menu Management Routes
+            Route::prefix('menu')->name('admin.menu.')->group(function () {
+                // User Guide
+                Route::get('/guide', [MenuController::class, 'guide'])->name('guide');
+                
+                // Menu CRUD
+                Route::get('/index', [MenuController::class, 'index'])->name('index');
+                Route::get('/create', [MenuController::class, 'create'])->name('create');
+                Route::post('/store', [MenuController::class, 'store'])->name('store');
+                Route::get('/edit/{id}', [MenuController::class, 'edit'])->name('edit');
+                Route::post('/update/{id}', [MenuController::class, 'update'])->name('update');
+                Route::post('/delete/{id}', [MenuController::class, 'destroy'])->name('delete');
+                Route::get('/trashed', [MenuController::class, 'trashed'])->name('trashed');
+                Route::post('/restore/{id}', [MenuController::class, 'restore'])->name('restore');
+                Route::post('/toggle-status/{id}', [MenuController::class, 'toggleStatus'])->name('toggle-status');
+                
+                // Menu Settings
+                Route::get('/settings', [MenuController::class, 'settings'])->name('settings');
+                Route::post('/settings/update', [MenuController::class, 'updateSettings'])->name('settings.update');
+                
+                // Menu Items Management
+                Route::get('/{menuId}/items', [MenuController::class, 'items'])->name('items');
+                Route::get('/{menuId}/items/create', [MenuController::class, 'createItem'])->name('item.create');
+                Route::post('/{menuId}/items/store', [MenuController::class, 'storeItem'])->name('item.store');
+                Route::get('/{menuId}/items/edit/{itemId}', [MenuController::class, 'editItem'])->name('item.edit');
+                Route::post('/{menuId}/items/update/{itemId}', [MenuController::class, 'updateItem'])->name('item.update');
+                Route::post('/{menuId}/items/delete/{itemId}', [MenuController::class, 'destroyItem'])->name('item.delete');
+                Route::post('/{menuId}/items/toggle-status/{itemId}', [MenuController::class, 'toggleItemStatus'])->name('item.toggle-status');
+                Route::get('/{menuId}/items/trashed', [MenuController::class, 'trashedItems'])->name('items.trashed');
+                Route::post('/{menuId}/items/restore/{itemId}', [MenuController::class, 'restoreItem'])->name('item.restore');
+                Route::post('/{menuId}/items/update-order', [MenuController::class, 'updateItemsOrder'])->name('items.update-order');
+                
+                // AJAX endpoints for category/subcategory selection
+                Route::get('/ajax/categories', [MenuController::class, 'getCategories'])->name('ajax.categories');
+                Route::get('/ajax/subcategories', [MenuController::class, 'getSubcategories'])->name('ajax.subcategories');
             });
 
         });

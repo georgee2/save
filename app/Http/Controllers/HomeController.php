@@ -268,7 +268,7 @@ class HomeController extends Controller
         $governmentPartners = Partner::getGovernmentPartners();
         
         // Fetch Interior Design Gallery items (published and shown on home)
-        $interiorGallery = InteriorDesignGallery::with(['projectType', 'project', 'projectStyle', 'emirate'])
+        $interiorGallery = InteriorDesignGallery::with(['category', 'projectType', 'project', 'projectStyle', 'emirate'])
             ->where('publish_status', 0) // Published
             ->where('home_status', 0)    // Shown on home
             ->whereNull('deleted_at')

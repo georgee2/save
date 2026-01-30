@@ -72,18 +72,18 @@ class InteriorCategory extends Model
     }
     
     /**
-     * Relationship: Category has many Sub Categories
-     */
-    public function subCategories()
-    {
-        return $this->hasMany(InteriorSubCategory::class, 'category_id');
-    }
-    
-    /**
      * Relationship: Category has many Projects
      */
     public function projects()
     {
         return $this->hasMany(Project::class, 'interior_category_id');
+    }
+    
+    /**
+     * Relationship: Category has many Interior Design Galleries
+     */
+    public function galleries()
+    {
+        return $this->hasMany(InteriorDesignGallery::class, 'category_id');
     }
 }

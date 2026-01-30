@@ -100,6 +100,15 @@ return [
     'all_subcategories' => 'جميع الفئات الفرعية',
     'all_styles' => 'جميع الأنماط',
     'area_size' => 'حجم المساحة',
+    'advanced_search' => 'بحث متقدم',
+    'view_all_results' => 'عرض جميع النتائج',
+    'search_in' => 'البحث في',
+    'no_results_found' => 'لا توجد نتائج',
+    'project_code' => 'كود المشروع',
+    'offer' => 'عرض',
+    'project' => 'مشروع',
+    'search_placeholder' => 'ابحث في العروض والمشاريع...',
+    'select_type' => 'اختر النوع',
     
     // Project Details Page
     'share' => 'مشاركة',
@@ -184,6 +193,17 @@ return [
     'view_all_gallery' => 'عرض كل المعرض',
     'design_style' => 'نمط التصميم',
     'related_project' => 'المشروع المرتبط',
+    'interior_design_seo_desc' => 'استكشف مجموعتنا المذهلة من مشاريع التصميم الداخلي التي تعرض الأناقة والإبداع والجماليات العصرية.',
+    'find_your_design' => 'ابحث عن تصميمك',
+    'designs_available' => 'تصاميم متاحة',
+    'designs' => 'تصاميم',
+    'no_designs_found' => 'لا توجد تصاميم',
+    'title_a_z' => 'العنوان أ-ي',
+    'title_z_a' => 'العنوان ي-أ',
+    'all_interior_designs' => 'جميع التصاميم الداخلية',
+    'browse_by_category' => 'تصفح حسب الفئة',
+    'interior_category' => 'فئة التصميم الداخلي',
+    'view_category' => 'عرض الفئة',
     
     // Services Section
     'what_we_do' => 'ماذا نقدم',

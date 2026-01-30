@@ -7,6 +7,7 @@ use App\Models\EngineeringCategory;
 use App\Models\OfferCategory;
 use App\Models\ContactInformation;
 use App\Models\Service;
+use App\Models\Menu;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -20,6 +21,14 @@ class HeaderComposer
      */
     public function compose(View $view)
     {
+        // Get the header menu with fallback logic:
+        // 1. If primary menu is active, use it
+        // 2. If primary is inactive, use the last active custom menu (for header location)
+        $headerMenu = Menu::getHeaderMenu();
+        $headerMenuItems = $headerMenu ? $headerMenu->getHierarchicalItems() : collect();
+        
+        // Check if we're using primary or custom menu (for debugging/display purposes)
+        $isUsingPrimaryMenu = $headerMenu ? $headerMenu->is_primary : false;
         // Get engineering categories with their subcategories for projects menu
         $headerProjectCategories = EngineeringCategory::with(['subCategories' => function($query) {
             $query->whereNull('deleted_at')->orderBy('created_at', 'DESC');
@@ -82,6 +91,13 @@ class HeaderComposer
             'headerNewsCategories' => $headerNewsCategories,
             'headerServices' => $headerServices,
             'hasActiveJobs' => $hasActiveJobs,
+            // Menu variables (renamed for clarity)
+            'headerMenu' => $headerMenu,
+            'headerMenuItems' => $headerMenuItems,
+            'isUsingPrimaryMenu' => $isUsingPrimaryMenu,
+            // Keep old variable names for backward compatibility
+            'primaryMenu' => $headerMenu,
+            'primaryMenuItems' => $headerMenuItems,
         ]);
     }
 }

@@ -79,6 +79,23 @@
                     </div>
                     @endif
                     
+                    {{-- Emirate --}}
+                    @if(isset($emirates) && $emirates->count() > 0)
+                    <div class="form-group">
+                        <label for="filter_emirate_id" class="sr-only">{{ __('lang.emirate') }}</label>
+                        <select class="form-control border-0 shadow-none form-control-lg selectpicker filter-select filter-emirate-select"
+                                title="{{ __('lang.all_emirates') }}" data-style="btn-lg py-2 h-52" 
+                                id="filter_emirate_id" name="emirate_id">
+                            <option value="">{{ __('lang.all_emirates') }}</option>
+                            @foreach($emirates as $emirate)
+                            <option value="{{ $emirate->id }}" {{ request('emirate_id') == $emirate->id ? 'selected' : '' }}>
+                                {{ app()->getLocale() == 'ar' ? $emirate->title_arabic : $emirate->title_english }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
+                    
                     {{-- SQFT Range Slider --}}
                     <div class="form-group area-slider-group">
                         <label class="text-gray-light mb-3">{{ __('lang.area_size') }} ({{ __('lang.sqft') }})</label>

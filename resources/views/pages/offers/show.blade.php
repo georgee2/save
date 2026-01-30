@@ -422,31 +422,27 @@
                             <h4 class="fs-18 text-heading font-weight-600 mb-0">{{ app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english }}</h4>
                         </div>
                         
-                        {{-- Emirates Prices List - Click to change price on image --}}
+                        {{-- Emirates Selection - Click to change price on image --}}
                         @if($offer->all_prices && $offer->all_prices->count() > 0)
-                        <div class="all-prices-list mb-4">
+                        <div class="emirates-selector mb-4">
                             <h5 class="fs-14 text-heading font-weight-600 mb-3">
-                                <i class="fas fa-tag text-primary mr-2"></i>{{ __('lang.price_by_emirate') }}
+                                <i class="fas fa-map-marker-alt text-primary mr-2"></i>{{ __('lang.select_emirate') }}
                             </h5>
-                            <p class="text-muted fs-13 mb-3">{{ __('lang.click_emirate_price') }}</p>
-                            <div class="list-group list-group-flush">
+                            <div class="emirates-grid">
                                 @foreach($offer->all_prices as $priceItem)
                                 @if($priceItem->emirate)
-                                <div class="list-group-item px-3 py-3 d-flex justify-content-between align-items-center border-0 mb-2 rounded emirate-price-item {{ $offer->selected_price && $offer->selected_price->emirate_id == $priceItem->emirate_id ? 'active-emirate' : '' }}" 
+                                <div class="emirate-item {{ $offer->selected_price && $offer->selected_price->emirate_id == $priceItem->emirate_id ? 'active-emirate' : '' }}" 
                                      data-emirate-id="{{ $priceItem->emirate_id }}"
                                      data-price="{{ number_format($priceItem->price) }}"
                                      data-emirate-name="{{ app()->getLocale() == 'ar' ? $priceItem->emirate->title_arabic : $priceItem->emirate->title_english }}">
-                                    <span class="d-flex align-items-center">
+                                    <div class="emirate-icon-wrapper">
                                         @if($priceItem->emirate->icon)
-                                        <img src="{{ url('/storage' . $priceItem->emirate->icon) }}" alt="" class="emirate-icon mr-2" style="width: 24px; height: 24px; object-fit: contain;">
+                                        <img src="{{ url('/storage' . $priceItem->emirate->icon) }}" alt="{{ app()->getLocale() == 'ar' ? $priceItem->emirate->title_arabic : $priceItem->emirate->title_english }}">
                                         @else
-                                        <span class="emirate-icon-placeholder mr-2">
-                                            <i class="fas fa-map-marker-alt"></i>
-                                        </span>
+                                        <i class="fas fa-map-marker-alt"></i>
                                         @endif
-                                        <span class="emirate-name">{{ app()->getLocale() == 'ar' ? $priceItem->emirate->title_arabic : $priceItem->emirate->title_english }}</span>
-                                    </span>
-                                    <span class="emirate-price font-weight-700">{{ $offer->currency->abbreviation ?? 'AED' }} {{ number_format($priceItem->price) }}</span>
+                                    </div>
+                                    <span class="emirate-name">{{ app()->getLocale() == 'ar' ? $priceItem->emirate->title_arabic : $priceItem->emirate->title_english }}</span>
                                 </div>
                                 @endif
                                 @endforeach
@@ -634,10 +630,10 @@ function updateGalleryPrice(price, emirateName) {
 
 // Gallery Slideshow
 document.addEventListener('DOMContentLoaded', function() {
-    // Price List Items Click - Update price tag on image
-    var priceItems = document.querySelectorAll('.emirate-price-item');
+    // Emirates Items Click - Update price tag on image
+    var emirateItems = document.querySelectorAll('.emirate-item');
     
-    priceItems.forEach(function(item) {
+    emirateItems.forEach(function(item) {
         item.addEventListener('click', function() {
             var price = this.getAttribute('data-price');
             var emirateName = this.getAttribute('data-emirate-name');
@@ -646,8 +642,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Update gallery price tag
             updateGalleryPrice(price, emirateName);
             
-            // Update active state in price list
-            priceItems.forEach(function(el) {
+            // Update active state in emirates grid
+            emirateItems.forEach(function(el) {
                 el.classList.remove('active-emirate');
             });
             this.classList.add('active-emirate');

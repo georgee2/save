@@ -11,11 +11,10 @@
                 <p class="mb-0">{{ __('lang.interior_gallery_bio') ?? 'Explore our stunning collection of interior design projects showcasing elegance, creativity, and modern aesthetics.' }}</p>
             </div>
             <div class="col-md-5 text-md-right mt-4 mt-md-0">
-                {{-- Optional: Add a view all link if you have a gallery page --}}
-                {{-- <a href="{{ route('interior-gallery.index') }}" class="view-all-btn">
+                <a href="{{ route('interior.index') }}" class="btn btn-primary">
                     {{ __('lang.view_all_gallery') ?? 'View All Gallery' }}
-                    <i class="far fa-long-arrow-right"></i>
-                </a> --}}
+                    <i class="far fa-long-arrow-right ml-2"></i>
+                </a>
             </div>
         </div>
         
@@ -27,7 +26,7 @@
                  data-title="{{ app()->getLocale() == 'ar' ? $item->title_arabic : $item->title_english }}"
                  data-bio="{{ app()->getLocale() == 'ar' ? $item->bio_arabic : $item->bio_english }}"
                  data-image="{{ url('/storage' . $item->image) }}"
-                 data-type="{{ $item->projectType ? (app()->getLocale() == 'ar' ? $item->projectType->name_arabic : $item->projectType->name_english) : '' }}"
+                 data-category="{{ $item->category ? (app()->getLocale() == 'ar' ? $item->category->title_arabic : $item->category->title_english) : '' }}"
                  data-style="{{ $item->projectStyle ? (app()->getLocale() == 'ar' ? $item->projectStyle->title_arabic : $item->projectStyle->title_english) : '' }}"
                  data-emirate="{{ $item->emirate ? (app()->getLocale() == 'ar' ? $item->emirate->title_arabic : $item->emirate->title_english) : '' }}"
                  @if($item->project)
@@ -51,6 +50,13 @@
                 
                 {{-- Card Content --}}
                 <div class="card-content">
+                    {{-- Category Badge --}}
+                    @if($item->category)
+                    <span class="card-category">
+                        {{ app()->getLocale() == 'ar' ? $item->category->title_arabic : $item->category->title_english }}
+                    </span>
+                    @endif
+                    
                     <h3 class="card-title">
                         {{ app()->getLocale() == 'ar' ? $item->title_arabic : $item->title_english }}
                     </h3>
@@ -64,13 +70,6 @@
                     
                     {{-- Meta Tags --}}
                     <div class="card-meta">
-                        @if($item->projectType)
-                        <span class="meta-tag">
-                            <i class="fas fa-tag"></i>
-                            {{ app()->getLocale() == 'ar' ? $item->projectType->name_arabic : $item->projectType->name_english }}
-                        </span>
-                        @endif
-                        
                         @if($item->projectStyle)
                         <span class="meta-tag">
                             <i class="fas fa-palette"></i>
@@ -141,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const title = this.dataset.title;
             const bio = this.dataset.bio;
             const image = this.dataset.image;
-            const type = this.dataset.type;
+            const category = this.dataset.category;
             const style = this.dataset.style;
             const emirate = this.dataset.emirate;
             const projectTitle = this.dataset.projectTitle;
@@ -157,13 +156,13 @@ document.addEventListener('DOMContentLoaded', function() {
             // Build meta items
             let metaHtml = '';
             
-            if (type) {
+            if (category) {
                 metaHtml += `
                     <div class="modal-meta-item">
-                        <i class="fas fa-tag"></i>
+                        <i class="fas fa-folder"></i>
                         <div>
-                            <span class="meta-label">{{ __('lang.project_type') ?? 'Project Type' }}</span>
-                            <span class="meta-value">${type}</span>
+                            <span class="meta-label">{{ __('lang.category') ?? 'Category' }}</span>
+                            <span class="meta-value">${category}</span>
                         </div>
                     </div>
                 `;

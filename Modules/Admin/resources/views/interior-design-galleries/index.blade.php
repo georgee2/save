@@ -63,6 +63,7 @@
                                     <th>Order</th>
                                     <th>Image</th>
                                     <th>Title (English)</th>
+                                    <th>Category</th>
                                     <th>Project Type</th>
                                     <th>Publish</th>
                                     <th>Home</th>
@@ -84,6 +85,7 @@
                                     @endif
                                 </td>
                                 <td>{{ $gallery->title_english }}</td>
+                                <td><span class="badge badge-primary">{{ $gallery->category_name ?? 'N/A' }}</span></td>
                                 <td><span class="badge badge-info">{{ $gallery->type_name ?? 'N/A' }}</span></td>
                                 <td>
                                     <form action="{{ route('interior-design-gallery.toggle-publish', ['id' => $gallery->id]) }}" method="POST" style="display: inline;">

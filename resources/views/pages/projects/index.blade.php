@@ -413,7 +413,8 @@
                 'styles' => $styles,
                 'types' => $types,
                 'specifications' => $specifications,
-                'specificationValues' => $specificationValues ?? []
+                'specificationValues' => $specificationValues ?? [],
+                'emirates' => $emirates ?? collect()
             ])
             </div>
           </div>

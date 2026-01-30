@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Menu;
+
 if (!function_exists('json')) {
     function json($data)
     {
@@ -71,5 +73,100 @@ if (!function_exists('tags')) {
         }
 
         return $tags;
+    }
+}
+
+/**
+ * Menu Helper Functions
+ */
+
+if (!function_exists('getMenu')) {
+    /**
+     * Get a menu by slug
+     * 
+     * @param string $slug
+     * @return Menu|null
+     */
+    function getMenu(string $slug): ?Menu
+    {
+        return Menu::getBySlug($slug);
+    }
+}
+
+if (!function_exists('getMenuByLocation')) {
+    /**
+     * Get a menu by location
+     * 
+     * @param string $location
+     * @return Menu|null
+     */
+    function getMenuByLocation(string $location): ?Menu
+    {
+        return Menu::getByLocation($location);
+    }
+}
+
+if (!function_exists('getHeaderMenu')) {
+    /**
+     * Get the header menu with fallback logic:
+     * 1. If primary menu is active, use it
+     * 2. If primary is inactive, use the last active custom menu
+     * 
+     * @return Menu|null
+     */
+    function getHeaderMenu(): ?Menu
+    {
+        return Menu::getHeaderMenu();
+    }
+}
+
+if (!function_exists('getPrimaryMenu')) {
+    /**
+     * Get the primary menu (only if active)
+     * 
+     * @return Menu|null
+     */
+    function getPrimaryMenu(): ?Menu
+    {
+        return Menu::getPrimaryMenu();
+    }
+}
+
+if (!function_exists('getMenuItems')) {
+    /**
+     * Get hierarchical menu items by slug
+     * 
+     * @param string $slug
+     * @return \Illuminate\Support\Collection
+     */
+    function getMenuItems(string $slug): \Illuminate\Support\Collection
+    {
+        $menu = Menu::getBySlug($slug);
+        return $menu ? $menu->getHierarchicalItems() : collect();
+    }
+}
+
+if (!function_exists('getAllActiveMenus')) {
+    /**
+     * Get all active menus
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    function getAllActiveMenus(): \Illuminate\Database\Eloquent\Collection
+    {
+        return Menu::getAllActive();
+    }
+}
+
+if (!function_exists('getActiveMenusByLocation')) {
+    /**
+     * Get all active menus for a specific location
+     * 
+     * @param string $location
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    function getActiveMenusByLocation(string $location): \Illuminate\Database\Eloquent\Collection
+    {
+        return Menu::getActiveMenusByLocation($location);
     }
 }
