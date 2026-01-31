@@ -14,13 +14,27 @@
     left: 0 !important;
     right: 0 !important;
     top: auto !important;
-    z-index: 9999 !important;
+    z-index: 2147483647 !important; /* Maximum z-index value */
+    background: #ffffff !important;
+    box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.15) !important;
+    border-top: 1px solid #ddd !important;
+    display: none;
+    transform: translate3d(0, 0, 0) !important;
+    -webkit-transform: translate3d(0, 0, 0) !important;
+    will-change: transform;
+    isolation: isolate;
+}
+
+/* Solid background layer to prevent content showing through */
+.mobile-bottom-nav::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background: #ffffff;
-    box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.1);
-    border-top: 1px solid #eee;
-    display: none; /* Hidden by default, shown via media query */
-    transform: none !important;
-    -webkit-transform: none !important;
+    z-index: -1;
 }
 
 /* Show on mobile/tablet */
@@ -33,6 +47,16 @@
     body {
         padding-bottom: 80px !important;
     }
+    
+    /* Ensure no clipping of fixed elements */
+    html, body {
+        overflow-x: hidden;
+    }
+    
+    /* Lower z-index for other floating elements */
+    .back-to-top {
+        z-index: 99999 !important;
+    }
 }
 
 .mobile-bottom-nav-container {
@@ -43,6 +67,9 @@
     max-width: 100%;
     margin: 0 auto;
     padding: 0 10px;
+    background: #ffffff;
+    position: relative;
+    z-index: 1;
 }
 
 /* ========================================
@@ -461,17 +488,25 @@ body.contact-popup-open {
         scroll-behavior: smooth;
     }
     
-    /* Force the nav to stay at bottom */
+    /* Force the nav to stay at bottom and on top of everything */
     #mobileBottomNav {
         position: fixed !important;
         bottom: 0 !important;
         left: 0 !important;
         right: 0 !important;
         width: 100% !important;
-        transform: translateZ(0) !important;
-        -webkit-transform: translateZ(0) !important;
+        z-index: 2147483647 !important; /* Maximum z-index value */
+        transform: translate3d(0, 0, 0) !important;
+        -webkit-transform: translate3d(0, 0, 0) !important;
         backface-visibility: hidden;
         -webkit-backface-visibility: hidden;
+        contain: layout style;
+    }
+    
+    /* Ensure content doesn't overlap the nav */
+    #mobileBottomNav * {
+        position: relative;
+        z-index: 1;
     }
 }
 
