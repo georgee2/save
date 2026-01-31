@@ -1,5 +1,5 @@
 {{-- Mobile Bottom Navigation - Only visible on mobile/tablet --}}
-<nav class="mobile-bottom-nav" id="mobileBottomNav" style="position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; z-index: 2147483647 !important; background: #fff !important;">
+<nav class="mobile-bottom-nav" id="mobileBottomNav">
     <div class="mobile-bottom-nav-container">
         {{-- Home --}}
         <a href="{{ route('index') }}" class="mobile-bottom-nav-item {{ Route::currentRouteName() == 'index' ? 'active' : '' }}">
