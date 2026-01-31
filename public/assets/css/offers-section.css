@@ -668,6 +668,37 @@
     color: #0d6b6f !important;
 }
 
+/* Category/Subcategory - Simple Text Links (Home Offers) */
+.offers-section .offer-category-info {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #6c757d;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 40px;
+}
+
+.offers-section .offer-cat-link,
+.offers-section .offer-subcat-link {
+    color: #19868b;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.offers-section .offer-cat-link:hover,
+.offers-section .offer-subcat-link:hover {
+    color: #e1273d;
+    text-decoration: underline;
+}
+
+.offers-section .cat-divider {
+    color: #adb5bd;
+    margin: 0 6px;
+}
+
 /* Title styling */
 .offer-title {
     display: -webkit-box;

@@ -2,7 +2,18 @@
 @php
     $emirates = \App\Models\Emirate::whereNull('deleted_at')->orderBy('title_english')->get();
     $selectedEmirateId = request('emirate_id');
-    $selectedSearchType = request('search_type', 'offers');
+    
+    // Determine search type from request or current route
+    $currentRouteName = \Route::currentRouteName();
+    if (request('search_type')) {
+        $selectedSearchType = request('search_type');
+    } elseif (str_contains($currentRouteName ?? '', 'projects')) {
+        $selectedSearchType = 'projects';
+    } elseif (str_contains($currentRouteName ?? '', 'offers')) {
+        $selectedSearchType = 'offers';
+    } else {
+        $selectedSearchType = 'offers'; // default
+    }
 @endphp
 
 <section class="bg-primary global-search-section">
@@ -82,9 +93,10 @@
                 
                 {{-- Advanced Search Filters --}}
                 <div id="advanced-search-filters" class="col-12 pb-6 pt-lg-2 collapse" data-parent="#accordion-search">
+                    {{-- Row 1: Category, Subcategory, Style, Code --}}
                     <div class="row mx-n2">
                         {{-- Category --}}
-                        <div class="col-sm-6 col-md-4 pt-4 px-2">
+                        <div class="col-sm-6 col-lg-3 pt-4 px-2">
                             <select class="form-control border-0 shadow-none form-control-lg selectpicker bg-white"
                                     name="category_id" id="categorySelect"
                                     title="{{ __('lang.all_categories') }}" data-style="btn-lg py-2 h-52 bg-white">
@@ -93,7 +105,7 @@
                         </div>
                         
                         {{-- Subcategory --}}
-                        <div class="col-sm-6 col-md-4 pt-4 px-2">
+                        <div class="col-sm-6 col-lg-3 pt-4 px-2">
                             <select class="form-control border-0 shadow-none form-control-lg selectpicker bg-white"
                                     name="subcategory_id" id="subcategorySelect"
                                     title="{{ __('lang.all_subcategories') }}" data-style="btn-lg py-2 h-52 bg-white">
@@ -101,17 +113,8 @@
                             </select>
                         </div>
                         
-                        {{-- Type --}}
-                        <div class="col-sm-6 col-md-4 pt-4 px-2">
-                            <select class="form-control border-0 shadow-none form-control-lg selectpicker bg-white"
-                                    name="type_id" id="typeSelect"
-                                    title="{{ __('lang.all_types') }}" data-style="btn-lg py-2 h-52 bg-white">
-                                <option value="">{{ __('lang.all_types') }}</option>
-                            </select>
-                        </div>
-                        
                         {{-- Style --}}
-                        <div class="col-sm-6 col-md-4 pt-4 px-2">
+                        <div class="col-sm-6 col-lg-3 pt-4 px-2">
                             <select class="form-control border-0 shadow-none form-control-lg selectpicker bg-white"
                                     name="style_id" id="styleSelect"
                                     title="{{ __('lang.all_styles') }}" data-style="btn-lg py-2 h-52 bg-white">
@@ -120,30 +123,34 @@
                         </div>
                         
                         {{-- Code/ID Search --}}
-                        <div class="col-sm-6 col-md-4 pt-4 px-2">
+                        <div class="col-sm-6 col-lg-3 pt-4 px-2">
                             <input type="text"
-                                   class="form-control form-control-lg border-0 shadow-none bg-white"
+                                   class="form-control form-control-lg border-0 shadow-none bg-white h-52"
                                    placeholder="{{ __('lang.offer_code') }} / {{ __('lang.project_code') ?? 'Project Code' }}" 
                                    name="code" id="codeInput">
                         </div>
                     </div>
                     
-                    {{-- Area Size Slider --}}
-                    <div class="row">
-                        <div class="col-md-6 col-lg-5 pt-6 slider-range slider-range-primary">
-                            <label for="area-size" class="mb-4 text-white">{{ __('lang.area_size') }} ({{ __('lang.sqft') }})</label>
-                            <div data-slider="true"
-                                 data-slider-options='{"min":0,"max":50000,"values":[0,50000],"type":"sqft"}'></div>
-                            <div class="text-center mt-2">
-                                <input id="area-size" type="text" readonly
-                                       class="border-0 amount text-center text-white bg-transparent font-weight-500"
-                                       name="sqft_range">
+                    {{-- Row 2: Area Size Slider & Search Button --}}
+                    <div class="row mx-n2 align-items-end">
+                        {{-- Area Size Slider --}}
+                        <div class="col-sm-6 col-lg-6 pt-5 px-2">
+                            <label class="mb-3 text-white font-weight-500">{{ __('lang.area_size') }} ({{ __('lang.sqft') }})</label>
+                            <div class="global-search-slider-container">
+                                <div id="global-sqft-slider" class="global-area-slider"></div>
+                                <div class="slider-values-display text-center mt-2">
+                                    <span id="global-sqft-display" class="text-white font-weight-500">
+                                        0 {{ __('lang.sqft') }} - 50,000 {{ __('lang.sqft') }}
+                                    </span>
+                                </div>
+                                <input type="hidden" id="global_sqft_min" name="sqft_min" value="">
+                                <input type="hidden" id="global_sqft_max" name="sqft_max" value="">
                             </div>
                         </div>
                         
                         {{-- Search Button --}}
-                        <div class="col-md-6 col-lg-5 pt-6 offset-lg-2 d-flex align-items-end">
-                            <button type="submit" class="btn btn-secondary btn-lg w-100">
+                        <div class="col-sm-6 col-lg-3 pt-5 px-2 ml-auto">
+                            <button type="submit" class="btn btn-secondary btn-lg w-100 h-52">
                                 <i class="fas fa-search mr-2"></i> {{ __('lang.search') }}
                             </button>
                         </div>
@@ -230,15 +237,6 @@
                             </select>
                         </div>
                         
-                        {{-- Type --}}
-                        <div class="col-sm-6 pt-4 px-2">
-                            <select class="form-control border-0 shadow-none form-control-lg selectpicker bg-white"
-                                    name="type_id" id="typeSelectMobile"
-                                    title="{{ __('lang.all_types') }}" data-style="btn-lg py-2 h-52 bg-white">
-                                <option value="">{{ __('lang.all_types') }}</option>
-                            </select>
-                        </div>
-                        
                         {{-- Style --}}
                         <div class="col-sm-6 pt-4 px-2">
                             <select class="form-control border-0 shadow-none form-control-lg selectpicker bg-white"
@@ -246,6 +244,15 @@
                                     title="{{ __('lang.all_styles') }}" data-style="btn-lg py-2 h-52 bg-white">
                                 <option value="">{{ __('lang.all_styles') }}</option>
                             </select>
+                        </div>
+                        
+                        {{-- Code/ID Search --}}
+                        <div class="col-sm-6 pt-4 px-2">
+                            <input type="text"
+                                   class="form-control form-control-lg border-0 shadow-none bg-white"
+                                   placeholder="{{ __('lang.offer_code') }} / {{ __('lang.project_code') ?? 'Project Code' }}" 
+                                   name="code" id="codeInputMobile"
+                                   style="height: 52px;">
                         </div>
                     </div>
                     
@@ -303,7 +310,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Reload categories for new type
             loadCategories(value);
-            loadTypes();
             loadStyles();
             
             // Clear subcategories
@@ -446,18 +452,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.success) {
                     updateSelect('subcategorySelect', data.subcategories, '{{ __("lang.all_subcategories") }}');
                     updateSelect('subcategorySelectMobile', data.subcategories, '{{ __("lang.all_subcategories") }}');
-                }
-            });
-    }
-    
-    // Load Types
-    function loadTypes() {
-        fetch(searchConfig.typesUrl)
-            .then(function(response) { return response.json(); })
-            .then(function(data) {
-                if (data.success) {
-                    updateSelect('typeSelect', data.types, '{{ __("lang.all_types") }}');
-                    updateSelect('typeSelectMobile', data.types, '{{ __("lang.all_types") }}');
                 }
             });
     }
@@ -607,10 +601,48 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initial Load
     loadCategories(currentSearchType);
-    loadTypes();
     loadStyles();
     
     // Sync emirates after a short delay to ensure selectpickers are initialized
     setTimeout(syncEmirateSelectors, 200);
+    
+    // Initialize Area Size Slider (jQuery UI)
+    function initGlobalAreaSlider() {
+        if (typeof $ !== 'undefined' && typeof $.fn.slider !== 'undefined') {
+            // Get values from URL if present
+            var urlParams = new URLSearchParams(window.location.search);
+            var minVal = parseInt(urlParams.get('sqft_min')) || 0;
+            var maxVal = parseInt(urlParams.get('sqft_max')) || 50000;
+            
+            $("#global-sqft-slider").slider({
+                range: true,
+                min: 0,
+                max: 50000,
+                step: 100,
+                values: [minVal, maxVal],
+                slide: function(event, ui) {
+                    updateSqftDisplay(ui.values[0], ui.values[1]);
+                },
+                change: function(event, ui) {
+                    updateSqftDisplay(ui.values[0], ui.values[1]);
+                }
+            });
+            
+            // Initial display
+            updateSqftDisplay(minVal, maxVal);
+        }
+    }
+    
+    function updateSqftDisplay(min, max) {
+        var sqftText = '{{ __("lang.sqft") }}';
+        $('#global-sqft-display').text(min.toLocaleString() + ' ' + sqftText + ' - ' + max.toLocaleString() + ' ' + sqftText);
+        
+        // Only set hidden inputs if values differ from default
+        $('#global_sqft_min').val(min > 0 ? min : '');
+        $('#global_sqft_max').val(max < 50000 ? max : '');
+    }
+    
+    // Initialize slider after a short delay to ensure jQuery UI is loaded
+    setTimeout(initGlobalAreaSlider, 300);
 });
 </script>

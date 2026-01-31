@@ -72,15 +72,9 @@
                                 </ul>
                             </li>
 
-                            <li class="has_sub">
-                                <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-th-list"></i><span> Home Sections <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
-                                <ul class="list-unstyled">
-                                    <li><a href="{{route('home-sections.index')}}">Manage Sections</a></li>
-                                    <li><a href="{{route('home-sections.trashed')}}">Trashed Sections</a></li>
-                                </ul>
-                            </li>
+                            
 
-                            <li class="has_sub">
+                            <li hidden class="has_sub">
                                 <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-star"></i><span> Showcases <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
                                 <ul class="list-unstyled">
                                     <li><a href="{{route('showcase.create')}}">Add New Showcase</a></li>
@@ -232,6 +226,61 @@
 
 
 
+            
+
+
+            <li hidden style="color:#e8e8e8" class="menu-title">Default Sections</li>
+
+            <li hidden class="has_sub">
+                <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-bar-chart"></i><span> Facts <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                <ul class="list-unstyled">
+                    <li><a href="{{route('admin.facts.create')}}">Add New Fact</a></li>
+                    <li><a href="{{route('admin.facts.index')}}">Facts List</a></li>
+                    <li><a href="{{route('admin.facts.trashed')}}">Trashed Facts</a></li>
+                </ul>
+            </li>
+
+            <li hidden class="has_sub">
+                <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-cogs"></i><span> Default Process <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                <ul class="list-unstyled">
+                    <li><a href="{{route('admin.default-processes.create')}}">Add New Process</a></li>
+                    <li><a href="{{route('admin.default-processes.index')}}">Processes List</a></li>
+                    <li><a href="{{route('admin.default-processes.trashed')}}">Trashed Processes</a></li>
+                </ul>
+            </li>
+
+            <li hidden class="has_sub">
+                <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-image"></i><span> Default Banners <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                <ul class="list-unstyled">
+                    <li><a href="{{route('admin.default-banners.create')}}">Add New Banner</a></li>
+                    <li><a href="{{route('admin.default-banners.index')}}">Banners List</a></li>
+                    <li><a href="{{route('admin.default-banners.trashed')}}">Trashed Banners</a></li>
+                </ul>
+            </li>
+
+
+
+            <li style="color:#e8e8e8" class="menu-title">Settings</li>
+
+                         <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-th-list"></i><span> Home Sections <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                                <ul class="list-unstyled">
+                                    <li><a href="{{route('home-sections.index')}}">Manage Sections</a></li>
+                                    <li><a href="{{route('home-sections.trashed')}}">Trashed Sections</a></li>
+                                </ul>
+                            </li>
+
+                <li class="has_sub">
+                <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-bars"></i><span> Menu Management <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                <ul class="list-unstyled">
+                    <li><a href="{{route('admin.menu.index')}}">Menus List</a></li>
+                    <li><a href="{{route('admin.menu.create')}}">Add New Menu</a></li>
+                    <li><a href="{{route('admin.menu.settings')}}">Menu Settings</a></li>
+                    <li><a href="{{route('admin.menu.trashed')}}">Trashed Menus</a></li>
+                    <li><a href="{{route('admin.menu.guide')}}"><i class="fa fa-book text-info"></i> User Guide</a></li>
+                </ul>
+            </li>
+
             <li class="has_sub">
                 <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-18px mdi-database-plus"></i><span> Users <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
                 <ul class="list-unstyled">
@@ -241,52 +290,12 @@
                 </ul>
             </li>
 
+            
 
-            <li style="color:#e8e8e8" class="menu-title">Default Sections</li>
-
-            <li class="has_sub">
-                <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-bar-chart"></i><span> Facts <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
-                <ul class="list-unstyled">
-                    <li><a href="{{route('admin.facts.create')}}">Add New Fact</a></li>
-                    <li><a href="{{route('admin.facts.index')}}">Facts List</a></li>
-                    <li><a href="{{route('admin.facts.trashed')}}">Trashed Facts</a></li>
-                </ul>
-            </li>
-
-            <li class="has_sub">
-                <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-cogs"></i><span> Default Process <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
-                <ul class="list-unstyled">
-                    <li><a href="{{route('admin.default-processes.create')}}">Add New Process</a></li>
-                    <li><a href="{{route('admin.default-processes.index')}}">Processes List</a></li>
-                    <li><a href="{{route('admin.default-processes.trashed')}}">Trashed Processes</a></li>
-                </ul>
-            </li>
-
-            <li class="has_sub">
-                <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-image"></i><span> Default Banners <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
-                <ul class="list-unstyled">
-                    <li><a href="{{route('admin.default-banners.create')}}">Add New Banner</a></li>
-                    <li><a href="{{route('admin.default-banners.index')}}">Banners List</a></li>
-                    <li><a href="{{route('admin.default-banners.trashed')}}">Trashed Banners</a></li>
-                </ul>
-            </li>
+            
 
             <li>
                 <a href="{{route('site-settings.index')}}" class="waves-effect"><i class="fa fa-cog"></i><span> Site Settings </span></a>
-            </li>
-
-
-            <li style="color:#e8e8e8" class="menu-title">Settings</li>
-
-            <li class="has_sub">
-                <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-bars"></i><span> Menu Management <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
-                <ul class="list-unstyled">
-                    <li><a href="{{route('admin.menu.index')}}">Menus List</a></li>
-                    <li><a href="{{route('admin.menu.create')}}">Add New Menu</a></li>
-                    <li><a href="{{route('admin.menu.settings')}}">Menu Settings</a></li>
-                    <li><a href="{{route('admin.menu.trashed')}}">Trashed Menus</a></li>
-                    <li><a href="{{route('admin.menu.guide')}}"><i class="fa fa-book text-info"></i> User Guide</a></li>
-                </ul>
             </li>
 
 

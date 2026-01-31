@@ -1,0 +1,463 @@
+/**
+ * Mobile Bottom Navigation
+ * Fixed navigation bar at the bottom for mobile/tablet
+ * Primary: #19868b | Secondary: #e1273d
+ */
+
+/* ========================================
+   BOTTOM NAVIGATION BAR
+   ======================================== */
+
+.mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 998;
+    background: #ffffff;
+    box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid #eee;
+    transition: transform 0.3s ease;
+    display: none; /* Hidden by default, shown via media query */
+}
+
+.mobile-bottom-nav.hidden {
+    transform: translateY(100%);
+}
+
+/* Show on mobile/tablet */
+@media (max-width: 991px) {
+    .mobile-bottom-nav {
+        display: block;
+    }
+}
+
+.mobile-bottom-nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 65px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 5px;
+}
+
+/* ========================================
+   NAV ITEMS
+   ======================================== */
+
+.mobile-bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    height: 100%;
+    padding: 8px 5px;
+    text-decoration: none;
+    color: #666;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-bottom-nav-item:hover,
+.mobile-bottom-nav-item:focus {
+    color: #19868b;
+    outline: none;
+}
+
+.mobile-bottom-nav-item.active {
+    color: #19868b;
+}
+
+/* Nav Icon */
+.nav-icon {
+    position: relative;
+    font-size: 22px;
+    line-height: 1;
+    margin-bottom: 4px;
+    transition: all 0.3s ease;
+}
+
+.nav-icon i {
+    transition: all 0.3s ease;
+}
+
+.nav-icon .active-icon {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+}
+
+.mobile-bottom-nav-item.active .nav-icon i:first-child {
+    opacity: 0;
+}
+
+.mobile-bottom-nav-item.active .nav-icon .active-icon {
+    opacity: 1;
+}
+
+/* Center Contact Button */
+.contact-popup-trigger .nav-icon-center {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #19868b 0%, #0d6d71 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 20px;
+    margin-top: -20px;
+    margin-bottom: 2px;
+    box-shadow: 0 4px 15px rgba(25, 134, 139, 0.4);
+    transition: all 0.3s ease;
+}
+
+.contact-popup-trigger:hover .nav-icon-center,
+.contact-popup-trigger:focus .nav-icon-center {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(25, 134, 139, 0.5);
+}
+
+.contact-popup-trigger .nav-label {
+    color: #19868b;
+    font-weight: 600;
+}
+
+/* Nav Label */
+.nav-label {
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.mobile-bottom-nav-item.active .nav-label {
+    color: #19868b;
+    font-weight: 600;
+}
+
+/* Wishlist Badge */
+.wishlist-badge {
+    position: absolute;
+    top: 5px;
+    right: 50%;
+    transform: translateX(12px);
+    background: #e1273d;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 600;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+}
+
+/* ========================================
+   CONTACT POPUP MODAL
+   ======================================== */
+
+.contact-popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1100;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.contact-popup-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+.contact-popup-modal {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1101;
+    background: #fff;
+    border-radius: 20px 20px 0 0;
+    max-height: 85vh;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.contact-popup-modal.active {
+    display: block;
+    transform: translateY(0);
+}
+
+/* Popup Header */
+.contact-popup-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 20px 15px;
+    border-bottom: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    background: #fff;
+    border-radius: 20px 20px 0 0;
+}
+
+.contact-popup-header h4 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.contact-popup-header h4 i {
+    color: #19868b;
+}
+
+.contact-popup-close {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: #f5f5f5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    color: #666;
+    transition: all 0.3s ease;
+}
+
+.contact-popup-close:hover {
+    background: #e1273d;
+    color: #fff;
+}
+
+/* Popup Body */
+.contact-popup-body {
+    padding: 15px 20px 30px;
+}
+
+/* Contact Links */
+.contact-popup-link {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.contact-popup-link:hover {
+    background: rgba(25, 134, 139, 0.1);
+    transform: translateX(5px);
+}
+
+[dir="rtl"] .contact-popup-link:hover {
+    transform: translateX(-5px);
+}
+
+.contact-popup-link-icon {
+    width: 45px;
+    height: 45px;
+    background: #19868b;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.contact-popup-link.whatsapp-link .contact-popup-link-icon {
+    background: #25d366;
+}
+
+.contact-popup-link-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-popup-link-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+}
+
+.contact-popup-link-desc {
+    font-size: 13px;
+    color: #666;
+    margin-top: 2px;
+}
+
+.contact-popup-link > i:last-child {
+    color: #999;
+    font-size: 14px;
+}
+
+/* Social Icons Section */
+.contact-popup-social {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.contact-popup-social-title {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.contact-popup-social-icons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.contact-popup-social-icons .social-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 20px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    background: #19868b;
+}
+
+.contact-popup-social-icons .social-icon:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Individual Social Colors */
+.contact-popup-social-icons .social-icon.facebook {
+    background: #1877f2;
+}
+
+.contact-popup-social-icons .social-icon.instagram {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+}
+
+.contact-popup-social-icons .social-icon.twitter {
+    background: #1da1f2;
+}
+
+.contact-popup-social-icons .social-icon.linkedin {
+    background: #0077b5;
+}
+
+.contact-popup-social-icons .social-icon.youtube {
+    background: #ff0000;
+}
+
+.contact-popup-social-icons .social-icon.pinterest {
+    background: #e60023;
+}
+
+.contact-popup-social-icons .social-icon.whatsapp {
+    background: #25d366;
+}
+
+/* ========================================
+   BODY STATE
+   ======================================== */
+
+body.contact-popup-open {
+    overflow: hidden;
+}
+
+/* Adjust back to top button position on mobile */
+@media (max-width: 991px) {
+    .back-to-top {
+        bottom: 80px !important;
+    }
+}
+
+/* ========================================
+   RESPONSIVE - Mobile/Tablet Adjustments
+   ======================================== */
+
+@media (max-width: 576px) {
+    .mobile-bottom-nav-container {
+        height: 60px;
+    }
+    
+    .nav-icon {
+        font-size: 20px;
+    }
+    
+    .nav-label {
+        font-size: 9px;
+    }
+    
+    .contact-popup-trigger .nav-icon-center {
+        width: 46px;
+        height: 46px;
+        font-size: 18px;
+        margin-top: -18px;
+    }
+    
+    .contact-popup-link {
+        padding: 12px;
+    }
+    
+    .contact-popup-link-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .contact-popup-social-icons .social-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+    }
+}
+
+/* ========================================
+   RTL SUPPORT
+   ======================================== */
+
+[dir="rtl"] .contact-popup-link > i:last-child {
+    transform: rotate(180deg);
+}
+
+[dir="rtl"] .wishlist-badge {
+    right: auto;
+    left: 50%;
+    transform: translateX(-12px);
+}

@@ -106,6 +106,13 @@ return [
     'no_results_found' => 'No results found',
     'project_code' => 'Project Code',
     'offer' => 'Offer',
+    
+    // Mobile Bottom Nav
+    'wishlist' => 'Wishlist',
+    'login' => 'Login',
+    'contact' => 'Contact',
+    'chat_with_us' => 'Chat with us',
+    'send_message' => 'Send us a message',
     'project' => 'Project',
     'search_placeholder' => 'Search offers and projects...',
     'select_type' => 'Select Type',
@@ -217,6 +224,7 @@ return [
     'our_projects' => 'Our Projects',
     'projects_bio' => 'Discover our portfolio of exceptional engineering projects across various categories.',
     'all' => 'All',
+    'more' => 'More',
     
     // Home Contact & FAQ Section
     'why_choose_us' => 'Why Choose Us',

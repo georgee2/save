@@ -65,6 +65,8 @@
           <link rel="stylesheet" href="{{asset('/assets/css/header.css')}}?v={{ time() }}">
           <!-- Mobile Header CSS -->
           <link rel="stylesheet" href="{{asset('/assets/css/mobile-header.css')}}?v={{ time() }}">
+          <!-- Mobile Bottom Nav CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/css/mobile-bottom-nav.css')}}?v={{ time() }}">
           
           <!-- RTL CSS for Arabic -->
           @if(app()->getLocale() == 'ar')
@@ -90,6 +92,7 @@
 
       </main>
       @include('includes.footer')
+      @include('includes.mobile-bottom-nav')
       @include('includes.language-switcher')
 
 

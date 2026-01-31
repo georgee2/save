@@ -144,8 +144,8 @@ body.scrolled .mobile-header {
     position: fixed;
     top: 0;
     left: 0;
-    width: 300px;
-    max-width: 85vw;
+    width: 340px;
+    max-width: 90vw;
     height: 100vh;
     background: #ffffff;
     z-index: 1001;
@@ -387,26 +387,65 @@ body.scrolled .mobile-header {
 
 .mobile-sidebar-social {
     display: flex;
-    gap: 10px;
-    margin-top: 15px;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0;
 }
 
 .mobile-sidebar-social a {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
     background: #19868b;
     color: #ffffff;
     border-radius: 50%;
-    font-size: 14px;
+    font-size: 18px;
     transition: all 0.3s ease;
+    text-decoration: none;
 }
 
 .mobile-sidebar-social a:hover {
     background: #0d6d71;
     transform: translateY(-2px);
+}
+
+/* Individual social icon colors on hover */
+.mobile-sidebar-social a[href*="facebook"]:hover {
+    background: #1877f2;
+}
+
+.mobile-sidebar-social a[href*="instagram"]:hover {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+}
+
+.mobile-sidebar-social a[href*="twitter"]:hover,
+.mobile-sidebar-social a[href*="x.com"]:hover {
+    background: #1da1f2;
+}
+
+.mobile-sidebar-social a[href*="linkedin"]:hover {
+    background: #0077b5;
+}
+
+.mobile-sidebar-social a[href*="youtube"]:hover {
+    background: #ff0000;
+}
+
+.mobile-sidebar-social a[href*="tiktok"]:hover {
+    background: #000000;
+}
+
+.mobile-sidebar-social a[href*="whatsapp"]:hover {
+    background: #25d366;
+}
+
+.mobile-sidebar-social a[href*="snapchat"]:hover {
+    background: #fffc00;
+    color: #000;
 }
 
 /* ========================================
@@ -453,7 +492,7 @@ body.scrolled .mobile-header {
     }
     
     .mobile-sidebar {
-        width: 280px;
+        width: 320px;
     }
 }
 
@@ -492,7 +531,13 @@ body.scrolled .mobile-header {
     }
     
     .mobile-sidebar {
-        width: 260px;
+        width: 300px;
+    }
+    
+    .mobile-sidebar-social a {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
     }
 }
 
