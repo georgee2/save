@@ -46,6 +46,24 @@
 /* Badge Styling */
 .home-projects-section .badge-primary {
     background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 11px;
+}
+
+@media (max-width: 1200px) {
+    .home-projects-section .badge-primary {
+        max-width: 120px;
+    }
+}
+
+@media (max-width: 768px) {
+    .home-projects-section .badge-primary {
+        max-width: 100px;
+        font-size: 10px;
+    }
 }
 
 /* Nav Pills - Category Tabs */

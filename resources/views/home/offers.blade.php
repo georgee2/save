@@ -117,15 +117,17 @@
                     {{-- Offer Content --}}
                     <div class="offer-card-body bg-white p-4">
                         {{-- Category --}}
-                        <div class="offer-category mb-2">
+                        <div class="offer-category-info mb-2">
                             @if($offer->category)
-                            <a href="#" class="text-primary font-weight-500 fs-13 hover-secondary">
+                            <a href="{{ route('offers.category', $offer->category->slug) }}" class="offer-cat-link" title="{{ app()->getLocale() == 'ar' ? $offer->category->title_arabic : $offer->category->title_english }}">
                                 {{ app()->getLocale() == 'ar' ? $offer->category->title_arabic : $offer->category->title_english }}
                             </a>
                             @endif
+                            @if($offer->category && $offer->subcategory)
+                            <span class="cat-divider">•</span>
+                            @endif
                             @if($offer->subcategory)
-                            <span class="mx-1 text-muted">/</span>
-                            <a href="#" class="text-gray-light fs-13 hover-primary">
+                            <a href="{{ route('offers.subcategory', $offer->subcategory->slug) }}" class="offer-subcat-link" title="{{ app()->getLocale() == 'ar' ? $offer->subcategory->title_arabic : $offer->subcategory->title_english }}">
                                 {{ app()->getLocale() == 'ar' ? $offer->subcategory->title_arabic : $offer->subcategory->title_english }}
                             </a>
                             @endif

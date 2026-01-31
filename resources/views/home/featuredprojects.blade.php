@@ -97,19 +97,21 @@
                                 {{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}
                             </a>
                         </h2>
-                        <p class="card-text font-weight-500 text-gray-light mb-2">
+                        <div class="project-category-info mb-2">
                             @if($project->category)
-                                <a href="#" class="text-gray-light hover-primary">
-                                    {{ app()->getLocale() == 'ar' ? $project->category->title_arabic : $project->category->title_english }}
-                                </a>
+                            <a href="{{ route('category.show', $project->category->slug) }}" class="project-cat-link" title="{{ app()->getLocale() == 'ar' ? $project->category->title_arabic : $project->category->title_english }}">
+                                {{ app()->getLocale() == 'ar' ? $project->category->title_arabic : $project->category->title_english }}
+                            </a>
+                            @endif
+                            @if($project->category && $project->subcategory)
+                            <span class="cat-divider">•</span>
                             @endif
                             @if($project->subcategory)
-                                <span class="mx-1">/</span>
-                                <a href="#" class="text-gray-light hover-primary">
-                                    {{ app()->getLocale() == 'ar' ? $project->subcategory->title_arabic : $project->subcategory->title_english }}
-                                </a>
+                            <a href="{{ route('subcategory.show', $project->subcategory->slug) }}" class="project-subcat-link" title="{{ app()->getLocale() == 'ar' ? $project->subcategory->title_arabic : $project->subcategory->title_english }}">
+                                {{ app()->getLocale() == 'ar' ? $project->subcategory->title_arabic : $project->subcategory->title_english }}
+                            </a>
                             @endif
-                        </p>
+                        </div>
                         <ul class="list-inline d-flex mb-0 flex-wrap mr-n5">
                             @foreach($project->specifications->take(4) as $spec)
                             @if($spec->specification)
@@ -155,7 +157,7 @@
 <style>
 /* Home Featured Projects - Fixed Height Cards */
 .featured-projects-section .slick-slider .card.shadow-hover-2 {
-    height: 650px;
+    height: 620px;
     display: flex;
     flex-direction: column;
 }
@@ -313,6 +315,37 @@
 
 .project-share-badge .share-slide-icons .email-btn:hover {
     background: #545b62;
+}
+
+/* Category/Subcategory - Simple Text Links */
+.featured-projects-section .project-category-info {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #6c757d;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 40px;
+}
+
+.featured-projects-section .project-cat-link,
+.featured-projects-section .project-subcat-link {
+    color: #19868b;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.featured-projects-section .project-cat-link:hover,
+.featured-projects-section .project-subcat-link:hover {
+    color: #e1273d;
+    text-decoration: underline;
+}
+
+.featured-projects-section .cat-divider {
+    color: #adb5bd;
+    margin: 0 6px;
 }
 </style>
 @endif

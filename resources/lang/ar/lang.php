@@ -106,6 +106,13 @@ return [
     'no_results_found' => 'لا توجد نتائج',
     'project_code' => 'كود المشروع',
     'offer' => 'عرض',
+    
+    // Mobile Bottom Nav
+    'wishlist' => 'المفضلة',
+    'login' => 'تسجيل الدخول',
+    'contact' => 'اتصل بنا',
+    'chat_with_us' => 'تواصل معنا',
+    'send_message' => 'أرسل لنا رسالة',
     'project' => 'مشروع',
     'search_placeholder' => 'ابحث في العروض والمشاريع...',
     'select_type' => 'اختر النوع',
@@ -217,6 +224,7 @@ return [
     'our_projects' => 'مشاريعنا',
     'projects_bio' => 'اكتشف مجموعتنا من المشاريع الهندسية الاستثنائية عبر مختلف الفئات.',
     'all' => 'الكل',
+    'more' => 'المزيد',
     
     // Home Contact & FAQ Section
     'why_choose_us' => 'لماذا تختارنا',

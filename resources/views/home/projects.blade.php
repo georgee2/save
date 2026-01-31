@@ -10,13 +10,14 @@
                 <p class="mb-7">{{ __('lang.projects_bio') }}</p>
             </div>
             <div class="col-lg-7 col-xxl-6">
-                <ul class="nav nav-pills mt-lg-4 justify-content-lg-end mb-lg-0 mb-6" role="tablist">
+                {{-- Desktop: Show first 3 categories + More dropdown for all --}}
+                <ul class="nav nav-pills mt-lg-4 justify-content-lg-end mb-lg-0 mb-6 d-none d-lg-flex project-category-nav" role="tablist">
                     <li class="nav-item pl-lg-3 pr-3 pr-lg-0 mb-3">
                         <a class="pointer nav-link active fs-13 letter-spacing-087 text-secondary text-uppercase px-4 bg-gray-01 text-active-white bg-active-primary rounded-lg"
                            id="pills-all-projects-tab" data-toggle="pill" href="#pills-all-projects" role="tab"
                            aria-controls="pills-all-projects" aria-selected="true">{{ __('lang.all') }}</a>
                     </li>
-                    @foreach($projectCategories as $category)
+                    @foreach($projectCategories->take(2) as $category)
                     <li class="nav-item pl-lg-3 pr-3 pr-lg-0 mb-3">
                         <a class="pointer nav-link fs-13 letter-spacing-087 text-secondary text-uppercase px-4 bg-gray-01 text-active-white bg-active-primary rounded-lg"
                            id="pills-cat-{{ $category->id }}-tab" data-toggle="pill" href="#pills-cat-{{ $category->id }}" role="tab"
@@ -25,7 +26,37 @@
                         </a>
                     </li>
                     @endforeach
+                    {{-- More dropdown with ALL categories --}}
+                    <li class="nav-item pl-lg-3 pr-3 pr-lg-0 mb-3 dropdown project-more-dropdown">
+                        <a class="pointer nav-link fs-13 letter-spacing-087 text-secondary text-uppercase px-4 bg-gray-01 rounded-lg dropdown-toggle"
+                           href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{ __('lang.more') }} <i class="fas fa-chevron-down ml-1 fs-10"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right project-dropdown-menu">
+                            @foreach($projectCategories as $category)
+                            <a class="dropdown-item project-dropdown-item" href="#pills-cat-{{ $category->id }}" 
+                               data-toggle="pill" data-target="#pills-cat-{{ $category->id }}"
+                               role="tab" aria-controls="pills-cat-{{ $category->id }}">
+                                {{ app()->getLocale() == 'ar' ? $category->title_arabic : $category->title_english }}
+                            </a>
+                            @endforeach
+                        </div>
+                    </li>
                 </ul>
+                
+                {{-- Mobile/Tablet: Horizontal scrollable pills --}}
+                <div class="d-lg-none mb-4 project-category-mobile-wrapper">
+                    <div class="project-category-mobile-scroll">
+                        <button type="button" class="project-mobile-pill active" data-target="pills-all-projects">
+                            {{ __('lang.all') }}
+                        </button>
+                        @foreach($projectCategories as $category)
+                        <button type="button" class="project-mobile-pill" data-target="pills-cat-{{ $category->id }}">
+                            {{ app()->getLocale() == 'ar' ? $category->title_arabic : $category->title_english }}
+                        </button>
+                        @endforeach
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -193,4 +224,239 @@
         </div>
     </div>
 </section>
+
+{{-- Project Category Filter Styles --}}
+<style>
+/* Desktop More Dropdown */
+.project-more-dropdown .dropdown-toggle::after {
+    display: none;
+}
+
+.project-dropdown-menu {
+    min-width: 220px;
+    padding: 8px 0;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.project-dropdown-item {
+    padding: 10px 20px;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #696969;
+    transition: all 0.2s ease;
+}
+
+.project-dropdown-item:hover,
+.project-dropdown-item:focus {
+    background-color: #eff6f7;
+    color: #19868b;
+}
+
+.project-dropdown-item.active {
+    background-color: #19868b;
+    color: #fff;
+}
+
+/* Mobile Category - Horizontal Scrollable Pills */
+.project-category-mobile-wrapper {
+    position: relative;
+    margin: 0 -15px;
+    padding: 0 15px;
+}
+
+.project-category-mobile-scroll {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 8px 5px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.project-category-mobile-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.project-mobile-pill {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    padding: 0 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 20px;
+    background: #fff;
+    color: #555;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.project-mobile-pill:hover {
+    border-color: #19868b;
+    color: #19868b;
+}
+
+.project-mobile-pill.active {
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(25, 134, 139, 0.35);
+}
+
+/* RTL Support */
+[dir="rtl"] .project-category-mobile-wrapper {
+    margin: 0 -15px;
+    padding: 0 15px;
+}
+
+[dir="rtl"] .project-dropdown-menu {
+    text-align: right;
+}
+
+/* Desktop nav item - show complete text */
+.project-category-nav .nav-link {
+    white-space: nowrap;
+}
+</style>
+
+{{-- Project Category Filter Script --}}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Mobile pill buttons functionality
+    document.querySelectorAll('.project-mobile-pill').forEach(function(pill) {
+        pill.addEventListener('click', function() {
+            var targetId = this.getAttribute('data-target');
+            var targetTab = document.getElementById(targetId);
+            
+            // Remove active from all tabs
+            document.querySelectorAll('#pills-projects-tabContent .tab-pane').forEach(function(pane) {
+                pane.classList.remove('show', 'active');
+            });
+            
+            // Remove active from all mobile pills
+            document.querySelectorAll('.project-mobile-pill').forEach(function(p) {
+                p.classList.remove('active');
+            });
+            
+            // Remove active from all nav links (desktop)
+            document.querySelectorAll('.project-category-nav .nav-link').forEach(function(link) {
+                link.classList.remove('active');
+                link.setAttribute('aria-selected', 'false');
+            });
+            
+            // Remove active from dropdown items
+            document.querySelectorAll('.project-dropdown-item').forEach(function(item) {
+                item.classList.remove('active');
+            });
+            
+            // Activate selected tab
+            if (targetTab) {
+                targetTab.classList.add('show', 'active');
+            }
+            
+            // Mark this pill as active
+            this.classList.add('active');
+            
+            // Sync desktop nav if visible
+            var desktopTab = document.querySelector('[href="#' + targetId + '"]');
+            if (desktopTab && desktopTab.classList.contains('nav-link')) {
+                desktopTab.classList.add('active');
+                desktopTab.setAttribute('aria-selected', 'true');
+            }
+        });
+    });
+    
+    // Desktop dropdown items - sync with tabs
+    document.querySelectorAll('.project-dropdown-item').forEach(function(item) {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            var targetId = this.getAttribute('href').replace('#', '');
+            var targetTab = document.getElementById(targetId);
+            
+            // Remove active from all tabs
+            document.querySelectorAll('#pills-projects-tabContent .tab-pane').forEach(function(pane) {
+                pane.classList.remove('show', 'active');
+            });
+            
+            // Remove active from all nav links
+            document.querySelectorAll('.project-category-nav .nav-link').forEach(function(link) {
+                link.classList.remove('active');
+                link.setAttribute('aria-selected', 'false');
+            });
+            
+            // Remove active from all dropdown items
+            document.querySelectorAll('.project-dropdown-item').forEach(function(di) {
+                di.classList.remove('active');
+            });
+            
+            // Remove active from all mobile pills
+            document.querySelectorAll('.project-mobile-pill').forEach(function(p) {
+                p.classList.remove('active');
+            });
+            
+            // Activate selected tab
+            if (targetTab) {
+                targetTab.classList.add('show', 'active');
+            }
+            
+            // Mark dropdown item as active
+            this.classList.add('active');
+            
+            // Sync mobile pill
+            var mobilePill = document.querySelector('.project-mobile-pill[data-target="' + targetId + '"]');
+            if (mobilePill) {
+                mobilePill.classList.add('active');
+            }
+            
+            // Close dropdown
+            var dropdown = this.closest('.dropdown');
+            if (dropdown) {
+                var dropdownToggle = dropdown.querySelector('.dropdown-toggle');
+                if (dropdownToggle && typeof bootstrap !== 'undefined') {
+                    bootstrap.Dropdown.getInstance(dropdownToggle)?.hide();
+                } else {
+                    $(dropdownToggle).dropdown('hide');
+                }
+            }
+        });
+    });
+    
+    // Sync mobile pills when desktop tabs are clicked
+    document.querySelectorAll('.project-category-nav .nav-link[data-toggle="pill"]').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            var targetId = this.getAttribute('href').replace('#', '');
+            
+            // Remove active from all mobile pills
+            document.querySelectorAll('.project-mobile-pill').forEach(function(p) {
+                p.classList.remove('active');
+            });
+            
+            // Sync mobile pill
+            var mobilePill = document.querySelector('.project-mobile-pill[data-target="' + targetId + '"]');
+            if (mobilePill) {
+                mobilePill.classList.add('active');
+            }
+            
+            // Remove active from dropdown items
+            document.querySelectorAll('.project-dropdown-item').forEach(function(item) {
+                item.classList.remove('active');
+            });
+        });
+    });
+});
+</script>
 @endif

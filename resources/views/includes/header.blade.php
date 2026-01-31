@@ -608,38 +608,47 @@
     
     {{-- Sidebar Footer --}}
     <div class="mobile-sidebar-footer">
+        @php
+            $mobileContactInfo = $footerContactInfo ?? \App\Models\ContactInformation::getContactInfo();
+        @endphp
         <div class="mobile-sidebar-contact">
-            @if(isset($contactInfo) && $contactInfo)
-                @if($contactInfo->phone)
-                <a href="tel:{{ $contactInfo->phone }}">
+            @if($mobileContactInfo)
+                @if($mobileContactInfo->mobile)
+                <a href="tel:{{ $mobileContactInfo->mobile }}">
                     <i class="fal fa-phone"></i>
-                    <span>{{ $contactInfo->phone }}</span>
+                    <span>{{ $mobileContactInfo->mobile }}</span>
                 </a>
                 @endif
-                @if($contactInfo->email)
-                <a href="mailto:{{ $contactInfo->email }}">
+                @if($mobileContactInfo->email)
+                <a href="mailto:{{ $mobileContactInfo->email }}">
                     <i class="fal fa-envelope"></i>
-                    <span>{{ $contactInfo->email }}</span>
+                    <span>{{ $mobileContactInfo->email }}</span>
                 </a>
                 @endif
             @endif
         </div>
         <div class="mobile-sidebar-social">
-            @if(isset($contactInfo) && $contactInfo)
-                @if($contactInfo->facebook)
-                <a href="{{ $contactInfo->facebook }}" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            @if($mobileContactInfo)
+                @if($mobileContactInfo->whatsapp)
+                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $mobileContactInfo->whatsapp) }}" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
                 @endif
-                @if($contactInfo->instagram)
-                <a href="{{ $contactInfo->instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>
+                @if($mobileContactInfo->facebook)
+                <a href="{{ $mobileContactInfo->facebook }}" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
                 @endif
-                @if($contactInfo->twitter)
-                <a href="{{ $contactInfo->twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>
+                @if($mobileContactInfo->instagram)
+                <a href="{{ $mobileContactInfo->instagram }}" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
                 @endif
-                @if($contactInfo->linkedin)
-                <a href="{{ $contactInfo->linkedin }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                @if($mobileContactInfo->twitter)
+                <a href="{{ $mobileContactInfo->twitter }}" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
                 @endif
-                @if($contactInfo->youtube)
-                <a href="{{ $contactInfo->youtube }}" target="_blank"><i class="fab fa-youtube"></i></a>
+                @if($mobileContactInfo->linkedin)
+                <a href="{{ $mobileContactInfo->linkedin }}" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                @endif
+                @if($mobileContactInfo->youtube)
+                <a href="{{ $mobileContactInfo->youtube }}" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+                @endif
+                @if($mobileContactInfo->pinterest)
+                <a href="{{ $mobileContactInfo->pinterest }}" target="_blank" title="Pinterest"><i class="fab fa-pinterest-p"></i></a>
                 @endif
             @endif
         </div>

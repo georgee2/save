@@ -321,3 +321,61 @@
     padding: 0 2px;
     border-radius: 2px;
 }
+
+/* Consistent Height for Form Elements */
+.global-search-form .h-52,
+.global-search-form input.h-52,
+.global-search-form button.h-52 {
+    height: 52px !important;
+    line-height: 52px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.global-search-form input.h-52 {
+    line-height: normal;
+    padding: 0 15px;
+}
+
+/* Global Search Area Slider Styles (jQuery UI) */
+.global-search-slider-container {
+    padding: 0 10px;
+}
+
+#global-sqft-slider.ui-slider {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    border: none;
+    box-shadow: none;
+}
+
+#global-sqft-slider .ui-slider-range {
+    background: #fff;
+    border-radius: 3px;
+}
+
+#global-sqft-slider .ui-slider-handle {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    border: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    top: -6px;
+}
+
+#global-sqft-slider .ui-slider-handle:focus {
+    outline: none;
+}
+
+.slider-values-display {
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+#global-sqft-display {
+    display: inline-block;
+    min-width: 200px;
+}
