@@ -1,5 +1,5 @@
 {{-- Mobile Bottom Navigation - Only visible on mobile/tablet --}}
-<nav class="mobile-bottom-nav" id="mobileBottomNav">
+<nav class="mobile-bottom-nav" id="mobileBottomNav" style="position:fixed!important;bottom:0!important;left:0!important;right:0!important;z-index:99999!important;background:#fff!important;">
     <div class="mobile-bottom-nav-container">
         {{-- Home --}}
         <a href="{{ route('index') }}" class="mobile-bottom-nav-item {{ Route::currentRouteName() == 'index' ? 'active' : '' }}">
@@ -49,8 +49,8 @@
 </nav>
 
 {{-- Contact Popup Modal --}}
-<div class="contact-popup-overlay" id="contactPopupOverlay"></div>
-<div class="contact-popup-modal" id="contactPopupModal">
+<div class="contact-popup-overlay" id="contactPopupOverlay" style="z-index:999999!important;"></div>
+<div class="contact-popup-modal" id="contactPopupModal" style="z-index:9999999!important;">
     <div class="contact-popup-header">
         <h4><i class="fal fa-envelope"></i> {{ __('lang.contact_us') }}</h4>
         <button type="button" class="contact-popup-close" id="contactPopupClose">
