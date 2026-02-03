@@ -295,6 +295,8 @@ Route::group(
                 Route::post('/toggle-feasibility-studies/{id}', [ProjectController::class, 'toggleFeasibilityStudies'])->name('project.toggle-feasibility-studies');
                 Route::get('/subcategories', [ProjectController::class, 'getSubcategories'])->name('project.subcategories');
                 Route::get('/live-search', [ProjectController::class, 'liveSearch'])->name('project.live-search');
+                Route::post('/bulk-publish', [ProjectController::class, 'bulkPublish'])->name('project.bulk-publish');
+                Route::post('/bulk-home-status', [ProjectController::class, 'bulkHomeStatus'])->name('project.bulk-home-status');
                 
                 // Project Building Components Sub-Routes (AJAX)
                 Route::prefix('{projectId}/buildingcomponents')->group(function () {
@@ -622,6 +624,8 @@ Route::group(
                 Route::post('/toggle-feasibility-studies/{id}', [OfferController::class, 'toggleFeasibilityStudies'])->name('offer.toggle-feasibility-studies');
                 Route::get('/subcategories', [OfferController::class, 'getSubcategories'])->name('offer.subcategories');
                 Route::get('/live-search', [OfferController::class, 'liveSearch'])->name('offer.live-search');
+                Route::post('/bulk-publish', [OfferController::class, 'bulkPublish'])->name('offer.bulk-publish');
+                Route::post('/bulk-home-status', [OfferController::class, 'bulkHomeStatus'])->name('offer.bulk-home-status');
                 
                 // Offer Prices Sub-Routes (AJAX)
                 Route::prefix('{offerId}/prices')->group(function () {
@@ -744,6 +748,8 @@ Route::group(
                 Route::post('/restore/{id}', [InteriorDesignGalleryController::class, 'restore'])->name('interior-design-gallery.restore');
                 Route::post('/toggle-publish/{id}', [InteriorDesignGalleryController::class, 'togglePublish'])->name('interior-design-gallery.toggle-publish');
                 Route::post('/toggle-home/{id}', [InteriorDesignGalleryController::class, 'toggleHomeStatus'])->name('interior-design-gallery.toggle-home');
+                Route::post('/bulk-publish', [InteriorDesignGalleryController::class, 'bulkPublish'])->name('interior-design-gallery.bulk-publish');
+                Route::post('/bulk-home-status', [InteriorDesignGalleryController::class, 'bulkHomeStatus'])->name('interior-design-gallery.bulk-home-status');
             });
 
             // Home Sections Management Routes

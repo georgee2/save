@@ -26,13 +26,74 @@ class InteriorDesignGalleryController extends Controller
     /**
      * Display a listing of interior design galleries
      */
-    public function index()
+    public function index(Request $request)
     {
-        $galleries = $this->interiorDesignGallery->list();
+        $query = InteriorDesignGallery::query()
+            ->leftJoin('interior_categories as ic', 'interior_design_galleries.category_id', '=', 'ic.id')
+            ->leftJoin('project_types as pt', 'interior_design_galleries.project_type_id', '=', 'pt.id')
+            ->leftJoin('project_styles as ps', 'interior_design_galleries.project_style_id', '=', 'ps.id')
+            ->leftJoin('emirates as e', 'interior_design_galleries.emirate_id', '=', 'e.id')
+            ->select(
+                'interior_design_galleries.id',
+                'interior_design_galleries.title_english',
+                'interior_design_galleries.title_arabic',
+                'interior_design_galleries.image',
+                'interior_design_galleries.publish_status',
+                'interior_design_galleries.home_status',
+                'interior_design_galleries.ordering',
+                'interior_design_galleries.created_at',
+                'ic.title_english as category_name',
+                'pt.name_english as type_name',
+                'ps.title_english as style_name',
+                'e.title_english as emirate_name'
+            )
+            ->whereNull('interior_design_galleries.deleted_at');
+
+        // Apply filters
+        if ($request->filled('title')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('interior_design_galleries.title_english', 'like', '%' . $request->title . '%')
+                  ->orWhere('interior_design_galleries.title_arabic', 'like', '%' . $request->title . '%');
+            });
+        }
+        if ($request->filled('category_id')) {
+            $query->where('interior_design_galleries.category_id', $request->category_id);
+        }
+        if ($request->filled('type_id')) {
+            $query->where('interior_design_galleries.project_type_id', $request->type_id);
+        }
+        if ($request->filled('style_id')) {
+            $query->where('interior_design_galleries.project_style_id', $request->style_id);
+        }
+        if ($request->filled('emirate_id')) {
+            $query->where('interior_design_galleries.emirate_id', $request->emirate_id);
+        }
+        if ($request->filled('publish_status')) {
+            $query->where('interior_design_galleries.publish_status', $request->publish_status);
+        }
+        if ($request->filled('home_status')) {
+            $query->where('interior_design_galleries.home_status', $request->home_status);
+        }
+
+        // Order and paginate
+        $galleries = $query->orderBy('interior_design_galleries.ordering', 'asc')
+            ->orderBy('interior_design_galleries.created_at', 'desc')
+            ->paginate(15)
+            ->withQueryString();
         
-        return view('admin::interior-design-galleries.index', [
-            'galleries' => $galleries
-        ]);
+        // Get filter options
+        $categories = InteriorCategory::whereNull('deleted_at')->orderBy('title_english')->get();
+        $types = ProjectType::whereNull('deleted_at')->orderBy('name_english')->get();
+        $styles = ProjectStyle::whereNull('deleted_at')->orderBy('title_english')->get();
+        $emirates = Emirate::whereNull('deleted_at')->orderBy('title_english')->get();
+        
+        return view('admin::interior-design-galleries.index', compact(
+            'galleries',
+            'categories',
+            'types',
+            'styles',
+            'emirates'
+        ));
     }
 
     /**
@@ -313,5 +374,57 @@ class InteriorDesignGalleryController extends Controller
         Storage::disk('public')->put('/interior_design_galleries/' . $filename, (string) $image);
         
         return '/interior_design_galleries/' . $filename;
+    }
+    
+    /**
+     * Bulk update publish status
+     */
+    public function bulkPublish(Request $request)
+    {
+        $action = $request->input('action'); // 'publish' or 'unpublish'
+        $scope = $request->input('scope'); // 'all' or 'selected'
+        $ids = $request->input('ids', '[]');
+        
+        // Decode JSON string to array
+        $idsArray = json_decode($ids, true) ?? [];
+        
+        $query = InteriorDesignGallery::whereNull('deleted_at');
+        
+        if ($scope === 'selected' && !empty($idsArray)) {
+            $query->whereIn('id', $idsArray);
+        }
+        
+        $newStatus = $action === 'publish' ? 0 : 1;
+        $count = $query->count();
+        $query->update(['publish_status' => $newStatus]);
+        
+        $statusText = $action === 'publish' ? 'published' : 'unpublished';
+        return redirect()->back()->with('success', "{$count} gallery item(s) {$statusText} successfully!");
+    }
+    
+    /**
+     * Bulk update home status
+     */
+    public function bulkHomeStatus(Request $request)
+    {
+        $action = $request->input('action'); // 'show' or 'hide'
+        $scope = $request->input('scope'); // 'all' or 'selected'
+        $ids = $request->input('ids', '[]');
+        
+        // Decode JSON string to array
+        $idsArray = json_decode($ids, true) ?? [];
+        
+        $query = InteriorDesignGallery::whereNull('deleted_at');
+        
+        if ($scope === 'selected' && !empty($idsArray)) {
+            $query->whereIn('id', $idsArray);
+        }
+        
+        $newStatus = $action === 'show' ? 0 : 1;
+        $count = $query->count();
+        $query->update(['home_status' => $newStatus]);
+        
+        $statusText = $action === 'show' ? 'shown on home' : 'hidden from home';
+        return redirect()->back()->with('success', "{$count} gallery item(s) {$statusText} successfully!");
     }
 }
