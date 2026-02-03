@@ -147,7 +147,7 @@
 
                          <div class="row">
                                         <div class="form-group col-md-6">
-                                            <label class="text-capitalize">Main Image (Width: 890px - Height: 278px - Will be converted to WebP)</label>
+                                            <label class="text-capitalize">Main Image (600x600px Square - Will be converted to WebP)</label>
                                             <input accept="image/*"  class="form-control dropify" type="file" name="image">
                                             @error('image')
                                             <span class="text-danger mt-1">{{ $message }}</span>

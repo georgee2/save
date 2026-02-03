@@ -48,6 +48,63 @@
                     <i class="fas fa-expand"></i>
                 </div>
                 
+                {{-- Share Options --}}
+                @php
+                    $shareTitle = app()->getLocale() == 'ar' ? $item->title_arabic : $item->title_english;
+                    $shareCategory = $item->category ? (app()->getLocale() == 'ar' ? $item->category->title_arabic : $item->category->title_english) : '';
+                    $shareStyle = $item->projectStyle ? (app()->getLocale() == 'ar' ? $item->projectStyle->title_arabic : $item->projectStyle->title_english) : '';
+                    $shareEmirate = $item->emirate ? (app()->getLocale() == 'ar' ? $item->emirate->title_arabic : $item->emirate->title_english) : '';
+                    $shareText = $shareTitle;
+                    if($shareCategory) {
+                        $shareText .= ' - ' . $shareCategory;
+                    }
+                    if($shareStyle) {
+                        $shareText .= ' (' . $shareStyle . ')';
+                    }
+                    if($shareEmirate) {
+                        $shareText .= ' | ' . $shareEmirate;
+                    }
+                    $shareUrl = route('interior.index');
+                    $shareImage = url('/storage' . $item->image);
+                @endphp
+                <div class="interior-share-badge" onclick="event.stopPropagation();">
+                    <div class="share-actions">
+                        <div class="share-slide-wrapper">
+                            <button type="button" class="share-action-btn share-slide-btn">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <div class="share-slide-icons">
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode($shareUrl) }}&quote={{ urlencode($shareText) }}" 
+                                   target="_blank" class="share-action-btn facebook-btn" onclick="event.stopPropagation();">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="https://twitter.com/intent/tweet?url={{ urlencode($shareUrl) }}&text={{ urlencode($shareText) }}" 
+                                   target="_blank" class="share-action-btn twitter-btn" onclick="event.stopPropagation();">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode($shareUrl) }}&title={{ urlencode($shareTitle) }}&summary={{ urlencode($shareText) }}" 
+                                   target="_blank" class="share-action-btn linkedin-btn" onclick="event.stopPropagation();">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                <a href="https://pinterest.com/pin/create/button/?url={{ urlencode($shareUrl) }}&media={{ urlencode($shareImage) }}&description={{ urlencode($shareText) }}" 
+                                   target="_blank" class="share-action-btn pinterest-btn" onclick="event.stopPropagation();">
+                                    <i class="fab fa-pinterest-p"></i>
+                                </a>
+                                <a href="mailto:?subject={{ rawurlencode($shareTitle) }}&body={{ urlencode($shareText . "\n\n" . $shareUrl) }}" 
+                                   class="share-action-btn email-btn" onclick="event.stopPropagation();">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <a href="https://wa.me/?text={{ urlencode($shareText . "\n" . $shareUrl) }}" 
+                           target="_blank" 
+                           class="share-action-btn whatsapp-share-btn"
+                           onclick="event.stopPropagation();">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+                
                 {{-- Card Content --}}
                 <div class="card-content">
                     {{-- Category Badge --}}

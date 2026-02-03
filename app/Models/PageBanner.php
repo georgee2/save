@@ -21,13 +21,15 @@ class PageBanner extends Model
     {
         return [
             'services' => 'Services',
-            'portfolios' => 'Portfolios',
             'projects' => 'Projects',
             'offers' => 'Offers',
             'showcases' => 'Showcases',
             'blogs' => 'Blogs',
             'careers' => 'Careers',
-            'team' => 'Team',
+            'team' => 'Our Team',
+            'board_of_directors' => 'Board of Directors',
+            'partners' => 'Our Partners',
+            'branches' => 'Our Branches',
             'contact' => 'Contact',
         ];
     }

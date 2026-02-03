@@ -154,6 +154,21 @@
                     </div>
                     
                     {{-- Share Badge --}}
+                    @php
+                        $shareTitle = app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english;
+                        $shareSqft = $project->sqft ? number_format($project->sqft) . ' ' . __('lang.sqft') : '';
+                        $shareCategory = $project->category ? (app()->getLocale() == 'ar' ? $project->category->title_arabic : $project->category->title_english) : '';
+                        $shareSubcategory = $project->subcategory ? (app()->getLocale() == 'ar' ? $project->subcategory->title_arabic : $project->subcategory->title_english) : '';
+                        $shareText = $shareTitle;
+                        if($shareSqft) {
+                            $shareText .= ' - ' . $shareSqft;
+                        }
+                        if($shareCategory) {
+                            $shareText .= ' (' . $shareCategory . ($shareSubcategory ? ' / ' . $shareSubcategory : '') . ')';
+                        }
+                        $shareUrl = route('projects.show', $project->slug);
+                        $shareImage = url('/storage' . $project->main_image);
+                    @endphp
                     <div class="project-share-badge">
                         <div class="share-actions">
                             {{-- Share Slide Out --}}
@@ -162,30 +177,30 @@
                                     <i class="fas fa-share-alt"></i>
                                 </button>
                                 <div class="share-slide-icons">
-                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('projects.show', $project->slug)) }}" 
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode($shareUrl) }}&quote={{ urlencode($shareText) }}" 
                                        target="_blank" class="share-action-btn facebook-btn">
                                         <i class="fab fa-facebook-f"></i>
                                     </a>
-                                    <a href="https://twitter.com/intent/tweet?url={{ urlencode(route('projects.show', $project->slug)) }}&text={{ urlencode(app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english) }}" 
+                                    <a href="https://twitter.com/intent/tweet?url={{ urlencode($shareUrl) }}&text={{ urlencode($shareText) }}" 
                                        target="_blank" class="share-action-btn twitter-btn">
                                         <i class="fab fa-twitter"></i>
                                     </a>
-                                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(route('projects.show', $project->slug)) }}" 
+                                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode($shareUrl) }}&title={{ urlencode($shareTitle) }}&summary={{ urlencode($shareText) }}" 
                                        target="_blank" class="share-action-btn linkedin-btn">
                                         <i class="fab fa-linkedin-in"></i>
                                     </a>
-                                    <a href="https://www.instagram.com/" 
-                                       target="_blank" class="share-action-btn instagram-btn">
-                                        <i class="fab fa-instagram"></i>
+                                    <a href="https://pinterest.com/pin/create/button/?url={{ urlencode($shareUrl) }}&media={{ urlencode($shareImage) }}&description={{ urlencode($shareText) }}" 
+                                       target="_blank" class="share-action-btn pinterest-btn">
+                                        <i class="fab fa-pinterest-p"></i>
                                     </a>
-                                    <a href="mailto:?subject={{ rawurlencode(app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english) }}&body={{ urlencode(route('projects.show', $project->slug)) }}" 
+                                    <a href="mailto:?subject={{ rawurlencode($shareTitle) }}&body={{ urlencode($shareText . "\n\n" . $shareUrl) }}" 
                                        class="share-action-btn email-btn">
                                         <i class="fas fa-envelope"></i>
                                     </a>
                                 </div>
                             </div>
                             {{-- WhatsApp Separate --}}
-                            <a href="https://wa.me/?text={{ urlencode(route('projects.show', $project->slug)) }}" 
+                            <a href="https://wa.me/?text={{ urlencode($shareText . "\n" . $shareUrl) }}" 
                                target="_blank" 
                                class="share-action-btn whatsapp-share-btn" 
                                data-toggle="tooltip" 

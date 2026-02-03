@@ -90,10 +90,10 @@ class NewsController extends Controller
 
     $data['slug'] = Str::slug($request->title_english);
 
-        // Main Image Upload (890x278)
+        // Main Image Upload (600x600 - Square)
         if ($request->hasFile('image')) {
                 $classifiedImg = $request->file('image');
-                $image = Image::make($classifiedImg)->resize(890, 278)->encode('webp', 80);
+                $image = Image::make($classifiedImg)->fit(600, 600)->encode('webp', 80);
                 $imageName = Str::random() . ".webp";
                 Storage::disk('public')->put('/uploads/news/main/' . $imageName, (string) $image);
                 $data['image'] = "/uploads/news/main/{$imageName}";
@@ -191,10 +191,10 @@ class NewsController extends Controller
 
         $data['slug'] = Str::slug($request->title_english);
 
-        // Main Image Upload (890x278)
+        // Main Image Upload (600x600 - Square)
         if ($request->hasFile('image')) {
                 $classifiedImg = $request->file('image');
-                $image = Image::make($classifiedImg)->resize(890, 278)->encode('webp', 80);
+                $image = Image::make($classifiedImg)->fit(600, 600)->encode('webp', 80);
                 $imageName = Str::random() . ".webp";
                 Storage::disk('public')->put('/uploads/news/main/' . $imageName, (string) $image);
                 $data['image'] = "/uploads/news/main/{$imageName}";

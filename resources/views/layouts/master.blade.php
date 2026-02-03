@@ -2,9 +2,57 @@
 <html lang="{{ App::getLocale() }}" dir="{{ App::getLocale() == 'ar' ? 'rtl' : 'ltr' }}">
 
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="@yield('seo_desc')" name="description">
         <meta content="@yield('seo_tags')" name="keywords">
         <title>@yield('title' , env('APP_NAME'))</title>
+        
+        {{-- Open Graph Meta Tags for Social Sharing --}}
+        @hasSection('og_title')
+        <meta property="og:title" content="@yield('og_title')">
+        @else
+        <meta property="og:title" content="@yield('title', env('APP_NAME'))">
+        @endif
+        
+        @hasSection('og_description')
+        <meta property="og:description" content="@yield('og_description')">
+        @else
+        <meta property="og:description" content="@yield('seo_desc')">
+        @endif
+        
+        @hasSection('og_image')
+        <meta property="og:image" content="@yield('og_image')">
+        @else
+        <meta property="og:image" content="{{ asset('assets/images/og-default.jpg') }}">
+        @endif
+        
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:type" content="@yield('og_type', 'website')">
+        <meta property="og:site_name" content="{{ env('APP_NAME') }}">
+        <meta property="og:locale" content="{{ app()->getLocale() == 'ar' ? 'ar_AE' : 'en_US' }}">
+        
+        {{-- Twitter Card Meta Tags --}}
+        <meta name="twitter:card" content="summary_large_image">
+        @hasSection('og_title')
+        <meta name="twitter:title" content="@yield('og_title')">
+        @else
+        <meta name="twitter:title" content="@yield('title', env('APP_NAME'))">
+        @endif
+        
+        @hasSection('og_description')
+        <meta name="twitter:description" content="@yield('og_description')">
+        @else
+        <meta name="twitter:description" content="@yield('seo_desc')">
+        @endif
+        
+        @hasSection('og_image')
+        <meta name="twitter:image" content="@yield('og_image')">
+        @else
+        <meta name="twitter:image" content="{{ asset('assets/images/og-default.jpg') }}">
+        @endif
+        
+        @yield('meta_tags')
         <!--==============================
             All CSS File
         ============================== -->

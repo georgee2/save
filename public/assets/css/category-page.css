@@ -414,6 +414,14 @@
     background: linear-gradient(45deg, #e08323 0%, #d6582c 25%, #cc1733 50%, #bc1356 75%, #ac0878 100%);
 }
 
+.project-share-badge .share-slide-icons .pinterest-btn {
+    background: #e60023;
+}
+
+.project-share-badge .share-slide-icons .pinterest-btn:hover {
+    background: #c5001e;
+}
+
 .project-share-badge .share-slide-icons .email-btn {
     background: #6c757d;
 }

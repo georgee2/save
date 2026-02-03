@@ -116,8 +116,9 @@
 
 .blog-card-image {
     position: relative;
-    width: 40%;
-    min-height: 280px;
+    width: 280px;
+    height: 280px;
+    flex-shrink: 0;
     overflow: hidden;
 }
 
@@ -499,7 +500,9 @@
     
     .blog-card-image {
         width: 100%;
-        min-height: 220px;
+        height: auto;
+        aspect-ratio: 1 / 1;
+        max-height: 300px;
     }
     
     .blogs-sidebar {
