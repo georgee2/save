@@ -1,7 +1,35 @@
 @extends('layouts.master')
-@section('title' , app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english)
-@section('seo_desc', $project->seo_desc ?? (app()->getLocale() == 'ar' ? $project->bio_arabic : $project->bio_english))
-@section('seo_tags', $project->seo_tags ?? (app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english))
+
+@php
+    $projectTitle = app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english;
+    $projectDesc = $project->seo_desc ?? (app()->getLocale() == 'ar' ? $project->bio_arabic : $project->bio_english);
+    $projectImage = url('/storage' . $project->main_image);
+    $projectCategory = $project->category ? (app()->getLocale() == 'ar' ? $project->category->title_arabic : $project->category->title_english) : '';
+    $projectSubcategory = $project->subcategory ? (app()->getLocale() == 'ar' ? $project->subcategory->title_arabic : $project->subcategory->title_english) : '';
+    $projectSqft = $project->sqft ? number_format($project->sqft) . ' ' . __('lang.sqft') : '';
+    $ogDescription = $projectDesc;
+    if($projectSqft || $projectCategory) {
+        $ogDescription = ($projectSqft ? $projectSqft . ' | ' : '') . ($projectCategory ? $projectCategory . ' | ' : '') . $projectDesc;
+    }
+@endphp
+
+@section('title', $projectTitle)
+@section('seo_desc', $projectDesc)
+@section('seo_tags', $project->seo_tags ?? $projectTitle)
+
+{{-- Open Graph Meta Tags --}}
+@section('og_title', $projectTitle . ($projectCategory ? ' - ' . $projectCategory : ''))
+@section('og_description', $ogDescription)
+@section('og_image', $projectImage)
+@section('og_type', 'article')
+
+@section('meta_tags')
+{{-- Additional Project Meta Tags --}}
+@if($project->project_code)
+<meta property="product:retailer_item_id" content="{{ $project->project_code }}">
+@endif
+@endsection
+
 @section('content')
 
 	

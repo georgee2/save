@@ -158,7 +158,7 @@
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid rgba(0,0,0,0.08);
     box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    height: 720px;
+    height: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -173,8 +173,9 @@
 .offer-card-image {
     position: relative;
     width: 100%;
-    padding-bottom: 126.9%; /* 1146/903 = 1.269 aspect ratio for portrait */
+    padding-bottom: 126.9% !important; /* 1146/903 = 1.269 aspect ratio for portrait - KEEP COMPLETE IMAGE */
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .offer-card-image img {
@@ -468,6 +469,14 @@
 
 .share-slide-icons .instagram-btn:hover {
     background: linear-gradient(45deg, #e08323 0%, #d6582c 25%, #cc1733 50%, #bc1356 75%, #ac0878 100%);
+}
+
+.share-slide-icons .pinterest-btn {
+    background: #e60023;
+}
+
+.share-slide-icons .pinterest-btn:hover {
+    background: #c5001e;
 }
 
 .share-slide-icons .email-btn {
@@ -811,10 +820,41 @@
 .offers-slider .slick-slide {
     opacity: 0.7;
     transition: opacity 0.3s ease;
+    height: auto !important;
 }
 
 .offers-slider .slick-slide.slick-active {
     opacity: 1;
+}
+
+/* Ensure equal height cards in slider */
+.offers-slider .slick-track {
+    display: flex !important;
+    align-items: stretch !important;
+}
+
+.offers-slider .slick-slide {
+    display: flex !important;
+    height: auto !important;
+}
+
+.offers-slider .slick-slide > div {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.offers-slider .box {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.offers-slider .offer-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Fix tooltip z-index - Ensure tooltips appear above all elements */
@@ -853,6 +893,34 @@
 
 .offers-slider .slick-slide {
     overflow: visible !important;
+}
+
+/* Large Screen Fixes for Offers Section - Equal Height Cards */
+@media (min-width: 992px) {
+    .offers-slider .slick-track {
+        display: flex !important;
+        align-items: stretch !important;
+    }
+    
+    .offers-slider .slick-slide {
+        display: flex !important;
+        height: auto !important;
+    }
+    
+    .offers-slider .slick-slide > div {
+        display: flex;
+        width: 100%;
+    }
+    
+    .offers-slider .box {
+        display: flex;
+        width: 100%;
+    }
+    
+    .offers-section .offer-card {
+        flex: 1;
+        height: 100%;
+    }
 }
 
 /* RTL Support */

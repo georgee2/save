@@ -48,8 +48,8 @@ class TeamController extends Controller
             ->orderBy('created_at', 'asc')
             ->get();
 
-        // Get page banner for team page
-        $pageBanner = PageBanner::getByTarget('team');
+        // Get page banner for board of directors page
+        $pageBanner = PageBanner::getByTarget('board_of_directors');
 
         return view('pages.team.board', compact('boardMembers', 'pageBanner'));
     }

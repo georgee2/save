@@ -868,3 +868,186 @@ body.filter-open {
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
+/* =====================================================
+   INTERIOR SHARE BADGE
+   ===================================================== */
+
+.interior-share-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 20;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.interior-gallery-card:hover .interior-share-badge {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.interior-share-badge .share-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.interior-share-badge .share-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    color: #333;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    font-size: 13px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.interior-share-badge .share-action-btn:hover {
+    transform: scale(1.1);
+}
+
+.interior-share-badge .whatsapp-share-btn {
+    background: #25D366;
+    color: #fff;
+}
+
+.interior-share-badge .whatsapp-share-btn:hover {
+    background: #128C7E;
+}
+
+/* Share Slide Out */
+.interior-share-badge .share-slide-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.interior-share-badge .share-slide-btn {
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #19868b !important;
+    z-index: 2;
+    position: relative;
+}
+
+.interior-share-badge .share-slide-btn:hover {
+    background: #19868b !important;
+    color: #fff !important;
+}
+
+.interior-share-badge .share-slide-icons {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 6px 10px;
+    margin-right: 6px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+}
+
+.interior-share-badge .share-slide-wrapper:hover .share-slide-icons {
+    opacity: 1;
+    visibility: visible;
+}
+
+.interior-share-badge .share-slide-icons .share-action-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
+    background: transparent;
+    color: #fff;
+    box-shadow: none;
+}
+
+.interior-share-badge .share-slide-icons .facebook-btn {
+    background: #3b5998 !important;
+}
+
+.interior-share-badge .share-slide-icons .facebook-btn:hover {
+    background: #2d4373 !important;
+}
+
+.interior-share-badge .share-slide-icons .twitter-btn {
+    background: #1da1f2 !important;
+}
+
+.interior-share-badge .share-slide-icons .twitter-btn:hover {
+    background: #0c85d0 !important;
+}
+
+.interior-share-badge .share-slide-icons .linkedin-btn {
+    background: #0077b5 !important;
+}
+
+.interior-share-badge .share-slide-icons .linkedin-btn:hover {
+    background: #005885 !important;
+}
+
+.interior-share-badge .share-slide-icons .pinterest-btn {
+    background: #e60023 !important;
+}
+
+.interior-share-badge .share-slide-icons .pinterest-btn:hover {
+    background: #c5001e !important;
+}
+
+.interior-share-badge .share-slide-icons .email-btn {
+    background: #6c757d !important;
+}
+
+.interior-share-badge .share-slide-icons .email-btn:hover {
+    background: #545b62 !important;
+}
+
+/* RTL Support */
+[dir="rtl"] .interior-share-badge {
+    right: auto;
+    left: 15px;
+}
+
+[dir="rtl"] .interior-share-badge .share-slide-icons {
+    right: auto;
+    left: 100%;
+    margin-right: 0;
+    margin-left: 6px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .interior-share-badge {
+        top: 10px;
+        right: 10px;
+    }
+    
+    .interior-share-badge .share-action-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 11px;
+    }
+    
+    .interior-share-badge .share-slide-icons .share-action-btn {
+        width: 24px;
+        height: 24px;
+        font-size: 10px;
+    }
+    
+    [dir="rtl"] .interior-share-badge {
+        left: 10px;
+    }
+}

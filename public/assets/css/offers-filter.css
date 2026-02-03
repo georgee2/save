@@ -5,6 +5,144 @@
  */
 
 /* =====================================================
+   OFFERS HERO BANNER SECTION (Similar to About Page)
+   ===================================================== */
+
+.offers-hero-section {
+    min-height: 450px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.offers-hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.offers-hero-gradient {
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 50%, #095456 100%);
+}
+
+.offers-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.offers-hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 80px 0;
+}
+
+.offers-hero-section .breadcrumb {
+    background: transparent;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.offers-hero-section .breadcrumb-item a {
+    color: rgba(255, 255, 255, 0.8);
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+.offers-hero-section .breadcrumb-item a:hover {
+    color: #ffffff;
+}
+
+.offers-hero-section .breadcrumb-item.active {
+    color: #ffffff;
+}
+
+.offers-hero-section .breadcrumb-item + .breadcrumb-item::before {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.offers-hero-title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 15px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.offers-hero-subtitle {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* RTL Support */
+[dir="rtl"] .offers-hero-section .breadcrumb-item + .breadcrumb-item::before {
+    content: "\f104";
+    font-family: "Font Awesome 5 Pro", "Font Awesome 5 Free";
+    font-weight: 900;
+}
+
+/* Responsive - Tablet */
+@media (max-width: 992px) {
+    .offers-hero-title {
+        font-size: 36px;
+    }
+    
+    .offers-hero-subtitle {
+        font-size: 18px;
+    }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+    .offers-hero-section {
+        min-height: 350px;
+    }
+    
+    .offers-hero-content {
+        padding: 60px 0;
+    }
+    
+    .offers-hero-title {
+        font-size: 28px;
+    }
+    
+    .offers-hero-subtitle {
+        font-size: 16px;
+    }
+}
+
+/* Responsive - Small Mobile */
+@media (max-width: 576px) {
+    .offers-hero-section {
+        min-height: 300px;
+    }
+    
+    .offers-hero-content {
+        padding: 50px 0;
+    }
+    
+    .offers-hero-title {
+        font-size: 24px;
+    }
+    
+    .offers-hero-subtitle {
+        font-size: 14px;
+    }
+}
+
+/* =====================================================
    FILTER TOGGLE BUTTON
    ===================================================== */
 

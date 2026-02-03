@@ -1,7 +1,42 @@
 @extends('layouts.master')
-@section('title' , (app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english) . ' - ' . __('lang.offers'))
-@section('seo_desc', app()->getLocale() == 'ar' ? ($offer->seo_description_ar ?? $offer->title_arabic) : ($offer->seo_description ?? $offer->title_english))
-@section('seo_tags', $offer->seo_tags ?? (app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english))
+
+@php
+    $offerTitle = app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english;
+    $offerDesc = app()->getLocale() == 'ar' ? ($offer->seo_description_ar ?? $offer->title_arabic) : ($offer->seo_description ?? $offer->title_english);
+    $offerImage = url('/storage' . $offer->main_image);
+    $offerPrice = ($offer->default_price && $offer->currency) 
+        ? ($offer->currency->abbreviation ?? 'AED') . ' ' . number_format($offer->default_price->price)
+        : '';
+    $offerEmirate = ($offer->default_price && $offer->default_price->emirate)
+        ? (app()->getLocale() == 'ar' ? $offer->default_price->emirate->title_arabic : $offer->default_price->emirate->title_english)
+        : '';
+    $ogDescription = $offerDesc;
+    if($offerPrice) {
+        $ogDescription = $offerPrice . ($offerEmirate ? ' - ' . $offerEmirate : '') . ' | ' . $offerDesc;
+    }
+@endphp
+
+@section('title', $offerTitle . ' - ' . __('lang.offers'))
+@section('seo_desc', $offerDesc)
+@section('seo_tags', $offer->seo_tags ?? $offerTitle)
+
+{{-- Open Graph Meta Tags --}}
+@section('og_title', $offerTitle . ($offerPrice ? ' - ' . $offerPrice : ''))
+@section('og_description', $ogDescription)
+@section('og_image', $offerImage)
+@section('og_type', 'product')
+
+@section('meta_tags')
+{{-- Additional Product Meta Tags --}}
+@if($offerPrice)
+<meta property="product:price:amount" content="{{ $offer->default_price->price ?? '' }}">
+<meta property="product:price:currency" content="{{ $offer->currency->abbreviation ?? 'AED' }}">
+@endif
+@if($offer->offer_code)
+<meta property="product:retailer_item_id" content="{{ $offer->offer_code }}">
+@endif
+@endsection
+
 @section('content')
 
 
@@ -92,13 +127,6 @@
                                         </div>
                                         @endforeach
                                     @endif
-                                </div>
-                                
-                                {{-- Badges --}}
-                                <div class="position-absolute" style="top: 20px; right: 20px; left: auto; z-index: 5;">
-                                    <span class="badge badge-offer" style="background: linear-gradient(135deg, #e1273d 0%, #c41f33 100%); padding: 8px 16px; font-size: 12px; border-radius: 25px;">
-                                        {{ __('lang.special_offer') }}
-                                    </span>
                                 </div>
                                 
                                 {{-- Price Tag on Image - Top Right --}}
@@ -479,19 +507,43 @@
                         </div>
                         
                         {{-- Share Buttons --}}
+                        @php
+                            $shareTitle = app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english;
+                            $sharePrice = ($offer->default_price && $offer->currency) 
+                                ? ($offer->currency->abbreviation ?? 'AED') . ' ' . number_format($offer->default_price->price)
+                                : '';
+                            $shareEmirate = ($offer->default_price && $offer->default_price->emirate)
+                                ? (app()->getLocale() == 'ar' ? $offer->default_price->emirate->title_arabic : $offer->default_price->emirate->title_english)
+                                : '';
+                            $shareText = $shareTitle;
+                            if($sharePrice) {
+                                $shareText .= ' - ' . $sharePrice;
+                            }
+                            if($shareEmirate) {
+                                $shareText .= ' (' . $shareEmirate . ')';
+                            }
+                            $shareUrl = request()->url();
+                            $shareImage = url('/storage' . $offer->main_image);
+                        @endphp
                         <div class="share-section pt-3 border-top">
                             <h6 class="fs-13 text-muted text-uppercase mb-3">{{ __('lang.share') }}</h6>
-                            <div class="d-flex justify-content-between">
-                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->url()) }}" target="_blank" class="btn btn-sm btn-outline-primary flex-fill mr-1" title="Facebook">
+                            <div class="d-flex justify-content-between flex-wrap">
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode($shareUrl) }}&quote={{ urlencode($shareText) }}" target="_blank" class="btn btn-sm btn-outline-primary flex-fill mr-1 mb-2" title="Facebook">
                                     <i class="fab fa-facebook-f"></i>
                                 </a>
-                                <a href="https://twitter.com/intent/tweet?url={{ urlencode(request()->url()) }}" target="_blank" class="btn btn-sm btn-outline-info flex-fill mr-1" title="Twitter">
+                                <a href="https://twitter.com/intent/tweet?url={{ urlencode($shareUrl) }}&text={{ urlencode($shareText) }}" target="_blank" class="btn btn-sm btn-outline-info flex-fill mr-1 mb-2" title="Twitter">
                                     <i class="fab fa-twitter"></i>
                                 </a>
-                                <a href="https://wa.me/?text={{ urlencode((app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english) . ' - ' . request()->url()) }}" target="_blank" class="btn btn-sm btn-outline-success flex-fill mr-1" title="WhatsApp">
+                                <a href="https://wa.me/?text={{ urlencode($shareText . "\n" . $shareUrl) }}" target="_blank" class="btn btn-sm btn-outline-success flex-fill mr-1 mb-2" title="WhatsApp">
                                     <i class="fab fa-whatsapp"></i>
                                 </a>
-                                <a href="mailto:?subject={{ rawurlencode(app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english) }}&body={{ urlencode(request()->url()) }}" class="btn btn-sm btn-outline-secondary flex-fill" title="Email">
+                                <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode($shareUrl) }}&title={{ urlencode($shareTitle) }}&summary={{ urlencode($shareText) }}" target="_blank" class="btn btn-sm btn-outline-primary flex-fill mr-1 mb-2" title="LinkedIn" style="border-color: #0077b5; color: #0077b5;">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                <a href="https://pinterest.com/pin/create/button/?url={{ urlencode($shareUrl) }}&media={{ urlencode($shareImage) }}&description={{ urlencode($shareText) }}" target="_blank" class="btn btn-sm btn-outline-danger flex-fill mr-1 mb-2" title="Pinterest" style="border-color: #e60023; color: #e60023;">
+                                    <i class="fab fa-pinterest-p"></i>
+                                </a>
+                                <a href="mailto:?subject={{ rawurlencode($shareTitle) }}&body={{ urlencode($shareText . "\n\n" . $shareUrl) }}" class="btn btn-sm btn-outline-secondary flex-fill mb-2" title="Email">
                                     <i class="fas fa-envelope"></i>
                                 </a>
                             </div>

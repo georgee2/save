@@ -44,6 +44,7 @@ return [
     'all_offers' => 'All Offers',
     'offers_subtitle' => 'Discover our exclusive engineering offers and special packages with competitive pricing tailored for your needs.',
     'offers_seo_desc' => 'Explore our exclusive engineering offers and special packages with competitive pricing.',
+    'offers_hero_subtitle' => 'Discover our exclusive engineering offers and special packages with competitive pricing tailored for your needs.',
     'offers_available' => 'offers available for you',
     'no_offers_found' => 'No offers found.',
     'find_your_offer' => 'Find your offer',
