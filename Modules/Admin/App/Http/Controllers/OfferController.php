@@ -475,5 +475,57 @@ class OfferController extends Controller
         
         return '/uploads/' . $folder . '/' . $filename;
     }
+    
+    /**
+     * Bulk update publish status
+     */
+    public function bulkPublish(Request $request)
+    {
+        $action = $request->input('action'); // 'publish' or 'unpublish'
+        $scope = $request->input('scope'); // 'all' or 'selected'
+        $ids = $request->input('ids', '[]');
+        
+        // Decode JSON string to array
+        $idsArray = json_decode($ids, true) ?? [];
+        
+        $query = Offer::whereNull('deleted_at');
+        
+        if ($scope === 'selected' && !empty($idsArray)) {
+            $query->whereIn('id', $idsArray);
+        }
+        
+        $newStatus = $action === 'publish' ? 0 : 1;
+        $count = $query->count();
+        $query->update(['publish_status' => $newStatus]);
+        
+        $statusText = $action === 'publish' ? 'published' : 'unpublished';
+        return redirect()->back()->with('success', "{$count} offer(s) {$statusText} successfully!");
+    }
+    
+    /**
+     * Bulk update home status
+     */
+    public function bulkHomeStatus(Request $request)
+    {
+        $action = $request->input('action'); // 'show' or 'hide'
+        $scope = $request->input('scope'); // 'all' or 'selected'
+        $ids = $request->input('ids', '[]');
+        
+        // Decode JSON string to array
+        $idsArray = json_decode($ids, true) ?? [];
+        
+        $query = Offer::whereNull('deleted_at');
+        
+        if ($scope === 'selected' && !empty($idsArray)) {
+            $query->whereIn('id', $idsArray);
+        }
+        
+        $newStatus = $action === 'show' ? 0 : 1;
+        $count = $query->count();
+        $query->update(['home_status' => $newStatus]);
+        
+        $statusText = $action === 'show' ? 'shown on home' : 'hidden from home';
+        return redirect()->back()->with('success', "{$count} offer(s) {$statusText} successfully!");
+    }
 }
 

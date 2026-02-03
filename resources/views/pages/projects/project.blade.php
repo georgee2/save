@@ -62,14 +62,41 @@
               @endif
               <li class="list-inline-item mr-2 mt-2 mt-sm-0"><i class="fal fa-clock mr-1"></i>{{ $project->created_at->diffForHumans() }}</li>
             </ul>
+@php
+                $shareTitle = app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english;
+                $shareSqft = $project->sqft ? number_format($project->sqft) . ' ' . __('lang.sqft') : '';
+                $shareCategory = $project->category ? (app()->getLocale() == 'ar' ? $project->category->title_arabic : $project->category->title_english) : '';
+                $shareSubcategory = $project->subcategory ? (app()->getLocale() == 'ar' ? $project->subcategory->title_arabic : $project->subcategory->title_english) : '';
+                $shareLocation = '';
+                if($project->location_english || $project->location_arabic) {
+                    $shareLocation = app()->getLocale() == 'ar' ? ($project->location_arabic ?? $project->location_english) : ($project->location_english ?? $project->location_arabic);
+                } elseif($project->emirate) {
+                    $shareLocation = app()->getLocale() == 'ar' ? $project->emirate->title_arabic : $project->emirate->title_english;
+                }
+                $shareText = $shareTitle;
+                if($shareSqft) {
+                    $shareText .= ' - ' . $shareSqft;
+                }
+                if($shareCategory) {
+                    $shareText .= ' | ' . $shareCategory;
+                    if($shareSubcategory) {
+                        $shareText .= ' / ' . $shareSubcategory;
+                    }
+                }
+                if($shareLocation) {
+                    $shareText .= ' | ' . $shareLocation;
+                }
+                $shareUrl = request()->url();
+                $shareImage = url('/storage' . $project->main_image);
+            @endphp
             <div class="social-share-buttons d-flex flex-wrap my-4 my-md-0">
-              <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(request()->url()) }}" 
+              <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode($shareUrl) }}&quote={{ urlencode($shareText) }}" 
                  target="_blank" 
                  class="social-share-btn facebook"
                  data-toggle="tooltip" title="Facebook">
                 <i class="fab fa-facebook-f"></i>
               </a>
-              <a href="https://twitter.com/intent/tweet?url={{ urlencode(request()->url()) }}&text={{ urlencode(app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english) }}" 
+              <a href="https://twitter.com/intent/tweet?url={{ urlencode($shareUrl) }}&text={{ urlencode($shareText) }}" 
                  target="_blank" 
                  class="social-share-btn twitter"
                  data-toggle="tooltip" title="X">
@@ -77,32 +104,32 @@
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                 </svg>
               </a>
-              <a href="https://wa.me/?text={{ urlencode((app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english) . ' - ' . request()->url()) }}" 
+              <a href="https://wa.me/?text={{ urlencode($shareText . "\n" . $shareUrl) }}" 
                  target="_blank" 
                  class="social-share-btn whatsapp"
                  data-toggle="tooltip" title="WhatsApp">
                 <i class="fab fa-whatsapp"></i>
               </a>
-              <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(request()->url()) }}&title={{ urlencode(app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english) }}" 
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode($shareUrl) }}&title={{ urlencode($shareTitle) }}&summary={{ urlencode($shareText) }}" 
                  target="_blank" 
                  class="social-share-btn linkedin"
                  data-toggle="tooltip" title="LinkedIn">
                 <i class="fab fa-linkedin-in"></i>
               </a>
-              <a href="https://pinterest.com/pin/create/button/?url={{ urlencode(request()->url()) }}&media={{ urlencode(url('/storage' . $project->main_image)) }}&description={{ urlencode(app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english) }}" 
+              <a href="https://pinterest.com/pin/create/button/?url={{ urlencode($shareUrl) }}&media={{ urlencode($shareImage) }}&description={{ urlencode($shareText) }}" 
                  target="_blank" 
                  class="social-share-btn pinterest"
                  data-toggle="tooltip" title="Pinterest">
                 <i class="fab fa-pinterest-p"></i>
               </a>
-              <a href="mailto:?subject={{ rawurlencode(app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english) }}&body={{ urlencode(request()->url()) }}" 
+              <a href="mailto:?subject={{ rawurlencode($shareTitle) }}&body={{ urlencode($shareText . "\n\n" . $shareUrl) }}" 
                  class="social-share-btn email"
                  data-toggle="tooltip" title="Email">
                 <i class="fas fa-envelope"></i>
               </a>
               <button type="button" 
                  class="social-share-btn copy-link copy-link-btn"
-                 data-url="{{ request()->url() }}"
+                 data-url="{{ $shareUrl }}"
                  data-toggle="tooltip" title="{{ __('lang.copy_link') }}">
                 <i class="fas fa-link"></i>
               </button>

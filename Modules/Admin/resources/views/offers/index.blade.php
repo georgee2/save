@@ -1,6 +1,8 @@
 @extends('admin::layouts.master')
 @section('title', 'Offers List')
 @section('css')
+<!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <style>
     /* Filter Panel Styles */
     .filter-panel {
@@ -311,6 +313,146 @@
         padding: 1px 2px;
         border-radius: 2px;
     }
+    
+    /* Bulk Actions Styles */
+    .bulk-actions-bar {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .bulk-actions-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    .bulk-actions-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .bulk-select-all {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        color: #495057;
+    }
+    .bulk-select-all input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+    }
+    .selected-count {
+        background: #19868b;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+    .bulk-action-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .bulk-action-dropdown-btn {
+        background: #6c757d;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .bulk-action-dropdown-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        min-width: 200px;
+        z-index: 1000;
+        display: none;
+        margin-top: 5px;
+    }
+    .bulk-action-dropdown-menu.show {
+        display: block;
+    }
+    .bulk-action-dropdown-menu .dropdown-header {
+        padding: 10px 15px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #6c757d;
+        text-transform: uppercase;
+        border-bottom: 1px solid #e9ecef;
+    }
+    .bulk-action-dropdown-menu .dropdown-item {
+        padding: 10px 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+        font-size: 14px;
+    }
+    .bulk-action-dropdown-menu .dropdown-item:hover {
+        background: #f8f9fa;
+    }
+    .bulk-action-dropdown-menu .dropdown-item i {
+        width: 18px;
+        text-align: center;
+    }
+    .bulk-action-dropdown-menu .dropdown-divider {
+        height: 1px;
+        background: #e9ecef;
+        margin: 5px 0;
+    }
+    .row-checkbox {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+    }
+    
+    /* SweetAlert2 Custom Styling */
+    .swal2-popup {
+        border-radius: 12px;
+        padding: 20px;
+    }
+    .swal2-title {
+        color: #2c3e50;
+        font-size: 22px;
+        font-weight: 600;
+    }
+    .swal2-html-container {
+        color: #495057;
+        font-size: 15px;
+    }
+    .swal2-confirm, .swal2-cancel {
+        border-radius: 6px !important;
+        padding: 10px 25px !important;
+        font-weight: 500 !important;
+    }
+    .swal2-icon {
+        margin: 1em auto 0.5em !important;
+    }
 </style>
 @endsection
 @section('content')
@@ -575,11 +717,91 @@
                     
                     <hr>
                     
+                    <!-- Bulk Actions Bar -->
+                    <div class="bulk-actions-bar">
+                        <div class="bulk-actions-left">
+                            <label class="bulk-select-all">
+                                <input type="checkbox" id="selectAllCheckbox">
+                                <span>Select All</span>
+                            </label>
+                            <span class="selected-count" id="selectedCount" style="display: none;">
+                                <span id="selectedNumber">0</span> selected
+                            </span>
+                        </div>
+                        <div class="bulk-actions-right">
+                            <!-- Publish Status Dropdown -->
+                            <div class="bulk-action-dropdown">
+                                <button type="button" class="bulk-action-dropdown-btn" id="publishDropdownBtn">
+                                    <i class="fa fa-globe"></i> Publish Status <i class="fa fa-caret-down"></i>
+                                </button>
+                                <div class="bulk-action-dropdown-menu" id="publishDropdownMenu">
+                                    <div class="dropdown-header">Apply to Selected</div>
+                                    <button type="button" class="dropdown-item" onclick="bulkAction('publish', 'selected')">
+                                        <i class="fa fa-check-circle text-success"></i> Publish Selected
+                                    </button>
+                                    <button type="button" class="dropdown-item" onclick="bulkAction('unpublish', 'selected')">
+                                        <i class="fa fa-times-circle text-danger"></i> Unpublish Selected
+                                    </button>
+                                    <div class="dropdown-divider"></div>
+                                    <div class="dropdown-header">Apply to All Offers</div>
+                                    <button type="button" class="dropdown-item" onclick="bulkAction('publish', 'all')">
+                                        <i class="fa fa-check-circle text-success"></i> Publish All
+                                    </button>
+                                    <button type="button" class="dropdown-item" onclick="bulkAction('unpublish', 'all')">
+                                        <i class="fa fa-times-circle text-danger"></i> Unpublish All
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Home Status Dropdown -->
+                            <div class="bulk-action-dropdown">
+                                <button type="button" class="bulk-action-dropdown-btn" id="homeDropdownBtn">
+                                    <i class="fa fa-home"></i> Home Status <i class="fa fa-caret-down"></i>
+                                </button>
+                                <div class="bulk-action-dropdown-menu" id="homeDropdownMenu">
+                                    <div class="dropdown-header">Apply to Selected</div>
+                                    <button type="button" class="dropdown-item" onclick="bulkHomeAction('show', 'selected')">
+                                        <i class="fa fa-eye text-info"></i> Show Selected on Home
+                                    </button>
+                                    <button type="button" class="dropdown-item" onclick="bulkHomeAction('hide', 'selected')">
+                                        <i class="fa fa-eye-slash text-warning"></i> Hide Selected from Home
+                                    </button>
+                                    <div class="dropdown-divider"></div>
+                                    <div class="dropdown-header">Apply to All Offers</div>
+                                    <button type="button" class="dropdown-item" onclick="bulkHomeAction('show', 'all')">
+                                        <i class="fa fa-eye text-info"></i> Show All on Home
+                                    </button>
+                                    <button type="button" class="dropdown-item" onclick="bulkHomeAction('hide', 'all')">
+                                        <i class="fa fa-eye-slash text-warning"></i> Hide All from Home
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Hidden Forms for Bulk Actions -->
+                    <form id="bulkPublishForm" action="{{ route('offer.bulk-publish') }}" method="POST" style="display: none;">
+                        @csrf
+                        <input type="hidden" name="action" id="bulkPublishAction">
+                        <input type="hidden" name="scope" id="bulkPublishScope">
+                        <input type="hidden" name="ids" id="bulkPublishIds">
+                    </form>
+                    
+                    <form id="bulkHomeStatusForm" action="{{ route('offer.bulk-home-status') }}" method="POST" style="display: none;">
+                        @csrf
+                        <input type="hidden" name="action" id="bulkHomeAction">
+                        <input type="hidden" name="scope" id="bulkHomeScope">
+                        <input type="hidden" name="ids" id="bulkHomeIds">
+                    </form>
+                    
                     @if($offers->count() > 0)
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead>
                                 <tr>
+                                    <th style="width: 40px;">
+                                        <input type="checkbox" id="headerCheckbox" class="row-checkbox" title="Select All on Page">
+                                    </th>
                                     <th>ID</th>
                                     <th>Offer #</th>
                                     <th>Offer Code</th>
@@ -597,6 +819,9 @@
                             <tbody>
                                 @foreach($offers as $offer)
                                 <tr>
+                                    <td>
+                                        <input type="checkbox" class="row-checkbox offer-checkbox" value="{{ $offer->id }}" data-id="{{ $offer->id }}">
+                                    </td>
                                     <td>{{ $offer->id }}</td>
                                     <td>{{ $offer->offer_number ?: 'N/A' }}</td>
                                     <td>
@@ -749,6 +974,8 @@
 @endsection
 
 @section('js')
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // Toggle Filter Panel
     document.getElementById('filterToggleBtn').addEventListener('click', function() {
@@ -984,5 +1211,259 @@
             liveSearchResults.classList.remove('show');
         }
     });
+    
+    // ===================================
+    // Bulk Actions Functionality
+    // ===================================
+    
+    // Dropdown toggles
+    document.getElementById('publishDropdownBtn').addEventListener('click', function(e) {
+        e.stopPropagation();
+        document.getElementById('publishDropdownMenu').classList.toggle('show');
+        document.getElementById('homeDropdownMenu').classList.remove('show');
+    });
+    
+    document.getElementById('homeDropdownBtn').addEventListener('click', function(e) {
+        e.stopPropagation();
+        document.getElementById('homeDropdownMenu').classList.toggle('show');
+        document.getElementById('publishDropdownMenu').classList.remove('show');
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.bulk-action-dropdown')) {
+            document.querySelectorAll('.bulk-action-dropdown-menu').forEach(menu => {
+                menu.classList.remove('show');
+            });
+        }
+    });
+    
+    // Select all checkbox (in bulk actions bar)
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+    const headerCheckbox = document.getElementById('headerCheckbox');
+    const offerCheckboxes = document.querySelectorAll('.offer-checkbox');
+    const selectedCountEl = document.getElementById('selectedCount');
+    const selectedNumberEl = document.getElementById('selectedNumber');
+    
+    function updateSelectedCount() {
+        const checkedCount = document.querySelectorAll('.offer-checkbox:checked').length;
+        selectedNumberEl.textContent = checkedCount;
+        
+        if (checkedCount > 0) {
+            selectedCountEl.style.display = 'inline-block';
+        } else {
+            selectedCountEl.style.display = 'none';
+        }
+        
+        // Update header checkbox state
+        const totalCheckboxes = offerCheckboxes.length;
+        if (checkedCount === 0) {
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = false;
+            if (headerCheckbox) {
+                headerCheckbox.checked = false;
+                headerCheckbox.indeterminate = false;
+            }
+        } else if (checkedCount === totalCheckboxes) {
+            selectAllCheckbox.checked = true;
+            selectAllCheckbox.indeterminate = false;
+            if (headerCheckbox) {
+                headerCheckbox.checked = true;
+                headerCheckbox.indeterminate = false;
+            }
+        } else {
+            selectAllCheckbox.checked = false;
+            selectAllCheckbox.indeterminate = true;
+            if (headerCheckbox) {
+                headerCheckbox.checked = false;
+                headerCheckbox.indeterminate = true;
+            }
+        }
+    }
+    
+    // Select all in bulk actions bar
+    selectAllCheckbox.addEventListener('change', function() {
+        offerCheckboxes.forEach(cb => {
+            cb.checked = this.checked;
+        });
+        if (headerCheckbox) {
+            headerCheckbox.checked = this.checked;
+        }
+        updateSelectedCount();
+    });
+    
+    // Select all in table header
+    if (headerCheckbox) {
+        headerCheckbox.addEventListener('change', function() {
+            offerCheckboxes.forEach(cb => {
+                cb.checked = this.checked;
+            });
+            selectAllCheckbox.checked = this.checked;
+            updateSelectedCount();
+        });
+    }
+    
+    // Individual checkbox change
+    offerCheckboxes.forEach(cb => {
+        cb.addEventListener('change', updateSelectedCount);
+    });
+    
+    // Get selected IDs
+    function getSelectedIds() {
+        const ids = [];
+        document.querySelectorAll('.offer-checkbox:checked').forEach(cb => {
+            ids.push(cb.value);
+        });
+        return ids;
+    }
+    
+    // Bulk publish action with SweetAlert
+    function bulkAction(action, scope) {
+        const ids = getSelectedIds();
+        
+        // Close dropdown
+        document.querySelectorAll('.bulk-action-dropdown-menu').forEach(menu => {
+            menu.classList.remove('show');
+        });
+        
+        if (scope === 'selected' && ids.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No Selection',
+                text: 'Please select at least one offer.',
+                confirmButtonColor: '#19868b'
+            });
+            return;
+        }
+        
+        const actionText = action === 'publish' ? 'publish' : 'unpublish';
+        const actionColor = action === 'publish' ? '#28a745' : '#dc3545';
+        const scopeText = scope === 'all' ? 'ALL offers' : `${ids.length} selected offer(s)`;
+        
+        Swal.fire({
+            title: `${action === 'publish' ? 'Publish' : 'Unpublish'} Offers?`,
+            html: `
+                <div style="text-align: center;">
+                    <i class="fa fa-${action === 'publish' ? 'check-circle' : 'times-circle'}" style="font-size: 60px; color: ${actionColor}; margin-bottom: 15px;"></i>
+                    <p style="font-size: 16px; margin-bottom: 10px;">You are about to <strong>${actionText}</strong></p>
+                    <p style="font-size: 18px; font-weight: 600; color: ${actionColor};">${scopeText}</p>
+                    ${scope === 'all' ? '<p style="font-size: 13px; color: #6c757d; margin-top: 10px;"><i class="fa fa-exclamation-triangle"></i> This will affect all offers in the database</p>' : ''}
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonColor: actionColor,
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: `<i class="fa fa-${action === 'publish' ? 'check' : 'times'}"></i> Yes, ${actionText}!`,
+            cancelButtonText: '<i class="fa fa-arrow-left"></i> Cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Show loading
+                Swal.fire({
+                    title: 'Processing...',
+                    html: `<p>Updating offer status...</p>`,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                document.getElementById('bulkPublishAction').value = action;
+                document.getElementById('bulkPublishScope').value = scope;
+                document.getElementById('bulkPublishIds').value = JSON.stringify(ids);
+                document.getElementById('bulkPublishForm').submit();
+            }
+        });
+    }
+    
+    // Bulk home status action with SweetAlert
+    function bulkHomeAction(action, scope) {
+        const ids = getSelectedIds();
+        
+        // Close dropdown
+        document.querySelectorAll('.bulk-action-dropdown-menu').forEach(menu => {
+            menu.classList.remove('show');
+        });
+        
+        if (scope === 'selected' && ids.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No Selection',
+                text: 'Please select at least one offer.',
+                confirmButtonColor: '#19868b'
+            });
+            return;
+        }
+        
+        const actionText = action === 'show' ? 'show on home page' : 'hide from home page';
+        const actionIcon = action === 'show' ? 'eye' : 'eye-slash';
+        const actionColor = action === 'show' ? '#17a2b8' : '#ffc107';
+        const textColor = action === 'show' ? '#17a2b8' : '#856404';
+        const scopeText = scope === 'all' ? 'ALL offers' : `${ids.length} selected offer(s)`;
+        
+        Swal.fire({
+            title: `${action === 'show' ? 'Show' : 'Hide'} on Home Page?`,
+            html: `
+                <div style="text-align: center;">
+                    <i class="fa fa-${actionIcon}" style="font-size: 60px; color: ${textColor}; margin-bottom: 15px;"></i>
+                    <p style="font-size: 16px; margin-bottom: 10px;">You are about to <strong>${actionText}</strong></p>
+                    <p style="font-size: 18px; font-weight: 600; color: ${textColor};">${scopeText}</p>
+                    ${scope === 'all' ? '<p style="font-size: 13px; color: #6c757d; margin-top: 10px;"><i class="fa fa-exclamation-triangle"></i> This will affect all offers in the database</p>' : ''}
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonColor: actionColor,
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: `<i class="fa fa-${actionIcon}"></i> Yes, ${action}!`,
+            cancelButtonText: '<i class="fa fa-arrow-left"></i> Cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Show loading
+                Swal.fire({
+                    title: 'Processing...',
+                    html: `<p>Updating home status...</p>`,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                document.getElementById('bulkHomeAction').value = action;
+                document.getElementById('bulkHomeScope').value = scope;
+                document.getElementById('bulkHomeIds').value = JSON.stringify(ids);
+                document.getElementById('bulkHomeStatusForm').submit();
+            }
+        });
+    }
+    
+    // Display success/error messages with SweetAlert2
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: '{{ session('success') }}',
+            confirmButtonColor: '#19868b',
+            timer: 3000,
+            timerProgressBar: true
+        });
+    @endif
+    
+    @if($errors->any())
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            html: `<ul style="text-align: left; list-style: none; padding: 0;">
+                @foreach($errors->all() as $error)
+                    <li style="margin-bottom: 5px;"><i class="fa fa-times-circle text-danger"></i> {{ $error }}</li>
+                @endforeach
+            </ul>`,
+            confirmButtonColor: '#dc3545'
+        });
+    @endif
 </script>
 @endsection
