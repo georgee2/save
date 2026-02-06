@@ -555,5 +555,10 @@ return [
     'cancel' => 'إلغاء',
     'something_went_wrong' => 'حدث خطأ ما. يرجى المحاولة مرة أخرى.',
     'message_sent_successfully' => 'تم إرسال رسالتك بنجاح. سنتواصل معك قريباً!',
+    
+    // Under Construction Page
+    'under_construction' => 'تحت الإنشاء',
+    'under_construction_title' => 'نحن نبني شيئاً مذهلاً',
+    'under_construction_message' => 'موقعنا الإلكتروني قيد الإنشاء حالياً. نعمل بجد لنقدم لك تجربة أفضل. يرجى العودة قريباً!',
 ];
 

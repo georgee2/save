@@ -54,6 +54,9 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 
 
 	Route::get('/', [HomeController::class, 'index'])->name('index');
+	
+	// Private access route for data entry during under construction
+	Route::get('/home', [HomeController::class, 'index'])->name('home.private');
 
 	// Services Routes Group
 	Route::prefix('services')->name('services.')->group(function () {
