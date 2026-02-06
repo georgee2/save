@@ -555,5 +555,10 @@ return [
     'cancel' => 'Cancel',
     'something_went_wrong' => 'Something went wrong. Please try again.',
     'message_sent_successfully' => 'Your message has been sent successfully. We will get back to you soon!',
+    
+    // Under Construction Page
+    'under_construction' => 'Under Construction',
+    'under_construction_title' => 'We\'re Building Something Amazing',
+    'under_construction_message' => 'Our website is currently under construction. We\'re working hard to bring you a better experience. Please check back soon!',
 ];
 
