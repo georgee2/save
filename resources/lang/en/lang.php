@@ -560,5 +560,10 @@ return [
     'under_construction' => 'Under Construction',
     'under_construction_title' => 'We\'re Building Something Amazing',
     'under_construction_message' => 'Our website is currently under construction. We\'re working hard to bring you a better experience. Please check back soon!',
+    
+    // 404 Error Page
+    'page_not_found' => 'Page Not Found',
+    'page_not_found_message' => 'Sorry, the page you are looking for doesn\'t exist or has been moved. Please check the URL or return to the homepage.',
+    'back_to_home' => 'Back to Home',
 ];
 
