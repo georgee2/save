@@ -158,6 +158,8 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap')
 // FALLBACK: Catch all undefined routes - return 404
 // This must be at the end of the routes file
 // ============================================
-Route::fallback(function () {
-    abort(404);
+Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']], function() {
+    Route::fallback(function () {
+        abort(404);
+    });
 });
