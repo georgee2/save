@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title' , 'SVG')
+@section('title' , 'SVEC')
 @section('content')
 
 {{-- Dynamic Home Sections --}}

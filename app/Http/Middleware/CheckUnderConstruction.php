@@ -16,17 +16,21 @@ class CheckUnderConstruction
     public function handle(Request $request, Closure $next): Response
     {
         try {
-            // ALWAYS allow access to admin routes (with or without locale prefix)
+            // ALWAYS allow access to backend modules (Admin, Basicdata, CRM)
             // This must be checked FIRST before anything else
-            if ($request->is('admin') || 
-                $request->is('admin/*') || 
-                $request->is('*/admin') || 
-                $request->is('*/admin/*') ||
-                $request->is('en/admin') ||
-                $request->is('en/admin/*') ||
-                $request->is('ar/admin') ||
-                $request->is('ar/admin/*')) {
-                return $next($request);
+            $backendPrefixes = ['admin', 'basicdata', 'crm'];
+            
+            foreach ($backendPrefixes as $prefix) {
+                if ($request->is($prefix) || 
+                    $request->is($prefix . '/*') || 
+                    $request->is('*/' . $prefix) || 
+                    $request->is('*/' . $prefix . '/*') ||
+                    $request->is('en/' . $prefix) ||
+                    $request->is('en/' . $prefix . '/*') ||
+                    $request->is('ar/' . $prefix) ||
+                    $request->is('ar/' . $prefix . '/*')) {
+                    return $next($request);
+                }
             }
             
             // ALWAYS allow access to login and authentication routes
