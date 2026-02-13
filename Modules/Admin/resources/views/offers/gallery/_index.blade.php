@@ -36,7 +36,7 @@
             <button class="btn btn-primary" type="submit">
                 <i class="fa fa-save"></i> Save Gallery
             </button>
-            <button class="btn btn-secondary" type="button" onclick="location.reload()">
+            <button class="btn btn-secondary" type="button" onclick="reloadWithTab()">
                 <i class="fa fa-history"></i> Reset
             </button>
         </div>
@@ -45,6 +45,19 @@
 
 @push('scripts')
 <script>
+    // Helper function to reload page while preserving current tab
+    function reloadWithTab() {
+        const activeTab = document.querySelector('.tab-item.active');
+        if (activeTab) {
+            const tabId = activeTab.getAttribute('data-tab');
+            const url = new URL(window.location.href);
+            url.searchParams.set('tab', tabId);
+            window.location.href = url.toString();
+        } else {
+            location.reload();
+        }
+    }
+    
     // Fetch and initialize offer gallery
     $.ajax({
         url: '/admin/offer-image/galleries/{{ $offer->id }}',

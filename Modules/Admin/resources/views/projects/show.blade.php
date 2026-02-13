@@ -1178,21 +1178,45 @@
         });
     @endif
 
-    // Tab switching
+    // Tab switching with persistence
+    const projectTabKey = 'project_active_tab_{{ $project->id }}';
+    
+    // Function to switch to a specific tab
+    function switchToTab(tabId) {
+        // Remove active class from all tabs and panes
+        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        
+        // Find and activate the tab
+        const tabItem = document.querySelector(`.tab-item[data-tab="${tabId}"]`);
+        const tabPane = document.getElementById(tabId);
+        
+        if (tabItem && tabPane) {
+            tabItem.classList.add('active');
+            tabPane.classList.add('active');
+            // Save to localStorage
+            localStorage.setItem(projectTabKey, tabId);
+        }
+    }
+    
+    // Tab click handlers
     document.querySelectorAll('.tab-item').forEach(tab => {
         tab.addEventListener('click', function() {
-            // Remove active class from all tabs and panes
-            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-            
-            // Add active class to clicked tab
-            this.classList.add('active');
-            
-            // Show corresponding pane
             const tabId = this.getAttribute('data-tab');
-            document.getElementById(tabId).classList.add('active');
+            switchToTab(tabId);
         });
     });
+    
+    // Restore active tab on page load
+    (function() {
+        const savedTab = localStorage.getItem(projectTabKey);
+        if (savedTab) {
+            const tabExists = document.querySelector(`.tab-item[data-tab="${savedTab}"]`);
+            if (tabExists) {
+                switchToTab(savedTab);
+            }
+        }
+    })();
     
     // Lightbox functions
     function openLightbox(imgSrc) {
@@ -1824,6 +1848,34 @@
             });
         }
     }
+    
+    // Open Force Delete Specification Modal
+    function openForceDeleteSpecificationModal(id, name) {
+        $('#force_delete_specification_id').val(id);
+        $('#force_delete_specification_name').text(name);
+        $('#forceDeleteSpecificationModal').modal('show');
+    }
+    
+    // Confirm Force Delete Specification
+    function confirmForceDeleteSpecification() {
+        const specId = $('#force_delete_specification_id').val();
+        
+        $.ajax({
+            url: `/admin/project/${projectId}/specifications/force-delete/${specId}`,
+            method: 'POST',
+            data: { _token: '{{ csrf_token() }}' },
+            success: function(response) {
+                if (response.success) {
+                    $('#forceDeleteSpecificationModal').modal('hide');
+                    showSpecificationAlert('success', 'Specification permanently deleted!');
+                    location.reload();
+                }
+            },
+            error: function() {
+                showSpecificationAlert('error', 'Failed to permanently delete specification');
+            }
+        });
+    }
 
     // Show Specification Alert
     function showSpecificationAlert(type, message) {
@@ -1848,6 +1900,190 @@
             });
         }, 5000);
     }
+
+    // ===================================
+    // Bulk Add Specifications JavaScript
+    // ===================================
+    
+    let availableSpecifications = [];
+    let bulkRowCounter = 0;
+    
+    // Open Bulk Add Specification Modal
+    function openBulkAddSpecificationModal() {
+        // Reset
+        bulkRowCounter = 0;
+        $('#bulkSpecificationsContainer').empty();
+        
+        // Load available specifications first
+        $.ajax({
+            url: `/admin/project/${projectId}/specifications/available`,
+            method: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    availableSpecifications = response.components;
+                    
+                    if (availableSpecifications.length === 0) {
+                        showSpecificationAlert('error', 'No specifications available to add. All specifications have already been added to this project.');
+                        return;
+                    }
+                    
+                    // Add initial rows (3 rows or available count, whichever is smaller)
+                    const initialRows = Math.min(3, availableSpecifications.length);
+                    for (let i = 0; i < initialRows; i++) {
+                        addBulkSpecificationRow();
+                    }
+                    
+                    $('#bulkAddSpecificationModal').modal('show');
+                }
+            },
+            error: function() {
+                showSpecificationAlert('error', 'Failed to load specifications');
+            }
+        });
+    }
+    
+    // Add a new row for bulk specification
+    function addBulkSpecificationRow() {
+        bulkRowCounter++;
+        
+        // Build options HTML
+        let optionsHtml = '<option value="">Select Specification</option>';
+        availableSpecifications.forEach(function(spec) {
+            optionsHtml += `<option value="${spec.id}" data-icon="${spec.icon || ''}">${spec.title_english} / ${spec.title_arabic}</option>`;
+        });
+        
+        const rowHtml = `
+            <div class="bulk-spec-row card mb-2" data-row="${bulkRowCounter}">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group mb-2">
+                                <label class="small font-weight-bold">Specification <span class="text-danger">*</span></label>
+                                <select class="form-control form-control-sm bulk-spec-select" name="spec_${bulkRowCounter}" required onchange="updateBulkRowCount()">
+                                    ${optionsHtml}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group mb-2">
+                                <label class="small font-weight-bold">Value (English) <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-sm bulk-value-en" name="value_en_${bulkRowCounter}" placeholder="English value" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group mb-2">
+                                <label class="small font-weight-bold">Value (Arabic) <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-sm bulk-value-ar" name="value_ar_${bulkRowCounter}" placeholder="القيمة بالعربية" dir="rtl" required>
+                            </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="button" class="btn btn-outline-danger btn-sm mb-2 w-100" onclick="removeBulkSpecificationRow(${bulkRowCounter})">
+                                <i class="fa fa-trash"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        $('#bulkSpecificationsContainer').append(rowHtml);
+        updateBulkRowCount();
+    }
+    
+    // Remove a bulk specification row
+    function removeBulkSpecificationRow(rowNum) {
+        $(`.bulk-spec-row[data-row="${rowNum}"]`).fadeOut(200, function() {
+            $(this).remove();
+            updateBulkRowCount();
+        });
+    }
+    
+    // Update the row count display
+    function updateBulkRowCount() {
+        const validRows = $('.bulk-spec-row').filter(function() {
+            return $(this).find('.bulk-spec-select').val() !== '';
+        }).length;
+        const totalRows = $('.bulk-spec-row').length;
+        
+        $('#bulkRowCount').text(`${validRows} of ${totalRows} specifications ready`);
+        $('#bulkAddSubmitBtn').prop('disabled', validRows === 0);
+    }
+    
+    // Bulk Add Specification Form Submit
+    $('#bulkAddSpecificationForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        // Collect all specifications data
+        const specifications = [];
+        let hasError = false;
+        
+        $('.bulk-spec-row').each(function() {
+            const specId = $(this).find('.bulk-spec-select').val();
+            const valueEn = $(this).find('.bulk-value-en').val().trim();
+            const valueAr = $(this).find('.bulk-value-ar').val().trim();
+            
+            if (specId) {
+                if (!valueEn || !valueAr) {
+                    hasError = true;
+                    $(this).find('.card-body').addClass('border-danger');
+                    return;
+                }
+                
+                specifications.push({
+                    specification_id: specId,
+                    value_english: valueEn,
+                    value_arabic: valueAr
+                });
+            }
+        });
+        
+        if (hasError) {
+            showSpecificationAlert('error', 'Please fill in all required fields for selected specifications');
+            return;
+        }
+        
+        if (specifications.length === 0) {
+            showSpecificationAlert('error', 'Please add at least one specification');
+            return;
+        }
+        
+        // Check for duplicate specifications in the form
+        const specIds = specifications.map(s => s.specification_id);
+        const uniqueSpecIds = [...new Set(specIds)];
+        if (specIds.length !== uniqueSpecIds.length) {
+            showSpecificationAlert('error', 'Duplicate specifications detected. Please select unique specifications.');
+            return;
+        }
+        
+        // Disable submit button
+        $('#bulkAddSubmitBtn').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Adding...');
+        
+        $.ajax({
+            url: `/admin/project/${projectId}/specifications/bulk-store`,
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                _token: '{{ csrf_token() }}',
+                specifications: specifications
+            }),
+            success: function(response) {
+                if (response.success) {
+                    $('#bulkAddSpecificationModal').modal('hide');
+                    showSpecificationAlert('success', response.message);
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    showSpecificationAlert('error', response.message);
+                    $('#bulkAddSubmitBtn').prop('disabled', false).html('<i class="fa fa-save"></i> Add All Specifications');
+                }
+            },
+            error: function(xhr) {
+                showSpecificationAlert('error', xhr.responseJSON?.message || 'Failed to add specifications');
+                $('#bulkAddSubmitBtn').prop('disabled', false).html('<i class="fa fa-save"></i> Add All Specifications');
+            }
+        });
+    });
 
     // ===================================
     // Length Components JavaScript

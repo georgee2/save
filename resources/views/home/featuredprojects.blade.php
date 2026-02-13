@@ -22,31 +22,31 @@
             @foreach($featuredProjects as $project)
             <div class="box box pb-7 pt-2" data-animate="fadeInUp">
                 <div class="card shadow-hover-2">
-                    <div class="hover-change-image bg-hover-overlay rounded-lg card-img-top">
+                    <a href="{{ route('projects.show', $project->slug) }}" class="hover-change-image bg-hover-overlay rounded-lg card-img-top d-block">
                         <img src="{{ url('/storage' . $project->main_image) }}" 
                              alt="{{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}">
-                        <div class="card-img-overlay p-2 d-flex flex-column">
+                        <div class="card-img-overlay p-2 d-flex flex-column pointer-events-none">
                             <div class="d-flex justify-content-end">
                                 <span class="badge badge-primary">{{ __('lang.featured') }}</span>
                             </div>
-                            <ul class="list-inline mb-0 mt-auto hover-image">
+                            <ul class="list-inline mb-0 mt-auto hover-image media-count-badges">
                                 @if($project->total_images > 0)
                                 <li class="list-inline-item mr-2" data-toggle="tooltip" title="{{ $project->total_images }} {{ __('lang.images') }}">
-                                    <a href="{{ route('projects.show', $project->slug) }}" class="text-white hover-primary">
+                                    <span class="media-count-badge">
                                         <i class="far fa-images"></i><span class="pl-1">{{ $project->total_images }}</span>
-                                    </a>
+                                    </span>
                                 </li>
                                 @endif
                                 @if($project->video_count > 0)
                                 <li class="list-inline-item" data-toggle="tooltip" title="{{ $project->video_count }} {{ __('lang.videos') }}">
-                                    <a href="{{ route('projects.show', $project->slug) }}" class="text-white hover-primary">
+                                    <span class="media-count-badge">
                                         <i class="far fa-play-circle"></i><span class="pl-1">{{ $project->video_count }}</span>
-                                    </a>
+                                    </span>
                                 </li>
                                 @endif
                             </ul>
                         </div>
-                    </div>
+                    </a>
                     
                     {{-- Share Badge --}}
                     @php
@@ -170,6 +170,33 @@
 </section>
 
 <style>
+/* Pointer events none for overlay */
+.featured-projects-section .pointer-events-none {
+    pointer-events: none;
+}
+
+/* Media Count Badges (Images/Videos) */
+.featured-projects-section .media-count-badges {
+    display: flex;
+    gap: 8px;
+}
+
+.featured-projects-section .media-count-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.6);
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    backdrop-filter: blur(5px);
+}
+
+.featured-projects-section .media-count-badge i {
+    font-size: 14px;
+}
+
 /* Home Featured Projects - Fixed Height Cards */
 .featured-projects-section .slick-slider .card.shadow-hover-2 {
     height: 620px;

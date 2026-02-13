@@ -57,8 +57,9 @@
             All CSS File
         ============================== -->
 
-        <!-- Place favicon.ico in the root directory -->
-          <link rel="shortcut icon" type="image/x-icon" href="assets/images/fav.png">
+        <!-- Favicon -->
+          <link rel="icon" type="image/svg+xml" href="{{ asset('pic/fav.svg') }}">
+          <link rel="shortcut icon" type="image/svg+xml" href="{{ asset('pic/fav.svg') }}">
 
           <!-- Mobile Hero Optimization -->
           <link rel="stylesheet" href="{{asset('/assets/css/mobile-hero.css')}}">

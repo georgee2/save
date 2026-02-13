@@ -118,6 +118,19 @@
 <script>
     const buildingComponentsBaseUrl = '/admin/offer/{{ $offer->id }}/buildingcomponents';
     
+    // Helper function to reload page while preserving current tab
+    function reloadWithTab() {
+        const activeTab = document.querySelector('.tab-item.active');
+        if (activeTab) {
+            const tabId = activeTab.getAttribute('data-tab');
+            const url = new URL(window.location.href);
+            url.searchParams.set('tab', tabId);
+            window.location.href = url.toString();
+        } else {
+            reloadWithTab();
+        }
+    }
+    
     // Initialize Select2 for Building Component
     function initBuildingComponentSelect2() {
         if ($('.select2-building-component').data('select2')) {
@@ -169,7 +182,7 @@
                 if (response.success) {
                     $('#addBuildingComponentModal').modal('hide');
                     $('#addBuildingComponentForm')[0].reset();
-                    location.reload();
+                    reloadWithTab();
                 } else {
                     showBuildingComponentAlert('error', response.message);
                 }
@@ -201,7 +214,7 @@
             success: function(response) {
                 if (response.success) {
                     $('#editBuildingComponentModal').modal('hide');
-                    location.reload();
+                    reloadWithTab();
                 } else {
                     showBuildingComponentAlert('error', response.message);
                 }
@@ -233,7 +246,7 @@
             success: function(response) {
                 if (response.success) {
                     $('#deleteBuildingComponentModal').modal('hide');
-                    location.reload();
+                    reloadWithTab();
                 } else {
                     showBuildingComponentAlert('error', response.message);
                 }
@@ -256,7 +269,7 @@
                 },
                 success: function(response) {
                     if (response.success) {
-                        location.reload();
+                        reloadWithTab();
                     } else {
                         showBuildingComponentAlert('error', response.message);
                     }

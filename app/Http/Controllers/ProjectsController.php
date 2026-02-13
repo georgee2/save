@@ -118,23 +118,43 @@ class ProjectsController extends Controller
     
     /**
      * Get filter data for views
+     * Only returns categories and subcategories that have at least one published project
      */
     private function getFilterData()
     {
+        // Get categories that have at least one published project
+        $categories = EngineeringCategory::whereNull('deleted_at')
+            ->whereHas('projects', function($query) {
+                $query->where('publish_status', 0)->whereNull('deleted_at');
+            })
+            ->orderBy('title_english')
+            ->get();
+        
+        // Get subcategories that have at least one published project
+        $subcategories = EngineeringSubCategory::whereNull('deleted_at')
+            ->whereHas('projects', function($query) {
+                $query->where('publish_status', 0)->whereNull('deleted_at');
+            })
+            ->orderBy('title_english')
+            ->get();
+        
+        // Subcategories with project counts for slider filter (only those with projects)
+        $subcategoriesWithCount = EngineeringSubCategory::withCount(['projects' => function($query) {
+                $query->where('publish_status', 0)->whereNull('deleted_at');
+            }])
+            ->whereNull('deleted_at')
+            ->having('projects_count', '>', 0)
+            ->orderBy('title_english')
+            ->get();
+        
         return [
-            'categories' => EngineeringCategory::whereNull('deleted_at')->orderBy('title_english')->get(),
-            'subcategories' => EngineeringSubCategory::whereNull('deleted_at')->orderBy('title_english')->get(),
+            'categories' => $categories,
+            'subcategories' => $subcategories,
             'styles' => ProjectStyle::whereNull('deleted_at')->orderBy('title_english')->get(),
             'types' => ProjectType::whereNull('deleted_at')->where('status', 0)->orderBy('name_english')->get(),
             'specifications' => Specification::whereNull('deleted_at')->orderBy('title_english')->get(),
             'emirates' => Emirate::whereNull('deleted_at')->orderBy('title_english')->get(),
-            // Subcategories with project counts for slider filter
-            'subcategoriesWithCount' => EngineeringSubCategory::withCount(['projects' => function($query) {
-                    $query->where('publish_status', 0)->whereNull('deleted_at');
-                }])
-                ->whereNull('deleted_at')
-                ->orderBy('title_english')
-                ->get(),
+            'subcategoriesWithCount' => $subcategoriesWithCount,
         ];
     }
     
@@ -214,7 +234,7 @@ class ProjectsController extends Controller
         $query = $this->applySorting($query, $request);
         
         // Get paginated results
-        $projects = $query->paginate(10)
+        $projects = $query->paginate(9)
             ->through(function($project) {
                 // Count videos (video_url and tour_url)
                 $videoCount = 0;
@@ -286,7 +306,7 @@ class ProjectsController extends Controller
         $query = $this->applySorting($query, $request);
         
         // Get paginated results
-        $projects = $query->paginate(10)
+        $projects = $query->paginate(9)
             ->through(function($project) {
                 // Count videos (video_url and tour_url)
                 $videoCount = 0;

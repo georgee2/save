@@ -127,6 +127,7 @@ class HomeController extends Controller
             ->get();
         
         // Fetch project categories with their projects for home section
+        // Limited to last 10 projects per category
         $projectCategories = EngineeringCategory::whereNull('deleted_at')
             ->whereHas('projects', function($query) {
                 $query->where('publish_status', 0)
@@ -138,7 +139,7 @@ class HomeController extends Controller
                       ->with(['category', 'subcategory', 'specifications.specification'])
                       ->withCount('images')
                       ->orderBy('created_at', 'desc')
-                      ->limit(8);
+                      ->limit(10);
             }])
             ->orderBy('title_english', 'asc')
             ->get()
@@ -154,7 +155,7 @@ class HomeController extends Controller
                 return $category;
             });
         
-        // Fetch board of directors ordered by board_order
+        // Fetch all board of directors ordered by board_order
         $boardMembers = Team::with(['jobTitle', 'rank'])
             ->whereNull('deleted_at')
             ->where('is_board_director', true)
@@ -162,15 +163,16 @@ class HomeController extends Controller
             ->orderBy('created_at', 'asc')
             ->get();
         
-        // Fetch regular team members ordered by display_order
+        // Fetch regular team members ordered by display_order (limited to 10)
         $teamMembers = Team::with(['jobTitle', 'rank'])
             ->whereNull('deleted_at')
             ->where('is_board_director', false)
             ->orderBy('display_order', 'asc')
             ->orderBy('created_at', 'asc')
+            ->limit(10)
             ->get();
         
-        // Combine board first, then team for the slider
+        // Combine all board members first, then limited team for the slider
         $allTeamMembers = $boardMembers->concat($teamMembers);
         
         // Fetch active portfolio types for tabs
@@ -216,13 +218,14 @@ class HomeController extends Controller
             ->get();
         
         // Fetch featured projects (home_status = 0) with category, subcategory, specifications and images count
+        // Limited to last 15 featured projects
         $featuredProjects = Project::with(['category', 'subcategory', 'specifications.specification'])
             ->withCount('images')
             ->where('publish_status', 0) // Published
             ->where('home_status', 0)    // Shown on home (featured)
             ->whereNull('deleted_at')
             ->orderBy('created_at', 'desc')
-            ->limit(20)
+            ->limit(15)
             ->get()
             ->map(function($project) {
                 // Count videos (video_url and tour_url)
@@ -238,13 +241,14 @@ class HomeController extends Controller
             });
         
         // Fetch featured offers (home_status = 0) with category, specifications, prices and images count
+        // Limited to last 15 featured offers
         $featuredOffers = Offer::with(['category', 'subcategory', 'currency', 'specifications.specification', 'prices.emirate'])
             ->withCount('images')
             ->where('publish_status', 0) // Published
             ->where('home_status', 0)    // Shown on home (featured)
             ->whereNull('deleted_at')
             ->orderBy('created_at', 'desc')
-            ->limit(20)
+            ->limit(15)
             ->get()
             ->map(function($offer) {
                 // Count videos (video_url and tour_url)

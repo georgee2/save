@@ -28,7 +28,8 @@
     <link rel="stylesheet" href="{{ asset('css/breadcrumb.css') }}">
     <link rel="stylesheet" href="{{ asset('css/select2-custom.css') }}">
     <link rel="stylesheet" href="{{ asset('css/new-style.css') }}">
-    <link rel="shortcut icon" href="{{url('/pic/ficon.png')}}" />
+    <link rel="icon" type="image/svg+xml" href="{{ asset('pic/fav.svg') }}">
+    <link rel="shortcut icon" type="image/svg+xml" href="{{ asset('pic/fav.svg') }}">
     <style>
         .inner-announcements {
             overflow-y: scroll;

@@ -430,3 +430,40 @@
     background: #545b62;
 }
 
+/* =====================================================
+   Clickable Image & Media Count Badges
+   ===================================================== */
+
+/* Pointer Events None - For overlay to allow click through */
+.pointer-events-none {
+    pointer-events: none;
+}
+
+/* Media Count Badges Container */
+.media-count-badges {
+    pointer-events: auto;
+}
+
+/* Media Count Badge - Styled span for image/video counts */
+.media-count-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    backdrop-filter: blur(4px);
+    color: #fff !important;
+}
+
+.media-count-badge i {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.media-count-badge span {
+    padding-left: 5px !important;
+    line-height: 1;
+}
+
