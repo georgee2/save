@@ -80,6 +80,66 @@ class OfferSpecificationController extends Controller
     }
     
     /**
+     * Bulk store multiple specifications (AJAX)
+     */
+    public function bulkStore(Request $request, $offerId)
+    {
+        try {
+            $request->validate([
+                'specifications' => 'required|array|min:1',
+                'specifications.*.specification_id' => 'required|exists:specifications,id',
+                'specifications.*.value_english' => 'required|string|max:255',
+                'specifications.*.value_arabic' => 'required|string|max:255',
+            ]);
+            
+            $addedCount = 0;
+            $skippedCount = 0;
+            
+            // Get already added specification IDs
+            $existingSpecIds = OfferSpecification::where('offer_id', $offerId)
+                ->whereNull('deleted_at')
+                ->pluck('specification_id')
+                ->toArray();
+            
+            foreach ($request->specifications as $spec) {
+                // Skip if specification already exists for this offer
+                if (in_array($spec['specification_id'], $existingSpecIds)) {
+                    $skippedCount++;
+                    continue;
+                }
+                
+                OfferSpecification::create([
+                    'offer_id' => $offerId,
+                    'specification_id' => $spec['specification_id'],
+                    'value_english' => $spec['value_english'],
+                    'value_arabic' => $spec['value_arabic'],
+                ]);
+                
+                $addedCount++;
+                $existingSpecIds[] = $spec['specification_id']; // Prevent duplicates in same batch
+            }
+            
+            $message = "{$addedCount} specification(s) added successfully!";
+            if ($skippedCount > 0) {
+                $message .= " ({$skippedCount} skipped as already exists)";
+            }
+            
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'added' => $addedCount,
+                'skipped' => $skippedCount
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    
+    /**
      * Update the specified specification (AJAX)
      */
     public function update(Request $request, $offerId, $id)
@@ -144,6 +204,28 @@ class OfferSpecificationController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Specification restored successfully!'
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    
+    /**
+     * Force delete the specification permanently (AJAX)
+     */
+    public function forceDelete($offerId, $id)
+    {
+        try {
+            $specification = OfferSpecification::withTrashed()->findOrFail($id);
+            $specification->forceDelete();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Specification permanently deleted!'
             ]);
             
         } catch (\Exception $e) {

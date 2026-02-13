@@ -85,6 +85,11 @@
                             title="Restore">
                             <i class="fa fa-undo"></i> Restore
                         </button>
+                        <button type="button" class="btn btn-dark btn-sm" 
+                            onclick="openForceDeleteSpecificationModal({{ $spec->id }}, '{{ $spec->title_english }}')" 
+                            title="Permanently Delete">
+                            <i class="fa fa-times-circle"></i> Force Delete
+                        </button>
                     </td>
                 </tr>
                 @endforeach

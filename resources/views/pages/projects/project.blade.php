@@ -163,11 +163,22 @@
             </div>
           </div>
           @php
-              $totalImages = $project->images->count();
+              $galleryImagesCount = $project->images->count();
+              // Total with main image
+              $totalWithMain = $galleryImagesCount + 1;
+              // We need minimum 5 items (1 main + 4 thumbnails)
+              $maxThumbnails = 4;
+              // Get actual gallery images (max 4)
+              $galleryImages = $project->images->take($maxThumbnails);
+              $actualThumbnails = $galleryImages->count();
+              // Remaining for +X overlay
+              $remainingImages = $galleryImagesCount > $maxThumbnails ? $galleryImagesCount - $maxThumbnails : 0;
+              // How many placeholders needed to fill 4 thumbnail slots
+              $placeholdersNeeded = $maxThumbnails - $actualThumbnails;
           @endphp
           <div class="row galleries">
             {{-- Main Image --}}
-            <div class="{{ $totalImages > 0 ? 'col-lg-6' : 'col-12' }} mb-3 mb-lg-0">
+            <div class="col-lg-6 mb-3 mb-lg-0">
               <a href="{{ url('/storage' . $project->main_image) }}" 
                  data-gtf-mfp="true"
                  data-gallery-id="project-gallery"
@@ -183,28 +194,20 @@
               </a>
             </div>
             
-            {{-- Thumbnails --}}
-            @if($totalImages > 0)
+            {{-- Thumbnails Grid (always show 4 items - real images + placeholders) --}}
             <div class="col-lg-6">
               <div class="row no-gutters">
-                @php
-                    // Show max 4 thumbnails to fit nicely in a 2x2 grid
-                    $galleryImages = $project->images->take(4);
-                    $remainingImages = $totalImages > 4 ? $totalImages - 4 : 0;
-                @endphp
-                
+                {{-- Real Gallery Images --}}
                 @foreach($galleryImages as $index => $image)
                 <div class="col-6 p-1">
                   <a href="{{ url('/storage' . $image->image) }}" 
                      data-gtf-mfp="true"
                      data-gallery-id="project-gallery"
-                     class="d-block position-relative rounded-lg overflow-hidden gallery-hover thumb-image-container">
+                     class="d-block position-relative rounded-lg overflow-hidden gallery-hover gallery-thumb">
                     <img src="{{ url('/storage' . $image->image) }}" 
                          alt=""
-                         class="w-100 rounded-lg"
-                         style="object-fit: contain;">
+                         class="w-100 rounded-lg gallery-thumb-img">
                     @if($index == 3 && $remainingImages > 0)
-                    {{-- Show +X overlay on last thumbnail --}}
                     <div class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center rounded-lg" 
                          style="top: 0; left: 0; background: rgba(0,0,0,0.5);">
                       <p class="fs-24 font-weight-600 text-white lh-1 mb-0">+{{ $remainingImages }}</p>
@@ -218,6 +221,21 @@
                   </a>
                 </div>
                 @endforeach
+                
+                {{-- Placeholder Shapes - NOT clickable, NOT in slideshow --}}
+                @for($p = 0; $p < $placeholdersNeeded; $p++)
+                <div class="col-6 p-1">
+                  <div class="gallery-placeholder rounded-lg">
+                    @if($p % 2 == 0)
+                    {{-- Icon placeholder --}}
+                    <img src="{{ asset('pic/holder/icon.webp') }}" alt="" class="gallery-placeholder-icon">
+                    @else
+                    {{-- Name placeholder --}}
+                    <img src="{{ asset('pic/holder/name.webp') }}" alt="" class="gallery-placeholder-name">
+                    @endif
+                  </div>
+                </div>
+                @endfor
               </div>
               
               {{-- Hidden images for lightbox --}}
@@ -229,12 +247,69 @@
               </a>
               @endforeach
             </div>
-            @endif
           </div>
           
           <style>
             .gallery-hover:hover .gallery-hover-overlay {
               opacity: 1 !important;
+            }
+            
+            /* Gallery Thumbnails */
+            .gallery-thumb {
+              aspect-ratio: 1 / 1;
+            }
+            .gallery-thumb-img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+            
+            /* Placeholder Shapes - Not clickable */
+            .gallery-placeholder {
+              aspect-ratio: 1 / 1;
+              background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              pointer-events: none;
+              cursor: default;
+              position: relative;
+              overflow: hidden;
+            }
+            
+            /* Subtle pattern overlay */
+            .gallery-placeholder::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background-image: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.02) 10px,
+                rgba(255,255,255,0.02) 20px
+              );
+            }
+            
+            /* Icon image */
+            .gallery-placeholder-icon {
+              width: 40%;
+              height: auto;
+              opacity: 0.5;
+              position: relative;
+              z-index: 1;
+            }
+            
+            /* Name image */
+            .gallery-placeholder-name {
+              width: 70%;
+              height: auto;
+              opacity: 0.5;
+              position: relative;
+              z-index: 1;
             }
           </style>
         </div>

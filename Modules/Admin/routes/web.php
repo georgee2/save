@@ -341,9 +341,11 @@ Route::group(
                 Route::prefix('{projectId}/specifications')->group(function () {
                     Route::get('/available', [ProjectSpecificationController::class, 'getAvailableComponents']);
                     Route::post('/store', [ProjectSpecificationController::class, 'store']);
+                    Route::post('/bulk-store', [ProjectSpecificationController::class, 'bulkStore']);
                     Route::post('/update/{id}', [ProjectSpecificationController::class, 'update']);
                     Route::post('/delete/{id}', [ProjectSpecificationController::class, 'destroy']);
                     Route::post('/restore/{id}', [ProjectSpecificationController::class, 'restore']);
+                    Route::post('/force-delete/{id}', [ProjectSpecificationController::class, 'forceDelete']);
                 });
                 
                 // Project Floors Sub-Routes
@@ -631,9 +633,11 @@ Route::group(
                 Route::prefix('{offerId}/prices')->group(function () {
                     Route::get('/available-emirates', [OfferPriceController::class, 'getAvailableEmirates']);
                     Route::post('/store', [OfferPriceController::class, 'store']);
+                    Route::post('/bulk-store', [OfferPriceController::class, 'bulkStore']);
                     Route::post('/update/{id}', [OfferPriceController::class, 'update']);
                     Route::post('/delete/{id}', [OfferPriceController::class, 'destroy']);
                     Route::post('/restore/{id}', [OfferPriceController::class, 'restore']);
+                    Route::post('/force-delete/{id}', [OfferPriceController::class, 'forceDelete']);
                 });
             });
             
@@ -686,9 +690,11 @@ Route::group(
             Route::prefix('offer/{offerId}/specifications')->group(function () {
                 Route::get('/available', [OfferSpecificationController::class, 'getAvailableComponents']);
                 Route::post('/store', [OfferSpecificationController::class, 'store']);
+                Route::post('/bulk-store', [OfferSpecificationController::class, 'bulkStore']);
                 Route::post('/update/{id}', [OfferSpecificationController::class, 'update']);
                 Route::post('/delete/{id}', [OfferSpecificationController::class, 'destroy']);
                 Route::post('/restore/{id}', [OfferSpecificationController::class, 'restore']);
+                Route::post('/force-delete/{id}', [OfferSpecificationController::class, 'forceDelete']);
             });
             
             // Offer Feasibility Studies Routes

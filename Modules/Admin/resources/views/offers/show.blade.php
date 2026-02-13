@@ -1061,6 +1061,19 @@
         });
     @endif
 
+    // Helper function to reload page while preserving current tab
+    function reloadWithTab() {
+        const activeTab = document.querySelector('.tab-item.active');
+        if (activeTab) {
+            const tabId = activeTab.getAttribute('data-tab');
+            const url = new URL(window.location.href);
+            url.searchParams.set('tab', tabId);
+            window.location.href = url.toString();
+        } else {
+            reloadWithTab();
+        }
+    }
+    
     // Tab switching
     document.querySelectorAll('.tab-item').forEach(tab => {
         tab.addEventListener('click', function() {
@@ -1074,8 +1087,31 @@
             // Show corresponding pane
             const tabId = this.getAttribute('data-tab');
             document.getElementById(tabId).classList.add('active');
+            
+            // Update URL without reload
+            const url = new URL(window.location.href);
+            url.searchParams.set('tab', tabId);
+            window.history.replaceState({}, '', url.toString());
         });
     });
+    
+    // On page load, check for tab parameter and activate that tab
+    (function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tabParam = urlParams.get('tab');
+        if (tabParam) {
+            const targetTab = document.querySelector(`.tab-item[data-tab="${tabParam}"]`);
+            const targetPane = document.getElementById(tabParam);
+            if (targetTab && targetPane) {
+                // Remove active from all
+                document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+                // Activate target
+                targetTab.classList.add('active');
+                targetPane.classList.add('active');
+            }
+        }
+    })();
     
     // Lightbox functions
     function openLightbox(imgSrc) {
@@ -1265,7 +1301,7 @@
                 if (response.success) {
                     $('#addLengthComponentModal').modal('hide');
                     $('#addLengthComponentForm')[0].reset();
-                    location.reload();
+                    reloadWithTab();
                 }
             },
             error: function(xhr) {
@@ -1294,7 +1330,7 @@
             success: function(response) {
                 if (response.success) {
                     $('#editLengthComponentModal').modal('hide');
-                    location.reload();
+                    reloadWithTab();
                 }
             },
             error: function(xhr) {
@@ -1321,7 +1357,7 @@
             success: function(response) {
                 $('#deleteLengthComponentModal').modal('hide');
                 if (response.success) {
-                    location.reload();
+                    reloadWithTab();
                 }
             },
             error: function() {
@@ -1339,7 +1375,7 @@
                 data: { _token: '{{ csrf_token() }}' },
                 success: function(response) {
                     if (response.success) {
-                        location.reload();
+                        reloadWithTab();
                     }
                 },
                 error: function() {
@@ -1402,7 +1438,7 @@
                 if (response.success) {
                     $('#addIncomeComponentModal').modal('hide');
                     $('#addIncomeComponentForm')[0].reset();
-                    location.reload();
+                    reloadWithTab();
                 }
             },
             error: function(xhr) {
@@ -1432,7 +1468,7 @@
             success: function(response) {
                 if (response.success) {
                     $('#editIncomeComponentModal').modal('hide');
-                    location.reload();
+                    reloadWithTab();
                 }
             },
             error: function(xhr) {
@@ -1459,7 +1495,7 @@
             success: function(response) {
                 $('#deleteIncomeComponentModal').modal('hide');
                 if (response.success) {
-                    location.reload();
+                    reloadWithTab();
                 }
             },
             error: function() {
@@ -1477,7 +1513,7 @@
                 data: { _token: '{{ csrf_token() }}' },
                 success: function(response) {
                     if (response.success) {
-                        location.reload();
+                        reloadWithTab();
                     }
                 },
                 error: function() {
@@ -1596,7 +1632,7 @@
                 if (response.success) {
                     $('#addConstructionCostModal').modal('hide');
                     $('#addConstructionCostForm')[0].reset();
-                    location.reload();
+                    reloadWithTab();
                 }
             },
             error: function(xhr) {
@@ -1657,7 +1693,7 @@
             success: function(response) {
                 if (response.success) {
                     $('#editConstructionCostModal').modal('hide');
-                    location.reload();
+                    reloadWithTab();
                 }
             },
             error: function(xhr) {
@@ -1684,7 +1720,7 @@
             success: function(response) {
                 $('#deleteConstructionCostModal').modal('hide');
                 if (response.success) {
-                    location.reload();
+                    reloadWithTab();
                 }
             },
             error: function() {
@@ -1702,7 +1738,7 @@
                 data: { _token: '{{ csrf_token() }}' },
                 success: function(response) {
                     if (response.success) {
-                        location.reload();
+                        reloadWithTab();
                     }
                 },
                 error: function() {
@@ -1765,7 +1801,7 @@
                 if (response.success) {
                     $('#addSpecificationModal').modal('hide');
                     $('#addSpecificationForm')[0].reset();
-                    location.reload();
+                    reloadWithTab();
                 }
             },
             error: function(xhr) {
@@ -1795,7 +1831,7 @@
             success: function(response) {
                 if (response.success) {
                     $('#editSpecificationModal').modal('hide');
-                    location.reload();
+                    reloadWithTab();
                 }
             },
             error: function(xhr) {
@@ -1822,7 +1858,7 @@
             success: function(response) {
                 $('#deleteSpecificationModal').modal('hide');
                 if (response.success) {
-                    location.reload();
+                    reloadWithTab();
                 }
             },
             error: function() {
@@ -1840,7 +1876,7 @@
                 data: { _token: '{{ csrf_token() }}' },
                 success: function(response) {
                     if (response.success) {
-                        location.reload();
+                        reloadWithTab();
                     }
                 },
                 error: function() {
@@ -1850,6 +1886,246 @@
         }
     }
     
+    // Open Force Delete Specification Modal
+    function openForceDeleteSpecificationModal(id, name) {
+        $('#force_delete_specification_id').val(id);
+        $('#force_delete_specification_name').text(name);
+        $('#forceDeleteSpecificationModal').modal('show');
+    }
+    
+    // Confirm Force Delete Specification
+    function confirmForceDeleteSpecification() {
+        const specId = $('#force_delete_specification_id').val();
+        
+        $.ajax({
+            url: `/admin/offer/${specOfferId}/specifications/force-delete/${specId}`,
+            method: 'POST',
+            data: { _token: '{{ csrf_token() }}' },
+            success: function(response) {
+                if (response.success) {
+                    $('#forceDeleteSpecificationModal').modal('hide');
+                    showSpecificationAlert('success', response.message);
+                    setTimeout(function() {
+                        reloadWithTab();
+                    }, 1000);
+                } else {
+                    showSpecificationAlert('error', response.message);
+                }
+            },
+            error: function() {
+                showSpecificationAlert('error', 'Failed to permanently delete specification');
+            }
+        });
+    }
+    
+    // ===================================
+    // Bulk Add Specifications JavaScript
+    // ===================================
+    
+    let availableSpecifications = [];
+    let bulkRowCounter = 0;
+    
+    // Show Specification Alert
+    function showSpecificationAlert(type, message) {
+        const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+        const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+        
+        const alertHtml = `
+            <div class="alert ${alertClass} alert-dismissible fade show shadow-sm" role="alert" style="border-left: 4px solid ${type === 'success' ? '#28a745' : '#dc3545'}; font-size: 16px; padding: 15px 20px;">
+                <i class="fa ${icon}" style="font-size: 20px;"></i> <strong>${type === 'success' ? 'Success!' : 'Error!'}</strong> ${message}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        `;
+        
+        $('.specifications-section').prepend(alertHtml);
+        
+        // Auto dismiss after 5 seconds
+        setTimeout(function() {
+            $('.specifications-section .alert').fadeOut('slow', function() {
+                $(this).remove();
+            });
+        }, 5000);
+    }
+    
+    // Open Bulk Add Specification Modal
+    function openBulkAddSpecificationModal() {
+        // Reset
+        bulkRowCounter = 0;
+        $('#bulkSpecificationsContainer').empty();
+        
+        // Load available specifications first
+        $.ajax({
+            url: `/admin/offer/${specOfferId}/specifications/available`,
+            method: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    availableSpecifications = response.components;
+                    
+                    if (availableSpecifications.length === 0) {
+                        showSpecificationAlert('error', 'No specifications available to add. All specifications have already been added to this offer.');
+                        return;
+                    }
+                    
+                    // Add initial rows (3 rows or available count, whichever is smaller)
+                    const initialRows = Math.min(3, availableSpecifications.length);
+                    for (let i = 0; i < initialRows; i++) {
+                        addBulkSpecificationRow();
+                    }
+                    
+                    $('#bulkAddSpecificationModal').modal('show');
+                }
+            },
+            error: function() {
+                showSpecificationAlert('error', 'Failed to load specifications');
+            }
+        });
+    }
+    
+    // Add a new row for bulk specification
+    function addBulkSpecificationRow() {
+        bulkRowCounter++;
+        
+        // Build options HTML
+        let optionsHtml = '<option value="">Select Specification</option>';
+        availableSpecifications.forEach(function(spec) {
+            optionsHtml += `<option value="${spec.id}" data-icon="${spec.icon || ''}">${spec.title_english} / ${spec.title_arabic}</option>`;
+        });
+        
+        const rowHtml = `
+            <div class="bulk-spec-row card mb-2" data-row="${bulkRowCounter}">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group mb-2">
+                                <label class="small font-weight-bold">Specification <span class="text-danger">*</span></label>
+                                <select class="form-control form-control-sm bulk-spec-select" name="spec_${bulkRowCounter}" required onchange="updateBulkRowCount()">
+                                    ${optionsHtml}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group mb-2">
+                                <label class="small font-weight-bold">Value (English) <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-sm bulk-value-en" name="value_en_${bulkRowCounter}" placeholder="English value" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group mb-2">
+                                <label class="small font-weight-bold">Value (Arabic) <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-sm bulk-value-ar" name="value_ar_${bulkRowCounter}" placeholder="القيمة بالعربية" dir="rtl" required>
+                            </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="button" class="btn btn-outline-danger btn-sm mb-2 w-100" onclick="removeBulkSpecificationRow(${bulkRowCounter})">
+                                <i class="fa fa-trash"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        $('#bulkSpecificationsContainer').append(rowHtml);
+        updateBulkRowCount();
+    }
+    
+    // Remove a bulk specification row
+    function removeBulkSpecificationRow(rowNum) {
+        $(`.bulk-spec-row[data-row="${rowNum}"]`).fadeOut(200, function() {
+            $(this).remove();
+            updateBulkRowCount();
+        });
+    }
+    
+    // Update the row count display
+    function updateBulkRowCount() {
+        const validRows = $('.bulk-spec-row').filter(function() {
+            return $(this).find('.bulk-spec-select').val() !== '';
+        }).length;
+        const totalRows = $('.bulk-spec-row').length;
+        
+        $('#bulkRowCount').text(`${validRows} of ${totalRows} specifications ready`);
+        $('#bulkAddSubmitBtn').prop('disabled', validRows === 0);
+    }
+    
+    // Bulk Add Specification Form Submit
+    $('#bulkAddSpecificationForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        // Collect all specifications data
+        const specifications = [];
+        let hasError = false;
+        
+        $('.bulk-spec-row').each(function() {
+            const specId = $(this).find('.bulk-spec-select').val();
+            const valueEn = $(this).find('.bulk-value-en').val().trim();
+            const valueAr = $(this).find('.bulk-value-ar').val().trim();
+            
+            if (specId) {
+                if (!valueEn || !valueAr) {
+                    hasError = true;
+                    $(this).find('.card-body').addClass('border-danger');
+                    return;
+                }
+                
+                specifications.push({
+                    specification_id: specId,
+                    value_english: valueEn,
+                    value_arabic: valueAr
+                });
+            }
+        });
+        
+        if (hasError) {
+            showSpecificationAlert('error', 'Please fill in all required fields for selected specifications');
+            return;
+        }
+        
+        if (specifications.length === 0) {
+            showSpecificationAlert('error', 'Please add at least one specification');
+            return;
+        }
+        
+        // Check for duplicate specifications in the form
+        const specIds = specifications.map(s => s.specification_id);
+        const uniqueSpecIds = [...new Set(specIds)];
+        if (specIds.length !== uniqueSpecIds.length) {
+            showSpecificationAlert('error', 'Duplicate specifications detected. Please select unique specifications.');
+            return;
+        }
+        
+        // Disable submit button
+        $('#bulkAddSubmitBtn').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Adding...');
+        
+        $.ajax({
+            url: `/admin/offer/${specOfferId}/specifications/bulk-store`,
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                _token: '{{ csrf_token() }}',
+                specifications: specifications
+            }),
+            success: function(response) {
+                if (response.success) {
+                    $('#bulkAddSpecificationModal').modal('hide');
+                    showSpecificationAlert('success', response.message);
+                    setTimeout(function() {
+                        reloadWithTab();
+                    }, 1000);
+                } else {
+                    showSpecificationAlert('error', response.message);
+                    $('#bulkAddSubmitBtn').prop('disabled', false).html('<i class="fa fa-save"></i> Add All Specifications');
+                }
+            },
+            error: function(xhr) {
+                showSpecificationAlert('error', xhr.responseJSON?.message || 'Failed to add specifications');
+                $('#bulkAddSubmitBtn').prop('disabled', false).html('<i class="fa fa-save"></i> Add All Specifications');
+            }
+        });
+    });
+
     // ===================================
     // FEASIBILITY STUDIES JAVASCRIPT
     // ===================================

@@ -67,7 +67,7 @@
                     @php
                         $allProjects = $projectCategories->flatMap(function($cat) {
                             return $cat->projects;
-                        })->unique('id')->take(8);
+                        })->unique('id')->take(10);
                     @endphp
                     @foreach($allProjects as $project)
                     @php
@@ -75,26 +75,26 @@
                         $vidCount = (!empty($project->video_url) ? 1 : 0) + (!empty($project->tour_url) ? 1 : 0);
                     @endphp
                     <div class="col-xxl-3 col-lg-4 col-md-6 mb-6" data-animate="zoomIn">
-                        <div class="card border-0 bg-overlay-gradient-3 rounded-lg hover-change-image project-card-square">
+                        <a href="{{ route('projects.show', $project->slug) }}" class="card border-0 bg-overlay-gradient-light rounded-lg hover-change-image project-card-square d-block">
                             <img src="{{ url('/storage' . $project->main_image) }}" class="card-img"
                                  alt="{{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}">
-                            <div class="card-img-overlay d-flex flex-column position-relative-sm">
+                            <div class="card-img-overlay d-flex flex-column position-relative-sm pointer-events-none">
                                 <div class="d-flex justify-content-between">
                                     <ul class="list-inline mb-0 d-flex justify-content-center align-items-center h-100 hover-image project-media-count">
                                         @if($imgCount > 0)
                                         <li class="list-inline-item">
-                                            <a href="{{ route('projects.show', $project->slug) }}" class="w-40px h-40 rounded-circle d-inline-flex align-items-center justify-content-center text-white bg-dark-opacity-03"
+                                            <span class="w-40px h-40 rounded-circle d-inline-flex align-items-center justify-content-center text-white bg-dark-opacity-03"
                                                   data-toggle="tooltip" title="{{ $imgCount }} {{ __('lang.images') }}">
                                                 <i class="far fa-images"></i>
-                                            </a>
+                                            </span>
                                         </li>
                                         @endif
                                         @if($vidCount > 0)
                                         <li class="list-inline-item">
-                                            <a href="{{ route('projects.show', $project->slug) }}" class="w-40px h-40 rounded-circle d-inline-flex align-items-center justify-content-center text-white bg-dark-opacity-03"
+                                            <span class="w-40px h-40 rounded-circle d-inline-flex align-items-center justify-content-center text-white bg-dark-opacity-03"
                                                   data-toggle="tooltip" title="{{ $vidCount }} {{ __('lang.videos') }}">
                                                 <i class="far fa-play-circle"></i>
-                                            </a>
+                                            </span>
                                         </li>
                                         @endif
                                     </ul>
@@ -113,9 +113,9 @@
                                     </p>
                                     @endif
                                     <h4 class="mt-0 mb-2 lh-1">
-                                        <a href="{{ route('projects.show', $project->slug) }}" class="fs-16 text-white">
+                                        <span class="fs-16 text-white">
                                             {{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}
-                                        </a>
+                                        </span>
                                     </h4>
                                     @if($project->specifications->count() > 0)
                                     <div class="border-top border-white-opacity-03 pt-2">
@@ -137,7 +137,7 @@
                                     @endif
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     @endforeach
                 </div>
@@ -153,26 +153,26 @@
                         $vidCount = (!empty($project->video_url) ? 1 : 0) + (!empty($project->tour_url) ? 1 : 0);
                     @endphp
                     <div class="col-xxl-3 col-lg-4 col-md-6 mb-6" data-animate="zoomIn">
-                        <div class="card border-0 bg-overlay-gradient-3 rounded-lg hover-change-image project-card-square">
+                        <a href="{{ route('projects.show', $project->slug) }}" class="card border-0 bg-overlay-gradient-light rounded-lg hover-change-image project-card-square d-block">
                             <img src="{{ url('/storage' . $project->main_image) }}" class="card-img"
                                  alt="{{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}">
-                            <div class="card-img-overlay d-flex flex-column position-relative-sm">
+                            <div class="card-img-overlay d-flex flex-column position-relative-sm pointer-events-none">
                                 <div class="d-flex justify-content-between">
                                     <ul class="list-inline mb-0 d-flex justify-content-center align-items-center h-100 hover-image project-media-count">
                                         @if($imgCount > 0)
                                         <li class="list-inline-item">
-                                            <a href="{{ route('projects.show', $project->slug) }}" class="w-40px h-40 rounded-circle d-inline-flex align-items-center justify-content-center text-white bg-dark-opacity-03"
+                                            <span class="w-40px h-40 rounded-circle d-inline-flex align-items-center justify-content-center text-white bg-dark-opacity-03"
                                                   data-toggle="tooltip" title="{{ $imgCount }} {{ __('lang.images') }}">
                                                 <i class="far fa-images"></i>
-                                            </a>
+                                            </span>
                                         </li>
                                         @endif
                                         @if($vidCount > 0)
                                         <li class="list-inline-item">
-                                            <a href="{{ route('projects.show', $project->slug) }}" class="w-40px h-40 rounded-circle d-inline-flex align-items-center justify-content-center text-white bg-dark-opacity-03"
+                                            <span class="w-40px h-40 rounded-circle d-inline-flex align-items-center justify-content-center text-white bg-dark-opacity-03"
                                                   data-toggle="tooltip" title="{{ $vidCount }} {{ __('lang.videos') }}">
                                                 <i class="far fa-play-circle"></i>
-                                            </a>
+                                            </span>
                                         </li>
                                         @endif
                                     </ul>
@@ -191,9 +191,9 @@
                                     </p>
                                     @endif
                                     <h4 class="mt-0 mb-2 lh-1">
-                                        <a href="{{ route('projects.show', $project->slug) }}" class="fs-16 text-white">
+                                        <span class="fs-16 text-white">
                                             {{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}
-                                        </a>
+                                        </span>
                                     </h4>
                                     @if($project->specifications->count() > 0)
                                     <div class="border-top border-white-opacity-03 pt-2">
@@ -215,7 +215,7 @@
                                     @endif
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     @endforeach
                 </div>

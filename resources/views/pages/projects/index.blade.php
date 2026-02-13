@@ -127,10 +127,10 @@
                 @forelse($projects as $project)
                 <div class="col-md-6 mb-6">
                   <div class="card border-0 shadow-hover-2" data-animate="fadeInUp">
-                    <div class="hover-change-image bg-hover-overlay rounded-lg card-img-top">
+                    <a href="{{ route('projects.show', $project->slug) }}" class="hover-change-image bg-hover-overlay rounded-lg card-img-top d-block">
                       <img src="{{ url('/storage' . $project->main_image) }}"
 								     alt="{{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}">
-                      <div class="card-img-overlay p-2 d-flex flex-column">
+                      <div class="card-img-overlay p-2 d-flex flex-column pointer-events-none">
                         <div>
                           @if($project->home_status == 0)
                           <span class="badge badge-primary">{{ __('lang.featured') }}</span>
@@ -138,24 +138,24 @@
                           <span class="badge badge-indigo">{{ app()->getLocale() == 'ar' ? $project->category->title_arabic : $project->category->title_english }}</span>
                           @endif
                         </div>
-                        <ul class="list-inline mb-0 mt-auto hover-image">
+                        <ul class="list-inline mb-0 mt-auto hover-image media-count-badges">
                           @if($project->total_images > 0)
                           <li class="list-inline-item mr-2" data-toggle="tooltip" title="{{ $project->total_images }} {{ __('lang.images') }}">
-                              <a href="{{ route('projects.show', $project->slug) }}" class="text-white hover-primary">
+                              <span class="media-count-badge">
                               <i class="far fa-images"></i><span class="pl-1">{{ $project->total_images }}</span>
-                              </a>
+                              </span>
                             </li>
                           @endif
                           @if($project->video_count > 0)
                           <li class="list-inline-item" data-toggle="tooltip" title="{{ $project->video_count }} {{ __('lang.videos') }}">
-                              <a href="{{ route('projects.show', $project->slug) }}" class="text-white hover-primary">
+                              <span class="media-count-badge">
                               <i class="far fa-play-circle"></i><span class="pl-1">{{ $project->video_count }}</span>
-                              </a>
+                              </span>
                             </li>
                           @endif
                           </ul>
                       </div>
-                    </div>
+                    </a>
                     
                     {{-- Share Badge --}}
                     @php
@@ -285,10 +285,10 @@
                   <div class="card border-0 shadow-hover-2" data-animate="fadeInUp">
                     <div class="row no-gutters">
                       <div class="col-md-5">
-                        <div class="hover-change-image bg-hover-overlay rounded-lg card-img h-100">
+                        <a href="{{ route('projects.show', $project->slug) }}" class="hover-change-image bg-hover-overlay rounded-lg card-img h-100 d-block">
                           <img src="{{ url('/storage' . $project->main_image) }}" class="h-100 object-fit-cover"
                                alt="{{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}">
-                          <div class="card-img-overlay p-2 d-flex flex-column">
+                          <div class="card-img-overlay p-2 d-flex flex-column pointer-events-none">
                             <div>
                               @if($project->home_status == 0)
                               <span class="badge badge-primary">{{ __('lang.featured') }}</span>
@@ -296,24 +296,24 @@
                               <span class="badge badge-indigo">{{ app()->getLocale() == 'ar' ? $project->category->title_arabic : $project->category->title_english }}</span>
                               @endif
                       </div>
-                            <ul class="list-inline mb-0 mt-auto hover-image">
+                            <ul class="list-inline mb-0 mt-auto hover-image media-count-badges">
                               @if($project->total_images > 0)
                               <li class="list-inline-item mr-2" data-toggle="tooltip" title="{{ $project->total_images }} {{ __('lang.images') }}">
-                              <a href="#" class="text-white hover-primary">
+                              <span class="media-count-badge">
                                   <i class="far fa-images"></i><span class="pl-1">{{ $project->total_images }}</span>
-                              </a>
+                              </span>
                             </li>
                               @endif
                               @if($project->video_count > 0)
                               <li class="list-inline-item" data-toggle="tooltip" title="{{ $project->video_count }} {{ __('lang.videos') }}">
-                              <a href="#" class="text-white hover-primary">
+                              <span class="media-count-badge">
                                   <i class="far fa-play-circle"></i><span class="pl-1">{{ $project->video_count }}</span>
-                              </a>
+                              </span>
                             </li>
                               @endif
                       </ul>
                     </div>
-                        </div>
+                        </a>
                       </div>
                       <div class="col-md-7">
                         <div class="card-body p-4 d-flex flex-column h-100">

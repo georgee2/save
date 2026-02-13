@@ -106,27 +106,43 @@ class CategoryController extends Controller
     
     /**
      * Get filter data for views
+     * Only returns categories and subcategories that have at least one published project
      */
     private function getFilterData($categoryId = null)
     {
-        $subcategoriesQuery = EngineeringSubCategory::whereNull('deleted_at')->orderBy('title_english');
+        // Get subcategories that have at least one published project
+        $subcategoriesQuery = EngineeringSubCategory::whereNull('deleted_at')
+            ->whereHas('projects', function($query) {
+                $query->where('publish_status', 0)->whereNull('deleted_at');
+            })
+            ->orderBy('title_english');
+        
         if ($categoryId) {
             $subcategoriesQuery->where('category_id', $categoryId);
         }
         
-        // Subcategories with project counts for slider filter
+        // Subcategories with project counts for slider filter (only those with projects)
         $subcategoriesWithCountQuery = EngineeringSubCategory::withCount(['projects' => function($query) {
                 $query->where('publish_status', 0)->whereNull('deleted_at');
             }])
             ->whereNull('deleted_at')
+            ->having('projects_count', '>', 0)
             ->orderBy('title_english');
         
         if ($categoryId) {
             $subcategoriesWithCountQuery->where('category_id', $categoryId);
         }
         
+        // Get categories that have at least one published project
+        $categories = EngineeringCategory::whereNull('deleted_at')
+            ->whereHas('projects', function($query) {
+                $query->where('publish_status', 0)->whereNull('deleted_at');
+            })
+            ->orderBy('title_english')
+            ->get();
+        
         return [
-            'categories' => EngineeringCategory::whereNull('deleted_at')->orderBy('title_english')->get(),
+            'categories' => $categories,
             'subcategories' => $subcategoriesQuery->get(),
             'styles' => ProjectStyle::whereNull('deleted_at')->orderBy('title_english')->get(),
             'types' => ProjectType::whereNull('deleted_at')->where('status', 0)->orderBy('name_english')->get(),
@@ -190,7 +206,7 @@ class CategoryController extends Controller
         $query = $this->applySorting($query, $request);
         
         // Get paginated results
-        $projects = $query->paginate(10)
+        $projects = $query->paginate(9)
             ->through(function($project) {
                 // Count videos (video_url and tour_url)
                 $videoCount = 0;

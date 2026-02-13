@@ -9,9 +9,14 @@
         <h5 class="text-primary mb-0">
             <i class="fa fa-money"></i> Prices by Emirate
         </h5>
-        <button type="button" class="btn btn-success btn-sm" onclick="openAddPriceModal()">
-            <i class="fa fa-plus"></i> Add Price
-        </button>
+        <div class="btn-group">
+            <button type="button" class="btn btn-success btn-sm" onclick="openAddPriceModal()">
+                <i class="fa fa-plus"></i> Add Price
+            </button>
+            <button type="button" class="btn btn-primary btn-sm" onclick="openBulkAddPriceModal()">
+                <i class="fa fa-plus-square"></i> Bulk Add
+            </button>
+        </div>
     </div>
     
     <!-- Active Prices -->
@@ -85,7 +90,7 @@
                             <th>Emirate</th>
                             <th>Price</th>
                             <th>Deleted At</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -95,8 +100,11 @@
                             <td>{{ number_format($price->price, 2) }}</td>
                             <td>{{ \Carbon\Carbon::parse($price->deleted_at)->format('M d, Y') }}</td>
                             <td>
-                                <button type="button" class="btn btn-success btn-sm" onclick="restorePrice({{ $price->id }})">
+                                <button type="button" class="btn btn-success btn-sm" onclick="restorePrice({{ $price->id }})" title="Restore">
                                     <i class="fa fa-undo"></i> Restore
+                                </button>
+                                <button type="button" class="btn btn-dark btn-sm" onclick="openForceDeletePriceModal({{ $price->id }}, '{{ $price->emirate_name_en }}')" title="Permanently Delete">
+                                    <i class="fa fa-times-circle"></i> Force Delete
                                 </button>
                             </td>
                         </tr>
@@ -226,9 +234,90 @@
         </div>
     </div>
 </div>
+
+<!-- Bulk Add Prices Modal -->
+<div class="modal fade" id="bulkAddPriceModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title"><i class="fa fa-plus-square"></i> Bulk Add Prices by Emirate</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="bulkAddPriceForm">
+                @csrf
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <i class="fa fa-info-circle"></i> 
+                        <strong>Tip:</strong> Add prices for multiple emirates at once. Click "Add Row" to add more.
+                    </div>
+                    
+                    <div id="bulkPricesContainer">
+                        <!-- Dynamic rows will be added here -->
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="addBulkPriceRow()">
+                            <i class="fa fa-plus"></i> Add Row
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span class="mr-auto text-muted" id="bulkPriceRowCount">0 prices</span>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="bulkAddPriceSubmitBtn">
+                        <i class="fa fa-save"></i> Add All Prices
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Force Delete Price Modal -->
+<div class="modal fade" id="forceDeletePriceModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title"><i class="fa fa-times-circle"></i> Permanent Delete</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <input type="hidden" id="force_delete_price_id">
+                <i class="fa fa-exclamation-triangle fa-5x text-warning mb-3"></i>
+                <h5 class="text-danger">Warning: This action cannot be undone!</h5>
+                <p>You are about to <strong>permanently delete</strong> this price:</p>
+                <p><strong id="force_delete_emirate_name" class="text-danger"></strong></p>
+                <p class="text-muted small">This will remove the record from the database permanently.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-dark" onclick="confirmForceDeletePrice()">
+                    <i class="fa fa-times-circle"></i> Permanently Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @push('scripts')
 <script>
     const pricesBaseUrl = '/admin/offer/{{ $offer->id }}/prices';
+    
+    // Helper function to reload page while preserving current tab
+    function reloadWithTab() {
+        const activeTab = document.querySelector('.tab-item.active');
+        if (activeTab) {
+            const tabId = activeTab.getAttribute('data-tab');
+            const url = new URL(window.location.href);
+            url.searchParams.set('tab', tabId);
+            window.location.href = url.toString();
+        } else {
+            reloadWithTab();
+        }
+    }
     
     // Initialize Select2 for Emirate
     function initEmirateSelect2() {
@@ -282,7 +371,7 @@
                 if (response.success) {
                     $('#addPriceModal').modal('hide');
                     $('#addPriceForm')[0].reset();
-                    location.reload();
+                    reloadWithTab();
                 } else {
                     showPriceAlert('error', response.message);
                 }
@@ -316,7 +405,7 @@
             success: function(response) {
                 if (response.success) {
                     $('#editPriceModal').modal('hide');
-                    location.reload();
+                    reloadWithTab();
                 } else {
                     showPriceAlert('error', response.message);
                 }
@@ -345,7 +434,7 @@
             success: function(response) {
                 if (response.success) {
                     $('#deletePriceModal').modal('hide');
-                    location.reload();
+                    reloadWithTab();
                 } else {
                     showPriceAlert('error', response.message);
                 }
@@ -365,7 +454,7 @@
                 data: { _token: '{{ csrf_token() }}' },
                 success: function(response) {
                     if (response.success) {
-                        location.reload();
+                        reloadWithTab();
                     } else {
                         showPriceAlert('error', response.message);
                     }
@@ -375,6 +464,38 @@
                 }
             });
         }
+    }
+    
+    // Open Force Delete Price Modal
+    function openForceDeletePriceModal(id, emirateName) {
+        $('#force_delete_price_id').val(id);
+        $('#force_delete_emirate_name').text(emirateName);
+        $('#forceDeletePriceModal').modal('show');
+    }
+    
+    // Confirm Force Delete Price
+    function confirmForceDeletePrice() {
+        const priceId = $('#force_delete_price_id').val();
+        
+        $.ajax({
+            url: pricesBaseUrl + '/force-delete/' + priceId,
+            method: 'POST',
+            data: { _token: '{{ csrf_token() }}' },
+            success: function(response) {
+                if (response.success) {
+                    $('#forceDeletePriceModal').modal('hide');
+                    showPriceAlert('success', response.message);
+                    setTimeout(function() {
+                        reloadWithTab();
+                    }, 1000);
+                } else {
+                    showPriceAlert('error', response.message);
+                }
+            },
+            error: function() {
+                showPriceAlert('error', 'Failed to permanently delete price');
+            }
+        });
     }
     
     // Show Price Alert
@@ -397,5 +518,208 @@
             });
         }, 5000);
     }
+    
+    // ===================================
+    // Bulk Add Prices JavaScript
+    // ===================================
+    
+    let availableEmirates = [];
+    let bulkPriceRowCounter = 0;
+    
+    // Open Bulk Add Price Modal
+    function openBulkAddPriceModal() {
+        // Reset
+        bulkPriceRowCounter = 0;
+        $('#bulkPricesContainer').empty();
+        
+        // Load available emirates first
+        $.ajax({
+            url: pricesBaseUrl + '/available-emirates',
+            method: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    availableEmirates = response.emirates;
+                    
+                    if (availableEmirates.length === 0) {
+                        showPriceAlert('error', 'No emirates available to add. All emirates have already been added to this offer.');
+                        return;
+                    }
+                    
+                    // Add initial rows (3 rows or available count, whichever is smaller)
+                    const initialRows = Math.min(3, availableEmirates.length);
+                    for (let i = 0; i < initialRows; i++) {
+                        addBulkPriceRow();
+                    }
+                    
+                    $('#bulkAddPriceModal').modal('show');
+                }
+            },
+            error: function() {
+                showPriceAlert('error', 'Failed to load emirates');
+            }
+        });
+    }
+    
+    // Add a new row for bulk price
+    function addBulkPriceRow() {
+        bulkPriceRowCounter++;
+        
+        // Build options HTML
+        let optionsHtml = '<option value="">Select Emirate</option>';
+        availableEmirates.forEach(function(emirate) {
+            optionsHtml += `<option value="${emirate.id}">${emirate.title_english} - ${emirate.title_arabic}</option>`;
+        });
+        
+        const rowHtml = `
+            <div class="bulk-price-row card mb-2" data-row="${bulkPriceRowCounter}">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group mb-2">
+                                <label class="small font-weight-bold">Emirate <span class="text-danger">*</span></label>
+                                <select class="form-control form-control-sm bulk-emirate-select" name="emirate_${bulkPriceRowCounter}" required onchange="updateBulkPriceRowCount()">
+                                    ${optionsHtml}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group mb-2">
+                                <label class="small font-weight-bold">Price <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control form-control-sm bulk-price-value" name="price_${bulkPriceRowCounter}" step="0.01" min="0" placeholder="0.00" required>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group mb-2">
+                                <label class="small font-weight-bold">Notes (EN)</label>
+                                <input type="text" class="form-control form-control-sm bulk-notes-en" name="notes_en_${bulkPriceRowCounter}" placeholder="English">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group mb-2">
+                                <label class="small font-weight-bold">Notes (AR)</label>
+                                <input type="text" class="form-control form-control-sm bulk-notes-ar" name="notes_ar_${bulkPriceRowCounter}" placeholder="العربية" dir="rtl">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group mb-2">
+                                <label class="small font-weight-bold">Status</label>
+                                <select class="form-control form-control-sm bulk-status-select" name="status_${bulkPriceRowCounter}">
+                                    <option value="0">Active</option>
+                                    <option value="1">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-1 d-flex align-items-end">
+                            <button type="button" class="btn btn-outline-danger btn-sm mb-2 w-100" onclick="removeBulkPriceRow(${bulkPriceRowCounter})" title="Remove">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        $('#bulkPricesContainer').append(rowHtml);
+        updateBulkPriceRowCount();
+    }
+    
+    // Remove a bulk price row
+    function removeBulkPriceRow(rowNum) {
+        $(`.bulk-price-row[data-row="${rowNum}"]`).fadeOut(200, function() {
+            $(this).remove();
+            updateBulkPriceRowCount();
+        });
+    }
+    
+    // Update the row count display
+    function updateBulkPriceRowCount() {
+        const validRows = $('.bulk-price-row').filter(function() {
+            return $(this).find('.bulk-emirate-select').val() !== '';
+        }).length;
+        const totalRows = $('.bulk-price-row').length;
+        
+        $('#bulkPriceRowCount').text(`${validRows} of ${totalRows} prices ready`);
+        $('#bulkAddPriceSubmitBtn').prop('disabled', validRows === 0);
+    }
+    
+    // Bulk Add Price Form Submit
+    $('#bulkAddPriceForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        // Collect all prices data
+        const prices = [];
+        let hasError = false;
+        
+        $('.bulk-price-row').each(function() {
+            const emirateId = $(this).find('.bulk-emirate-select').val();
+            const price = $(this).find('.bulk-price-value').val();
+            const notesEn = $(this).find('.bulk-notes-en').val().trim();
+            const notesAr = $(this).find('.bulk-notes-ar').val().trim();
+            const status = $(this).find('.bulk-status-select').val();
+            
+            if (emirateId) {
+                if (!price || parseFloat(price) < 0) {
+                    hasError = true;
+                    $(this).find('.card-body').addClass('border-danger');
+                    return;
+                }
+                
+                prices.push({
+                    emirate_id: emirateId,
+                    price: parseFloat(price),
+                    notes_english: notesEn || null,
+                    notes_arabic: notesAr || null,
+                    status: status
+                });
+            }
+        });
+        
+        if (hasError) {
+            showPriceAlert('error', 'Please fill in all required fields for selected emirates');
+            return;
+        }
+        
+        if (prices.length === 0) {
+            showPriceAlert('error', 'Please add at least one price');
+            return;
+        }
+        
+        // Check for duplicate emirates in the form
+        const emirateIds = prices.map(p => p.emirate_id);
+        const uniqueEmirateIds = [...new Set(emirateIds)];
+        if (emirateIds.length !== uniqueEmirateIds.length) {
+            showPriceAlert('error', 'Duplicate emirates detected. Please select unique emirates.');
+            return;
+        }
+        
+        // Disable submit button
+        $('#bulkAddPriceSubmitBtn').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Adding...');
+        
+        $.ajax({
+            url: pricesBaseUrl + '/bulk-store',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                _token: '{{ csrf_token() }}',
+                prices: prices
+            }),
+            success: function(response) {
+                if (response.success) {
+                    $('#bulkAddPriceModal').modal('hide');
+                    showPriceAlert('success', response.message);
+                    setTimeout(function() {
+                        reloadWithTab();
+                    }, 1000);
+                } else {
+                    showPriceAlert('error', response.message);
+                    $('#bulkAddPriceSubmitBtn').prop('disabled', false).html('<i class="fa fa-save"></i> Add All Prices');
+                }
+            },
+            error: function(xhr) {
+                showPriceAlert('error', xhr.responseJSON?.message || 'Failed to add prices');
+                $('#bulkAddPriceSubmitBtn').prop('disabled', false).html('<i class="fa fa-save"></i> Add All Prices');
+            }
+        });
+    });
 </script>
 @endpush

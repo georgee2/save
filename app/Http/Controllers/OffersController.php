@@ -16,13 +16,25 @@ class OffersController extends Controller
 {
     /**
      * Get common filter data for all offer pages
+     * Only returns categories and subcategories that have at least one published offer
      */
     private function getFilterData($categoryId = null)
     {
-        $categories = OfferCategory::whereNull('deleted_at')->orderBy('title_english')->get();
+        // Get categories that have at least one published offer
+        $categories = OfferCategory::whereNull('deleted_at')
+            ->whereHas('offers', function($query) {
+                $query->where('publish_status', 0)->whereNull('deleted_at');
+            })
+            ->orderBy('title_english')
+            ->get();
         
-        // If category is specified, only get subcategories for that category
-        $subcategoriesQuery = OfferSubCategory::whereNull('deleted_at')->orderBy('title_english');
+        // Get subcategories that have at least one published offer
+        $subcategoriesQuery = OfferSubCategory::whereNull('deleted_at')
+            ->whereHas('offers', function($query) {
+                $query->where('publish_status', 0)->whereNull('deleted_at');
+            })
+            ->orderBy('title_english');
+        
         if ($categoryId) {
             $subcategoriesQuery->where('category_id', $categoryId);
         }
@@ -33,19 +45,21 @@ class OffersController extends Controller
         $emirates = Emirate::whereNull('deleted_at')->orderBy('title_english')->get();
         $specifications = Specification::whereNull('deleted_at')->orderBy('title_english')->get();
         
-        // Categories with offer counts for slider filter (main index page)
+        // Categories with offer counts for slider filter (only those with offers)
         $categoriesWithCount = OfferCategory::withCount(['offers' => function($query) {
                 $query->where('publish_status', 0)->whereNull('deleted_at');
             }])
             ->whereNull('deleted_at')
+            ->having('offers_count', '>', 0)
             ->orderBy('title_english')
             ->get();
         
-        // Subcategories with offer counts for slider filter
+        // Subcategories with offer counts for slider filter (only those with offers)
         $subcategoriesWithCountQuery = OfferSubCategory::withCount(['offers' => function($query) {
                 $query->where('publish_status', 0)->whereNull('deleted_at');
             }])
             ->whereNull('deleted_at')
+            ->having('offers_count', '>', 0)
             ->orderBy('title_english');
         
         if ($categoryId) {
@@ -243,7 +257,7 @@ class OffersController extends Controller
         // Get paginated results
         $selectedEmirateId = $request->emirate_id;
         $offers = $this->processOffers(
-            $query->paginate(12)->withQueryString(),
+            $query->paginate(9)->withQueryString(),
             $selectedEmirateId
         );
         
@@ -285,7 +299,7 @@ class OffersController extends Controller
         // Get paginated results
         $selectedEmirateId = $request->emirate_id;
         $offers = $this->processOffers(
-            $query->paginate(12)->withQueryString(),
+            $query->paginate(9)->withQueryString(),
             $selectedEmirateId
         );
         
@@ -330,7 +344,7 @@ class OffersController extends Controller
         // Get paginated results
         $selectedEmirateId = $request->emirate_id;
         $offers = $this->processOffers(
-            $query->paginate(12)->withQueryString(),
+            $query->paginate(9)->withQueryString(),
             $selectedEmirateId
         );
         
