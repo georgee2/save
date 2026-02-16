@@ -221,11 +221,12 @@ class HomeController extends Controller
             ->orderBy('created_at', 'desc')
             ->first();
         
-        // Fetch engineering sub categories with project counts
+        // Fetch engineering sub categories with project counts (only those with at least one published project)
         $engineeringSubCategories = EngineeringSubCategory::withCount(['projects' => function($query) {
                 $query->where('publish_status', 0)->whereNull('deleted_at');
             }])
             ->whereNull('deleted_at')
+            ->having('projects_count', '>', 0)
             ->orderBy('created_at', 'asc')
             ->get();
         
