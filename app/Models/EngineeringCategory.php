@@ -86,5 +86,13 @@ class EngineeringCategory extends Model
     {
         return $this->hasMany(Project::class, 'category_id');
     }
+    
+    /**
+     * Relationship: Category has one Home Project Setting
+     */
+    public function homeProjectSetting()
+    {
+        return $this->hasOne(HomeProjectSetting::class, 'category_id');
+    }
 }
 

@@ -109,7 +109,10 @@
                                 <div class="offer-main-slider" id="offerMainSlider">
                                     {{-- Main Image --}}
                                     <div class="main-slide">
-                                        <a href="{{ url('/storage' . $offer->main_image) }}" data-fancybox="offer-gallery">
+                                        <a href="{{ url('/storage' . $offer->main_image) }}" 
+                                           class="offer-gallery-item"
+                                           data-gtf-mfp="true" 
+                                           data-gallery-id="offer-gallery">
                                             <img src="{{ url('/storage' . $offer->main_image) }}" 
                                                  alt="{{ app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english }}"
                                                  class="main-slide-img">
@@ -119,7 +122,10 @@
                                     @if($offer->images && $offer->images->count() > 0)
                                         @foreach($offer->images as $image)
                                         <div class="main-slide">
-                                            <a href="{{ url('/storage' . $image->image) }}" data-fancybox="offer-gallery">
+                                            <a href="{{ url('/storage' . $image->image) }}" 
+                                               class="offer-gallery-item"
+                                               data-gtf-mfp="true" 
+                                               data-gallery-id="offer-gallery">
                                                 <img src="{{ url('/storage' . $image->image) }}" 
                                                      alt=""
                                                      class="main-slide-img">
@@ -834,25 +840,41 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Auto-play (optional - uncomment to enable)
-    /*
-    var autoPlay = setInterval(function() {
-        goToSlide(currentSlide + 1);
-    }, 5000);
-    
-    // Pause on hover
-    var galleryContainer = document.querySelector('.offer-gallery-container');
-    if (galleryContainer) {
-        galleryContainer.addEventListener('mouseenter', function() {
-            clearInterval(autoPlay);
-        });
-        galleryContainer.addEventListener('mouseleave', function() {
-            autoPlay = setInterval(function() {
-                goToSlide(currentSlide + 1);
-            }, 5000);
-        });
+    // Initialize Magnific Popup for offer gallery
+    if (typeof $.fn.magnificPopup !== 'undefined') {
+        var $galleryItems = $('.offer-gallery-item');
+        if ($galleryItems.length > 0) {
+            var galleryImages = [];
+            $galleryItems.each(function() {
+                galleryImages.push({
+                    src: $(this).attr('href')
+                });
+            });
+            
+            $galleryItems.magnificPopup({
+                type: 'image',
+                gallery: {
+                    enabled: true,
+                    navigateByImgClick: true,
+                    preload: [0, 1]
+                },
+                items: galleryImages,
+                closeOnBgClick: true,
+                closeBtnInside: false,
+                mainClass: 'mfp-zoom-in',
+                midClick: true,
+                removalDelay: 300,
+                callbacks: {
+                    beforeOpen: function() {
+                        var index = $galleryItems.index(this.st.el);
+                        if (index !== -1) {
+                            this.goTo(index);
+                        }
+                    }
+                }
+            });
+        }
     }
-    */
     
     // Calendar Day Selection for Tour Form
     var calendarDays = document.querySelectorAll('.calendar-day');

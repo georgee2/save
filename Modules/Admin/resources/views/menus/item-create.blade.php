@@ -346,6 +346,42 @@
                             </div>
                         </div>
                         
+                        {{-- Category with Subcategories Section --}}
+                        <div id="category-subs-section" style="display: none;">
+                            <div class="alert alert-info" style="background: #fff3e0; border-left: 4px solid #ff9800; color: #e65100;">
+                                <i class="fa fa-sitemap"></i> <strong>Category with Subcategories:</strong> Select a category. The menu item will link to the category page, and subcategories will appear as clickable children.
+                            </div>
+                            
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label>Data Source <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                    <select class="form-control" name="cat_subs_source" id="cat_subs_source">
+                                        <option value="">-- Select Data Source --</option>
+                                        <option value="offers" {{ old('query_source') == 'offers' ? 'selected' : '' }}>Offers</option>
+                                        <option value="projects" {{ old('query_source') == 'projects' ? 'selected' : '' }}>Projects</option>
+                                    </select>
+                                    <small class="text-muted">Choose where to pull data from (Interior Design has no subcategories)</small>
+                                </div>
+                                
+                                <div class="form-group col-md-6">
+                                    <label>Select Category <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                    <select class="form-control select2" name="cat_subs_category_id" id="cat_subs_category_id">
+                                        <option value="">-- Select Category --</option>
+                                        {{-- Options will be loaded via AJAX --}}
+                                    </select>
+                                    <small class="text-muted">Select the category. Its subcategories will appear as menu children.</small>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label>Max Subcategories (optional)</label>
+                                    <input class="form-control" value="{{ old('max_children') }}" type="number" name="cat_subs_max_children" min="1" placeholder="Leave empty for all">
+                                    <small class="text-muted">Limit number of subcategories shown</small>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label>Status <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
@@ -419,6 +455,11 @@ $(document).ready(function() {
         allowClear: true
     });
     
+    $('#cat_subs_category_id').select2({
+        placeholder: 'Select a category...',
+        allowClear: true
+    });
+    
     var hasSubcategories = true;
     
     function toggleSections() {
@@ -426,6 +467,7 @@ $(document).ready(function() {
         var isDynamicServices = itemType === 'dynamic_services';
         var isDynamic = ['dynamic_offers', 'dynamic_projects', 'dynamic_news'].includes(itemType);
         var isDynamicQuery = itemType === 'dynamic_query';
+        var isCategoryWithSubs = itemType === 'category_with_subs';
         var isLinkType = ['static'].includes(itemType);
         var isNonLink = ['divider', 'header'].includes(itemType);
         
@@ -436,6 +478,7 @@ $(document).ready(function() {
         $('#ready-options-section').hide();
         $('#link-section').hide();
         $('#link-section-2').hide();
+        $('#category-subs-section').hide();
         
         if (isDynamicServices) {
             $('#dynamic-section').show();
@@ -449,6 +492,10 @@ $(document).ready(function() {
         } else if (isDynamicQuery) {
             $('#dynamic-section').show();
             $('#query-section').show();
+            $('#link-section').show();
+            $('#link-section-2').show();
+        } else if (isCategoryWithSubs) {
+            $('#category-subs-section').show();
             $('#link-section').show();
             $('#link-section-2').show();
         } else if (isNonLink) {
@@ -621,6 +668,32 @@ $(document).ready(function() {
         });
     }
     
+    // Load categories for category_with_subs
+    function loadCatSubsCategories(source) {
+        if (!source) {
+            $('#cat_subs_category_id').empty().append('<option value="">-- Select Category --</option>').trigger('change');
+            return;
+        }
+        
+        $.ajax({
+            url: '{{ route("admin.menu.ajax.categories") }}',
+            type: 'GET',
+            data: { source: source },
+            success: function(response) {
+                if (response.success) {
+                    var $select = $('#cat_subs_category_id');
+                    $select.empty().append('<option value="">-- Select Category --</option>');
+                    
+                    $.each(response.categories, function(index, category) {
+                        $select.append(new Option(category.title_english + ' (' + (category.title_arabic || '-') + ')', category.id, false, false));
+                    });
+                    
+                    $select.trigger('change');
+                }
+            }
+        });
+    }
+    
     // Event handlers
     $('#item_type').on('change', function() {
         toggleSections();
@@ -649,6 +722,48 @@ $(document).ready(function() {
         
         if (queryType === 'subcategory' && hasSubcategories) {
             loadSubcategories(source, categoryIds);
+        }
+    });
+    
+    // Category with Subs handlers
+    $('#cat_subs_source').on('change', function() {
+        var source = $(this).val();
+        loadCatSubsCategories(source);
+        
+        // Sync with query_source hidden field
+        $('input[name="query_source"]').val(source);
+    });
+    
+    $('#cat_subs_category_id').on('change', function() {
+        var categoryId = $(this).val();
+        // We need to set query_category_ids as array
+        // This will be handled on form submit
+    });
+    
+    // Before form submit, sync category_with_subs fields
+    $('form').on('submit', function() {
+        var itemType = $('#item_type').val();
+        if (itemType === 'category_with_subs') {
+            var source = $('#cat_subs_source').val();
+            var categoryId = $('#cat_subs_category_id').val();
+            var maxChildren = $('input[name="cat_subs_max_children"]').val();
+            
+            // Set the actual form fields
+            $('select[name="query_source"]').val(source);
+            
+            // Create hidden inputs for query_category_ids array
+            if (categoryId) {
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'query_category_ids[]',
+                    value: categoryId
+                }).appendTo(this);
+            }
+            
+            // Set max_children
+            if (maxChildren) {
+                $('input[name="max_children"]').val(maxChildren);
+            }
         }
     });
     

@@ -76,6 +76,7 @@ class MenuItem extends Model
     const TYPE_DYNAMIC_PROJECTS = 'dynamic_projects';
     const TYPE_DYNAMIC_NEWS = 'dynamic_news';
     const TYPE_DYNAMIC_QUERY = 'dynamic_query'; // Custom query from categories
+    const TYPE_CATEGORY_WITH_SUBS = 'category_with_subs'; // Single category with subcategories as children
     const TYPE_DIVIDER = 'divider';
     const TYPE_HEADER = 'header';
     
@@ -193,6 +194,12 @@ class MenuItem extends Model
             }
         }
 
+        // For category_with_subs items:
+        // Parent links to category page, children are subcategories
+        if ($this->item_type === self::TYPE_CATEGORY_WITH_SUBS) {
+            return $this->generateCategoryWithSubsUrl();
+        }
+
         // If route name is set, generate URL from route
         if ($this->route_name) {
             try {
@@ -277,6 +284,133 @@ class MenuItem extends Model
         }
 
         return null;
+    }
+
+    /**
+     * Generate URL for category_with_subs items - links to the category page
+     */
+    protected function generateCategoryWithSubsUrl(): ?string
+    {
+        $categoryIds = $this->query_category_ids ?? [];
+        
+        if (empty($categoryIds)) {
+            return null;
+        }
+
+        $categoryId = is_array($categoryIds) ? $categoryIds[0] : $categoryIds;
+
+        try {
+            switch ($this->query_source) {
+                case self::QUERY_SOURCE_OFFERS:
+                    $category = OfferCategory::find($categoryId);
+                    if ($category && Route::has('offers.category')) {
+                        return route('offers.category', $category->slug);
+                    }
+                    break;
+
+                case self::QUERY_SOURCE_PROJECTS:
+                    $category = EngineeringCategory::find($categoryId);
+                    if ($category && Route::has('category.show')) {
+                        return route('category.show', $category->slug);
+                    }
+                    break;
+
+                case self::QUERY_SOURCE_INTERIOR:
+                    $category = InteriorCategory::find($categoryId);
+                    if ($category && Route::has('interior.category')) {
+                        return route('interior.category', $category->slug ?? $category->id);
+                    }
+                    break;
+            }
+        } catch (\Exception $e) {
+            // Route generation failed
+        }
+
+        return null;
+    }
+
+    /**
+     * Check if this is a category_with_subs item
+     */
+    public function isCategoryWithSubs(): bool
+    {
+        return $this->item_type === self::TYPE_CATEGORY_WITH_SUBS && !empty($this->query_source) && !empty($this->query_category_ids);
+    }
+
+    /**
+     * Get subcategories for category_with_subs type
+     * Returns subcategories of the selected category as menu children
+     * Only returns subcategories that have at least one published item
+     */
+    public function getCategorySubcategories(): \Illuminate\Support\Collection
+    {
+        if (!$this->isCategoryWithSubs()) {
+            return collect();
+        }
+
+        $categoryIds = $this->query_category_ids ?? [];
+        if (empty($categoryIds)) {
+            return collect();
+        }
+
+        $categoryId = is_array($categoryIds) ? $categoryIds[0] : $categoryIds;
+
+        switch ($this->query_source) {
+            case self::QUERY_SOURCE_OFFERS:
+                // Get subcategories that have at least one published offer
+                $query = OfferSubCategory::where('category_id', $categoryId)
+                    ->whereNull('deleted_at')
+                    ->whereHas('offers', function($q) {
+                        $q->where('publish_status', 0)->whereNull('deleted_at');
+                    })
+                    ->orderBy('title_english');
+                
+                $subcategories = $query->get();
+                
+                $subcategories->each(function($item) {
+                    $item->is_subcategory = true;
+                    $item->route_name = 'offers.subcategory';
+                    $item->menu_url = Route::has('offers.subcategory') ? route('offers.subcategory', $item->slug) : null;
+                });
+                
+                // Apply max_children limit after filtering
+                if ($this->max_children && $subcategories->count() > $this->max_children) {
+                    $subcategories = $subcategories->take($this->max_children);
+                }
+                
+                return $subcategories;
+
+            case self::QUERY_SOURCE_PROJECTS:
+                // Get subcategories that have at least one published project
+                $query = EngineeringSubCategory::where('category_id', $categoryId)
+                    ->whereNull('deleted_at')
+                    ->whereHas('projects', function($q) {
+                        $q->where('publish_status', 0)->whereNull('deleted_at');
+                    })
+                    ->orderBy('title_english');
+                
+                $subcategories = $query->get();
+                
+                $subcategories->each(function($item) {
+                    $item->is_subcategory = true;
+                    $item->route_name = 'subcategory.show';
+                    $item->menu_url = Route::has('subcategory.show') ? route('subcategory.show', $item->slug) : null;
+                });
+                
+                // Apply max_children limit after filtering
+                if ($this->max_children && $subcategories->count() > $this->max_children) {
+                    $subcategories = $subcategories->take($this->max_children);
+                }
+                
+                return $subcategories;
+
+            case self::QUERY_SOURCE_INTERIOR:
+                // Interior design doesn't have subcategories
+                return collect();
+
+            default:
+                return collect();
+        }
     }
 
     /**

@@ -211,6 +211,7 @@ class MenuController extends Controller
             'dynamic_projects' => 'Dynamic: Project Categories',
             'dynamic_news' => 'Dynamic: News Categories',
             'dynamic_query' => 'Dynamic Query: Custom Categories/Subcategories',
+            'category_with_subs' => 'Category with Subcategories (Clickable Parent)',
             'divider' => 'Divider',
             'header' => 'Section Header',
         ];
@@ -248,7 +249,7 @@ class MenuController extends Controller
             'icon' => 'nullable|string|max:100',
             'icon_type' => 'required|in:fontawesome,image,svg',
             'css_class' => 'nullable|string|max:200',
-            'item_type' => 'required|in:static,dynamic_services,dynamic_offers,dynamic_projects,dynamic_news,dynamic_query,divider,header',
+            'item_type' => 'required|in:static,dynamic_services,dynamic_offers,dynamic_projects,dynamic_news,dynamic_query,category_with_subs,divider,header',
             'service_id' => 'nullable|integer|exists:services,id',
             'query_source' => 'nullable|in:offers,projects,interior',
             'query_category_ids' => 'nullable|array',
@@ -292,6 +293,16 @@ class MenuController extends Controller
             }
             // Clear service_id for query type
             $data['service_id'] = null;
+        } else if ($data['item_type'] === 'category_with_subs') {
+            // category_with_subs - keep query_source and query_category_ids, clear the rest
+            if (empty($data['query_category_ids'])) {
+                $data['query_category_ids'] = null;
+            }
+            $data['query_subcategory_ids'] = null;
+            $data['query_type'] = null;
+            $data['service_id'] = null;
+            // Force show_children to true for this type
+            $data['show_children'] = true;
         } else if ($data['item_type'] !== 'dynamic_services') {
             // Clear query fields and service_id for non-query/non-service types
             $data['query_source'] = null;
@@ -336,6 +347,7 @@ class MenuController extends Controller
             'dynamic_projects' => 'Dynamic: Project Categories',
             'dynamic_news' => 'Dynamic: News Categories',
             'dynamic_query' => 'Dynamic Query: Custom Categories/Subcategories',
+            'category_with_subs' => 'Category with Subcategories (Clickable Parent)',
             'divider' => 'Divider',
             'header' => 'Section Header',
         ];
@@ -378,7 +390,7 @@ class MenuController extends Controller
             'icon' => 'nullable|string|max:100',
             'icon_type' => 'required|in:fontawesome,image,svg',
             'css_class' => 'nullable|string|max:200',
-            'item_type' => 'required|in:static,dynamic_services,dynamic_offers,dynamic_projects,dynamic_news,dynamic_query,divider,header',
+            'item_type' => 'required|in:static,dynamic_services,dynamic_offers,dynamic_projects,dynamic_news,dynamic_query,category_with_subs,divider,header',
             'service_id' => 'nullable|integer|exists:services,id',
             'query_source' => 'nullable|in:offers,projects,interior',
             'query_category_ids' => 'nullable|array',
@@ -420,6 +432,15 @@ class MenuController extends Controller
             if (empty($data['query_subcategory_ids'])) {
                 $data['query_subcategory_ids'] = null;
             }
+        } else if ($data['item_type'] === 'category_with_subs') {
+            // category_with_subs - keep query_source and query_category_ids, clear the rest
+            if (empty($data['query_category_ids'])) {
+                $data['query_category_ids'] = null;
+            }
+            $data['query_subcategory_ids'] = null;
+            $data['query_type'] = null;
+            // Force show_children to true for this type
+            $data['show_children'] = true;
         } else {
             // Clear query fields for non-query types
             $data['query_source'] = null;

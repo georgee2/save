@@ -43,6 +43,7 @@ class ProjectController extends Controller
                 'projects.project_number',
                 'projects.title_english',
                 'projects.title_arabic',
+                'projects.main_image',
                 'projects.publish_status',
                 'projects.home_status',
                 'projects.created_at',

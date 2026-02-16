@@ -194,7 +194,11 @@ class OffersController extends Controller
      */
     private function processOffers($offers, $selectedEmirateId = null)
     {
-        return $offers->through(function($offer) use ($selectedEmirateId) {
+        // Get primary emirate ID for default price display
+        $primaryEmirate = Emirate::getPrimary();
+        $primaryEmirateId = $primaryEmirate ? $primaryEmirate->id : null;
+        
+        return $offers->through(function($offer) use ($selectedEmirateId, $primaryEmirateId) {
             // Count videos (video_url and tour_url)
             $videoCount = 0;
             if (!empty($offer->video_url)) $videoCount++;
@@ -204,25 +208,26 @@ class OffersController extends Controller
             // Add 1 for main image to images_count
             $offer->total_images = $offer->images_count + 1;
             
-            // Get price based on selected emirate or first available
+            // Get price based on selected emirate, primary emirate, or first available
             $activePrices = $offer->prices->where('status', 0);
+            $offer->default_price = null;
             
             if ($selectedEmirateId) {
-                // Try to get price for selected emirate
+                // User selected a specific emirate - try to get price for it
                 $offer->default_price = $activePrices
                     ->where('emirate_id', $selectedEmirateId)
                     ->first();
-                
-                // Fallback to first available if not found
-                if (!$offer->default_price) {
-                    $offer->default_price = $activePrices
-                        ->sortBy(function($price) {
-                            return $price->emirate ? $price->emirate->title_english : '';
-                        })
-                        ->first();
-                }
-            } else {
-                // Get the first active price ordered by emirate name
+            }
+            
+            // If no selected emirate or no price found for selected, try primary emirate
+            if (!$offer->default_price && $primaryEmirateId) {
+                $offer->default_price = $activePrices
+                    ->where('emirate_id', $primaryEmirateId)
+                    ->first();
+            }
+            
+            // Fallback to first available price if still not found
+            if (!$offer->default_price) {
                 $offer->default_price = $activePrices
                     ->sortBy(function($price) {
                         return $price->emirate ? $price->emirate->title_english : '';
@@ -403,6 +408,10 @@ class OffersController extends Controller
         // Get all emirates for the price selector
         $emirates = Emirate::whereNull('deleted_at')->orderBy('title_english')->get();
         
+        // Get primary emirate for default selection
+        $primaryEmirate = Emirate::getPrimary();
+        $primaryEmirateId = $primaryEmirate ? $primaryEmirate->id : null;
+        
         // Count videos
         $videoCount = 0;
         if (!empty($offer->video_url)) $videoCount++;
@@ -412,7 +421,7 @@ class OffersController extends Controller
         // Total images
         $offer->total_images = $offer->images->count() + 1;
         
-        // Get selected emirate from request or default to first
+        // Get selected emirate from request, or use primary emirate as default
         $selectedEmirateId = $request->emirate_id;
         $activePrices = $offer->prices->where('status', 0);
         
@@ -420,12 +429,23 @@ class OffersController extends Controller
             $offer->selected_price = $activePrices->where('emirate_id', $selectedEmirateId)->first();
         }
         
-        // Default price (first available)
-        $offer->default_price = $activePrices
-            ->sortBy(function($price) {
-                return $price->emirate ? $price->emirate->title_english : '';
-            })
-            ->first();
+        // Default price - try primary emirate first, then first available
+        $offer->default_price = null;
+        
+        if ($primaryEmirateId) {
+            $offer->default_price = $activePrices
+                ->where('emirate_id', $primaryEmirateId)
+                ->first();
+        }
+        
+        // Fallback to first available if no primary emirate price
+        if (!$offer->default_price) {
+            $offer->default_price = $activePrices
+                ->sortBy(function($price) {
+                    return $price->emirate ? $price->emirate->title_english : '';
+                })
+                ->first();
+        }
         
         // If no selected price, use default
         if (!isset($offer->selected_price) || !$offer->selected_price) {
@@ -437,6 +457,6 @@ class OffersController extends Controller
             return $price->emirate ? $price->emirate->title_english : '';
         })->values();
         
-        return view('pages.offers.show', compact('offer', 'emirates'));
+        return view('pages.offers.show', compact('offer', 'emirates', 'primaryEmirateId'));
     }
 }

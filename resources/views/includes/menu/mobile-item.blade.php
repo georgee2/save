@@ -26,6 +26,12 @@
         $hasDynamicContent = $dynamicChildren->isNotEmpty();
     }
     
+    // Get category with subcategories children
+    if ($item->isCategoryWithSubs()) {
+        $dynamicChildren = $item->getCategorySubcategories();
+        $hasDynamicContent = $dynamicChildren->isNotEmpty();
+    }
+    
     $hasChildren = $itemChildren->isNotEmpty() || $hasDynamicContent;
     $itemUrl = $item->getUrl() ?? 'javascript:void(0);';
     $itemTitle = $item->getTitle();
@@ -52,6 +58,16 @@
                 <i class="fal fa-chevron-right"></i>
             </a>
             <ul class="mobile-submenu">
+                {{-- For category_with_subs, add a "View All" link to the category page --}}
+                @if($item->item_type === 'category_with_subs' && $itemUrl && $itemUrl !== 'javascript:void(0);')
+                    <li class="mobile-submenu-item">
+                        <a href="{{ $itemUrl }}" class="mobile-submenu-link" style="font-weight: 600; color: #19868b;">
+                            <i class="fal fa-arrow-right"></i>
+                            {{ __('lang.view_all') }} {{ $itemTitle }}
+                        </a>
+                    </li>
+                @endif
+                
                 {{-- Static children from menu items --}}
                 @foreach($itemChildren as $child)
                     @include('includes.menu.mobile-submenu-item', ['item' => $child, 'depth' => $depth + 1])
@@ -295,6 +311,26 @@
                                     </li>
                                 @endif
                             @endif
+                        @endforeach
+                    @elseif($item->item_type === 'category_with_subs')
+                        {{-- Category with Subcategories - Subcategories as clickable children --}}
+                        @foreach($dynamicChildren as $subCategory)
+                            <li class="mobile-submenu-item">
+                                <a href="{{ $subCategory->menu_url ?? '#' }}" class="mobile-submenu-link">
+                                    @if($subCategory->icon)
+                                        <img src="{{ url('/storage' . $subCategory->icon) }}" alt="">
+                                    @else
+                                        @if($item->query_source === 'offers')
+                                            <i class="fal fa-tag"></i>
+                                        @elseif($item->query_source === 'projects')
+                                            <i class="fal fa-project-diagram"></i>
+                                        @else
+                                            <i class="fal fa-folder"></i>
+                                        @endif
+                                    @endif
+                                    {{ app()->getLocale() == 'ar' ? ($subCategory->title_arabic ?? $subCategory->title_english) : $subCategory->title_english }}
+                                </a>
+                            </li>
                         @endforeach
                     @endif
                 @endif

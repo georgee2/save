@@ -28,6 +28,8 @@ use App\Models\EngineeringCategory;
 use App\Models\Partner;
 use App\Models\InteriorDesignGallery;
 use App\Models\HomeSection;
+use App\Models\HomeProjectSetting;
+use App\Models\Emirate;
 
 class HomeController extends Controller
 {
@@ -127,33 +129,43 @@ class HomeController extends Controller
             ->get();
         
         // Fetch project categories with their projects for home section
-        // Limited to last 10 projects per category
-        $projectCategories = EngineeringCategory::whereNull('deleted_at')
-            ->whereHas('projects', function($query) {
-                $query->where('publish_status', 0)
-                      ->whereNull('deleted_at');
+        // Using HomeProjectSetting to control which categories appear and max projects per category
+        $homeProjectSettings = HomeProjectSetting::with(['category', 'selectedProjects.project'])
+            ->where('is_active', true)
+            ->whereNull('deleted_at')
+            ->whereHas('category', function($query) {
+                $query->whereNull('deleted_at');
             })
-            ->with(['projects' => function($query) {
-                $query->where('publish_status', 0)
-                      ->whereNull('deleted_at')
-                      ->with(['category', 'subcategory', 'specifications.specification'])
-                      ->withCount('images')
-                      ->orderBy('created_at', 'desc')
-                      ->limit(10);
-            }])
-            ->orderBy('title_english', 'asc')
-            ->get()
-            ->map(function($category) {
+            ->orderBy('ordering', 'asc')
+            ->get();
+        
+        $projectCategories = collect();
+        
+        foreach ($homeProjectSettings as $setting) {
+            $category = EngineeringCategory::where('id', $setting->category_id)
+                ->whereNull('deleted_at')
+                ->first();
+            
+            if (!$category) continue;
+            
+            // Get projects - either manually selected or automatic (latest)
+            $projects = $setting->getProjectsForHome();
+            
+            if ($projects->count() > 0) {
                 // Add video count and total images to each project
-                $category->projects->each(function($project) {
+                $projects->each(function($project) {
                     $videoCount = 0;
                     if (!empty($project->video_url)) $videoCount++;
                     if (!empty($project->tour_url)) $videoCount++;
                     $project->video_count = $videoCount;
-                    $project->total_images = $project->images_count + 1; // +1 for main image
+                    $project->total_images = ($project->images_count ?? 0) + 1; // +1 for main image
                 });
-                return $category;
-            });
+                
+                // Attach projects to category
+                $category->setRelation('projects', $projects);
+                $projectCategories->push($category);
+            }
+        }
         
         // Fetch all board of directors ordered by board_order
         $boardMembers = Team::with(['jobTitle', 'rank'])
@@ -240,6 +252,10 @@ class HomeController extends Controller
                 return $project;
             });
         
+        // Get the primary emirate for default price display
+        $primaryEmirate = Emirate::getPrimary();
+        $primaryEmirateId = $primaryEmirate ? $primaryEmirate->id : null;
+        
         // Fetch featured offers (home_status = 0) with category, specifications, prices and images count
         // Limited to last 15 featured offers
         $featuredOffers = Offer::with(['category', 'subcategory', 'currency', 'specifications.specification', 'prices.emirate'])
@@ -250,7 +266,7 @@ class HomeController extends Controller
             ->orderBy('created_at', 'desc')
             ->limit(15)
             ->get()
-            ->map(function($offer) {
+            ->map(function($offer) use ($primaryEmirateId) {
                 // Count videos (video_url and tour_url)
                 $videoCount = 0;
                 if (!empty($offer->video_url)) $videoCount++;
@@ -260,10 +276,23 @@ class HomeController extends Controller
                 // Add 1 for main image to images_count
                 $offer->total_images = $offer->images_count + 1;
                 
-                // Get first active price (default price to show)
-                $offer->default_price = $offer->prices
-                    ->where('status', 0) // Active
-                    ->first();
+                // Get price for primary emirate first, fallback to first active price
+                $offer->default_price = null;
+                
+                if ($primaryEmirateId) {
+                    // Try to get price for primary emirate
+                    $offer->default_price = $offer->prices
+                        ->where('status', 0) // Active
+                        ->where('emirate_id', $primaryEmirateId)
+                        ->first();
+                }
+                
+                // Fallback to first active price if no primary emirate price found
+                if (!$offer->default_price) {
+                    $offer->default_price = $offer->prices
+                        ->where('status', 0) // Active
+                        ->first();
+                }
                 
                 return $offer;
             });

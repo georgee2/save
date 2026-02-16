@@ -68,6 +68,7 @@ use Modules\Admin\App\Http\Controllers\OfferSpecificationController;
 use Modules\Admin\App\Http\Controllers\OfferFeasibilityStudyController;
 use Modules\Admin\App\Http\Controllers\InteriorDesignGalleryController;
 use Modules\Admin\App\Http\Controllers\MenuController;
+use Modules\Admin\App\Http\Controllers\HomeProjectSettingController;
 
 
 /*
@@ -771,6 +772,19 @@ Route::group(
                 Route::post('/delete/{id}', [HomeSectionController::class, 'destroy'])->name('home-sections.delete');
                 Route::get('/trashed', [HomeSectionController::class, 'trashed'])->name('home-sections.trashed');
                 Route::post('/restore/{id}', [HomeSectionController::class, 'restore'])->name('home-sections.restore');
+            });
+
+            // Home Projects Section Settings Routes
+            Route::prefix('home-project-settings')->group(function () {
+                Route::get('/index', [HomeProjectSettingController::class, 'index'])->name('home-project-settings.index');
+                Route::post('/update/{id}', [HomeProjectSettingController::class, 'update'])->name('home-project-settings.update');
+                Route::post('/update-order', [HomeProjectSettingController::class, 'updateOrder'])->name('home-project-settings.update-order');
+                Route::post('/toggle-status/{id}', [HomeProjectSettingController::class, 'toggleStatus'])->name('home-project-settings.toggle-status');
+                Route::post('/bulk-update', [HomeProjectSettingController::class, 'bulkUpdate'])->name('home-project-settings.bulk-update');
+                Route::get('/reset', [HomeProjectSettingController::class, 'resetToDefault'])->name('home-project-settings.reset');
+                Route::get('/{id}/select-projects', [HomeProjectSettingController::class, 'selectProjects'])->name('home-project-settings.select-projects');
+                Route::post('/{id}/save-projects', [HomeProjectSettingController::class, 'saveProjects'])->name('home-project-settings.save-projects');
+                Route::post('/{id}/clear-projects', [HomeProjectSettingController::class, 'clearProjects'])->name('home-project-settings.clear-projects');
             });
 
             // Menu Management Routes

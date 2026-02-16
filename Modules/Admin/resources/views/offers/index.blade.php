@@ -3,7 +3,36 @@
 @section('css')
 <!-- SweetAlert2 CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<!-- Lightbox2 CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
 <style>
+    /* Offer Thumbnail Styles */
+    .offer-thumb-img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid #e9ecef;
+    }
+    .offer-thumb-img:hover {
+        transform: scale(1.1);
+        border-color: #19868b;
+        box-shadow: 0 4px 12px rgba(25, 134, 139, 0.3);
+    }
+    .no-image-placeholder {
+        width: 60px;
+        height: 60px;
+        background: #f8f9fa;
+        border: 2px dashed #dee2e6;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #adb5bd;
+        font-size: 20px;
+    }
     /* Filter Panel Styles */
     .filter-panel {
         background-color: #f8f9fa;
@@ -97,6 +126,18 @@
         border-radius: 4px;
         font-size: 12px;
         font-weight: normal;
+    }
+    /* Category/Subcategory Styles - One word per line */
+    .category-cell {
+        max-width: 90px;
+    }
+    .category-text {
+        display: inline-block;
+        word-spacing: 100vw;
+        line-height: 1.5;
+        font-weight: 500;
+        color: #495057;
+        font-size: 13px;
     }
     .pagination-info {
         font-size: 14px;
@@ -803,12 +844,11 @@
                                         <input type="checkbox" id="headerCheckbox" class="row-checkbox" title="Select All on Page">
                                     </th>
                                     <th>ID</th>
-                                    <th>Offer #</th>
-                                    <th>Offer Code</th>
+                                    <th>Image</th>
+                                    <th style="min-width: 140px;">Code</th>
                                     <th>Title (English)</th>
-                                    <th>Category</th>
-                                    <th>Subcategory</th>
-                                    <th>Type</th>
+                                    <th style="max-width: 90px;">Category</th>
+                                    <th style="max-width: 90px;">Sub</th>
                                     <th>Style</th>
                                     <th>Publish Status</th>
                                     <th>Home Status</th>
@@ -823,7 +863,17 @@
                                         <input type="checkbox" class="row-checkbox offer-checkbox" value="{{ $offer->id }}" data-id="{{ $offer->id }}">
                                     </td>
                                     <td>{{ $offer->id }}</td>
-                                    <td>{{ $offer->offer_number ?: 'N/A' }}</td>
+                                    <td>
+                                        @if($offer->main_image)
+                                            <a href="{{ url('/storage' . $offer->main_image) }}" data-lightbox="offer-{{ $offer->id }}" data-title="{{ $offer->title_english }}">
+                                                <img src="{{ url('/storage' . $offer->main_image) }}" alt="{{ $offer->title_english }}" class="offer-thumb-img">
+                                            </a>
+                                        @else
+                                            <div class="no-image-placeholder">
+                                                <i class="fa fa-image"></i>
+                                            </div>
+                                        @endif
+                                    </td>
                                     <td>
                                         @if($offer->offer_code)
                                             <span class="badge badge-secondary">{{ $offer->offer_code }}</span>
@@ -832,23 +882,16 @@
                                         @endif
                                     </td>
                                     <td>{{ Str::limit($offer->title_english, 30) }}</td>
-                                    <td>
+                                    <td class="category-cell">
                                         @if($offer->category_name)
-                                            <span class="badge badge-primary">{{ $offer->category_name }}</span>
+                                            <span class="category-text">{{ $offer->category_name }}</span>
                                         @else
                                             <span class="text-muted">N/A</span>
                                         @endif
                                     </td>
-                                    <td>
+                                    <td class="category-cell">
                                         @if($offer->subcategory_name)
-                                            <span class="badge badge-info">{{ $offer->subcategory_name }}</span>
-                                        @else
-                                            <span class="text-muted">N/A</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if($offer->type_name)
-                                            <span class="badge badge-info">{{ $offer->type_name }}</span>
+                                            <span class="category-text">{{ $offer->subcategory_name }}</span>
                                         @else
                                             <span class="text-muted">N/A</span>
                                         @endif
@@ -860,18 +903,18 @@
                                             <span class="text-muted">N/A</span>
                                         @endif
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                         @if($offer->publish_status == 0)
-                                            <span class="badge badge-success"><i class="fa fa-check-circle"></i> Published</span>
+                                            <span class="badge badge-success" title="Published">P</span>
                                         @else
-                                            <span class="badge badge-danger"><i class="fa fa-times-circle"></i> Unpublished</span>
+                                            <span class="badge badge-danger" title="Unpublished">U</span>
                                         @endif
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                         @if($offer->home_status == 0)
-                                            <span class="badge badge-success"><i class="fa fa-eye"></i> Shown</span>
+                                            <span class="badge badge-success" title="Shown on Home">S</span>
                                         @else
-                                            <span class="badge badge-warning"><i class="fa fa-eye-slash"></i> Hidden</span>
+                                            <span class="badge badge-warning" title="Hidden from Home">H</span>
                                         @endif
                                     </td>
                                     <td>{{ \Carbon\Carbon::parse($offer->created_at)->format('M d, Y') }}</td>
@@ -976,6 +1019,18 @@
 @section('js')
 <!-- SweetAlert2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Lightbox2 JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+<script>
+    // Configure Lightbox
+    lightbox.option({
+        'resizeDuration': 200,
+        'wrapAround': true,
+        'albumLabel': 'Image %1 of %2',
+        'fadeDuration': 300,
+        'imageFadeDuration': 300
+    });
+</script>
 <script>
     // Toggle Filter Panel
     document.getElementById('filterToggleBtn').addEventListener('click', function() {
