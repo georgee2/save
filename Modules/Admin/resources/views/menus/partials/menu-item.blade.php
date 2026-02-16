@@ -16,7 +16,7 @@
         <div style="width: 24px;"></div>
         @endif
         
-        <div class="menu-item-icon {{ $item->isDynamic() || $item->isDynamicQuery() ? 'dynamic' : '' }}">
+        <div class="menu-item-icon {{ $item->isDynamic() || $item->isDynamicQuery() || $item->isCategoryWithSubs() ? 'dynamic' : '' }}">
             @if($item->icon)
                 <i class="{{ $item->icon }}"></i>
             @else
@@ -45,7 +45,10 @@
             @php
                 $typeClass = 'type-static';
                 $typeLabel = 'Static';
-                if ($item->isDynamicQuery()) {
+                if ($item->isCategoryWithSubs()) {
+                    $typeClass = 'type-dynamic';
+                    $typeLabel = 'Category+Subs: ' . ucfirst($item->query_source ?? '');
+                } elseif ($item->isDynamicQuery()) {
                     $typeClass = 'type-dynamic';
                     $typeLabel = 'Query: ' . ucfirst($item->query_source ?? 'Custom');
                 } elseif ($item->isDynamic()) {
@@ -61,7 +64,21 @@
             @endphp
             <span class="badge type-badge {{ $typeClass }}">{{ $typeLabel }}</span>
             
-            @if($item->isDynamicQuery())
+            @if($item->isCategoryWithSubs())
+                @if($item->query_category_ids && count($item->query_category_ids) > 0)
+                    @php
+                        $catName = '';
+                        if ($item->query_source === 'offers') {
+                            $cat = \App\Models\OfferCategory::find($item->query_category_ids[0]);
+                            $catName = $cat ? $cat->title_english : '';
+                        } elseif ($item->query_source === 'projects') {
+                            $cat = \App\Models\EngineeringCategory::find($item->query_category_ids[0]);
+                            $catName = $cat ? $cat->title_english : '';
+                        }
+                    @endphp
+                    <span class="badge badge-info" title="Category: {{ $catName }}"><i class="fa fa-folder"></i> {{ Str::limit($catName, 15) }}</span>
+                @endif
+            @elseif($item->isDynamicQuery())
                 @if($item->query_category_ids && count($item->query_category_ids) > 0)
                     <span class="badge badge-info" title="Categories selected"><i class="fa fa-folder"></i> {{ count($item->query_category_ids) }} cat</span>
                 @endif

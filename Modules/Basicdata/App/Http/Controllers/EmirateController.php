@@ -278,5 +278,26 @@ class EmirateController extends Controller
 
         return redirect()->route('emirate.trashed')->with('success', 'Emirate restored successfully!');
     }
+    
+    /**
+     * Toggle primary status for an emirate
+     * Only one emirate can be primary at a time
+     */
+    public function togglePrimary($id)
+    {
+        $emirate = Emirate::findOrFail($id);
+        
+        if ($emirate->is_primary) {
+            // If already primary, remove primary status
+            $emirate->unmarkAsPrimary();
+            $message = 'Emirate "' . $emirate->title_english . '" is no longer the primary emirate.';
+        } else {
+            // Set as primary (this will unset any other primary emirate)
+            $emirate->markAsPrimary();
+            $message = 'Emirate "' . $emirate->title_english . '" is now set as the primary emirate.';
+        }
+        
+        return redirect()->route('emirate.index')->with('success', $message);
+    }
 }
 

@@ -4,7 +4,48 @@
 @section('css')
 <!-- SweetAlert2 CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<!-- Lightbox2 CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css">
 <style>
+    /* Project Thumbnail Styles */
+    .project-thumb-img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid #e9ecef;
+    }
+    .project-thumb-img:hover {
+        transform: scale(1.1);
+        border-color: #19868b;
+        box-shadow: 0 4px 12px rgba(25, 134, 139, 0.3);
+    }
+    .no-image-placeholder {
+        width: 60px;
+        height: 60px;
+        background: #f8f9fa;
+        border: 2px dashed #dee2e6;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #adb5bd;
+        font-size: 20px;
+    }
+    /* Category/Subcategory Styles - One word per line */
+    .category-cell {
+        max-width: 90px;
+    }
+    .category-text {
+        display: inline-block;
+        word-spacing: 100vw;
+        line-height: 1.5;
+        font-weight: 500;
+        color: #495057;
+        font-size: 13px;
+    }
     .filter-toggle-btn {
         background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
         border: none;
@@ -849,11 +890,11 @@
                                         <input type="checkbox" id="headerCheckbox" class="row-checkbox" title="Select All on Page">
                                     </th>
                                     <th>ID</th>
-                                    <th>Code</th>
-                                    <th>Project #</th>
+                                    <th>Image</th>
+                                    <th style="min-width: 140px;">Code</th>
                                     <th>Title (English)</th>
-                                    <th>Category</th>
-                                    <th>Type</th>
+                                    <th style="max-width: 90px;">Category</th>
+                                    <th style="max-width: 90px;">Sub</th>
                                     <th>Publish Status</th>
                                     <th>Home Status</th>
                                     <th>Created At</th>
@@ -868,46 +909,50 @@
                                     </td>
                                     <td>{{ $project->id }}</td>
                                     <td>
+                                        @if($project->main_image)
+                                            <a href="{{ url('/storage' . $project->main_image) }}" data-lightbox="project-{{ $project->id }}" data-title="{{ $project->title_english }}">
+                                                <img src="{{ url('/storage' . $project->main_image) }}" alt="{{ $project->title_english }}" class="project-thumb-img">
+                                            </a>
+                                        @else
+                                            <div class="no-image-placeholder">
+                                                <i class="fa fa-image"></i>
+                                            </div>
+                                        @endif
+                                    </td>
+                                    <td>
                                         @if($project->project_code)
                                             <span class="project-code-badge">{{ $project->project_code }}</span>
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif
                                     </td>
-                                    <td>
-                                        @if($project->project_number)
-                                            <span class="badge badge-secondary" style="font-size: 12px;">{{ $project->project_number }}</span>
-                                        @else
-                                            <span class="text-muted">-</span>
-                                        @endif
-                                    </td>
                                     <td>{{ $project->title_english }}</td>
-                                    <td>
+                                    <td class="category-cell">
                                         @if($project->category_name)
-                                            <span class="badge badge-primary">{{ $project->category_name }}</span>
+                                            <span class="category-text">{{ $project->category_name }}</span>
                                         @else
                                             <span class="text-muted">N/A</span>
                                         @endif
                                     </td>
-                                    <td>
-                                        @if($project->type_name)
-                                            <span class="badge badge-info">{{ $project->type_name }}</span>
+                                    <td class="category-cell">
+                                        @if($project->subcategory_name)
+                                            <span class="category-text">{{ $project->subcategory_name }}</span>
                                         @else
                                             <span class="text-muted">N/A</span>
                                         @endif
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                         @if($project->publish_status == 0)
-                                            <span class="badge badge-success"><i class="fa fa-check-circle"></i> Published</span>
+                                            <span class="badge badge-success" title="Published">P</span>
                                         @else
-                                            <span class="badge badge-danger"><i class="fa fa-times-circle"></i> Unpublished</span>
+                                            <span class="badge badge-danger" title="Unpublished">U</span>
                                         @endif
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                         @if($project->home_status == 0)
-                                            <span class="badge badge-success"><i class="fa fa-eye"></i> Shown</span>
+                                            <span class="badge badge-success" title="Shown on Home">S</span>
                                         @else
-                                            <span class="badge badge-warning"><i class="fa fa-eye-slash"></i> Hidden</span>
+                                            <span class="badge badge-warning" title="Hidden from Home">H</span>
                                         @endif
                                     </td>
                                     <td>{{ \Carbon\Carbon::parse($project->created_at)->format('M d, Y') }}</td>
@@ -948,7 +993,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="11" class="text-center py-4">
+                                    <td colspan="10" class="text-center py-4">
                                         <i class="fa fa-folder-open-o fa-3x text-muted mb-3"></i>
                                         <p class="text-muted">No projects found matching your criteria.</p>
                                         <a href="{{ route('project.index') }}" class="btn btn-sm btn-primary">Clear Filters</a>
@@ -980,6 +1025,18 @@
 @section('js')
 <!-- SweetAlert2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Lightbox2 JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+<script>
+    // Configure Lightbox
+    lightbox.option({
+        'resizeDuration': 200,
+        'wrapAround': true,
+        'albumLabel': 'Image %1 of %2',
+        'fadeDuration': 300,
+        'imageFadeDuration': 300
+    });
+</script>
 <script>
     // Filter toggle
     const filterToggleBtn = document.getElementById('filterToggleBtn');

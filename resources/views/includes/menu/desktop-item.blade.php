@@ -26,6 +26,12 @@
         $hasDynamicContent = $dynamicChildren->isNotEmpty();
     }
     
+    // Get category with subcategories children
+    if ($item->isCategoryWithSubs()) {
+        $dynamicChildren = $item->getCategorySubcategories();
+        $hasDynamicContent = $dynamicChildren->isNotEmpty();
+    }
+    
     $hasChildren = $itemChildren->isNotEmpty() || $hasDynamicContent;
     $itemUrl = $item->getUrl() ?? 'javascript:void(0);';
     $itemTitle = $item->getTitle();
@@ -37,6 +43,10 @@
 @elseif($item->item_type === 'header')
     <li class="dropdown-header">{{ $itemTitle }}</li>
 @else
+    @php
+        // For category_with_subs, we want the parent to be clickable (no data-toggle)
+        $isClickableParent = $item->item_type === 'category_with_subs';
+    @endphp
     <li id="{{ $itemId }}" 
         aria-haspopup="{{ $hasChildren ? 'true' : 'false' }}" 
         aria-expanded="false"
@@ -44,7 +54,7 @@
         
         <a class="nav-link {{ $hasChildren ? 'dropdown-toggle' : '' }} p-0"
            href="{{ $itemUrl }}" 
-           @if($hasChildren) data-toggle="dropdown" @endif
+           @if($hasChildren && !$isClickableParent) data-toggle="dropdown" @endif
            @if($item->link_target) target="{{ $item->link_target }}" @endif>
             @if($item->icon)
                 @if($item->icon_type === 'image')
@@ -234,6 +244,26 @@
                                     @endif
                                 </li>
                             @endif
+                        @endforeach
+                    @elseif($item->item_type === 'category_with_subs')
+                        {{-- Category with Subcategories - Subcategories as clickable children --}}
+                        @foreach($dynamicChildren as $subCategory)
+                            <li class="dropdown-item">
+                                <a class="dropdown-link" href="{{ $subCategory->menu_url ?? '#' }}">
+                                    @if($subCategory->icon)
+                                        <img src="{{ url('/storage' . $subCategory->icon) }}" alt="" style="width: 18px; height: 18px; margin-right: 8px; object-fit: contain;">
+                                    @else
+                                        @if($item->query_source === 'offers')
+                                            <i class="fal fa-tag mr-2"></i>
+                                        @elseif($item->query_source === 'projects')
+                                            <i class="fal fa-project-diagram mr-2"></i>
+                                        @else
+                                            <i class="fal fa-folder mr-2"></i>
+                                        @endif
+                                    @endif
+                                    {{ app()->getLocale() == 'ar' ? ($subCategory->title_arabic ?? $subCategory->title_english) : $subCategory->title_english }}
+                                </a>
+                            </li>
                         @endforeach
                     @endif
                 @endif

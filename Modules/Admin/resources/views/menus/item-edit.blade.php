@@ -350,6 +350,46 @@
                             </div>
                         </div>
                         
+                        {{-- Category with Subcategories Section --}}
+                        <div id="category-subs-section" style="display: none;">
+                            <div class="alert alert-info" style="background: #fff3e0; border-left: 4px solid #ff9800; color: #e65100;">
+                                <i class="fa fa-sitemap"></i> <strong>Category with Subcategories:</strong> Select a category. The menu item will link to the category page, and subcategories will appear as clickable children.
+                            </div>
+                            
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label>Data Source <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                    <select class="form-control" name="cat_subs_source" id="cat_subs_source">
+                                        <option value="">-- Select Data Source --</option>
+                                        <option value="offers" {{ old('query_source', $item->query_source) == 'offers' ? 'selected' : '' }}>Offers</option>
+                                        <option value="projects" {{ old('query_source', $item->query_source) == 'projects' ? 'selected' : '' }}>Projects</option>
+                                    </select>
+                                    <small class="text-muted">Choose where to pull data from (Interior Design has no subcategories)</small>
+                                </div>
+                                
+                                <div class="form-group col-md-6">
+                                    <label>Select Category <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                    <select class="form-control select2" name="cat_subs_category_id" id="cat_subs_category_id">
+                                        <option value="">-- Select Category --</option>
+                                        @if($item->item_type == 'category_with_subs' && !empty($selectedCategories))
+                                            @foreach($selectedCategories as $category)
+                                            <option value="{{ $category['id'] }}" selected>{{ $category['title_english'] }} ({{ $category['title_arabic'] ?? '-' }})</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    <small class="text-muted">Select the category. Its subcategories will appear as menu children.</small>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label>Max Subcategories (optional)</label>
+                                    <input class="form-control" value="{{ old('max_children', $item->max_children) }}" type="number" name="cat_subs_max_children" min="1" placeholder="Leave empty for all">
+                                    <small class="text-muted">Limit number of subcategories shown</small>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label>Status <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
@@ -407,9 +447,20 @@
 @section('js')
 <script>
 $(document).ready(function() {
-    // Store existing selections
+    // Store existing selections - ensure they are arrays of integers
     var existingCategoryIds = @json($item->query_category_ids ?? []);
     var existingSubcategoryIds = @json($item->query_subcategory_ids ?? []);
+    
+    // Convert to integers if needed
+    if (existingCategoryIds && existingCategoryIds.length > 0) {
+        existingCategoryIds = existingCategoryIds.map(function(id) { return parseInt(id); });
+    }
+    if (existingSubcategoryIds && existingSubcategoryIds.length > 0) {
+        existingSubcategoryIds = existingSubcategoryIds.map(function(id) { return parseInt(id); });
+    }
+    
+    console.log('Existing Category IDs:', existingCategoryIds);
+    console.log('Existing Subcategory IDs:', existingSubcategoryIds);
     
     // Initialize Select2
     $('#query_category_ids').select2({
@@ -427,6 +478,11 @@ $(document).ready(function() {
         allowClear: true
     });
     
+    $('#cat_subs_category_id').select2({
+        placeholder: 'Select a category...',
+        allowClear: true
+    });
+    
     var hasSubcategories = true;
     
     function toggleSections() {
@@ -434,6 +490,7 @@ $(document).ready(function() {
         var isDynamicServices = itemType === 'dynamic_services';
         var isDynamic = ['dynamic_offers', 'dynamic_projects', 'dynamic_news'].includes(itemType);
         var isDynamicQuery = itemType === 'dynamic_query';
+        var isCategoryWithSubs = itemType === 'category_with_subs';
         var isLinkType = ['static'].includes(itemType);
         var isNonLink = ['divider', 'header'].includes(itemType);
         
@@ -444,6 +501,7 @@ $(document).ready(function() {
         $('#ready-options-section').hide();
         $('#link-section').hide();
         $('#link-section-2').hide();
+        $('#category-subs-section').hide();
         
         if (isDynamicServices) {
             $('#dynamic-section').show();
@@ -457,6 +515,10 @@ $(document).ready(function() {
         } else if (isDynamicQuery) {
             $('#dynamic-section').show();
             $('#query-section').show();
+            $('#link-section').show();
+            $('#link-section-2').show();
+        } else if (isCategoryWithSubs) {
+            $('#category-subs-section').show();
             $('#link-section').show();
             $('#link-section-2').show();
         } else if (isNonLink) {
@@ -523,17 +585,23 @@ $(document).ready(function() {
         alert('Route set to services.index - This will link to the Services listing page.');
     };
     
-    function toggleQuerySections() {
+    function toggleQuerySections(forceShow) {
         var queryType = $('#query_type').val();
         var source = $('#query_source').val();
         
-        if (queryType === 'all') {
+        console.log('toggleQuerySections - queryType:', queryType, 'source:', source, 'forceShow:', forceShow);
+        
+        if (queryType === 'all' && !forceShow) {
             $('#category-selection-row').hide();
             $('#subcategory-selection-row').hide();
-        } else if (queryType === 'category') {
+        } else if (queryType === 'category' || forceShow) {
             $('#category-selection-row').show();
-            $('#subcategory-selection-row').hide();
-        } else if (queryType === 'subcategory') {
+            if (queryType !== 'subcategory') {
+                $('#subcategory-selection-row').hide();
+            }
+        }
+        
+        if (queryType === 'subcategory') {
             $('#category-selection-row').show();
             if (hasSubcategories) {
                 $('#subcategory-selection-row').show();
@@ -546,32 +614,39 @@ $(document).ready(function() {
             $('#subcategory-selection-row').hide();
             // Force category type for interior
             if (queryType === 'subcategory') {
-                $('#query_type').val('category').trigger('change');
+                $('#query_type').val('category');
             }
         } else {
             $('#no-subcategory-notice').hide();
         }
     }
     
-    function loadCategories(source, preselectedIds) {
+    function loadCategories(source, preselectedIds, callback) {
         if (!source) {
             $('#query_category_ids').empty().trigger('change');
             $('#query_subcategory_ids').empty().trigger('change');
+            if (callback) callback();
             return;
         }
+        
+        console.log('Loading categories for source:', source, 'preselectedIds:', preselectedIds);
         
         $.ajax({
             url: '{{ route("admin.menu.ajax.categories") }}',
             type: 'GET',
             data: { source: source },
             success: function(response) {
+                console.log('Categories response:', response);
                 if (response.success) {
                     var $select = $('#query_category_ids');
                     $select.empty();
                     
                     $.each(response.categories, function(index, category) {
-                        var isSelected = preselectedIds && preselectedIds.includes(category.id);
-                        $select.append(new Option(category.title_english + ' (' + (category.title_arabic || '-') + ')', category.id, isSelected, isSelected));
+                        var catId = parseInt(category.id);
+                        var isSelected = preselectedIds && preselectedIds.length > 0 && preselectedIds.indexOf(catId) !== -1;
+                        console.log('Category:', category.title_english, 'ID:', catId, 'isSelected:', isSelected);
+                        var option = new Option(category.title_english + ' (' + (category.title_arabic || '-') + ')', catId, isSelected, isSelected);
+                        $select.append(option);
                     });
                     
                     $select.trigger('change');
@@ -585,13 +660,25 @@ $(document).ready(function() {
                         $('#query_type option[value="subcategory"]').prop('disabled', false);
                     }
                     
-                    toggleQuerySections();
+                    // Show the category selection row if we have preselected categories
+                    if (preselectedIds && preselectedIds.length > 0) {
+                        toggleQuerySections(true);
+                    } else {
+                        toggleQuerySections(false);
+                    }
                     
                     // Load subcategories if needed
-                    if (preselectedIds && preselectedIds.length > 0 && hasSubcategories) {
+                    var queryType = $('#query_type').val();
+                    if (preselectedIds && preselectedIds.length > 0 && hasSubcategories && queryType === 'subcategory') {
                         loadSubcategories(source, preselectedIds, existingSubcategoryIds);
                     }
+                    
+                    if (callback) callback();
                 }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error loading categories:', error);
+                if (callback) callback();
             }
         });
     }
@@ -602,6 +689,8 @@ $(document).ready(function() {
             return;
         }
         
+        console.log('Loading subcategories for source:', source, 'categoryIds:', categoryIds, 'preselectedIds:', preselectedIds);
+        
         $.ajax({
             url: '{{ route("admin.menu.ajax.subcategories") }}',
             type: 'GET',
@@ -610,13 +699,49 @@ $(document).ready(function() {
                 category_ids: categoryIds
             },
             success: function(response) {
+                console.log('Subcategories response:', response);
                 if (response.success) {
                     var $select = $('#query_subcategory_ids');
                     $select.empty();
                     
                     $.each(response.subcategories, function(index, subcategory) {
-                        var isSelected = preselectedIds && preselectedIds.includes(subcategory.id);
-                        $select.append(new Option(subcategory.title_english + ' (' + (subcategory.title_arabic || '-') + ')', subcategory.id, isSelected, isSelected));
+                        var subId = parseInt(subcategory.id);
+                        var isSelected = preselectedIds && preselectedIds.length > 0 && preselectedIds.indexOf(subId) !== -1;
+                        console.log('Subcategory:', subcategory.title_english, 'ID:', subId, 'isSelected:', isSelected);
+                        var option = new Option(subcategory.title_english + ' (' + (subcategory.title_arabic || '-') + ')', subId, isSelected, isSelected);
+                        $select.append(option);
+                    });
+                    
+                    $select.trigger('change');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error loading subcategories:', error);
+            }
+        });
+    }
+    
+    // Load categories for category_with_subs
+    function loadCatSubsCategories(source, preselectedId) {
+        if (!source) {
+            $('#cat_subs_category_id').empty().append('<option value="">-- Select Category --</option>').trigger('change');
+            return;
+        }
+        
+        $.ajax({
+            url: '{{ route("admin.menu.ajax.categories") }}',
+            type: 'GET',
+            data: { source: source },
+            success: function(response) {
+                if (response.success) {
+                    var $select = $('#cat_subs_category_id');
+                    $select.empty().append('<option value="">-- Select Category --</option>');
+                    
+                    $.each(response.categories, function(index, category) {
+                        var catId = parseInt(category.id);
+                        var isSelected = preselectedId && parseInt(preselectedId) === catId;
+                        var option = new Option(category.title_english + ' (' + (category.title_arabic || '-') + ')', catId, isSelected, isSelected);
+                        $select.append(option);
                     });
                     
                     $select.trigger('change');
@@ -633,17 +758,34 @@ $(document).ready(function() {
             if (source) {
                 loadCategories(source, existingCategoryIds);
             }
+        } else if ($(this).val() === 'category_with_subs') {
+            var source = $('#cat_subs_source').val();
+            if (source && $('#cat_subs_category_id option').length <= 1) {
+                var preselectedId = existingCategoryIds && existingCategoryIds.length > 0 ? existingCategoryIds[0] : null;
+                loadCatSubsCategories(source, preselectedId);
+            }
         }
     });
     
     $('#query_source').on('change', function() {
         var source = $(this).val();
+        // When source changes manually, clear existing selections
         loadCategories(source, []);
         $('#query_subcategory_ids').empty().trigger('change');
     });
     
     $('#query_type').on('change', function() {
-        toggleQuerySections();
+        toggleQuerySections(false);
+        
+        // If switching to subcategory type, load subcategories for selected categories
+        var queryType = $(this).val();
+        if (queryType === 'subcategory' && hasSubcategories) {
+            var source = $('#query_source').val();
+            var categoryIds = $('#query_category_ids').val();
+            if (categoryIds && categoryIds.length > 0) {
+                loadSubcategories(source, categoryIds.map(Number), existingSubcategoryIds);
+            }
+        }
     });
     
     $('#query_category_ids').on('change', function() {
@@ -656,16 +798,104 @@ $(document).ready(function() {
         }
     });
     
+    // Category with Subs handlers
+    $('#cat_subs_source').on('change', function() {
+        var source = $(this).val();
+        loadCatSubsCategories(source, null);
+    });
+    
+    // Before form submit, sync category_with_subs fields
+    $('form').on('submit', function() {
+        var itemType = $('#item_type').val();
+        if (itemType === 'category_with_subs') {
+            var source = $('#cat_subs_source').val();
+            var categoryId = $('#cat_subs_category_id').val();
+            var maxChildren = $('input[name="cat_subs_max_children"]').val();
+            
+            // Set the actual form fields
+            $('select[name="query_source"]').val(source);
+            
+            // Create hidden inputs for query_category_ids array
+            if (categoryId) {
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'query_category_ids[]',
+                    value: categoryId
+                }).appendTo(this);
+            }
+            
+            // Set max_children
+            if (maxChildren) {
+                $('input[name="max_children"]').val(maxChildren);
+            }
+        }
+    });
+    
     // Initialize
     toggleSections();
     
-    // If it's a dynamic_query type, load the data
+    // If it's a dynamic_query type, initialize the view
     if ($('#item_type').val() === 'dynamic_query') {
         var source = $('#query_source').val();
-        if (source) {
-            loadCategories(source, existingCategoryIds);
+        var queryType = $('#query_type').val();
+        
+        console.log('Initializing dynamic_query - source:', source, 'queryType:', queryType);
+        
+        // Check if categories are already pre-populated from server
+        var hasPrePopulatedCategories = $('#query_category_ids option').length > 0;
+        console.log('Has pre-populated categories:', hasPrePopulatedCategories);
+        
+        // First show the query sections based on query_type
+        if (queryType === 'category' || queryType === 'subcategory') {
+            $('#category-selection-row').show();
         }
-        toggleQuerySections();
+        if (queryType === 'subcategory') {
+            $('#subcategory-selection-row').show();
+        }
+        
+        if (source) {
+            if (hasPrePopulatedCategories && existingCategoryIds && existingCategoryIds.length > 0) {
+                // Categories are already pre-populated from server, just refresh select2 and show sections
+                $('#query_category_ids').trigger('change');
+                toggleQuerySections(true);
+                
+                // Check if we need to load subcategories
+                if (queryType === 'subcategory' && existingSubcategoryIds && existingSubcategoryIds.length > 0) {
+                    // Subcategories are also pre-populated, just refresh
+                    $('#query_subcategory_ids').trigger('change');
+                } else if (queryType === 'subcategory') {
+                    // Need to load subcategories
+                    loadSubcategories(source, existingCategoryIds, existingSubcategoryIds);
+                }
+            } else {
+                // No pre-populated categories, load from AJAX
+                loadCategories(source, existingCategoryIds, function() {
+                    toggleQuerySections(existingCategoryIds && existingCategoryIds.length > 0);
+                });
+            }
+        }
+        
+        // Handle interior design notice
+        if (source === 'interior') {
+            $('#no-subcategory-notice').show();
+            hasSubcategories = false;
+        }
+    }
+    
+    // If it's a category_with_subs type, initialize the view
+    if ($('#item_type').val() === 'category_with_subs') {
+        var source = $('#cat_subs_source').val();
+        console.log('Initializing category_with_subs - source:', source);
+        
+        // Check if category is already pre-populated from server
+        var hasPrePopulatedCategory = $('#cat_subs_category_id option:selected').val();
+        console.log('Has pre-populated category:', hasPrePopulatedCategory);
+        
+        if (source && !hasPrePopulatedCategory) {
+            // Load categories from AJAX
+            var preselectedId = existingCategoryIds && existingCategoryIds.length > 0 ? existingCategoryIds[0] : null;
+            loadCatSubsCategories(source, preselectedId);
+        }
     }
 });
 </script>

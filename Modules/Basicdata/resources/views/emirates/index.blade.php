@@ -56,6 +56,10 @@
                     </div>
                     <hr>
                     
+                    <div class="alert alert-info mb-3" style="background: #e3f2fd; border-left: 4px solid #2196f3; color: #1565c0;">
+                        <i class="fa fa-info-circle"></i> <strong>Primary Emirate:</strong> Only one emirate can be marked as primary. The primary emirate will be used as the default selection in forms and displayed prominently on the frontend.
+                    </div>
+                    
                     @if(count($emirates) > 0)
                         <table id="datatable" class="table table-striped table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead>
@@ -63,7 +67,7 @@
                                     <th>ID</th>
                                     <th>Title (English)</th>
                                     <th>Title (Arabic)</th>
-                                    <th>Bio (English)</th>
+                                    <th>Primary</th>
                                     <th>Icon</th>
                                     <th>Image</th>
                                     <th>Slug</th>
@@ -73,11 +77,29 @@
                             </thead>
                             <tbody>
                                 @foreach($emirates as $emirate)
-                            <tr>
+                            <tr style="{{ $emirate->is_primary ? 'background-color: #e8f5e9;' : '' }}">
                                 <td>{{ $emirate->id }}</td>
-                                <td>{{ $emirate->title_english }}</td>
+                                <td>
+                                    {{ $emirate->title_english }}
+                                    @if($emirate->is_primary)
+                                        <span class="badge badge-success ml-1"><i class="fa fa-star"></i> Primary</span>
+                                    @endif
+                                </td>
                                 <td>{{ $emirate->title_arabic }}</td>
-                                <td>{{ \Illuminate\Support\Str::limit($emirate->bio_english, 50) }}</td>
+                                <td class="text-center">
+                                    <form action="{{ route('emirate.toggle-primary', ['id' => $emirate->id]) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        @if($emirate->is_primary)
+                                            <button type="submit" class="btn btn-success btn-sm" title="Click to remove primary status">
+                                                <i class="fa fa-star"></i> Primary
+                                            </button>
+                                        @else
+                                            <button type="submit" class="btn btn-outline-secondary btn-sm" title="Click to set as primary">
+                                                <i class="fa fa-star-o"></i> Set Primary
+                                            </button>
+                                        @endif
+                                    </form>
+                                </td>
                                 <td>
                                     @if($emirate->icon)
                                         <a data-lightbox="{{url('/storage'.$emirate->icon)}}" href="{{url('/storage'.$emirate->icon)}}">

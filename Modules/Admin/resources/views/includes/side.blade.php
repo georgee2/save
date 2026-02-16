@@ -266,6 +266,7 @@
                                 <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-th-list"></i><span> Home Sections <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
                                 <ul class="list-unstyled">
                                     <li><a href="{{route('home-sections.index')}}">Manage Sections</a></li>
+                                    <li><a href="{{route('home-project-settings.index')}}">Our Projects Settings</a></li>
                                     <li><a href="{{route('home-sections.trashed')}}">Trashed Sections</a></li>
                                 </ul>
                             </li>

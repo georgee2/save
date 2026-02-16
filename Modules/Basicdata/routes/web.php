@@ -284,6 +284,7 @@ Route::group(
                 Route::post('/delete/{id}', [EmirateController::class, 'destroy'])->name('emirate.delete');
                 Route::get('/trashed', [EmirateController::class, 'trashed'])->name('emirate.trashed');
                 Route::post('/restore/{id}', [EmirateController::class, 'restore'])->name('emirate.restore');
+                Route::post('/toggle-primary/{id}', [EmirateController::class, 'togglePrimary'])->name('emirate.toggle-primary');
             });
 
             // Offer Categories Routes

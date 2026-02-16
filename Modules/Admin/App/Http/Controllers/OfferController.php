@@ -39,6 +39,7 @@ class OfferController extends Controller
                 'offers.offer_number',
                 'offers.title_english',
                 'offers.title_arabic',
+                'offers.main_image',
                 'oc.title_english as category_name',
                 'osc.title_english as subcategory_name',
                 'pt.name_english as type_name',

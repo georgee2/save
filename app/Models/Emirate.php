@@ -42,10 +42,49 @@ class Emirate extends Model
     public static function list()
     {
         return DB::table('emirates')
-            ->select('id', 'title_english', 'title_arabic', 'bio_english', 'icon', 'image', 'slug', 'created_at', 'updated_at')
+            ->select('id', 'title_english', 'title_arabic', 'bio_english', 'icon', 'image', 'slug', 'is_primary', 'created_at', 'updated_at')
             ->whereNull('deleted_at')
+            ->orderBy('is_primary', 'desc')
             ->orderBy('created_at', 'desc')
             ->get();
+    }
+    
+    /**
+     * Get the primary emirate
+     */
+    public static function getPrimary()
+    {
+        return static::where('is_primary', true)
+            ->whereNull('deleted_at')
+            ->first();
+    }
+    
+    /**
+     * Set this emirate as primary (and unset others)
+     */
+    public function markAsPrimary()
+    {
+        // First, unset all other emirates as primary
+        DB::table('emirates')
+            ->where('is_primary', true)
+            ->update(['is_primary' => false]);
+        
+        // Set this one as primary
+        $this->is_primary = true;
+        $this->save();
+        
+        return $this;
+    }
+    
+    /**
+     * Remove primary status from this emirate
+     */
+    public function unmarkAsPrimary()
+    {
+        $this->is_primary = false;
+        $this->save();
+        
+        return $this;
     }
     
     /**
