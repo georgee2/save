@@ -7,7 +7,7 @@
         </h5>
     </div>
     <div class="card-body">
-        @if($errors->all())
+        @if(isset($errors) && $errors->any())
             <div class="alert alert-danger">
                 <ul class="mb-0">
                     @foreach($errors->all() as $error)
@@ -22,7 +22,7 @@
             
             <div class="form-group">
                 <label class="font-weight-bold">
-                    Gallery Images 
+                    <i class="fas fa-upload"></i> Upload / Manage Gallery Images 
                     <small class="text-muted">(1080px x 1080px)</small>
                 </label>
                 <div class="images mb-3"></div>
@@ -41,6 +41,17 @@
                 </button>
             </div>
         </form>
+        
+        <!-- Saved Images Preview with Lightbox (Below Uploader) -->
+        <div class="saved-gallery-preview mt-4" id="savedGalleryPreview" style="display: none;">
+            <hr>
+            <label class="font-weight-bold d-block mb-3">
+                <i class="fas fa-eye text-primary"></i> Saved Images Preview 
+                <small class="text-muted">(Click to view full size - Same order as uploader)</small>
+            </label>
+            <div class="gallery-thumbs-grid" id="galleryPreviewRow">
+                <!-- Images will be loaded via JavaScript -->
+            </div>
+        </div>
     </div>
 </div>
-

@@ -305,6 +305,7 @@ return [
     'email_us' => 'راسلنا',
     'visit_us' => 'زورنا',
     'get_in_touch' => 'تواصل معنا',
+    'we_are_here_to_help' => 'نحن هنا لمساعدتك',
     'send_us_message' => 'أرسل لنا رسالة',
     'enter_your_name' => 'أدخل اسمك الكامل',
     'enter_your_email' => 'أدخل بريدك الإلكتروني',

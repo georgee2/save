@@ -18,6 +18,116 @@
         font-size: 0.9rem;
         padding: 0.25rem 0.5rem;
     }
+    
+    /* Gallery Preview Thumbnails */
+    .gallery-thumbs-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .gallery-thumbs-grid .gallery-thumb-item {
+        display: block;
+        width: 80px;
+        height: 80px;
+        position: relative;
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .gallery-thumbs-grid .gallery-thumb-item:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+    .gallery-thumbs-grid .gallery-thumb-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    .gallery-thumbs-grid .gallery-thumb-item .thumb-order {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        background: rgba(0,0,0,0.7);
+        color: #fff;
+        font-size: 10px;
+        font-weight: bold;
+        padding: 2px 6px;
+        border-radius: 3px;
+        z-index: 3;
+    }
+    .gallery-thumbs-grid .gallery-thumb-item .thumb-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.4);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .gallery-thumbs-grid .gallery-thumb-item:hover .thumb-overlay {
+        opacity: 1;
+    }
+    .gallery-thumbs-grid .gallery-thumb-item .thumb-overlay i {
+        color: white;
+        font-size: 18px;
+    }
+    
+    /* Lightbox2 Customization for Project Gallery */
+    .lightboxOverlay {
+        cursor: pointer !important;
+        background-color: rgba(0, 0, 0, 0.85) !important;
+    }
+    .lb-outerContainer {
+        background-color: transparent !important;
+        border-radius: 8px !important;
+    }
+    .lb-container {
+        padding: 0 !important;
+    }
+    .lb-image {
+        max-width: 500px !important;
+        max-height: 400px !important;
+        border-radius: 8px !important;
+        border: 3px solid #fff !important;
+    }
+    .lb-dataContainer {
+        padding: 10px 0 !important;
+    }
+    .lb-data .lb-details {
+        width: 100% !important;
+    }
+    .lb-data .lb-caption {
+        font-size: 14px !important;
+        color: #ccc !important;
+    }
+    .lb-data .lb-number {
+        color: #999 !important;
+        font-size: 12px !important;
+    }
+    .lb-closeContainer .lb-close {
+        cursor: pointer !important;
+        width: 30px !important;
+        height: 30px !important;
+        opacity: 0.7 !important;
+        transition: opacity 0.2s ease !important;
+    }
+    .lb-closeContainer .lb-close:hover {
+        opacity: 1 !important;
+    }
+    .lb-nav a.lb-prev,
+    .lb-nav a.lb-next {
+        opacity: 0.6 !important;
+    }
+    .lb-nav a.lb-prev:hover,
+    .lb-nav a.lb-next:hover {
+        opacity: 1 !important;
+    }
     .project-show-container {
         display: flex;
         gap: 20px;
@@ -264,8 +374,8 @@
         text-align: center;
     }
     
-    /* Lightbox */
-    .lightbox {
+    /* Custom Lightbox for Project Images */
+    .custom-lightbox {
         display: none;
         position: fixed;
         z-index: 9999;
@@ -273,28 +383,44 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.9);
+        background: rgba(0,0,0,0.85);
         justify-content: center;
         align-items: center;
+        cursor: pointer;
     }
     
-    .lightbox.active {
+    .custom-lightbox.active {
         display: flex;
     }
     
-    .lightbox img {
-        max-width: 90%;
-        max-height: 90%;
-        box-shadow: 0 0 30px rgba(255,255,255,0.3);
+    .custom-lightbox img {
+        max-width: 500px;
+        max-height: 400px;
+        border-radius: 8px;
+        border: 3px solid #fff;
+        box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        cursor: default;
     }
     
-    .lightbox-close {
+    .custom-lightbox-close {
         position: absolute;
         top: 20px;
         right: 30px;
         color: #fff;
-        font-size: 40px;
+        font-size: 30px;
         cursor: pointer;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        transition: background 0.2s ease;
+    }
+    
+    .custom-lightbox-close:hover {
+        background: rgba(255,255,255,0.3);
     }
     
     .seo-tags {
@@ -1126,10 +1252,10 @@
     </div>
 </div>
 
-<!-- Lightbox -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
-    <img id="lightbox-img" src="" alt="Preview">
+<!-- Custom Lightbox for Project Images -->
+<div class="custom-lightbox" id="custom-lightbox" onclick="closeLightbox()">
+    <span class="custom-lightbox-close" onclick="closeLightbox()">&times;</span>
+    <img id="lightbox-img" src="" alt="Preview" onclick="event.stopPropagation()">
 </div>
 @endsection
 
@@ -1218,14 +1344,14 @@
         }
     })();
     
-    // Lightbox functions
+    // Custom Lightbox functions
     function openLightbox(imgSrc) {
         document.getElementById('lightbox-img').src = imgSrc;
-        document.getElementById('lightbox').classList.add('active');
+        document.getElementById('custom-lightbox').classList.add('active');
     }
     
     function closeLightbox() {
-        document.getElementById('lightbox').classList.remove('active');
+        document.getElementById('custom-lightbox').classList.remove('active');
     }
     
     // ===================================
@@ -2507,6 +2633,9 @@
             
             // Update gallery count
             updateProjectGalleryCount(projectImages.length);
+            
+            // Build lightbox preview gallery (same order as uploader)
+            buildGalleryPreview(projectImages);
         })
         .catch(error => {
             console.error('Error loading gallery:', error);
@@ -2522,6 +2651,29 @@
             });
         });
     
+    // Build gallery preview with small thumbnails
+    function buildGalleryPreview(images) {
+        if (images.length > 0) {
+            let galleryHtml = '';
+            images.forEach((img, index) => {
+                galleryHtml += `
+                    <a href="${img.src}" 
+                       data-lightbox="project-gallery" 
+                       data-title="Image ${index + 1} of ${images.length}"
+                       class="gallery-thumb-item">
+                        <span class="thumb-order">${index + 1}</span>
+                        <img src="${img.src}" alt="Gallery Image ${index + 1}">
+                        <span class="thumb-overlay"><i class="fas fa-search-plus"></i></span>
+                    </a>
+                `;
+            });
+            $('#galleryPreviewRow').html(galleryHtml);
+            $('#savedGalleryPreview').show();
+        } else {
+            $('#savedGalleryPreview').hide();
+        }
+    }
+    
     // Update gallery count badge
     function updateProjectGalleryCount(count) {
         $('#gallery-count').text(count + ' image' + (count !== 1 ? 's' : ''));
@@ -2531,6 +2683,27 @@
     $(document).on('DOMSubtreeModified', '.images', function() {
         const currentCount = $('.image-uploader-images .uploaded').length;
         updateProjectGalleryCount(currentCount);
+    });
+    
+    // Configure lightbox options
+    if (typeof lightbox !== 'undefined') {
+        lightbox.option({
+            'resizeDuration': 200,
+            'wrapAround': true,
+            'maxWidth': 600,
+            'maxHeight': 500,
+            'fitImagesInViewport': true,
+            'disableScrolling': true
+        });
+    }
+    
+    // Close lightbox when clicking on overlay (outside the image)
+    $(document).on('click', '.lightboxOverlay, .lb-outerContainer', function(e) {
+        if (!$(e.target).closest('.lb-image').length && !$(e.target).closest('.lb-nav').length) {
+            if (typeof lightbox !== 'undefined') {
+                lightbox.end();
+            }
+        }
     });
 </script>
 @endsection

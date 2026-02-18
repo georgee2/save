@@ -551,6 +551,7 @@ Route::group(
             Route::prefix('site-settings')->group(function () {
                 Route::get('/index', [SiteSettingsController::class, 'index'])->name('site-settings.index');
                 Route::post('/update-construction', [SiteSettingsController::class, 'updateUnderConstruction'])->name('site-settings.update-construction');
+                Route::post('/update-contact-forms', [SiteSettingsController::class, 'updateContactForms'])->name('site-settings.update-contact-forms');
             });
 
             // Facts Routes
