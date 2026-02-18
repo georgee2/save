@@ -60,7 +60,6 @@
               @if($project->category)
               <li class="list-inline-item badge badge-primary mr-3">{{ app()->getLocale() == 'ar' ? $project->category->title_arabic : $project->category->title_english }}</li>
               @endif
-              <li class="list-inline-item mr-2 mt-2 mt-sm-0"><i class="fal fa-clock mr-1"></i>{{ $project->created_at->diffForHumans() }}</li>
             </ul>
 @php
                 $shareTitle = app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english;
@@ -331,7 +330,15 @@
             </article>
             <aside class="col-lg-4 pl-xl-4 primary-sidebar sidebar-sticky" id="sidebar">
               <div class="primary-sidebar-inner">
+              @php
+                  $showProjectScheduleTour = env('PROJECTS_SCHEDULE_TOUR', false);
+                  $showProjectRequestInfo = env('PROJECTS_REQUEST_INFO', false);
+                  $showProjectForms = $showProjectScheduleTour || $showProjectRequestInfo;
+              @endphp
+              @if($showProjectForms)
               <div class="card border-0 widget-request-tour">
+                @if($showProjectScheduleTour && $showProjectRequestInfo)
+                {{-- Both tabs enabled --}}
                 <ul class="nav nav-tabs d-flex" role="tablist">
                   <li class="nav-item">
                     <a class="nav-link active px-3" data-toggle="tab" href="#schedule" role="tab"
@@ -344,10 +351,22 @@
                       Info</a>
                   </li>
                 </ul>
+                @elseif($showProjectScheduleTour)
+                {{-- Only Schedule a Tour --}}
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <i class="fas fa-calendar-alt mr-2"></i>Schedule A Tour
+                </div>
+                @else
+                {{-- Only Request Info --}}
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <i class="fas fa-info-circle mr-2"></i>Request Info
+                </div>
+                @endif
                 <div class="card-body px-sm-6 shadow-xxs-2 pb-5 pt-0">
                   <form>
                     <div class="tab-content pt-1 pb-0 px-0 shadow-none">
-                      <div class="tab-pane fade show active" id="schedule" role="tabpanel">
+                      @if($showProjectScheduleTour)
+                      <div class="tab-pane fade {{ $showProjectScheduleTour ? 'show active' : '' }}" id="schedule" role="tabpanel">
                         <div class="slick-slider calendar arrow-hide-disable mx-n1"
                                              data-slick-options='{"slidesToShow": 5, "autoplay":false,"dots":false}'>
                           <div class="box px-1 py-4">
@@ -463,7 +482,9 @@
                             eleifend donec.</label>
                         </div>
                       </div>
-                      <div class="tab-pane fade pt-5" id="request-info" role="tabpanel">
+                      @endif
+                      @if($showProjectRequestInfo)
+                      <div class="tab-pane fade {{ !$showProjectScheduleTour ? 'show active' : '' }} pt-5" id="request-info" role="tabpanel">
                         <div class="form-check d-flex align-items-center border-bottom pb-3 mb-3">
                           <input class="form-check-input" type="radio" name="agent" value="option1">
                           <div class="form-check-label ml-2">
@@ -534,10 +555,15 @@
                             eleifend donec.</label>
                         </div>
                       </div>
+                      @endif
                     </div>
                   </form>
                 </div>
               </div>
+              @else
+              {{-- Show Contact Card when forms are disabled --}}
+              @include('pages.projects.singleproject.contact-card')
+              @endif
             </div>
             </aside>
           </div>
@@ -548,6 +574,594 @@
 
 @section('css')
 <style>
+/* Contact Info Card Styles */
+.contact-info-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.contact-card-header {
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+    padding: 25px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-card-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.contact-card-header .header-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    backdrop-filter: blur(10px);
+}
+
+.contact-card-header .header-icon i {
+    font-size: 26px;
+    color: #fff;
+}
+
+.contact-card-header .header-title {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.contact-card-header .header-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    margin: 0;
+}
+
+.contact-card-body {
+    padding: 20px;
+}
+
+.contact-method {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    background: #fff;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.contact-method:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    text-decoration: none;
+}
+
+.contact-method .method-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 14px;
+    flex-shrink: 0;
+}
+
+.contact-method .method-icon i {
+    font-size: 18px;
+    color: #fff;
+}
+
+.contact-method.phone-method .method-icon {
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+}
+
+.contact-method.whatsapp-method .method-icon {
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+}
+
+.contact-method.email-method .method-icon {
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+}
+
+.contact-method .method-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.contact-method .method-label {
+    display: block;
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.contact-method .method-value {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.contact-method .method-arrow {
+    color: #ccc;
+    font-size: 12px;
+    transition: all 0.3s ease;
+}
+
+.contact-method:hover .method-arrow {
+    color: #19868b;
+    transform: translateX(3px);
+}
+
+.btn-contact-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-top: 5px;
+    box-shadow: 0 4px 15px rgba(25, 134, 139, 0.3);
+}
+
+.btn-contact-page:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(25, 134, 139, 0.4);
+    color: #fff;
+    text-decoration: none;
+}
+
+.btn-contact-page i {
+    font-size: 16px;
+}
+
+.btn-company-profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #0d6b6f 0%, #095456 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-top: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-company-profile::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-company-profile:hover::before {
+    left: 100%;
+}
+
+.btn-company-profile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(13, 107, 111, 0.4);
+    color: #fff;
+    text-decoration: none;
+}
+
+.btn-company-profile .fa-file-pdf {
+    font-size: 18px;
+    color: #ff6b6b;
+}
+
+.btn-company-profile .download-icon {
+    margin-left: auto;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.contact-card-footer {
+    padding: 20px;
+    background: linear-gradient(135deg, #f0f9f9 0%, #e8f4f4 100%);
+    border-top: 1px solid rgba(25, 134, 139, 0.1);
+    text-align: center;
+}
+
+.contact-card-footer .social-label {
+    display: block;
+    font-size: 12px;
+    color: #19868b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.contact-card-footer .social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.contact-card-footer .social-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 16px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+.contact-card-footer .social-icon:hover {
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+.contact-card-footer .social-icon.facebook {
+    background: linear-gradient(135deg, #1877f2 0%, #0d65d9 100%);
+}
+
+.contact-card-footer .social-icon.instagram {
+    background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.contact-card-footer .social-icon.twitter {
+    background: linear-gradient(135deg, #1da1f2 0%, #0d8ecf 100%);
+}
+
+.contact-card-footer .social-icon.linkedin {
+    background: linear-gradient(135deg, #0077b5 0%, #005885 100%);
+}
+
+.contact-card-footer .social-icon.pinterest {
+    background: linear-gradient(135deg, #e60023 0%, #c8001e 100%);
+}
+
+.contact-card-footer .social-icon.whatsapp {
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+}
+
+/* RTL Support */
+html[dir="rtl"] .contact-method:hover {
+    transform: translateX(-5px);
+}
+
+html[dir="rtl"] .contact-method .method-icon {
+    margin-right: 0;
+    margin-left: 14px;
+}
+
+html[dir="rtl"] .contact-method:hover .method-arrow {
+    transform: translateX(-3px);
+}
+
+html[dir="rtl"] .contact-method .method-arrow i {
+    transform: rotate(180deg);
+}
+
+html[dir="rtl"] .btn-company-profile .download-icon {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+/* Contact Card Responsive Styles */
+@media (max-width: 1199px) {
+    .contact-info-card {
+        margin-bottom: 30px;
+    }
+    
+    .contact-card-header {
+        padding: 22px 18px;
+    }
+    
+    .contact-card-header .header-icon {
+        width: 55px;
+        height: 55px;
+    }
+    
+    .contact-card-header .header-icon i {
+        font-size: 24px;
+    }
+    
+    .contact-card-header .header-title {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 991px) {
+    .contact-info-card {
+        max-width: 500px;
+        margin: 0 auto 30px;
+    }
+    
+    .contact-card-header {
+        padding: 25px 20px;
+    }
+    
+    .contact-card-header .header-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .contact-card-header .header-icon i {
+        font-size: 26px;
+    }
+    
+    .contact-card-header .header-title {
+        font-size: 20px;
+    }
+    
+    .contact-card-body {
+        padding: 25px;
+    }
+    
+    .contact-method {
+        padding: 16px 18px;
+    }
+    
+    .contact-method .method-icon {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .contact-method .method-icon i {
+        font-size: 20px;
+    }
+    
+    .contact-method .method-value {
+        font-size: 15px;
+    }
+    
+    .btn-contact-page,
+    .btn-company-profile {
+        padding: 16px 24px;
+        font-size: 16px;
+    }
+    
+    .contact-card-footer {
+        padding: 25px;
+    }
+    
+    .contact-card-footer .social-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 767px) {
+    .contact-info-card {
+        max-width: 100%;
+        border-radius: 12px;
+    }
+    
+    .contact-card-header {
+        padding: 20px 15px;
+    }
+    
+    .contact-card-header .header-icon {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 12px;
+    }
+    
+    .contact-card-header .header-icon i {
+        font-size: 22px;
+    }
+    
+    .contact-card-header .header-title {
+        font-size: 18px;
+    }
+    
+    .contact-card-header .header-subtitle {
+        font-size: 12px;
+    }
+    
+    .contact-card-body {
+        padding: 15px;
+    }
+    
+    .contact-method {
+        padding: 12px 14px;
+        margin-bottom: 10px;
+        border-radius: 10px;
+    }
+    
+    .contact-method .method-icon {
+        width: 40px;
+        height: 40px;
+        margin-right: 12px;
+        border-radius: 8px;
+    }
+    
+    .contact-method .method-icon i {
+        font-size: 16px;
+    }
+    
+    .contact-method .method-label {
+        font-size: 10px;
+    }
+    
+    .contact-method .method-value {
+        font-size: 13px;
+    }
+    
+    .contact-method .method-arrow {
+        font-size: 11px;
+    }
+    
+    .btn-contact-page {
+        padding: 12px 18px;
+        font-size: 14px;
+        border-radius: 10px;
+        gap: 8px;
+    }
+    
+    .btn-contact-page i {
+        font-size: 14px;
+    }
+    
+    .btn-company-profile {
+        padding: 12px 18px;
+        font-size: 13px;
+        border-radius: 10px;
+        gap: 8px;
+        margin-top: 10px;
+    }
+    
+    .btn-company-profile .fa-file-pdf {
+        font-size: 16px;
+    }
+    
+    .btn-company-profile .download-icon {
+        font-size: 12px;
+    }
+    
+    .contact-card-footer {
+        padding: 15px;
+    }
+    
+    .contact-card-footer .social-label {
+        font-size: 11px;
+        margin-bottom: 12px;
+    }
+    
+    .contact-card-footer .social-icons {
+        gap: 8px;
+    }
+    
+    .contact-card-footer .social-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+    
+    /* RTL adjustments for mobile */
+    html[dir="rtl"] .contact-method .method-icon {
+        margin-left: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-info-card {
+        border-radius: 10px;
+    }
+    
+    .contact-card-header {
+        padding: 18px 12px;
+    }
+    
+    .contact-card-header .header-icon {
+        width: 45px;
+        height: 45px;
+        margin-bottom: 10px;
+    }
+    
+    .contact-card-header .header-icon i {
+        font-size: 20px;
+    }
+    
+    .contact-card-header .header-title {
+        font-size: 16px;
+    }
+    
+    .contact-card-header .header-subtitle {
+        font-size: 11px;
+    }
+    
+    .contact-card-body {
+        padding: 12px;
+    }
+    
+    .contact-method {
+        padding: 10px 12px;
+        margin-bottom: 8px;
+    }
+    
+    .contact-method .method-icon {
+        width: 36px;
+        height: 36px;
+        margin-right: 10px;
+    }
+    
+    .contact-method .method-icon i {
+        font-size: 14px;
+    }
+    
+    .contact-method .method-value {
+        font-size: 12px;
+    }
+    
+    .btn-contact-page,
+    .btn-company-profile {
+        padding: 11px 15px;
+        font-size: 13px;
+    }
+    
+    .contact-card-footer {
+        padding: 12px;
+    }
+    
+    .contact-card-footer .social-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+    }
+    
+    /* RTL adjustments for small mobile */
+    html[dir="rtl"] .contact-method .method-icon {
+        margin-left: 10px;
+    }
+}
+
 /* Social Share Buttons */
 .social-share-buttons {
     gap: 8px;

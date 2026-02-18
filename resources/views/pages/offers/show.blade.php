@@ -558,7 +558,15 @@
                 </div>
                 
                 {{-- Schedule A Tour / Request Info Card --}}
+                @php
+                    $showOfferScheduleTour = env('OFFERS_SCHEDULE_TOUR', false);
+                    $showOfferRequestInfo = env('OFFERS_REQUEST_INFO', false);
+                    $showOfferForms = $showOfferScheduleTour || $showOfferRequestInfo;
+                @endphp
+                @if($showOfferForms)
                 <div class="card border-0 shadow-sm widget-request-tour">
+                    @if($showOfferScheduleTour && $showOfferRequestInfo)
+                    {{-- Both tabs enabled --}}
                     <ul class="nav nav-tabs d-flex" role="tablist">
                         <li class="nav-item flex-fill">
                             <a class="nav-link active text-center px-3 py-3" data-toggle="tab" href="#schedule-tour" role="tab" aria-selected="true">
@@ -571,11 +579,23 @@
                             </a>
                         </li>
                     </ul>
+                    @elseif($showOfferScheduleTour)
+                    {{-- Only Schedule a Tour --}}
+                    <div class="card-header bg-primary text-white text-center py-3">
+                        <i class="fas fa-calendar-alt mr-2"></i>{{ __('lang.schedule_a_tour') }}
+                    </div>
+                    @else
+                    {{-- Only Request Info --}}
+                    <div class="card-header bg-primary text-white text-center py-3">
+                        <i class="fas fa-info-circle mr-2"></i>{{ __('lang.request_info') }}
+                    </div>
+                    @endif
                     <div class="card-body px-4 shadow-xxs-2 pb-4 pt-0">
                         <form id="tourRequestForm">
                             <div class="tab-content pt-1 pb-0 px-0 shadow-none">
+                                @if($showOfferScheduleTour)
                                 {{-- Schedule A Tour Tab --}}
-                                <div class="tab-pane fade show active" id="schedule-tour" role="tabpanel">
+                                <div class="tab-pane fade {{ $showOfferScheduleTour ? 'show active' : '' }}" id="schedule-tour" role="tabpanel">
                                     {{-- Date Picker Slider with Custom Navigation --}}
                                     <div class="calendar-slider-wrapper mt-4 mb-3">
                                         <button type="button" class="calendar-nav calendar-prev" id="calendarPrev">
@@ -635,9 +655,11 @@
                                         <i class="fas fa-calendar-check mr-2"></i>{{ __('lang.schedule_a_tour') }}
                                     </button>
                                 </div>
+                                @endif
                                 
+                                @if($showOfferRequestInfo)
                                 {{-- Request Info Tab --}}
-                                <div class="tab-pane fade pt-4" id="request-info" role="tabpanel">
+                                <div class="tab-pane fade {{ !$showOfferScheduleTour ? 'show active' : '' }} pt-4" id="request-info" role="tabpanel">
                                     <div class="form-group mb-3">
                                         <input type="text" class="form-control form-control-lg border-0 bg-gray-01" name="info_name" placeholder="{{ __('lang.full_name') }}">
                                     </div>
@@ -654,10 +676,15 @@
                                         <i class="fas fa-paper-plane mr-2"></i>{{ __('lang.request_info') }}
                                     </button>
                                 </div>
+                                @endif
                             </div>
                         </form>
                     </div>
                 </div>
+                @else
+                {{-- Show Contact Card when forms are disabled --}}
+                @include('pages.offers.partials.contact-card')
+                @endif
                 </div>
             </div>
         </div>

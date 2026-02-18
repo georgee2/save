@@ -305,6 +305,7 @@ return [
     'email_us' => 'Email Us',
     'visit_us' => 'Visit Us',
     'get_in_touch' => 'Get In Touch',
+    'we_are_here_to_help' => 'We are here to help you',
     'send_us_message' => 'Send Us a Message',
     'enter_your_name' => 'Enter your full name',
     'enter_your_email' => 'Enter your email address',

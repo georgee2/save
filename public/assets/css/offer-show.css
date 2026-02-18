@@ -1181,3 +1181,591 @@
     margin-left: 8px;
 }
 
+/* ===================================================
+   Offer Contact Card Styles
+   =================================================== */
+.offer-contact-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    border: 1px solid rgba(25, 134, 139, 0.1);
+}
+
+.offer-contact-header {
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+    padding: 24px 20px;
+    text-align: center;
+    position: relative;
+}
+
+.offer-contact-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.offer-contact-icon {
+    width: 56px;
+    height: 56px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+}
+
+.offer-contact-icon i {
+    font-size: 24px;
+    color: #fff;
+}
+
+.offer-contact-title {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 4px;
+}
+
+.offer-contact-subtitle {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 13px;
+    margin: 0;
+}
+
+.offer-contact-body {
+    padding: 20px;
+}
+
+.offer-contact-method {
+    display: flex;
+    align-items: center;
+    padding: 12px 14px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.offer-contact-method:hover {
+    background: #fff;
+    border-color: rgba(25, 134, 139, 0.2);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transform: translateX(4px);
+    text-decoration: none;
+}
+
+.offer-method-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.offer-method-icon i {
+    font-size: 16px;
+    color: #fff;
+}
+
+.offer-phone-method .offer-method-icon {
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+}
+
+.offer-whatsapp-method .offer-method-icon {
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+}
+
+.offer-email-method .offer-method-icon {
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+}
+
+.offer-method-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.offer-method-label {
+    display: block;
+    font-size: 10px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.offer-method-value {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.offer-method-arrow {
+    color: #ccc;
+    font-size: 11px;
+    transition: all 0.3s ease;
+}
+
+.offer-contact-method:hover .offer-method-arrow {
+    color: #19868b;
+    transform: translateX(3px);
+}
+
+.offer-btn-contact {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 18px;
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-top: 5px;
+    box-shadow: 0 4px 12px rgba(25, 134, 139, 0.25);
+}
+
+.offer-btn-contact:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(25, 134, 139, 0.35);
+    color: #fff;
+    text-decoration: none;
+}
+
+.offer-btn-contact i {
+    font-size: 14px;
+}
+
+.offer-btn-profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 18px;
+    background: linear-gradient(135deg, #0d6b6f 0%, #095456 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.offer-btn-profile::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    transition: left 0.5s ease;
+}
+
+.offer-btn-profile:hover::before {
+    left: 100%;
+}
+
+.offer-btn-profile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(13, 107, 111, 0.35);
+    color: #fff;
+    text-decoration: none;
+}
+
+.offer-btn-profile .fa-file-pdf {
+    font-size: 16px;
+    color: #ff6b6b;
+}
+
+.offer-download-icon {
+    margin-left: auto;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.offer-contact-footer {
+    padding: 18px 20px;
+    background: linear-gradient(135deg, #f0f9f9 0%, #e8f4f4 100%);
+    border-top: 1px solid rgba(25, 134, 139, 0.1);
+    text-align: center;
+}
+
+.offer-social-label {
+    display: block;
+    font-size: 11px;
+    color: #19868b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.offer-social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.offer-social-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.offer-social-icon:hover {
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.offer-social-facebook {
+    background: linear-gradient(135deg, #1877f2 0%, #0d65d9 100%);
+}
+
+.offer-social-instagram {
+    background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.offer-social-twitter {
+    background: linear-gradient(135deg, #1da1f2 0%, #0d8ecf 100%);
+}
+
+.offer-social-linkedin {
+    background: linear-gradient(135deg, #0077b5 0%, #005885 100%);
+}
+
+.offer-social-pinterest {
+    background: linear-gradient(135deg, #e60023 0%, #c8001e 100%);
+}
+
+.offer-social-whatsapp {
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+}
+
+/* RTL Support for Offer Contact Card */
+[dir="rtl"] .offer-contact-method:hover {
+    transform: translateX(-4px);
+}
+
+[dir="rtl"] .offer-method-icon {
+    margin-right: 0;
+    margin-left: 12px;
+}
+
+[dir="rtl"] .offer-contact-method:hover .offer-method-arrow {
+    transform: translateX(-3px);
+}
+
+[dir="rtl"] .offer-method-arrow i {
+    transform: rotate(180deg);
+}
+
+[dir="rtl"] .offer-download-icon {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+/* Offer Contact Card Responsive Styles */
+@media (max-width: 1199px) {
+    .offer-contact-card {
+        margin-bottom: 25px;
+    }
+    
+    .offer-contact-header {
+        padding: 20px 18px;
+    }
+    
+    .offer-contact-icon {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .offer-contact-icon i {
+        font-size: 22px;
+    }
+    
+    .offer-contact-title {
+        font-size: 17px;
+    }
+}
+
+@media (max-width: 991px) {
+    .offer-contact-card {
+        max-width: 450px;
+        margin: 0 auto 25px;
+    }
+    
+    .offer-contact-header {
+        padding: 22px 20px;
+    }
+    
+    .offer-contact-icon {
+        width: 54px;
+        height: 54px;
+    }
+    
+    .offer-contact-icon i {
+        font-size: 24px;
+    }
+    
+    .offer-contact-title {
+        font-size: 18px;
+    }
+    
+    .offer-contact-body {
+        padding: 22px;
+    }
+    
+    .offer-contact-method {
+        padding: 14px 16px;
+    }
+    
+    .offer-method-icon {
+        width: 44px;
+        height: 44px;
+    }
+    
+    .offer-method-icon i {
+        font-size: 18px;
+    }
+    
+    .offer-method-value {
+        font-size: 14px;
+    }
+    
+    .offer-btn-contact,
+    .offer-btn-profile {
+        padding: 14px 20px;
+        font-size: 15px;
+    }
+    
+    .offer-contact-footer {
+        padding: 20px;
+    }
+    
+    .offer-social-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 767px) {
+    .offer-contact-card {
+        max-width: 100%;
+        border-radius: 10px;
+    }
+    
+    .offer-contact-header {
+        padding: 18px 15px;
+    }
+    
+    .offer-contact-icon {
+        width: 46px;
+        height: 46px;
+        margin-bottom: 10px;
+    }
+    
+    .offer-contact-icon i {
+        font-size: 20px;
+    }
+    
+    .offer-contact-title {
+        font-size: 16px;
+    }
+    
+    .offer-contact-subtitle {
+        font-size: 12px;
+    }
+    
+    .offer-contact-body {
+        padding: 15px;
+    }
+    
+    .offer-contact-method {
+        padding: 11px 12px;
+        margin-bottom: 8px;
+        border-radius: 8px;
+    }
+    
+    .offer-method-icon {
+        width: 36px;
+        height: 36px;
+        margin-right: 10px;
+        border-radius: 8px;
+    }
+    
+    .offer-method-icon i {
+        font-size: 14px;
+    }
+    
+    .offer-method-label {
+        font-size: 9px;
+    }
+    
+    .offer-method-value {
+        font-size: 12px;
+    }
+    
+    .offer-method-arrow {
+        font-size: 10px;
+    }
+    
+    .offer-btn-contact {
+        padding: 11px 16px;
+        font-size: 13px;
+        border-radius: 8px;
+        gap: 6px;
+    }
+    
+    .offer-btn-contact i {
+        font-size: 13px;
+    }
+    
+    .offer-btn-profile {
+        padding: 11px 16px;
+        font-size: 12px;
+        border-radius: 8px;
+        gap: 6px;
+        margin-top: 8px;
+    }
+    
+    .offer-btn-profile .fa-file-pdf {
+        font-size: 14px;
+    }
+    
+    .offer-download-icon {
+        font-size: 11px;
+    }
+    
+    .offer-contact-footer {
+        padding: 14px;
+    }
+    
+    .offer-social-label {
+        font-size: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .offer-social-icons {
+        gap: 6px;
+    }
+    
+    .offer-social-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+    }
+    
+    /* RTL adjustments for mobile */
+    [dir="rtl"] .offer-method-icon {
+        margin-left: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .offer-contact-card {
+        border-radius: 8px;
+    }
+    
+    .offer-contact-header {
+        padding: 15px 12px;
+    }
+    
+    .offer-contact-icon {
+        width: 42px;
+        height: 42px;
+        margin-bottom: 8px;
+    }
+    
+    .offer-contact-icon i {
+        font-size: 18px;
+    }
+    
+    .offer-contact-title {
+        font-size: 15px;
+    }
+    
+    .offer-contact-subtitle {
+        font-size: 11px;
+    }
+    
+    .offer-contact-body {
+        padding: 12px;
+    }
+    
+    .offer-contact-method {
+        padding: 10px;
+        margin-bottom: 6px;
+    }
+    
+    .offer-method-icon {
+        width: 34px;
+        height: 34px;
+        margin-right: 8px;
+    }
+    
+    .offer-method-icon i {
+        font-size: 13px;
+    }
+    
+    .offer-method-value {
+        font-size: 11px;
+    }
+    
+    .offer-btn-contact,
+    .offer-btn-profile {
+        padding: 10px 14px;
+        font-size: 12px;
+    }
+    
+    .offer-contact-footer {
+        padding: 12px;
+    }
+    
+    .offer-social-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+    
+    /* RTL adjustments for small mobile */
+    [dir="rtl"] .offer-method-icon {
+        margin-left: 8px;
+    }
+}
+

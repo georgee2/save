@@ -7,7 +7,7 @@
         </h5>
     </div>
     
-    @if($errors->all())
+    @if(isset($errors) && $errors->any())
         <div class="alert alert-danger">
             <ul class="mb-0">
                 @foreach($errors->all() as $error)
@@ -22,7 +22,7 @@
         
         <div class="form-group">
             <label class="font-weight-bold">
-                Gallery Images 
+                <i class="fas fa-upload"></i> Upload / Manage Gallery Images 
                 <small class="text-muted">(903px x 1146px - Portrait)</small>
             </label>
             <div class="offer-gallery-images mb-3"></div>
@@ -41,6 +41,18 @@
             </button>
         </div>
     </form>
+    
+    <!-- Saved Images Preview with Lightbox (Below Uploader) -->
+    <div class="saved-gallery-preview mt-4" id="offerSavedGalleryPreview" style="display: none;">
+        <hr>
+        <label class="font-weight-bold d-block mb-3">
+            <i class="fas fa-eye text-primary"></i> Saved Images Preview 
+            <small class="text-muted">(Click to view full size - Same order as uploader)</small>
+        </label>
+        <div class="gallery-thumbs-grid" id="offerGalleryPreviewRow">
+            <!-- Images will be loaded via JavaScript -->
+        </div>
+    </div>
 </div>
 
 @push('scripts')
@@ -76,6 +88,9 @@
             
             // Update gallery count
             updateOfferGalleryCount(offerImages.length);
+            
+            // Build lightbox preview gallery (same order as uploader)
+            buildOfferGalleryPreview(offerImages);
         },
         error: function() {
             // Initialize empty uploader
@@ -90,6 +105,29 @@
         }
     });
     
+    // Build gallery preview with small thumbnails
+    function buildOfferGalleryPreview(images) {
+        if (images.length > 0) {
+            let galleryHtml = '';
+            images.forEach((img, index) => {
+                galleryHtml += `
+                    <a href="${img.src}" 
+                       data-lightbox="offer-gallery" 
+                       data-title="Image ${index + 1} of ${images.length}"
+                       class="gallery-thumb-item">
+                        <span class="thumb-order">${index + 1}</span>
+                        <img src="${img.src}" alt="Gallery Image ${index + 1}">
+                        <span class="thumb-overlay"><i class="fas fa-search-plus"></i></span>
+                    </a>
+                `;
+            });
+            $('#offerGalleryPreviewRow').html(galleryHtml);
+            $('#offerSavedGalleryPreview').show();
+        } else {
+            $('#offerSavedGalleryPreview').hide();
+        }
+    }
+    
     // Update gallery count badge
     function updateOfferGalleryCount(count) {
         $('#offer-gallery-count').text(count + ' image' + (count !== 1 ? 's' : ''));
@@ -99,6 +137,27 @@
     $(document).on('DOMSubtreeModified', '.offer-gallery-images', function() {
         const currentCount = $('.offer-gallery-images .image-uploader .uploaded').length;
         updateOfferGalleryCount(currentCount);
+    });
+    
+    // Configure lightbox options for offer gallery
+    if (typeof lightbox !== 'undefined') {
+        lightbox.option({
+            'resizeDuration': 200,
+            'wrapAround': true,
+            'maxWidth': 500,
+            'maxHeight': 400,
+            'fitImagesInViewport': true,
+            'disableScrolling': true
+        });
+    }
+    
+    // Close lightbox when clicking on overlay (outside the image)
+    $(document).on('click', '.lightboxOverlay, .lb-outerContainer', function(e) {
+        if (!$(e.target).closest('.lb-image').length && !$(e.target).closest('.lb-nav').length) {
+            if (typeof lightbox !== 'undefined') {
+                lightbox.end();
+            }
+        }
     });
 </script>
 @endpush

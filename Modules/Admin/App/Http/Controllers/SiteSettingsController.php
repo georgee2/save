@@ -12,10 +12,29 @@ class SiteSettingsController extends Controller
      */
     public function index()
     {
-        // Read current status from .env file directly (not from config cache)
-        $underConstruction = $this->getUnderConstructionStatus();
-        
-        return view('admin::site-settings.index', compact('underConstruction'));
+        try {
+            // Read current status from .env file directly (not from config cache)
+            $underConstruction = $this->getUnderConstructionStatus();
+            
+            // Read contact forms settings
+            $contactFormsSettings = $this->getContactFormsSettings();
+            
+            return view('admin::site-settings.index', compact('underConstruction', 'contactFormsSettings'));
+        } catch (\Exception $e) {
+            \Log::error('Error loading site settings page: ' . $e->getMessage());
+            
+            // Return with default values if there's an error
+            $underConstruction = false;
+            $contactFormsSettings = [
+                'offers_schedule_tour' => false,
+                'offers_request_info' => false,
+                'projects_schedule_tour' => false,
+                'projects_request_info' => false,
+            ];
+            
+            return view('admin::site-settings.index', compact('underConstruction', 'contactFormsSettings'))
+                ->with('error', 'Error loading settings: ' . $e->getMessage());
+        }
     }
     
     /**
@@ -143,6 +162,72 @@ class SiteSettingsController extends Controller
         } catch (\Exception $e) {
             // Silently fail - cache will be refreshed on next request anyway
             \Log::warning('Failed to clear cache: ' . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Get contact forms settings from .env file
+     */
+    private function getContactFormsSettings(): array
+    {
+        $settings = [
+            'offers_schedule_tour' => false,
+            'offers_request_info' => false,
+            'projects_schedule_tour' => false,
+            'projects_request_info' => false,
+        ];
+        
+        try {
+            $envPath = base_path('.env');
+            if (file_exists($envPath)) {
+                $envContent = @file_get_contents($envPath);
+                if ($envContent !== false) {
+                    if (preg_match('/OFFERS_SCHEDULE_TOUR=(\S*)/', $envContent, $matches)) {
+                        $settings['offers_schedule_tour'] = strtolower(trim($matches[1])) === 'true';
+                    }
+                    if (preg_match('/OFFERS_REQUEST_INFO=(\S*)/', $envContent, $matches)) {
+                        $settings['offers_request_info'] = strtolower(trim($matches[1])) === 'true';
+                    }
+                    if (preg_match('/PROJECTS_SCHEDULE_TOUR=(\S*)/', $envContent, $matches)) {
+                        $settings['projects_schedule_tour'] = strtolower(trim($matches[1])) === 'true';
+                    }
+                    if (preg_match('/PROJECTS_REQUEST_INFO=(\S*)/', $envContent, $matches)) {
+                        $settings['projects_request_info'] = strtolower(trim($matches[1])) === 'true';
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error reading contact forms settings: ' . $e->getMessage());
+        }
+        
+        return $settings;
+    }
+    
+    /**
+     * Update contact forms settings
+     */
+    public function updateContactForms(Request $request)
+    {
+        try {
+            $offersScheduleTour = $request->has('offers_schedule_tour') ? 'true' : 'false';
+            $offersRequestInfo = $request->has('offers_request_info') ? 'true' : 'false';
+            $projectsScheduleTour = $request->has('projects_schedule_tour') ? 'true' : 'false';
+            $projectsRequestInfo = $request->has('projects_request_info') ? 'true' : 'false';
+            
+            // Update .env file
+            $this->setEnvValue('OFFERS_SCHEDULE_TOUR', $offersScheduleTour);
+            $this->setEnvValue('OFFERS_REQUEST_INFO', $offersRequestInfo);
+            $this->setEnvValue('PROJECTS_SCHEDULE_TOUR', $projectsScheduleTour);
+            $this->setEnvValue('PROJECTS_REQUEST_INFO', $projectsRequestInfo);
+            
+            // Clear config cache
+            $this->clearConfigCache();
+            
+            return redirect()->back()->with('success', 'Contact forms settings have been updated successfully.');
+            
+        } catch (\Exception $e) {
+            \Log::error('Error updating contact forms settings: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
         }
     }
 }
