@@ -67,7 +67,27 @@
                     </div>
                 </div>
 
-                {{-- Quick Links Column --}}
+                {{-- Quick Links Column (Dynamic) --}}
+                @if(isset($footerQuickLinksMenu) && $footerQuickLinksMenu && $footerQuickLinksItems->count() > 0)
+                <div class="col-lg-2 col-md-6 mb-5 mb-lg-0">
+                    <div class="footer-widget">
+                        <h4 class="footer-widget-title">{{ $footerQuickLinksMenu->getTitle() }}</h4>
+                        <ul class="footer-links">
+                            @foreach($footerQuickLinksItems as $item)
+                                @if($item->isVisible())
+                                <li>
+                                    <a href="{{ $item->getUrl() ?? '#' }}" target="{{ $item->link_target }}">
+                                        <i class="fas fa-chevron-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}"></i>
+                                        {{ $item->getTitle() }}
+                                    </a>
+                                </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+                @else
+                {{-- Fallback Quick Links --}}
                 <div class="col-lg-2 col-md-6 mb-5 mb-lg-0">
                     <div class="footer-widget">
                         <h4 class="footer-widget-title">{{ __('lang.quick_links') }}</h4>
@@ -97,12 +117,6 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('blogs.index') }}">
-                                    <i class="fas fa-chevron-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}"></i>
-                                    {{ __('lang.news') }}
-                                </a>
-                            </li>
-                            <li>
                                 <a href="{{ route('contact') }}">
                                     <i class="fas fa-chevron-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}"></i>
                                     {{ __('lang.contact_us') }}
@@ -111,8 +125,37 @@
                         </ul>
                     </div>
                 </div>
+                @endif
 
-                {{-- Company Column --}}
+                {{-- Company Column (Dynamic) --}}
+                @if(isset($footerCompanyMenu) && $footerCompanyMenu && $footerCompanyItems->count() > 0)
+                <div class="col-lg-2 col-md-6 mb-5 mb-lg-0">
+                    <div class="footer-widget">
+                        <h4 class="footer-widget-title">{{ $footerCompanyMenu->getTitle() }}</h4>
+                        <ul class="footer-links">
+                            @foreach($footerCompanyItems as $item)
+                                @if($item->isVisible())
+                                @php
+                                    $showItem = true;
+                                    if ($item->route_name === 'careers.index' && (!isset($hasActiveJobs) || !$hasActiveJobs)) {
+                                        $showItem = false;
+                                    }
+                                @endphp
+                                @if($showItem)
+                                <li>
+                                    <a href="{{ $item->getUrl() ?? '#' }}" target="{{ $item->link_target }}">
+                                        <i class="fas fa-chevron-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}"></i>
+                                        {{ $item->getTitle() }}
+                                    </a>
+                                </li>
+                                @endif
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+                @else
+                {{-- Fallback Company Links --}}
                 <div class="col-lg-2 col-md-6 mb-5 mb-lg-0">
                     <div class="footer-widget">
                         <h4 class="footer-widget-title">{{ __('lang.company') }}</h4>
@@ -121,12 +164,6 @@
                                 <a href="{{ route('about') }}">
                                     <i class="fas fa-chevron-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}"></i>
                                     {{ __('lang.about_us') }}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('team.board') }}">
-                                    <i class="fas fa-chevron-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}"></i>
-                                    {{ __('lang.board_of_directors') }}
                                 </a>
                             </li>
                             <li>
@@ -141,12 +178,6 @@
                                     {{ __('lang.our_partners') }}
                                 </a>
                             </li>
-                            <li>
-                                <a href="{{ route('branches.index') }}">
-                                    <i class="fas fa-chevron-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}"></i>
-                                    {{ __('lang.our_branches') }}
-                                </a>
-                            </li>
                             @if(isset($hasActiveJobs) && $hasActiveJobs)
                             <li>
                                 <a href="{{ route('careers.index') }}">
@@ -158,6 +189,7 @@
                         </ul>
                     </div>
                 </div>
+                @endif
 
                 {{-- Contact Info Column --}}
                 <div class="col-lg-4 col-md-6 mb-5 mb-lg-0">

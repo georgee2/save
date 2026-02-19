@@ -177,6 +177,15 @@
                 </ul>
             </li>
 
+            <li class="has_sub">
+                <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-certificate"></i><span> Certificates </span><span class="float-right"><i class="mdi mdi-chevron-right"></i></span></a>
+                <ul class="list-unstyled">
+                    <li><a href="{{route('certificate.create')}}">Add New Certificate</a></li>
+                    <li><a href="{{route('certificate.index')}}">Certificates List</a></li>
+                    <li><a href="{{route('certificate.trashed')}}">Trashed Certificates</a></li>
+                </ul>
+            </li>
+
             <li>
                 <a href="{{route('contact-information.index')}}" class="waves-effect"><i class="fa fa-info-circle"></i><span> Contact Information </span></a>
             </li>

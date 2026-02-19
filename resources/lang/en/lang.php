@@ -566,5 +566,18 @@ return [
     'page_not_found' => 'Page Not Found',
     'page_not_found_message' => 'Sorry, the page you are looking for doesn\'t exist or has been moved. Please check the URL or return to the homepage.',
     'back_to_home' => 'Back to Home',
+    
+    // About Page Modern Section
+    'years_experience' => 'Years Experience',
+    'professional_team' => 'Professional Team',
+    'quality_service' => 'Quality Service',
+    'customer_satisfaction' => 'Customer Satisfaction',
+    'features_subtitle' => 'Discover what makes us stand out from the rest',
+    'mvv_subtitle' => 'The principles that guide everything we do',
+    
+    // Certificates Section
+    'our_achievements' => 'Our Achievements',
+    'certificates' => 'Certificates & Awards',
+    'certificates_subtitle' => 'Recognitions and certifications that reflect our commitment to excellence',
 ];
 

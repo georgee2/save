@@ -141,6 +141,37 @@ class Menu extends Model
     }
 
     /**
+     * Get footer Quick Links menu
+     */
+    public static function getFooterQuickLinksMenu(): ?self
+    {
+        return self::where('location', 'footer_quick_links')
+            ->where('is_active', true)
+            ->first();
+    }
+
+    /**
+     * Get footer Company menu
+     */
+    public static function getFooterCompanyMenu(): ?self
+    {
+        return self::where('location', 'footer_company')
+            ->where('is_active', true)
+            ->first();
+    }
+
+    /**
+     * Get all footer menus
+     */
+    public static function getFooterMenus(): \Illuminate\Database\Eloquent\Collection
+    {
+        return self::where('location', 'like', 'footer_%')
+            ->where('is_active', true)
+            ->orderBy('order')
+            ->get();
+    }
+
+    /**
      * Get all active menus
      */
     public static function getAllActive(): \Illuminate\Database\Eloquent\Collection

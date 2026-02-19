@@ -84,6 +84,13 @@ class HeaderComposer
             ->whereNull('deleted_at')
             ->exists();
 
+        // Get footer menus
+        $footerQuickLinksMenu = Menu::getFooterQuickLinksMenu();
+        $footerQuickLinksItems = $footerQuickLinksMenu ? $footerQuickLinksMenu->getHierarchicalItems() : collect();
+        
+        $footerCompanyMenu = Menu::getFooterCompanyMenu();
+        $footerCompanyItems = $footerCompanyMenu ? $footerCompanyMenu->getHierarchicalItems() : collect();
+
         $view->with([
             'headerProjectCategories' => $headerProjectCategories,
             'headerOfferCategories' => $headerOfferCategories,
@@ -98,6 +105,11 @@ class HeaderComposer
             // Keep old variable names for backward compatibility
             'primaryMenu' => $headerMenu,
             'primaryMenuItems' => $headerMenuItems,
+            // Footer menus
+            'footerQuickLinksMenu' => $footerQuickLinksMenu,
+            'footerQuickLinksItems' => $footerQuickLinksItems,
+            'footerCompanyMenu' => $footerCompanyMenu,
+            'footerCompanyItems' => $footerCompanyItems,
         ]);
     }
 }

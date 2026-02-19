@@ -56,11 +56,19 @@
                             <div class="form-group col-md-6">
                                 <label>Location <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
                                 <select class="form-control" name="location" required>
-                                    <option value="header" {{ old('location', $menu->location) == 'header' ? 'selected' : '' }}>Header</option>
-                                    <option value="footer" {{ old('location', $menu->location) == 'footer' ? 'selected' : '' }}>Footer</option>
-                                    <option value="sidebar" {{ old('location', $menu->location) == 'sidebar' ? 'selected' : '' }}>Sidebar</option>
-                                    <option value="mobile" {{ old('location', $menu->location) == 'mobile' ? 'selected' : '' }}>Mobile</option>
-                                    <option value="other" {{ old('location', $menu->location) == 'other' ? 'selected' : '' }}>Other</option>
+                                    <optgroup label="Header">
+                                        <option value="header" {{ old('location', $menu->location) == 'header' ? 'selected' : '' }}>Header (Main Navigation)</option>
+                                    </optgroup>
+                                    <optgroup label="Footer">
+                                        <option value="footer_quick_links" {{ old('location', $menu->location) == 'footer_quick_links' ? 'selected' : '' }}>Footer - Quick Links</option>
+                                        <option value="footer_company" {{ old('location', $menu->location) == 'footer_company' ? 'selected' : '' }}>Footer - Company</option>
+                                        <option value="footer" {{ old('location', $menu->location) == 'footer' ? 'selected' : '' }}>Footer (Other)</option>
+                                    </optgroup>
+                                    <optgroup label="Other">
+                                        <option value="sidebar" {{ old('location', $menu->location) == 'sidebar' ? 'selected' : '' }}>Sidebar</option>
+                                        <option value="mobile" {{ old('location', $menu->location) == 'mobile' ? 'selected' : '' }}>Mobile</option>
+                                        <option value="other" {{ old('location', $menu->location) == 'other' ? 'selected' : '' }}>Other</option>
+                                    </optgroup>
                                 </select>
                                 @error('location')
                                 <span class="text-danger mt-1">{{ $message }}</span>

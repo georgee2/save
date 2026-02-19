@@ -755,10 +755,10 @@ body.filter-open {
     gap: 30px;
 }
 
-/* Home section cards - bigger aspect ratio */
+/* Home section cards - use original image aspect ratio (765x432 = ~16:9) */
 .interior-gallery-section .interior-gallery-card {
-    aspect-ratio: 3/4;
-    min-height: 350px;
+    aspect-ratio: 765 / 432;
+    min-height: auto;
 }
 
 /* Larger card title for home section */
@@ -787,7 +787,7 @@ body.filter-open {
     }
     
     .interior-gallery-section .interior-gallery-card {
-        min-height: 320px;
+        min-height: auto;
     }
 }
 
@@ -798,7 +798,7 @@ body.filter-open {
     }
     
     .interior-gallery-section .interior-gallery-card {
-        min-height: 280px;
+        min-height: auto;
     }
 }
 
@@ -809,7 +809,7 @@ body.filter-open {
     }
     
     .interior-gallery-section .interior-gallery-card {
-        min-height: 300px;
+        min-height: auto;
     }
 }
 
@@ -820,8 +820,8 @@ body.filter-open {
     }
     
     .interior-gallery-section .interior-gallery-card {
-        min-height: 250px;
-        aspect-ratio: 3/4;
+        min-height: auto;
+        aspect-ratio: 765 / 432;
     }
     
     .interior-gallery-section .interior-gallery-card .card-title {
@@ -842,8 +842,8 @@ body.filter-open {
     }
     
     .interior-gallery-section .interior-gallery-card {
-        min-height: 350px;
-        aspect-ratio: 3/4;
+        min-height: auto;
+        aspect-ratio: 765 / 432;
     }
     
     .interior-gallery-section .interior-gallery-card .card-title {

@@ -9,6 +9,7 @@ use App\Models\AboutFeature;
 use App\Models\AboutCustomBlock;
 use App\Models\Team;
 use App\Models\Partner;
+use App\Models\Certificate;
 
 class AboutController extends Controller
 {
@@ -44,6 +45,9 @@ class AboutController extends Controller
         // Fetch government partners for slider
         $governmentPartners = Partner::getGovernmentPartners();
         
-        return view('pages.about.index', compact('aboutInfo', 'contactInfo', 'features', 'customBlocks', 'allTeamMembers', 'governmentPartners'));
+        // Fetch published certificates
+        $certificates = Certificate::getPublished();
+        
+        return view('pages.about.index', compact('aboutInfo', 'contactInfo', 'features', 'customBlocks', 'allTeamMembers', 'governmentPartners', 'certificates'));
     }
 }
