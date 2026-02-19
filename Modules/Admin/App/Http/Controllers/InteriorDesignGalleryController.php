@@ -427,4 +427,177 @@ class InteriorDesignGalleryController extends Controller
         $statusText = $action === 'show' ? 'shown on home' : 'hidden from home';
         return redirect()->back()->with('success', "{$count} gallery item(s) {$statusText} successfully!");
     }
+    
+    /**
+     * Show bulk add form
+     */
+    public function bulkAdd()
+    {
+        $categories = InteriorCategory::whereNull('deleted_at')
+            ->orderBy('title_english', 'asc')
+            ->get();
+            
+        $projectTypes = ProjectType::whereNull('deleted_at')
+            ->orderBy('name_english', 'asc')
+            ->get();
+        
+        return view('admin::interior-design-galleries.bulk-add', compact('categories', 'projectTypes'));
+    }
+    
+    /**
+     * Get next available number for a category
+     */
+    public function getNextNumber($categoryId)
+    {
+        $category = InteriorCategory::find($categoryId);
+        
+        if (!$category) {
+            return response()->json(['error' => 'Category not found'], 404);
+        }
+        
+        // Get the category name in English
+        $categoryName = $category->title_english;
+        
+        // Find all existing titles that match the pattern "CategoryName X" where X is a number
+        $existingNumbers = InteriorDesignGallery::whereNull('deleted_at')
+            ->where('category_id', $categoryId)
+            ->where('title_english', 'LIKE', $categoryName . ' %')
+            ->pluck('title_english')
+            ->map(function($title) use ($categoryName) {
+                // Extract the number from the title
+                $pattern = '/^' . preg_quote($categoryName, '/') . ' (\d+)$/';
+                if (preg_match($pattern, $title, $matches)) {
+                    return (int) $matches[1];
+                }
+                return null;
+            })
+            ->filter()
+            ->toArray();
+        
+        // Find the next available number
+        $nextNumber = 1;
+        if (!empty($existingNumbers)) {
+            sort($existingNumbers);
+            // Find the first gap or use max + 1
+            for ($i = 1; $i <= max($existingNumbers) + 1; $i++) {
+                if (!in_array($i, $existingNumbers)) {
+                    $nextNumber = $i;
+                    break;
+                }
+            }
+        }
+        
+        return response()->json([
+            'category_name_english' => $categoryName,
+            'category_name_arabic' => $category->title_arabic,
+            'next_number' => $nextNumber,
+            'existing_numbers' => $existingNumbers
+        ]);
+    }
+    
+    /**
+     * Store bulk uploaded images
+     */
+    public function bulkStore(Request $request)
+    {
+        $request->validate([
+            'category_id' => 'required|exists:interior_categories,id',
+            'project_type_id' => 'required|exists:project_types,id',
+            'images' => 'required|array|min:1',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+        ]);
+        
+        $categoryId = $request->category_id;
+        $projectTypeId = $request->project_type_id;
+        
+        // Get category info
+        $category = InteriorCategory::find($categoryId);
+        if (!$category) {
+            return redirect()->back()->with('error', 'Category not found.');
+        }
+        
+        $categoryNameEnglish = $category->title_english;
+        $categoryNameArabic = $category->title_arabic;
+        
+        // Get existing numbers for this category
+        $existingNumbers = InteriorDesignGallery::whereNull('deleted_at')
+            ->where('category_id', $categoryId)
+            ->where('title_english', 'LIKE', $categoryNameEnglish . ' %')
+            ->pluck('title_english')
+            ->map(function($title) use ($categoryNameEnglish) {
+                $pattern = '/^' . preg_quote($categoryNameEnglish, '/') . ' (\d+)$/';
+                if (preg_match($pattern, $title, $matches)) {
+                    return (int) $matches[1];
+                }
+                return null;
+            })
+            ->filter()
+            ->toArray();
+        
+        // Get max ordering
+        $maxOrdering = InteriorDesignGallery::whereNull('deleted_at')->max('ordering') ?? 0;
+        
+        $uploadedCount = 0;
+        $errors = [];
+        
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $image) {
+                try {
+                    // Find next available number
+                    $nextNumber = 1;
+                    if (!empty($existingNumbers)) {
+                        sort($existingNumbers);
+                        for ($i = 1; $i <= max($existingNumbers) + 1; $i++) {
+                            if (!in_array($i, $existingNumbers)) {
+                                $nextNumber = $i;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // Add this number to existing numbers for next iteration
+                    $existingNumbers[] = $nextNumber;
+                    
+                    // Generate titles
+                    $titleEnglish = $categoryNameEnglish . ' ' . $nextNumber;
+                    $titleArabic = $categoryNameArabic . ' ' . $nextNumber;
+                    
+                    // Handle image upload
+                    $imagePath = $this->handleImageUpload($image);
+                    
+                    // Increment ordering
+                    $maxOrdering++;
+                    
+                    // Create gallery entry
+                    InteriorDesignGallery::create([
+                        'title_english' => $titleEnglish,
+                        'title_arabic' => $titleArabic,
+                        'slug' => Str::slug($titleEnglish),
+                        'image' => $imagePath,
+                        'category_id' => $categoryId,
+                        'project_type_id' => $projectTypeId,
+                        'publish_status' => 1, // Not published by default
+                        'home_status' => 1, // Not shown on home by default
+                        'ordering' => $maxOrdering,
+                    ]);
+                    
+                    $uploadedCount++;
+                    
+                } catch (\Exception $e) {
+                    $errors[] = "Image " . ($index + 1) . ": " . $e->getMessage();
+                }
+            }
+        }
+        
+        if ($uploadedCount > 0) {
+            $message = "{$uploadedCount} image(s) uploaded successfully!";
+            if (!empty($errors)) {
+                $message .= " However, some images failed: " . implode(', ', $errors);
+                return redirect()->route('interior-design-gallery.index')->with('warning', $message);
+            }
+            return redirect()->route('interior-design-gallery.index')->with('success', $message);
+        }
+        
+        return redirect()->back()->with('error', 'No images were uploaded. ' . implode(', ', $errors));
+    }
 }

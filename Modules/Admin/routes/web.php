@@ -69,6 +69,7 @@ use Modules\Admin\App\Http\Controllers\OfferFeasibilityStudyController;
 use Modules\Admin\App\Http\Controllers\InteriorDesignGalleryController;
 use Modules\Admin\App\Http\Controllers\MenuController;
 use Modules\Admin\App\Http\Controllers\HomeProjectSettingController;
+use Modules\Admin\App\Http\Controllers\CertificateController;
 
 
 /*
@@ -758,6 +759,9 @@ Route::group(
                 Route::post('/toggle-home/{id}', [InteriorDesignGalleryController::class, 'toggleHomeStatus'])->name('interior-design-gallery.toggle-home');
                 Route::post('/bulk-publish', [InteriorDesignGalleryController::class, 'bulkPublish'])->name('interior-design-gallery.bulk-publish');
                 Route::post('/bulk-home-status', [InteriorDesignGalleryController::class, 'bulkHomeStatus'])->name('interior-design-gallery.bulk-home-status');
+                Route::get('/bulk-add', [InteriorDesignGalleryController::class, 'bulkAdd'])->name('interior-design-gallery.bulk-add');
+                Route::post('/bulk-store', [InteriorDesignGalleryController::class, 'bulkStore'])->name('interior-design-gallery.bulk-store');
+                Route::get('/get-next-number/{categoryId}', [InteriorDesignGalleryController::class, 'getNextNumber'])->name('interior-design-gallery.get-next-number');
             });
 
             // Home Sections Management Routes
@@ -786,6 +790,20 @@ Route::group(
                 Route::get('/{id}/select-projects', [HomeProjectSettingController::class, 'selectProjects'])->name('home-project-settings.select-projects');
                 Route::post('/{id}/save-projects', [HomeProjectSettingController::class, 'saveProjects'])->name('home-project-settings.save-projects');
                 Route::post('/{id}/clear-projects', [HomeProjectSettingController::class, 'clearProjects'])->name('home-project-settings.clear-projects');
+            });
+
+            // Certificates Routes
+            Route::prefix('certificate')->group(function () {
+                Route::get('/index', [CertificateController::class, 'index'])->name('certificate.index');
+                Route::get('/create', [CertificateController::class, 'create'])->name('certificate.create');
+                Route::post('/store', [CertificateController::class, 'store'])->name('certificate.store');
+                Route::get('/edit/{id}', [CertificateController::class, 'edit'])->name('certificate.edit');
+                Route::post('/update/{id}', [CertificateController::class, 'update'])->name('certificate.update');
+                Route::post('/delete/{id}', [CertificateController::class, 'destroy'])->name('certificate.delete');
+                Route::get('/trashed', [CertificateController::class, 'trashed'])->name('certificate.trashed');
+                Route::post('/restore/{id}', [CertificateController::class, 'restore'])->name('certificate.restore');
+                Route::post('/toggle-status/{id}', [CertificateController::class, 'toggleStatus'])->name('certificate.toggle-status');
+                Route::post('/update-order', [CertificateController::class, 'updateOrder'])->name('certificate.update-order');
             });
 
             // Menu Management Routes

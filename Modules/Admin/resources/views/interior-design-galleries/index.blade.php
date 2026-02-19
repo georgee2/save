@@ -332,6 +332,9 @@
                             <a href="{{ route('interior-design-gallery.create') }}" class="mr-2">
                                 <button class="btn btn-new"><i class="fa fa-plus"></i> Add New Gallery</button>
                             </a>
+                            <a href="{{ route('interior-design-gallery.bulk-add') }}" class="mr-2">
+                                <button class="btn btn-info"><i class="fa fa-images"></i> Bulk Add</button>
+                            </a>
                             <a href="{{ route('interior-design-gallery.trashed') }}" class="mr-2">
                                 <button class="btn btn-danger"><i class="fa fa-trash"></i> Trashed Galleries</button>
                             </a>

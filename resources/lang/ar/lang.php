@@ -566,5 +566,18 @@ return [
     'page_not_found' => 'الصفحة غير موجودة',
     'page_not_found_message' => 'عذراً، الصفحة التي تبحث عنها غير موجودة أو تم نقلها. يرجى التحقق من الرابط أو العودة إلى الصفحة الرئيسية.',
     'back_to_home' => 'العودة للرئيسية',
+    
+    // About Page Modern Section
+    'years_experience' => 'سنوات الخبرة',
+    'professional_team' => 'فريق محترف',
+    'quality_service' => 'خدمة عالية الجودة',
+    'customer_satisfaction' => 'رضا العملاء',
+    'features_subtitle' => 'اكتشف ما يميزنا عن الآخرين',
+    'mvv_subtitle' => 'المبادئ التي توجه كل ما نقوم به',
+    
+    // Certificates Section
+    'our_achievements' => 'إنجازاتنا',
+    'certificates' => 'الشهادات والجوائز',
+    'certificates_subtitle' => 'التقديرات والشهادات التي تعكس التزامنا بالتميز',
 ];
 

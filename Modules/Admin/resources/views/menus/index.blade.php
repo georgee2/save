@@ -138,7 +138,19 @@
                                                 @if($menu->is_primary)
                                                 <span class="badge badge-primary-menu"><i class="fa fa-star"></i> Primary</span>
                                                 @endif
-                                                <span class="badge badge-location"><i class="fa fa-map-marker"></i> {{ ucfirst($menu->location) }}</span>
+                                                @php
+                                                    $locationLabels = [
+                                                        'header' => 'Header',
+                                                        'footer_quick_links' => 'Footer - Quick Links',
+                                                        'footer_company' => 'Footer - Company',
+                                                        'footer' => 'Footer',
+                                                        'sidebar' => 'Sidebar',
+                                                        'mobile' => 'Mobile',
+                                                        'other' => 'Other',
+                                                    ];
+                                                    $locationLabel = $locationLabels[$menu->location] ?? ucfirst($menu->location);
+                                                @endphp
+                                                <span class="badge badge-location"><i class="fa fa-map-marker"></i> {{ $locationLabel }}</span>
                                                 @if($menu->is_active)
                                                 <span class="badge badge-success"><i class="fa fa-check"></i> Active</span>
                                                 @else
