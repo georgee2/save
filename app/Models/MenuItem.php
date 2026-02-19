@@ -16,10 +16,13 @@ use App\Models\EngineeringCategory;
 use App\Models\EngineeringSubCategory;
 use App\Models\InteriorCategory;
 use App\Models\Service;
+use App\Traits\LogsActivity;
 
 class MenuItem extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, LogsActivity;
+    
+    protected $logTitleField = 'title_english';
 
     protected $fillable = [
         'menu_id',

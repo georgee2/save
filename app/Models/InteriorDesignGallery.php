@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Traits\LogsActivity;
 
 class InteriorDesignGallery extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, LogsActivity;
+    
+    protected $logTitleField = 'title_english';
     
     protected $table = 'interior_design_galleries';
     protected $guarded = [];

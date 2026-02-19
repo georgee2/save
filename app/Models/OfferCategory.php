@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Traits\LogsActivity;
 
 class OfferCategory extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, LogsActivity;
+    
+    protected $logTitleField = 'title_english';
     
     protected $table = 'offer_categories';
     protected $guarded = [];

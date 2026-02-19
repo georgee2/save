@@ -5,10 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\LogsActivity;
 
 class Service extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, LogsActivity;
+    
+    protected $logTitleField = 'title_english';
     protected $guarded = [];
 
     public function NewRecord(array $data){

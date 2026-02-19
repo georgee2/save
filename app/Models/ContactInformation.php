@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\LogsActivity;
 
 class ContactInformation extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
     
     protected $table = 'contact_information';
     protected $guarded = [];

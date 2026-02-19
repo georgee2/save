@@ -308,6 +308,10 @@
                 <a href="{{route('site-settings.index')}}" class="waves-effect"><i class="fa fa-cog"></i><span> Site Settings </span></a>
             </li>
 
+            <li>
+                <a href="{{route('admin.activity-logs.index')}}" class="waves-effect"><i class="fa fa-history"></i><span> Activity Logs </span></a>
+            </li>
+
 
                         </ul>
                     </div>

@@ -70,6 +70,7 @@ use Modules\Admin\App\Http\Controllers\InteriorDesignGalleryController;
 use Modules\Admin\App\Http\Controllers\MenuController;
 use Modules\Admin\App\Http\Controllers\HomeProjectSettingController;
 use Modules\Admin\App\Http\Controllers\CertificateController;
+use Modules\Admin\App\Http\Controllers\ActivityLogController;
 
 
 /*
@@ -841,6 +842,13 @@ Route::group(
                 // AJAX endpoints for category/subcategory selection
                 Route::get('/ajax/categories', [MenuController::class, 'getCategories'])->name('ajax.categories');
                 Route::get('/ajax/subcategories', [MenuController::class, 'getSubcategories'])->name('ajax.subcategories');
+            });
+
+            // Activity Logs Routes
+            Route::prefix('activity-logs')->name('admin.activity-logs.')->group(function () {
+                Route::get('/', [ActivityLogController::class, 'index'])->name('index');
+                Route::get('/show/{id}', [ActivityLogController::class, 'show'])->name('show');
+                Route::post('/clear-old', [ActivityLogController::class, 'clearOld'])->name('clear-old');
             });
 
         });
