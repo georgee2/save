@@ -8,10 +8,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Models\OffersPrices\OfferPrice;
+use App\Traits\LogsActivity;
 
 class Offer extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, LogsActivity;
+    
+    protected $logTitleField = 'title_english';
     
     protected $table = 'offers';
     protected $guarded = [];

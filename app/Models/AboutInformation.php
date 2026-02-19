@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\LogsActivity;
 
 class AboutInformation extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
+    
+    protected $logTitleField = 'title_english';
     
     protected $table = 'about_information';
     protected $guarded = [];
