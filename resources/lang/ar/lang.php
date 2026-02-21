@@ -252,6 +252,7 @@ return [
     // Common
     'read_more' => 'اقرأ المزيد',
     'learn_more' => 'معرفة المزيد',
+    'load_more' => 'تحميل المزيد',
     'view_all' => 'عرض الكل',
     'projects' => 'مشاريع',
     'all_projects' => 'جميع المشاريع',

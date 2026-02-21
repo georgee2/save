@@ -49,9 +49,40 @@
                             </div>
                         </div>
                         
-                        {{-- Project Slider Type - Card on Right --}}
+                        {{-- Project Slider Type - Card on Right (Desktop/Tablet) --}}
                         @elseif($slider->slider_type == 'project' && $slider->project)
                         @php $project = $slider->project; @endphp
+                        
+                        {{-- Mobile Version --}}
+                        <div class="col-12 d-block d-md-none py-6">
+                            <div class="slider-mobile-content" data-animate="fadeInUp">
+                                <div class="slider-mobile-badges mb-2">
+                                    @if($project->home_status == 0)
+                                    <span class="badge badge-orange mr-1">{{ __('lang.featured') }}</span>
+                                    @endif
+                                    @if($project->category)
+                                    <span class="badge badge-primary">
+                                        {{ app()->getLocale() == 'ar' ? $project->category->title_arabic : $project->category->title_english }}
+                                    </span>
+                                    @endif
+                                </div>
+                                <h2 class="text-white fs-24 font-weight-bold mb-2 slider-title-shadow">
+                                    {{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}
+                                </h2>
+                                @if($project->location_english || $project->location_arabic)
+                                <p class="text-white fs-14 mb-3 opacity-90">
+                                    <i class="fas fa-map-marker-alt mr-1"></i>
+                                    {{ app()->getLocale() == 'ar' ? ($project->location_arabic ?? $project->location_english) : ($project->location_english ?? $project->location_arabic) }}
+                                </p>
+                                @endif
+                                <a href="{{ route('projects.show', $project->slug) }}" class="btn btn-primary btn-sm px-4">
+                                    {{ __('lang.view_project') }}
+                                    <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'left ml-2' : 'right ml-2' }}"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        {{-- Desktop/Tablet Version --}}
                         <div class="col-lg-5 offset-lg-7 col-md-6 offset-md-3 col-sm-8 offset-sm-2 mt-xl-1 py-8 pt-lg-12 d-none d-md-block">
                             <div class="bg-white px-7 pt-6 pb-4 rounded-lg ml-lg-n1 mb-xl-15" data-animate="flipInX">
                                 <div class="mt-n7 position-absolute d-flex">
@@ -113,12 +144,50 @@
                             </div>
                         </div>
                         
-                        {{-- Offer Slider Type - Card on Right --}}
+                        {{-- Offer Slider Type - Card on Right (Desktop/Tablet) --}}
                         @elseif($slider->slider_type == 'offer' && $slider->offer)
                         @php 
                             $offer = $slider->offer;
                             $defaultPrice = $offer->prices ? $offer->prices->where('status', 0)->first() : null;
                         @endphp
+                        
+                        {{-- Mobile Version --}}
+                        <div class="col-12 d-block d-md-none py-6">
+                            <div class="slider-mobile-content" data-animate="fadeInUp">
+                                <div class="slider-mobile-badges mb-2">
+                                    @if($offer->home_status == 0)
+                                    <span class="badge badge-orange mr-1">{{ __('lang.featured') }}</span>
+                                    @endif
+                                    @if($offer->category)
+                                    <span class="badge badge-primary mr-1">
+                                        {{ app()->getLocale() == 'ar' ? $offer->category->title_arabic : $offer->category->title_english }}
+                                    </span>
+                                    @endif
+                                    <span class="badge badge-secondary">{{ __('lang.special_offer') }}</span>
+                                </div>
+                                <h2 class="text-white fs-24 font-weight-bold mb-2 slider-title-shadow">
+                                    {{ app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english }}
+                                </h2>
+                                @if($offer->location_english || $offer->location_arabic)
+                                <p class="text-white fs-14 mb-2 opacity-90">
+                                    <i class="fas fa-map-marker-alt mr-1"></i>
+                                    {{ app()->getLocale() == 'ar' ? ($offer->location_arabic ?? $offer->location_english) : ($offer->location_english ?? $offer->location_arabic) }}
+                                </p>
+                                @endif
+                                @if($defaultPrice || $offer->project_cost)
+                                <p class="text-white fs-18 font-weight-bold mb-3">
+                                    {{ $offer->currency ? $offer->currency->abbreviation : 'AED' }}
+                                    {{ number_format($defaultPrice ? $defaultPrice->price : $offer->project_cost) }}
+                                </p>
+                                @endif
+                                <a href="{{ route('offers.show', $offer->slug) }}" class="btn btn-secondary btn-sm px-4">
+                                    {{ __('lang.view_offer') }}
+                                    <i class="fas fa-arrow-{{ app()->getLocale() == 'ar' ? 'left ml-2' : 'right ml-2' }}"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        {{-- Desktop/Tablet Version --}}
                         <div class="col-lg-5 offset-lg-7 col-md-6 offset-md-3 col-sm-8 offset-sm-2 mt-xl-1 py-8 pt-lg-12 d-none d-md-block">
                             <div class="bg-white px-7 pt-6 pb-4 rounded-lg ml-lg-n1 mb-xl-15" data-animate="flipInX">
                                 <div class="mt-n7 position-absolute d-flex">
@@ -284,6 +353,56 @@
     
     .home-slider-wrapper .fs-48 {
         font-size: 24px !important;
+    }
+}
+
+/* Mobile Slider Content for Projects and Offers */
+.home-slider-wrapper .slider-mobile-content {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 70%, transparent 100%);
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 100%;
+}
+
+.home-slider-wrapper .slider-mobile-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.home-slider-wrapper .slider-mobile-badges .badge {
+    font-size: 10px;
+    padding: 4px 8px;
+}
+
+.home-slider-wrapper .slider-mobile-content h2 {
+    line-height: 1.3;
+}
+
+.home-slider-wrapper .slider-mobile-content .opacity-90 {
+    opacity: 0.9;
+}
+
+/* RTL Support for Mobile */
+[dir="rtl"] .home-slider-wrapper .slider-mobile-content {
+    text-align: right;
+}
+
+@media (max-width: 400px) {
+    .home-slider-wrapper .slider-mobile-content {
+        padding: 15px;
+    }
+    
+    .home-slider-wrapper .slider-mobile-content h2 {
+        font-size: 20px !important;
+    }
+    
+    .home-slider-wrapper .slider-mobile-content .fs-14 {
+        font-size: 12px !important;
+    }
+    
+    .home-slider-wrapper .slider-mobile-content .fs-18 {
+        font-size: 16px !important;
     }
 }
 </style>

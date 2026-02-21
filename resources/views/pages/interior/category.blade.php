@@ -199,26 +199,9 @@
                         
                         {{-- Card Content --}}
                         <div class="card-content">
-                            <h3 class="card-title">
-                                {{ app()->getLocale() == 'ar' ? $item->title_arabic : $item->title_english }}
-                            </h3>
-                            
-                            {{-- Meta Tags --}}
-                            <div class="card-meta">
-                                @if($item->projectStyle)
-                                <span class="meta-tag">
-                                    <i class="fas fa-palette"></i>
-                                    {{ app()->getLocale() == 'ar' ? $item->projectStyle->title_arabic : $item->projectStyle->title_english }}
-                                </span>
-                                @endif
-                                
-                                @if($item->emirate)
-                                <span class="meta-tag">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    {{ app()->getLocale() == 'ar' ? $item->emirate->title_arabic : $item->emirate->title_english }}
-                                </span>
-                                @endif
-                            </div>
+                            <h4 class="card-category-title">
+                                {{ app()->getLocale() == 'ar' ? $currentCategory->title_arabic : $currentCategory->title_english }}
+                            </h4>
                         </div>
                     </div>
                     @empty
@@ -292,8 +275,7 @@
         </div>
         
         <div class="modal-content-section">
-            <h2 class="modal-title" id="modalTitle"></h2>
-            <p class="modal-bio" id="modalBio"></p>
+            <span class="modal-category-badge" id="modalCategory"></span>
             <div class="modal-meta" id="modalMeta"></div>
             <div id="relatedProjectContainer"></div>
         </div>
@@ -367,18 +349,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('interiorGalleryModal');
     const closeBtn = document.getElementById('closeGalleryModal');
     const modalImage = document.getElementById('modalImage');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalBio = document.getElementById('modalBio');
+    const modalCategory = document.getElementById('modalCategory');
     const modalMeta = document.getElementById('modalMeta');
     const relatedProjectContainer = document.getElementById('relatedProjectContainer');
     
     galleryCards.forEach(card => {
         card.addEventListener('click', function() {
-            const title = this.dataset.title;
-            const bio = this.dataset.bio;
             const image = this.dataset.image;
             const category = this.dataset.category;
-            const type = this.dataset.type;
             const style = this.dataset.style;
             const emirate = this.dataset.emirate;
             const projectTitle = this.dataset.projectTitle;
@@ -386,13 +364,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const projectUrl = this.dataset.projectUrl;
             
             modalImage.src = image;
-            modalImage.alt = title;
-            modalTitle.textContent = title;
-            modalBio.textContent = bio || '';
+            modalImage.alt = category || '';
+            modalCategory.textContent = category || '';
             
             let metaHtml = '';
-            if (category) metaHtml += `<div class="modal-meta-item"><i class="fas fa-folder"></i><div><span class="meta-label">{{ __('lang.category') }}</span><span class="meta-value">${category}</span></div></div>`;
-            if (type) metaHtml += `<div class="modal-meta-item"><i class="fas fa-tag"></i><div><span class="meta-label">{{ __('lang.type') }}</span><span class="meta-value">${type}</span></div></div>`;
             if (style) metaHtml += `<div class="modal-meta-item"><i class="fas fa-palette"></i><div><span class="meta-label">{{ __('lang.style') }}</span><span class="meta-value">${style}</span></div></div>`;
             if (emirate) metaHtml += `<div class="modal-meta-item"><i class="fas fa-map-marker-alt"></i><div><span class="meta-label">{{ __('lang.location') }}</span><span class="meta-value">${emirate}</span></div></div>`;
             modalMeta.innerHTML = metaHtml;

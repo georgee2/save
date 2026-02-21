@@ -189,6 +189,26 @@ a.project-card-square {
     .home-projects-section .nav-pills .nav-item {
         margin-bottom: 10px;
     }
+    
+    /* Keep overlay style on tablet - override position-relative-sm */
+    .home-projects-section .project-card-square .card-img-overlay {
+        position: absolute !important;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+    
+    /* Override the position-relative-sm class specifically */
+    .home-projects-section .project-card-square .card-img-overlay.position-relative-sm {
+        position: absolute !important;
+    }
+    
+    /* Ensure card maintains proper structure */
+    .home-projects-section .project-card-square {
+        position: relative;
+        overflow: hidden;
+    }
 }
 
 @media (max-width: 576px) {
@@ -218,6 +238,71 @@ a.project-card-square {
         padding: 6px 10px;
         font-size: 10px;
     }
+    
+    /* Keep overlay style on mobile - override position-relative-sm */
+    .home-projects-section .project-card-square .card-img-overlay {
+        position: absolute !important;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+    
+    /* Override the position-relative-sm class specifically */
+    .home-projects-section .project-card-square .card-img-overlay.position-relative-sm {
+        position: absolute !important;
+    }
+    
+    /* Ensure card maintains proper structure */
+    .home-projects-section .project-card-square {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* Card image fills the card */
+    .home-projects-section .project-card-square .card-img {
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+    }
+    
+    /* Text styling for mobile overlay */
+    .home-projects-section .project-card-square .card-img-overlay .fs-17 {
+        font-size: 15px !important;
+    }
+    
+    .home-projects-section .project-card-square .card-img-overlay .fs-14 {
+        font-size: 12px !important;
+    }
+    
+    .home-projects-section .project-card-square .card-img-overlay .fs-16 {
+        font-size: 14px !important;
+    }
+    
+    .home-projects-section .project-card-square .card-img-overlay .fs-13 {
+        font-size: 11px !important;
+    }
+    
+    /* Specs list on mobile */
+    .home-projects-section .project-card-square .card-img-overlay .list-inline {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    
+    .home-projects-section .project-card-square .card-img-overlay .list-inline-item {
+        margin-right: 8px !important;
+    }
+    
+    .home-projects-section .project-card-square .card-img-overlay .list-inline-item img {
+        width: 14px !important;
+        height: 14px !important;
+    }
+    
+    /* Bottom content padding adjustment */
+    .home-projects-section .project-card-square .card-img-overlay .mt-auto {
+        padding-bottom: 10px;
+    }
 }
 
 /* RTL Support */
@@ -239,5 +324,13 @@ a.project-card-square {
 [dir="rtl"] .home-projects-section .mr-1 {
     margin-right: 0 !important;
     margin-left: 0.25rem !important;
+}
+
+/* RTL Support for mobile */
+@media (max-width: 576px) {
+    [dir="rtl"] .home-projects-section .project-card-square .card-img-overlay .list-inline-item {
+        margin-right: 0 !important;
+        margin-left: 8px !important;
+    }
 }
 
