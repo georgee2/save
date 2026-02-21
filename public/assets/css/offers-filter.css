@@ -297,7 +297,7 @@
         right: 0;
         bottom: 0;
         background: rgba(0, 0, 0, 0.5);
-        z-index: 1040;
+        z-index: 99999996;
         opacity: 0;
         visibility: hidden;
         transition: all 0.3s ease;
@@ -317,7 +317,7 @@
         max-width: 90vw;
         height: 100vh;
         background: #ffffff;
-        z-index: 1050;
+        z-index: 99999997;
         overflow-y: auto;
         box-shadow: -5px 0 30px rgba(0, 0, 0, 0.2);
         transition: right 0.3s ease;
@@ -421,21 +421,22 @@
         padding-bottom: 126.9% !important;
     }
     
-    /* Offers page container padding for tablet */
+    /* Offers page container padding for tablet - MORE SPACE */
     .offers-page .container {
-        padding-left: 20px;
-        padding-right: 20px;
+        padding-left: 40px !important;
+        padding-right: 40px !important;
     }
     
-    /* Grid view padding adjustment */
+    /* Grid view padding adjustment - MORE SPACE BETWEEN CARDS */
     .offers-main-container #gridView {
-        margin-left: -10px;
-        margin-right: -10px;
+        margin-left: -15px;
+        margin-right: -15px;
     }
     
     .offers-main-container #gridView .col-md-6 {
-        padding-left: 10px;
-        padding-right: 10px;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-bottom: 30px;
     }
 }
 
@@ -445,21 +446,22 @@
         padding-bottom: 126.9% !important;
     }
     
-    /* Offers page container padding for mobile */
+    /* Offers page container padding for mobile - MORE SPACE */
     .offers-page .container {
-        padding-left: 15px;
-        padding-right: 15px;
+        padding-left: 35px !important;
+        padding-right: 35px !important;
     }
     
-    /* Grid view padding adjustment */
+    /* Grid view padding adjustment - MORE SPACE BETWEEN CARDS */
     .offers-main-container #gridView {
-        margin-left: -8px;
-        margin-right: -8px;
+        margin-left: -12px;
+        margin-right: -12px;
     }
     
     .offers-main-container #gridView .col-md-6 {
-        padding-left: 8px;
-        padding-right: 8px;
+        padding-left: 12px;
+        padding-right: 12px;
+        margin-bottom: 25px;
     }
     
     /* Smaller card elements on mobile */
@@ -512,6 +514,7 @@
         max-width: 100% !important;
         padding-left: 0;
         padding-right: 0;
+        margin-bottom: 20px;
     }
     
     .offers-main-container #gridView {
@@ -529,10 +532,10 @@
         padding-bottom: 126.9% !important;
     }
     
-    /* Offers page container padding for small mobile */
+    /* Offers page container padding for small mobile - MORE SPACE */
     .offers-page .container {
-        padding-left: 12px;
-        padding-right: 12px;
+        padding-left: 30px !important;
+        padding-right: 30px !important;
     }
     
     /* Smaller elements on small mobile */
@@ -589,6 +592,18 @@
     /* Hide specs on very small screens to save space */
     .offers-page .offer-specs {
         display: none;
+    }
+}
+
+@media (max-width: 400px) {
+    /* Extra small mobile - even more space */
+    .offers-page .container {
+        padding-left: 25px !important;
+        padding-right: 25px !important;
+    }
+    
+    .offers-main-container #gridView .col-md-6 {
+        margin-bottom: 20px;
     }
 }
 
@@ -1115,5 +1130,232 @@ body.filter-open {
     [dir="rtl"] .subcategory-filter-slider .slick-next {
         right: auto !important;
         left: -30px !important;
+    }
+}
+
+/* =====================================================
+   SMART PAGINATION STYLES
+   Max 4 visible pages with dots navigation
+   ===================================================== */
+
+.offers-pagination-wrapper {
+    margin-top: 30px;
+}
+
+.offers-smart-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.offers-smart-pagination .page-item {
+    margin: 0;
+}
+
+.offers-smart-pagination .page-item .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    height: 42px;
+    padding: 0 12px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #333333;
+    background: #ffffff;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.offers-smart-pagination .page-item .page-link:hover {
+    color: #19868b;
+    border-color: #19868b;
+    background: rgba(25, 134, 139, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(25, 134, 139, 0.15);
+}
+
+/* Active page */
+.offers-smart-pagination .page-item.active .page-link {
+    color: #ffffff;
+    background: linear-gradient(135deg, #19868b 0%, #0d6d71 100%);
+    border-color: #19868b;
+    box-shadow: 0 4px 12px rgba(25, 134, 139, 0.3);
+}
+
+/* Disabled state */
+.offers-smart-pagination .page-item.disabled .page-link {
+    color: #adb5bd;
+    background: #f8f9fa;
+    border-color: #e9ecef;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.offers-smart-pagination .page-item.disabled .page-link:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Navigation arrows */
+.offers-smart-pagination .page-item.page-nav .page-link {
+    min-width: 42px;
+    background: #19868b;
+    border-color: #19868b;
+    color: #ffffff;
+}
+
+.offers-smart-pagination .page-item.page-nav .page-link:hover {
+    background: #0d6d71;
+    border-color: #0d6d71;
+    color: #ffffff;
+}
+
+.offers-smart-pagination .page-item.page-nav.disabled .page-link {
+    background: #e9ecef;
+    border-color: #e9ecef;
+    color: #adb5bd;
+}
+
+/* Dots */
+.offers-smart-pagination .page-item.page-dots .page-link {
+    min-width: 32px;
+    background: transparent;
+    border: none;
+    color: #6c757d;
+    font-weight: 700;
+    letter-spacing: 2px;
+    box-shadow: none;
+}
+
+.offers-smart-pagination .page-item.page-dots .page-link:hover {
+    transform: none;
+    box-shadow: none;
+    background: transparent;
+}
+
+/* RTL Support */
+[dir="rtl"] .offers-smart-pagination .page-item.page-nav .page-link i {
+    transform: rotate(180deg);
+}
+
+/* =====================================================
+   PAGINATION RESPONSIVE - TABLET
+   ===================================================== */
+
+@media (max-width: 991px) {
+    .offers-pagination-wrapper {
+        margin-top: 25px;
+    }
+    
+    .offers-smart-pagination {
+        gap: 6px;
+    }
+    
+    .offers-smart-pagination .page-item .page-link {
+        min-width: 40px;
+        height: 40px;
+        font-size: 14px;
+        padding: 0 10px;
+        border-radius: 8px;
+    }
+    
+    .offers-smart-pagination .page-item.page-dots .page-link {
+        min-width: 28px;
+    }
+}
+
+/* =====================================================
+   PAGINATION RESPONSIVE - MOBILE
+   ===================================================== */
+
+@media (max-width: 767px) {
+    .offers-pagination-wrapper {
+        margin-top: 20px;
+    }
+    
+    .offers-smart-pagination {
+        gap: 5px;
+    }
+    
+    .offers-smart-pagination .page-item .page-link {
+        min-width: 38px;
+        height: 38px;
+        font-size: 13px;
+        padding: 0 8px;
+        border-radius: 8px;
+    }
+    
+    .offers-smart-pagination .page-item.page-nav .page-link {
+        min-width: 38px;
+    }
+    
+    .offers-smart-pagination .page-item.page-dots .page-link {
+        min-width: 24px;
+        padding: 0 4px;
+    }
+}
+
+/* =====================================================
+   PAGINATION RESPONSIVE - SMALL MOBILE
+   ===================================================== */
+
+@media (max-width: 575px) {
+    .offers-pagination-wrapper {
+        margin-top: 15px;
+        padding: 0 10px;
+    }
+    
+    .offers-smart-pagination {
+        gap: 4px;
+    }
+    
+    .offers-smart-pagination .page-item .page-link {
+        min-width: 36px;
+        height: 36px;
+        font-size: 12px;
+        padding: 0 6px;
+        border-radius: 6px;
+        border-width: 1px;
+    }
+    
+    .offers-smart-pagination .page-item.page-nav .page-link {
+        min-width: 36px;
+    }
+    
+    .offers-smart-pagination .page-item.page-dots .page-link {
+        min-width: 20px;
+        padding: 0 2px;
+        font-size: 10px;
+    }
+}
+
+/* =====================================================
+   PAGINATION RESPONSIVE - EXTRA SMALL MOBILE
+   ===================================================== */
+
+@media (max-width: 400px) {
+    .offers-smart-pagination {
+        gap: 3px;
+    }
+    
+    .offers-smart-pagination .page-item .page-link {
+        min-width: 32px;
+        height: 32px;
+        font-size: 11px;
+        padding: 0 5px;
+    }
+    
+    .offers-smart-pagination .page-item.page-nav .page-link {
+        min-width: 32px;
+    }
+    
+    .offers-smart-pagination .page-item.page-dots .page-link {
+        min-width: 18px;
     }
 }

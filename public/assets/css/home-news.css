@@ -6,6 +6,8 @@
 /* Section */
 .home-news-section {
     background: #ffffff;
+    padding-left: 40px;
+    padding-right: 40px;
 }
 
 /* News Slider Wrapper */
@@ -271,8 +273,8 @@
 
 @media (max-width: 992px) {
     .home-news-section {
-        padding-left: 15px;
-        padding-right: 15px;
+        padding-left: 30px;
+        padding-right: 30px;
     }
 }
 
@@ -280,8 +282,8 @@
     .home-news-section {
         padding-top: 50px;
         padding-bottom: 50px;
-        padding-left: 15px;
-        padding-right: 15px;
+        padding-left: 25px;
+        padding-right: 25px;
     }
     
     .news-card-content {
@@ -297,8 +299,8 @@
     .home-news-section {
         padding-top: 40px;
         padding-bottom: 40px;
-        padding-left: 12px;
-        padding-right: 12px;
+        padding-left: 20px;
+        padding-right: 20px;
     }
     
     .news-slider .slick-arrow {

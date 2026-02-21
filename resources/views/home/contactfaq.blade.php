@@ -34,8 +34,8 @@
                         </div>
                         @endif
                         
-                        {{-- Contact Us Button --}}
-                        <button type="button" class="btn-contact-popup" data-toggle="modal" data-target="#homeContactModal">
+                        {{-- Contact Us Button - Opens Inline Form --}}
+                        <button type="button" class="btn-contact-popup" id="toggleContactForm">
                             <i class="fas fa-envelope"></i>
                             <span>{{ __('lang.send_us_message') }}</span>
                         </button>
@@ -81,139 +81,154 @@
                 @endif
             </div>
         </div>
-    </div>
-</section>
-
-{{-- Contact Modal Popup --}}
-<div class="modal fade" id="homeContactModal" tabindex="-1" role="dialog" aria-labelledby="homeContactModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content home-contact-modal-content">
-            {{-- Modal Header --}}
-            <div class="modal-header home-contact-modal-header">
-                <div class="modal-header-content">
-                    <div class="modal-icon">
-                        <i class="fas fa-envelope"></i>
+        
+        {{-- Inline Contact Form Popup --}}
+        <div class="inline-contact-popup" id="inlineContactPopup">
+            <div class="inline-popup-overlay" id="inlinePopupOverlay"></div>
+            <div class="inline-popup-content">
+                {{-- Popup Header --}}
+                <div class="inline-popup-header">
+                    <div class="popup-header-content">
+                        <div class="popup-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="popup-title-wrapper">
+                            <h4>{{ __('lang.send_us_message') }}</h4>
+                            <p>{{ __('lang.contact_us_subtitle') ?? 'We\'d love to hear from you' }}</p>
+                        </div>
                     </div>
-                    <div class="modal-title-wrapper">
-                        <h5 class="modal-title" id="homeContactModalLabel">{{ __('lang.send_us_message') }}</h5>
-                        <p class="modal-subtitle">{{ __('lang.contact_us_subtitle') }}</p>
-                    </div>
+                    <button type="button" class="popup-close-btn" id="closeContactPopup">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
-                <button type="button" class="close modal-close-btn" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"><i class="fas fa-times"></i></span>
-                </button>
-            </div>
-            
-            {{-- Modal Body --}}
-            <div class="modal-body home-contact-modal-body">
-                <form action="{{ route('contact.store') }}" method="POST" class="home-contact-form" id="homeContactForm">
-                    @csrf
-                    <input type="hidden" name="source" value="home_popup">
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="popup_name">{{ __('lang.full_name') }} <span class="text-danger">*</span></label>
-                                <div class="input-icon-wrapper">
-                                    <i class="fas fa-user"></i>
-                                    <input type="text" class="form-control" id="popup_name" name="name" placeholder="{{ __('lang.enter_your_name') }}" required>
+                
+                {{-- Popup Body --}}
+                <div class="inline-popup-body">
+                    <form action="{{ route('contact.store') }}" method="POST" class="inline-contact-form" id="inlineContactForm">
+                        @csrf
+                        <input type="hidden" name="source" value="home_inline">
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="input-icon-wrapper">
+                                        <i class="fas fa-user"></i>
+                                        <input type="text" class="form-control" name="name" placeholder="{{ __('lang.full_name') ?? 'Full Name' }} *" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="input-icon-wrapper">
+                                        <i class="fas fa-envelope"></i>
+                                        <input type="email" class="form-control" name="email" placeholder="{{ __('lang.email_address') ?? 'Email' }} *" required>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="popup_email">{{ __('lang.email_address') }} <span class="text-danger">*</span></label>
-                                <div class="input-icon-wrapper">
-                                    <i class="fas fa-envelope"></i>
-                                    <input type="email" class="form-control" id="popup_email" name="email" placeholder="{{ __('lang.enter_your_email') }}" required>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="input-icon-wrapper">
+                                        <i class="fas fa-phone-alt"></i>
+                                        <input type="tel" class="form-control" name="phone" placeholder="{{ __('lang.phone_number') ?? 'Phone' }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="input-icon-wrapper">
+                                        <i class="fas fa-tag"></i>
+                                        <input type="text" class="form-control" name="subject" placeholder="{{ __('lang.subject') ?? 'Subject' }} *" required>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="popup_phone">{{ __('lang.phone_number') }}</label>
-                                <div class="input-icon-wrapper">
-                                    <i class="fas fa-phone-alt"></i>
-                                    <input type="tel" class="form-control" id="popup_phone" name="phone" placeholder="{{ __('lang.enter_your_phone') }}">
-                                </div>
+                        
+                        <div class="form-group">
+                            <div class="input-icon-wrapper textarea-wrapper">
+                                <i class="fas fa-comment-alt"></i>
+                                <textarea class="form-control" name="message" rows="3" placeholder="{{ __('lang.your_message') ?? 'Your Message' }} *" required></textarea>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="popup_service_id">{{ __('lang.select_service') }}</label>
-                                <div class="input-icon-wrapper">
-                                    <i class="fas fa-cog"></i>
-                                    <select class="form-control" id="popup_service_id" name="service_id">
-                                        <option value="">{{ __('lang.choose_service') }}</option>
-                                        @if(isset($services))
-                                            @foreach($services as $service)
-                                            <option value="{{ $service->id }}">
-                                                {{ app()->getLocale() == 'ar' ? $service->title_arabic : $service->title_english }}
-                                            </option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                </div>
-                            </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn-cancel-inline" id="cancelContactForm">
+                                <i class="fas fa-times"></i>
+                                <span>{{ __('lang.cancel') ?? 'Cancel' }}</span>
+                            </button>
+                            <button type="submit" class="btn-submit-inline">
+                                <i class="fas fa-paper-plane"></i>
+                                <span>{{ __('lang.send_message') ?? 'Send' }}</span>
+                            </button>
                         </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="popup_subject">{{ __('lang.subject') }} <span class="text-danger">*</span></label>
-                        <div class="input-icon-wrapper">
-                            <i class="fas fa-tag"></i>
-                            <input type="text" class="form-control" id="popup_subject" name="subject" placeholder="{{ __('lang.enter_subject') }}" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="popup_message">{{ __('lang.your_message') }} <span class="text-danger">*</span></label>
-                        <div class="input-icon-wrapper textarea-wrapper">
-                            <i class="fas fa-comment-alt"></i>
-                            <textarea class="form-control" id="popup_message" name="message" rows="4" placeholder="{{ __('lang.enter_your_message') }}" required></textarea>
-                        </div>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-cancel" data-dismiss="modal">
-                            <i class="fas fa-times"></i>
-                            <span>{{ __('lang.cancel') }}</span>
-                        </button>
-                        <button type="submit" class="btn btn-submit-popup">
-                            <i class="fas fa-paper-plane"></i>
-                            <span>{{ __('lang.send_message') }}</span>
-                        </button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-{{-- Form Submission Script --}}
+{{-- Inline Contact Form Script --}}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const homeContactForm = document.getElementById('homeContactForm');
+    var toggleBtn = document.getElementById('toggleContactForm');
+    var closeBtn = document.getElementById('closeContactPopup');
+    var cancelBtn = document.getElementById('cancelContactForm');
+    var popup = document.getElementById('inlineContactPopup');
+    var overlay = document.getElementById('inlinePopupOverlay');
+    var contactForm = document.getElementById('inlineContactForm');
     
-    if (homeContactForm) {
-        homeContactForm.addEventListener('submit', function(e) {
+    function openPopup() {
+        popup.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closePopup() {
+        popup.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            openPopup();
+        });
+    }
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closePopup);
+    }
+    
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', closePopup);
+    }
+    
+    if (overlay) {
+        overlay.addEventListener('click', closePopup);
+    }
+    
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && popup.classList.contains('active')) {
+            closePopup();
+        }
+    });
+    
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const submitBtn = homeContactForm.querySelector('.btn-submit-popup');
-            const originalContent = submitBtn.innerHTML;
+            var submitBtn = contactForm.querySelector('.btn-submit-inline');
+            var originalContent = submitBtn.innerHTML;
             
-            // Show loading state
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>{{ __("lang.sending") }}...</span>';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>{{ __("lang.sending") ?? "Sending" }}...</span>';
             
-            // Create FormData
-            const formData = new FormData(homeContactForm);
+            var formData = new FormData(contactForm);
             
-            // Submit via fetch
-            fetch(homeContactForm.action, {
+            fetch(contactForm.action, {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -221,44 +236,36 @@ document.addEventListener('DOMContentLoaded', function() {
                     'Accept': 'application/json'
                 }
             })
-            .then(response => response.json())
-            .then(data => {
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalContent;
                 
                 if (data.success) {
-                    // Close modal
-                    $('#homeContactModal').modal('hide');
-                    
-                    // Reset form
-                    homeContactForm.reset();
-                    
-                    // Show success message
+                    closePopup();
+                    contactForm.reset();
                     Swal.fire({
                         icon: 'success',
-                        title: '{{ __("lang.success") }}',
-                        text: data.message || '{{ __("lang.message_sent_successfully") }}',
+                        title: '{{ __("lang.success") ?? "Success" }}',
+                        text: data.message || '{{ __("lang.message_sent_successfully") ?? "Message sent!" }}',
                         confirmButtonColor: '#19868b'
                     });
                 } else {
-                    // Show error message
                     Swal.fire({
                         icon: 'error',
-                        title: '{{ __("lang.error") }}',
-                        text: data.message || '{{ __("lang.something_went_wrong") }}',
+                        title: '{{ __("lang.error") ?? "Error" }}',
+                        text: data.message || '{{ __("lang.something_went_wrong") ?? "Something went wrong" }}',
                         confirmButtonColor: '#e1273d'
                     });
                 }
             })
-            .catch(error => {
+            .catch(function(error) {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalContent;
-                
-                // Show error message
                 Swal.fire({
                     icon: 'error',
-                    title: '{{ __("lang.error") }}',
-                    text: '{{ __("lang.something_went_wrong") }}',
+                    title: '{{ __("lang.error") ?? "Error" }}',
+                    text: '{{ __("lang.something_went_wrong") ?? "Something went wrong" }}',
                     confirmButtonColor: '#e1273d'
                 });
             });
@@ -267,4 +274,3 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endif
-

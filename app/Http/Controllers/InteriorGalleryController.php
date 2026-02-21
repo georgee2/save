@@ -85,8 +85,10 @@ class InteriorGalleryController extends Controller
             ->orderBy('title_english')
             ->get();
 
-        // Get categories with count for slider
-        $categoriesWithCount = $categories;
+        // Get categories with count for slider - exclude categories with zero galleries
+        $categoriesWithCount = $categories->filter(function($category) {
+            return $category->galleries_count > 0;
+        });
 
         return view('pages.interior.index', compact(
             'galleries',
@@ -164,7 +166,10 @@ class InteriorGalleryController extends Controller
         $styles = ProjectStyle::whereNull('deleted_at')->orderBy('title_english')->get();
         $emirates = Emirate::whereNull('deleted_at')->orderBy('title_english')->get();
 
-        $categoriesWithCount = $categories;
+        // Get categories with count for slider - exclude categories with zero galleries
+        $categoriesWithCount = $categories->filter(function($category) {
+            return $category->galleries_count > 0;
+        });
 
         return view('pages.interior.category', compact(
             'galleries',

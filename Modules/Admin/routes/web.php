@@ -71,6 +71,8 @@ use Modules\Admin\App\Http\Controllers\MenuController;
 use Modules\Admin\App\Http\Controllers\HomeProjectSettingController;
 use Modules\Admin\App\Http\Controllers\CertificateController;
 use Modules\Admin\App\Http\Controllers\ActivityLogController;
+use Modules\Admin\App\Http\Controllers\RoleController;
+use Modules\Admin\App\Http\Controllers\UserRoleController;
 
 
 /*
@@ -86,7 +88,7 @@ use Modules\Admin\App\Http\Controllers\ActivityLogController;
 
 Route::group(
     ['prefix' => LaravelLocalization::setLocale(), 
-    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath' , 'middleware' => 'auth']],
+    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath' , 'middleware' => 'auth', 'check.route.permission']],
     function () {
 
         Route::prefix('admin')->group(function () {
@@ -849,6 +851,29 @@ Route::group(
                 Route::get('/', [ActivityLogController::class, 'index'])->name('index');
                 Route::get('/show/{id}', [ActivityLogController::class, 'show'])->name('show');
                 Route::post('/clear-old', [ActivityLogController::class, 'clearOld'])->name('clear-old');
+            });
+
+            // Roles Management Routes
+            Route::prefix('roles')->name('admin.roles.')->group(function () {
+                Route::get('/', [RoleController::class, 'index'])->name('index');
+                Route::get('/create', [RoleController::class, 'create'])->name('create');
+                Route::post('/store', [RoleController::class, 'store'])->name('store');
+                Route::get('/show/{role}', [RoleController::class, 'show'])->name('show');
+                Route::get('/edit/{role}', [RoleController::class, 'edit'])->name('edit');
+                Route::put('/update/{role}', [RoleController::class, 'update'])->name('update');
+                Route::delete('/destroy/{role}', [RoleController::class, 'destroy'])->name('destroy');
+                Route::get('/trashed', [RoleController::class, 'trashed'])->name('trashed');
+                Route::post('/restore/{id}', [RoleController::class, 'restore'])->name('restore');
+                Route::delete('/force-delete/{id}', [RoleController::class, 'forceDelete'])->name('force-delete');
+                Route::patch('/toggle-active/{role}', [RoleController::class, 'toggleActive'])->name('toggle-active');
+            });
+
+            // User Roles Management Routes
+            Route::prefix('users/roles')->name('admin.users.roles.')->group(function () {
+                Route::get('/', [UserRoleController::class, 'index'])->name('index');
+                Route::get('/edit/{user}', [UserRoleController::class, 'edit'])->name('edit');
+                Route::put('/update/{user}', [UserRoleController::class, 'update'])->name('update');
+                Route::get('/permissions/{user}', [UserRoleController::class, 'permissions'])->name('permissions');
             });
 
         });
