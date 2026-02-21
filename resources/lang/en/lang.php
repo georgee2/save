@@ -216,6 +216,7 @@ return [
     'terms_of_service' => 'Terms of Service',
     'read_more' => 'Read More',
     'learn_more' => 'Learn More',
+    'load_more' => 'Load More',
     'view_all' => 'View All',
     'projects' => 'Projects',
     'all_projects' => 'All Projects',

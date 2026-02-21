@@ -39,7 +39,7 @@ use Modules\Basicdata\App\Http\Controllers\InteriorCategoryController;
 
 Route::group(
     ['prefix' => LaravelLocalization::setLocale(), 
-    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath' , 'middleware' => 'auth']],
+    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath', 'auth', 'check.route.permission']],
     function () {
 
         Route::prefix('basicdata')->group(function () {

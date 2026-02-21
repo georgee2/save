@@ -799,7 +799,9 @@
 
 /* Slider Dots Customization for Offers - Primary Color */
 .offers-slider .slick-dots {
-    margin-top: 35px;
+    margin-top: 50px;
+    position: relative;
+    bottom: auto;
 }
 
 .offers-slider .slick-dots li button:before {
@@ -810,6 +812,11 @@
 .offers-slider .slick-dots li.slick-active button:before {
     color: #19868b;
     opacity: 1;
+}
+
+/* Maximum 4 dots only */
+.offers-slider .slick-dots li:nth-child(n+5) {
+    display: none !important;
 }
 
 /* Slider spacing and visibility improvements */
@@ -1274,5 +1281,92 @@
 @media (max-width: 576px) {
     .offers-page .offer-card {
         height: 520px;
+    }
+}
+
+/* ===================================================
+   Mobile & Tablet Side Spacing for Home Offers Section
+   =================================================== */
+
+@media (max-width: 992px) {
+    .offers-section .container,
+    .offers-section .container-xxl {
+        padding-left: 25px !important;
+        padding-right: 25px !important;
+    }
+    
+    .offers-slider .slick-list {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+    }
+    
+    .offers-slider .box {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+    
+    .offers-slider .slick-dots {
+        position: relative !important;
+        bottom: auto !important;
+        margin-top: 25px !important;
+        padding-top: 15px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .offers-section .container,
+    .offers-section .container-xxl {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+    
+    .offers-slider .slick-list {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+    
+    .offers-slider .box {
+        padding-left: 6px !important;
+        padding-right: 6px !important;
+    }
+    
+    .offers-slider .slick-dots {
+        margin-top: 30px !important;
+        padding-top: 15px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .offers-section .container,
+    .offers-section .container-xxl {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+    
+    .offers-slider .slick-list {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+    }
+    
+    .offers-slider .box {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+    }
+    
+    .offers-slider .slick-dots {
+        margin-top: 35px !important;
+    }
+}
+
+@media (max-width: 400px) {
+    .offers-section .container,
+    .offers-section .container-xxl {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+    
+    .offers-slider .box {
+        padding-left: 4px !important;
+        padding-right: 4px !important;
     }
 }

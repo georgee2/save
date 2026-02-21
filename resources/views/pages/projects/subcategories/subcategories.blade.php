@@ -383,29 +383,69 @@
               </div>
 
               @if($projects->hasPages())
-              <nav class="pt-4">
-                <ul class="pagination rounded-active justify-content-center mb-0">
+              <nav class="pt-4 projects-pagination-wrapper">
+                <ul class="pagination projects-smart-pagination justify-content-center mb-0">
                   {{-- Previous Page Link --}}
                   @if($projects->onFirstPage())
-                  <li class="page-item disabled"><span class="page-link"><i class="far fa-angle-double-left"></i></span></li>
+                  <li class="page-item page-nav disabled"><span class="page-link"><i class="far fa-chevron-left"></i></span></li>
                   @else
-                  <li class="page-item"><a class="page-link" href="{{ $projects->previousPageUrl() }}"><i class="far fa-angle-double-left"></i></a></li>
+                  <li class="page-item page-nav"><a class="page-link" href="{{ $projects->previousPageUrl() }}"><i class="far fa-chevron-left"></i></a></li>
                   @endif
 
-                  {{-- Pagination Elements --}}
-                  @foreach($projects->getUrlRange(1, $projects->lastPage()) as $page => $url)
-                    @if($page == $projects->currentPage())
-                    <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
-                    @else
-                    <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
-                    @endif
-                  @endforeach
+                  {{-- Smart Pagination Elements (max 4 visible) --}}
+                  @php
+                      $currentPage = $projects->currentPage();
+                      $lastPage = $projects->lastPage();
+                      $maxVisible = 4;
+                      
+                      if ($lastPage <= $maxVisible) {
+                          $startPage = 1;
+                          $endPage = $lastPage;
+                      } else {
+                          $half = floor($maxVisible / 2);
+                          if ($currentPage <= $half + 1) {
+                              $startPage = 1;
+                              $endPage = $maxVisible;
+                          } elseif ($currentPage >= $lastPage - $half) {
+                              $startPage = $lastPage - $maxVisible + 1;
+                              $endPage = $lastPage;
+                          } else {
+                              $startPage = $currentPage - $half;
+                              $endPage = $currentPage + $half - 1;
+                          }
+                      }
+                  @endphp
+
+                  {{-- First page + dots if needed --}}
+                  @if($startPage > 1)
+                  <li class="page-item"><a class="page-link" href="{{ $projects->url(1) }}">1</a></li>
+                  @if($startPage > 2)
+                  <li class="page-item page-dots disabled"><span class="page-link">...</span></li>
+                  @endif
+                  @endif
+
+                  {{-- Visible page numbers --}}
+                  @for($page = $startPage; $page <= $endPage; $page++)
+                      @if($page == $currentPage)
+                      <li class="page-item active"><span class="page-link">{{ $page }}</span></li>
+                      @else
+                      <li class="page-item"><a class="page-link" href="{{ $projects->url($page) }}">{{ $page }}</a></li>
+                      @endif
+                  @endfor
+
+                  {{-- Dots + last page if needed --}}
+                  @if($endPage < $lastPage)
+                  @if($endPage < $lastPage - 1)
+                  <li class="page-item page-dots disabled"><span class="page-link">...</span></li>
+                  @endif
+                  <li class="page-item"><a class="page-link" href="{{ $projects->url($lastPage) }}">{{ $lastPage }}</a></li>
+                  @endif
 
                   {{-- Next Page Link --}}
                   @if($projects->hasMorePages())
-                  <li class="page-item"><a class="page-link" href="{{ $projects->nextPageUrl() }}"><i class="far fa-angle-double-right"></i></a></li>
+                  <li class="page-item page-nav"><a class="page-link" href="{{ $projects->nextPageUrl() }}"><i class="far fa-chevron-right"></i></a></li>
                   @else
-                  <li class="page-item disabled"><span class="page-link"><i class="far fa-angle-double-right"></i></span></li>
+                  <li class="page-item page-nav disabled"><span class="page-link"><i class="far fa-chevron-right"></i></span></li>
                   @endif
                 </ul>
               </nav>

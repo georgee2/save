@@ -26,18 +26,18 @@
    ===================================================== */
 
 @media (max-width: 991px) {
-    /* Page Container - Full width with proper padding */
+    /* Page Container - Full width with proper padding - MORE SPACE */
     .pt-8.pb-11 > .container,
     section.pt-8.pb-11 > .container {
-        padding-left: 25px !important;
-        padding-right: 25px !important;
+        padding-left: 40px !important;
+        padding-right: 40px !important;
         max-width: 100% !important;
     }
     
     /* Page Title Container */
     .page-title .container {
-        padding-left: 25px !important;
-        padding-right: 25px !important;
+        padding-left: 40px !important;
+        padding-right: 40px !important;
     }
     
     /* Projects Main Container - Full Width */
@@ -47,12 +47,12 @@
         flex: 0 0 100% !important;
     }
     
-    /* Grid View - 2 Columns */
+    /* Grid View - 2 Columns - MORE SPACE BETWEEN CARDS */
     #gridView {
         display: flex !important;
         flex-wrap: wrap !important;
-        margin-left: -10px !important;
-        margin-right: -10px !important;
+        margin-left: -15px !important;
+        margin-right: -15px !important;
     }
     
     #gridView > .col-md-6,
@@ -60,9 +60,9 @@
         flex: 0 0 50% !important;
         max-width: 50% !important;
         width: 50% !important;
-        padding-left: 10px !important;
-        padding-right: 10px !important;
-        margin-bottom: 20px !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+        margin-bottom: 30px !important;
     }
     
     /* Card */
@@ -168,17 +168,17 @@
    ===================================================== */
 
 @media (max-width: 767px) {
-    /* Page Container */
+    /* Page Container - MORE SPACE */
     .pt-8.pb-11 > .container,
     section.pt-8.pb-11 > .container {
-        padding-left: 20px !important;
-        padding-right: 20px !important;
+        padding-left: 35px !important;
+        padding-right: 35px !important;
     }
     
     /* Page Title */
     .page-title .container {
-        padding-left: 20px !important;
-        padding-right: 20px !important;
+        padding-left: 35px !important;
+        padding-right: 35px !important;
     }
     
     .page-title h1 {
@@ -189,17 +189,17 @@
         font-size: 12px !important;
     }
     
-    /* Grid View - 2 Columns tighter */
+    /* Grid View - 2 Columns - MORE SPACE BETWEEN CARDS */
     #gridView {
-        margin-left: -8px !important;
-        margin-right: -8px !important;
+        margin-left: -12px !important;
+        margin-right: -12px !important;
     }
     
     #gridView > .col-md-6,
     #gridView > div[class*="col-"] {
-        padding-left: 8px !important;
-        padding-right: 8px !important;
-        margin-bottom: 16px !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        margin-bottom: 25px !important;
     }
     
     /* Card Body */
@@ -289,17 +289,17 @@
    ===================================================== */
 
 @media (max-width: 575px) {
-    /* Page Container */
+    /* Page Container - MORE SPACE */
     .pt-8.pb-11 > .container,
     section.pt-8.pb-11 > .container {
-        padding-left: 15px !important;
-        padding-right: 15px !important;
+        padding-left: 30px !important;
+        padding-right: 30px !important;
     }
     
     /* Page Title */
     .page-title .container {
-        padding-left: 15px !important;
-        padding-right: 15px !important;
+        padding-left: 30px !important;
+        padding-right: 30px !important;
     }
     
     .page-title h1 {
@@ -312,17 +312,17 @@
         padding-bottom: 10px !important;
     }
     
-    /* Grid View */
+    /* Grid View - MORE SPACE */
     #gridView {
-        margin-left: -6px !important;
-        margin-right: -6px !important;
+        margin-left: -8px !important;
+        margin-right: -8px !important;
     }
     
     #gridView > .col-md-6,
     #gridView > div[class*="col-"] {
-        padding-left: 6px !important;
-        padding-right: 6px !important;
-        margin-bottom: 12px !important;
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+        margin-bottom: 20px !important;
     }
     
     /* Card Body */
@@ -413,7 +413,272 @@
     
     /* Subcategory Filter Section */
     .subcategory-filter-section .container {
-        padding-left: 15px !important;
-        padding-right: 15px !important;
+        padding-left: 30px !important;
+        padding-right: 30px !important;
+    }
+}
+
+/* =====================================================
+   EXTRA SMALL MOBILE STYLES (< 400px)
+   ===================================================== */
+
+@media (max-width: 400px) {
+    /* Page Container - MORE SPACE */
+    .pt-8.pb-11 > .container,
+    section.pt-8.pb-11 > .container {
+        padding-left: 25px !important;
+        padding-right: 25px !important;
+    }
+    
+    /* Page Title */
+    .page-title .container {
+        padding-left: 25px !important;
+        padding-right: 25px !important;
+    }
+    
+    /* Grid View */
+    #gridView {
+        margin-left: -6px !important;
+        margin-right: -6px !important;
+    }
+    
+    #gridView > .col-md-6,
+    #gridView > div[class*="col-"] {
+        padding-left: 6px !important;
+        padding-right: 6px !important;
+        margin-bottom: 18px !important;
+    }
+    
+    /* Subcategory Filter Section */
+    .subcategory-filter-section .container {
+        padding-left: 25px !important;
+        padding-right: 25px !important;
+    }
+}
+
+/* =====================================================
+   SMART PAGINATION STYLES FOR PROJECTS
+   Max 4 visible pages with dots navigation
+   ===================================================== */
+
+.projects-pagination-wrapper {
+    margin-top: 30px;
+}
+
+.projects-smart-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.projects-smart-pagination .page-item {
+    margin: 0;
+}
+
+.projects-smart-pagination .page-item .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    height: 42px;
+    padding: 0 12px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #333333;
+    background: #ffffff;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.projects-smart-pagination .page-item .page-link:hover {
+    color: #19868b;
+    border-color: #19868b;
+    background: rgba(25, 134, 139, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(25, 134, 139, 0.15);
+}
+
+/* Active page */
+.projects-smart-pagination .page-item.active .page-link {
+    color: #ffffff;
+    background: linear-gradient(135deg, #19868b 0%, #0d6d71 100%);
+    border-color: #19868b;
+    box-shadow: 0 4px 12px rgba(25, 134, 139, 0.3);
+}
+
+/* Disabled state */
+.projects-smart-pagination .page-item.disabled .page-link {
+    color: #adb5bd;
+    background: #f8f9fa;
+    border-color: #e9ecef;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.projects-smart-pagination .page-item.disabled .page-link:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Navigation arrows */
+.projects-smart-pagination .page-item.page-nav .page-link {
+    min-width: 42px;
+    background: #19868b;
+    border-color: #19868b;
+    color: #ffffff;
+}
+
+.projects-smart-pagination .page-item.page-nav .page-link:hover {
+    background: #0d6d71;
+    border-color: #0d6d71;
+    color: #ffffff;
+}
+
+.projects-smart-pagination .page-item.page-nav.disabled .page-link {
+    background: #e9ecef;
+    border-color: #e9ecef;
+    color: #adb5bd;
+}
+
+/* Dots */
+.projects-smart-pagination .page-item.page-dots .page-link {
+    min-width: 32px;
+    background: transparent;
+    border: none;
+    color: #6c757d;
+    font-weight: 700;
+    letter-spacing: 2px;
+    box-shadow: none;
+}
+
+.projects-smart-pagination .page-item.page-dots .page-link:hover {
+    transform: none;
+    box-shadow: none;
+    background: transparent;
+}
+
+/* RTL Support */
+[dir="rtl"] .projects-smart-pagination .page-item.page-nav .page-link i {
+    transform: rotate(180deg);
+}
+
+/* =====================================================
+   PAGINATION RESPONSIVE - TABLET (Projects)
+   ===================================================== */
+
+@media (max-width: 991px) {
+    .projects-pagination-wrapper {
+        margin-top: 25px;
+    }
+    
+    .projects-smart-pagination {
+        gap: 6px;
+    }
+    
+    .projects-smart-pagination .page-item .page-link {
+        min-width: 40px;
+        height: 40px;
+        font-size: 14px;
+        padding: 0 10px;
+        border-radius: 8px;
+    }
+    
+    .projects-smart-pagination .page-item.page-dots .page-link {
+        min-width: 28px;
+    }
+}
+
+/* =====================================================
+   PAGINATION RESPONSIVE - MOBILE (Projects)
+   ===================================================== */
+
+@media (max-width: 767px) {
+    .projects-pagination-wrapper {
+        margin-top: 20px;
+    }
+    
+    .projects-smart-pagination {
+        gap: 5px;
+    }
+    
+    .projects-smart-pagination .page-item .page-link {
+        min-width: 38px;
+        height: 38px;
+        font-size: 13px;
+        padding: 0 8px;
+        border-radius: 8px;
+    }
+    
+    .projects-smart-pagination .page-item.page-nav .page-link {
+        min-width: 38px;
+    }
+    
+    .projects-smart-pagination .page-item.page-dots .page-link {
+        min-width: 24px;
+        padding: 0 4px;
+    }
+}
+
+/* =====================================================
+   PAGINATION RESPONSIVE - SMALL MOBILE (Projects)
+   ===================================================== */
+
+@media (max-width: 575px) {
+    .projects-pagination-wrapper {
+        margin-top: 15px;
+        padding: 0 10px;
+    }
+    
+    .projects-smart-pagination {
+        gap: 4px;
+    }
+    
+    .projects-smart-pagination .page-item .page-link {
+        min-width: 36px;
+        height: 36px;
+        font-size: 12px;
+        padding: 0 6px;
+        border-radius: 6px;
+        border-width: 1px;
+    }
+    
+    .projects-smart-pagination .page-item.page-nav .page-link {
+        min-width: 36px;
+    }
+    
+    .projects-smart-pagination .page-item.page-dots .page-link {
+        min-width: 20px;
+        padding: 0 2px;
+        font-size: 10px;
+    }
+}
+
+/* =====================================================
+   PAGINATION RESPONSIVE - EXTRA SMALL MOBILE (Projects)
+   ===================================================== */
+
+@media (max-width: 400px) {
+    .projects-smart-pagination {
+        gap: 3px;
+    }
+    
+    .projects-smart-pagination .page-item .page-link {
+        min-width: 32px;
+        height: 32px;
+        font-size: 11px;
+        padding: 0 5px;
+    }
+    
+    .projects-smart-pagination .page-item.page-nav .page-link {
+        min-width: 32px;
+    }
+    
+    .projects-smart-pagination .page-item.page-dots .page-link {
+        min-width: 18px;
     }
 }

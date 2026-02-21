@@ -216,6 +216,7 @@ return [
     'terms_of_service' => 'شروط الخدمة',
     'read_more' => 'اقرأ المزيد',
     'learn_more' => 'اعرف المزيد',
+    'load_more' => 'تحميل المزيد',
     'view_all' => 'عرض الكل',
     'projects' => 'المشاريع',
     'all_projects' => 'جميع المشاريع',

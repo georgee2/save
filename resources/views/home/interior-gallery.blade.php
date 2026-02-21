@@ -18,8 +18,8 @@
             </div>
         </div>
         
-        {{-- Gallery Grid --}}
-        <div class="interior-gallery-grid">
+        {{-- Gallery Grid - Desktop Only --}}
+        <div class="interior-gallery-grid d-none d-lg-grid">
             @foreach($interiorGallery as $item)
             <div class="interior-gallery-card" 
                  data-gallery-id="{{ $item->id }}"
@@ -107,43 +107,55 @@
                 
                 {{-- Card Content --}}
                 <div class="card-content">
-                    {{-- Category Badge --}}
                     @if($item->category)
-                    <span class="card-category">
+                    <h4 class="card-category-title">
                         {{ app()->getLocale() == 'ar' ? $item->category->title_arabic : $item->category->title_english }}
-                    </span>
+                    </h4>
                     @endif
-                    
-                    <h3 class="card-title">
-                        {{ app()->getLocale() == 'ar' ? $item->title_arabic : $item->title_english }}
-                    </h3>
-                    
-                    @php
-                        $bio = app()->getLocale() == 'ar' ? $item->bio_arabic : $item->bio_english;
-                    @endphp
-                    @if($bio)
-                    <p class="card-bio">{{ $bio }}</p>
-                    @endif
-                    
-                    {{-- Meta Tags --}}
-                    <div class="card-meta">
-                        @if($item->projectStyle)
-                        <span class="meta-tag">
-                            <i class="fas fa-palette"></i>
-                            {{ app()->getLocale() == 'ar' ? $item->projectStyle->title_arabic : $item->projectStyle->title_english }}
-                        </span>
-                        @endif
-                        
-                        @if($item->emirate)
-                        <span class="meta-tag">
-                            <i class="fas fa-map-marker-alt"></i>
-                            {{ app()->getLocale() == 'ar' ? $item->emirate->title_arabic : $item->emirate->title_english }}
-                        </span>
-                        @endif
-                    </div>
                 </div>
             </div>
             @endforeach
+        </div>
+        
+        {{-- Gallery Slider - Mobile & Tablet Only (1 image per slide) --}}
+        <div class="interior-gallery-slider d-lg-none">
+            <div class="slick-slider interior-mobile-slider" data-slick-options='{"slidesToShow": 1, "slidesToScroll": 1, "dots": true, "arrows": false, "autoplay": true, "autoplaySpeed": 4000, "infinite": true, "centerMode": true, "centerPadding": "25px"}'>
+                @foreach($interiorGallery as $item)
+                <div class="interior-slide-item">
+                    <div class="interior-gallery-card" 
+                         data-gallery-id="{{ $item->id }}"
+                         data-image="{{ url('/storage' . $item->image) }}"
+                         data-category="{{ $item->category ? (app()->getLocale() == 'ar' ? $item->category->title_arabic : $item->category->title_english) : '' }}"
+                         data-style="{{ $item->projectStyle ? (app()->getLocale() == 'ar' ? $item->projectStyle->title_arabic : $item->projectStyle->title_english) : '' }}"
+                         data-emirate="{{ $item->emirate ? (app()->getLocale() == 'ar' ? $item->emirate->title_arabic : $item->emirate->title_english) : '' }}"
+                         @if($item->project)
+                         data-project-title="{{ app()->getLocale() == 'ar' ? $item->project->title_arabic : $item->project->title_english }}"
+                         data-project-image="{{ $item->project->main_image ? url('/storage' . $item->project->main_image) : '' }}"
+                         data-project-url="{{ route('projects.show', $item->project->slug) }}"
+                         @endif
+                    >
+                        <div class="card-image">
+                            <img src="{{ url('/storage' . $item->image) }}" 
+                                 alt="{{ app()->getLocale() == 'ar' ? $item->title_arabic : $item->title_english }}"
+                                 loading="lazy">
+                            <div class="card-overlay"></div>
+                        </div>
+                        
+                        <div class="view-btn">
+                            <i class="fas fa-expand"></i>
+                        </div>
+                        
+                        <div class="card-content">
+                            @if($item->category)
+                            <h4 class="card-category-title">
+                                {{ app()->getLocale() == 'ar' ? $item->category->title_arabic : $item->category->title_english }}
+                            </h4>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
         </div>
     </div>
 </section>
@@ -163,8 +175,7 @@
         
         {{-- Content Section --}}
         <div class="modal-content-section">
-            <h2 class="modal-title" id="modalTitle"></h2>
-            <p class="modal-bio" id="modalBio"></p>
+            <span class="modal-category-badge" id="modalCategory"></span>
             
             {{-- Meta Information --}}
             <div class="modal-meta" id="modalMeta">
@@ -186,16 +197,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('interiorGalleryModal');
     const closeBtn = document.getElementById('closeGalleryModal');
     const modalImage = document.getElementById('modalImage');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalBio = document.getElementById('modalBio');
+    const modalCategory = document.getElementById('modalCategory');
     const modalMeta = document.getElementById('modalMeta');
     const relatedProjectContainer = document.getElementById('relatedProjectContainer');
     
     // Open modal on card click
     galleryCards.forEach(card => {
         card.addEventListener('click', function() {
-            const title = this.dataset.title;
-            const bio = this.dataset.bio;
             const image = this.dataset.image;
             const category = this.dataset.category;
             const style = this.dataset.style;
@@ -206,24 +214,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Set modal content
             modalImage.src = image;
-            modalImage.alt = title;
-            modalTitle.textContent = title;
-            modalBio.textContent = bio || '';
+            modalImage.alt = category || '';
+            modalCategory.textContent = category || '';
             
             // Build meta items
             let metaHtml = '';
-            
-            if (category) {
-                metaHtml += `
-                    <div class="modal-meta-item">
-                        <i class="fas fa-folder"></i>
-                        <div>
-                            <span class="meta-label">{{ __('lang.category') ?? 'Category' }}</span>
-                            <span class="meta-value">${category}</span>
-                        </div>
-                    </div>
-                `;
-            }
             
             if (style) {
                 metaHtml += `

@@ -44,17 +44,31 @@
                     </li>
                 </ul>
                 
-                {{-- Mobile/Tablet: Horizontal scrollable pills --}}
+                {{-- Mobile/Tablet: Pills with More dropdown --}}
                 <div class="d-lg-none mb-4 project-category-mobile-wrapper">
-                    <div class="project-category-mobile-scroll">
+                    <div class="project-category-mobile-nav">
                         <button type="button" class="project-mobile-pill active" data-target="pills-all-projects">
                             {{ __('lang.all') }}
                         </button>
-                        @foreach($projectCategories as $category)
+                        @foreach($projectCategories->take(2) as $category)
                         <button type="button" class="project-mobile-pill" data-target="pills-cat-{{ $category->id }}">
                             {{ app()->getLocale() == 'ar' ? $category->title_arabic : $category->title_english }}
                         </button>
                         @endforeach
+                        @if($projectCategories->count() > 2)
+                        <div class="project-mobile-more-dropdown">
+                            <button type="button" class="project-mobile-pill project-mobile-more-btn">
+                                {{ __('lang.more') }} <i class="fas fa-chevron-down ml-1"></i>
+                            </button>
+                            <div class="project-mobile-dropdown-menu">
+                                @foreach($projectCategories->skip(2) as $category)
+                                <button type="button" class="project-mobile-dropdown-item" data-target="pills-cat-{{ $category->id }}">
+                                    {{ app()->getLocale() == 'ar' ? $category->title_arabic : $category->title_english }}
+                                </button>
+                                @endforeach
+                            </div>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -63,18 +77,19 @@
         <div class="tab-content p-0 shadow-none" id="pills-projects-tabContent">
             {{-- All Projects Tab --}}
             <div class="tab-pane fade show active" id="pills-all-projects" role="tabpanel" aria-labelledby="pills-all-projects-tab">
-                <div class="row">
+                <div class="row project-grid-container" data-mobile-limit="6" data-category-limit="6">
                     @php
                         $allProjects = $projectCategories->flatMap(function($cat) {
                             return $cat->projects;
                         })->unique('id')->take(10);
+                        $allProjectsCount = $allProjects->count();
                     @endphp
-                    @foreach($allProjects as $project)
+                    @foreach($allProjects as $index => $project)
                     @php
                         $imgCount = ($project->images_count ?? 0) + 1;
                         $vidCount = (!empty($project->video_url) ? 1 : 0) + (!empty($project->tour_url) ? 1 : 0);
                     @endphp
-                    <div class="col-xxl-3 col-lg-4 col-md-6 mb-6" data-animate="zoomIn">
+                    <div class="col-xxl-3 col-lg-4 col-md-6 mb-6 project-grid-item" data-index="{{ $index }}" data-animate="zoomIn">
                         <a href="{{ route('projects.show', $project->slug) }}" class="card border-0 bg-overlay-gradient-light rounded-lg hover-change-image project-card-square d-block">
                             <img src="{{ url('/storage' . $project->main_image) }}" class="card-img"
                                  alt="{{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}">
@@ -141,18 +156,25 @@
                     </div>
                     @endforeach
                 </div>
+                @if($allProjectsCount > 6)
+                <div class="text-center mt-4 d-lg-none project-load-more-wrapper">
+                    <button type="button" class="btn btn-outline-primary project-load-more-btn" data-target="pills-all-projects">
+                        {{ __('lang.load_more') }} <i class="fas fa-chevron-down ml-2"></i>
+                    </button>
+                </div>
+                @endif
             </div>
             
             {{-- Category Tabs --}}
             @foreach($projectCategories as $category)
             <div class="tab-pane fade" id="pills-cat-{{ $category->id }}" role="tabpanel" aria-labelledby="pills-cat-{{ $category->id }}-tab">
-                <div class="row">
-                    @foreach($category->projects as $project)
+                <div class="row project-grid-container" data-mobile-limit="3" data-category-limit="3">
+                    @foreach($category->projects as $index => $project)
                     @php
                         $imgCount = ($project->images_count ?? 0) + 1;
                         $vidCount = (!empty($project->video_url) ? 1 : 0) + (!empty($project->tour_url) ? 1 : 0);
                     @endphp
-                    <div class="col-xxl-3 col-lg-4 col-md-6 mb-6" data-animate="zoomIn">
+                    <div class="col-xxl-3 col-lg-4 col-md-6 mb-6 project-grid-item" data-index="{{ $index }}" data-animate="zoomIn">
                         <a href="{{ route('projects.show', $project->slug) }}" class="card border-0 bg-overlay-gradient-light rounded-lg hover-change-image project-card-square d-block">
                             <img src="{{ url('/storage' . $project->main_image) }}" class="card-img"
                                  alt="{{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}">
@@ -219,6 +241,13 @@
                     </div>
                     @endforeach
                 </div>
+                @if($category->projects->count() > 3)
+                <div class="text-center mt-4 d-lg-none project-load-more-wrapper">
+                    <button type="button" class="btn btn-outline-primary project-load-more-btn" data-target="pills-cat-{{ $category->id }}">
+                        {{ __('lang.load_more') }} <i class="fas fa-chevron-down ml-2"></i>
+                    </button>
+                </div>
+                @endif
             </div>
             @endforeach
         </div>
@@ -262,41 +291,29 @@
     color: #fff;
 }
 
-/* Mobile Category - Horizontal Scrollable Pills */
+/* Mobile Category - Pills with Dropdown */
 .project-category-mobile-wrapper {
     position: relative;
-    margin: 0 -15px;
-    padding: 0 15px;
 }
 
-.project-category-mobile-scroll {
+.project-category-mobile-nav {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 8px 5px;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.project-category-mobile-scroll::-webkit-scrollbar {
-    display: none;
+    align-items: center;
 }
 
 .project-mobile-pill {
-    flex-shrink: 0;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 40px;
-    padding: 0 20px;
+    min-height: 40px;
+    padding: 8px 20px;
     border: 2px solid #e0e0e0;
     border-radius: 20px;
     background: #fff;
     color: #555;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -317,6 +334,119 @@
     box-shadow: 0 4px 12px rgba(25, 134, 139, 0.35);
 }
 
+/* Mobile More Dropdown */
+.project-mobile-more-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.project-mobile-more-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.project-mobile-more-btn i {
+    font-size: 10px;
+    transition: transform 0.3s ease;
+}
+
+.project-mobile-more-dropdown.open .project-mobile-more-btn i {
+    transform: rotate(180deg);
+}
+
+.project-mobile-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 200px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    padding: 8px 0;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.project-mobile-more-dropdown.open .project-mobile-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.project-mobile-dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    background: transparent;
+    border: none;
+    text-align: left;
+    color: #555;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.project-mobile-dropdown-item:hover {
+    background: #f5f5f5;
+    color: #19868b;
+}
+
+.project-mobile-dropdown-item.active {
+    background: rgba(25, 134, 139, 0.1);
+    color: #19868b;
+    font-weight: 600;
+}
+
+/* RTL Support for dropdown */
+[dir="rtl"] .project-mobile-dropdown-menu {
+    left: auto;
+    right: 0;
+}
+
+[dir="rtl"] .project-mobile-dropdown-item {
+    text-align: right;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+    .project-category-mobile-wrapper {
+        display: block !important;
+    }
+    
+    .project-mobile-pill {
+        font-size: 11px;
+        padding: 6px 16px;
+        min-height: 36px;
+    }
+}
+
+@media (max-width: 575px) {
+    .project-category-mobile-nav {
+        gap: 8px;
+    }
+    
+    .project-mobile-pill {
+        font-size: 10px;
+        padding: 5px 14px;
+        min-height: 34px;
+        letter-spacing: 0.3px;
+    }
+    
+    .project-mobile-dropdown-menu {
+        min-width: 180px;
+    }
+    
+    .project-mobile-dropdown-item {
+        font-size: 12px;
+        padding: 10px 16px;
+    }
+}
+
 /* RTL Support */
 [dir="rtl"] .project-category-mobile-wrapper {
     margin: 0 -15px;
@@ -331,51 +461,329 @@
 .project-category-nav .nav-link {
     white-space: nowrap;
 }
+
+/* Ensure desktop nav is hidden on mobile/tablet */
+@media (max-width: 991px) {
+    .project-category-nav {
+        display: none !important;
+    }
+}
+
+/* Ensure mobile nav is hidden on desktop */
+@media (min-width: 992px) {
+    .project-category-mobile-wrapper {
+        display: none !important;
+    }
+}
+
+/* Load More Button Styles */
+.project-load-more-wrapper {
+    margin-top: 20px;
+}
+
+.project-load-more-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 30px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 2px solid #19868b;
+    border-radius: 30px;
+    color: #19868b;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.project-load-more-btn:hover {
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(25, 134, 139, 0.3);
+}
+
+.project-load-more-btn i {
+    transition: transform 0.3s ease;
+}
+
+.project-load-more-btn:hover i {
+    transform: translateY(3px);
+}
+
+.project-load-more-btn.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.project-load-more-btn.loading i {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Mobile/Tablet: Hide items beyond limit */
+@media (max-width: 991px) {
+    .project-grid-item.mobile-hidden {
+        display: none !important;
+    }
+    
+    .project-load-more-wrapper.all-loaded {
+        display: none !important;
+    }
+}
+
+/* Desktop: Always show all items and hide load more button */
+@media (min-width: 992px) {
+    .project-grid-item.mobile-hidden {
+        display: block !important;
+    }
+    
+    .project-load-more-wrapper {
+        display: none !important;
+    }
+}
 </style>
 
 {{-- Project Category Filter Script --}}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Mobile pill buttons functionality
-    document.querySelectorAll('.project-mobile-pill').forEach(function(pill) {
-        pill.addEventListener('click', function() {
+    // Check if we're on mobile/tablet
+    function isMobileOrTablet() {
+        return window.innerWidth < 992;
+    }
+    
+    // Initialize mobile load more functionality
+    function initMobileLoadMore() {
+        document.querySelectorAll('.project-grid-container').forEach(function(container) {
+            var limit = parseInt(container.getAttribute('data-mobile-limit')) || 6;
+            var items = container.querySelectorAll('.project-grid-item');
+            
+            items.forEach(function(item, index) {
+                if (isMobileOrTablet() && index >= limit) {
+                    item.classList.add('mobile-hidden');
+                } else {
+                    item.classList.remove('mobile-hidden');
+                }
+            });
+            
+            // Update load more button visibility
+            var tabPane = container.closest('.tab-pane');
+            if (tabPane) {
+                var loadMoreWrapper = tabPane.querySelector('.project-load-more-wrapper');
+                if (loadMoreWrapper) {
+                    var hiddenItems = container.querySelectorAll('.project-grid-item.mobile-hidden');
+                    if (hiddenItems.length === 0) {
+                        loadMoreWrapper.classList.add('all-loaded');
+                    } else {
+                        loadMoreWrapper.classList.remove('all-loaded');
+                    }
+                }
+            }
+        });
+    }
+    
+    // Load more button click handler
+    document.querySelectorAll('.project-load-more-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
             var targetId = this.getAttribute('data-target');
-            var targetTab = document.getElementById(targetId);
+            var tabPane = document.getElementById(targetId);
+            if (!tabPane) return;
             
-            // Remove active from all tabs
-            document.querySelectorAll('#pills-projects-tabContent .tab-pane').forEach(function(pane) {
-                pane.classList.remove('show', 'active');
-            });
+            var container = tabPane.querySelector('.project-grid-container');
+            if (!container) return;
             
-            // Remove active from all mobile pills
-            document.querySelectorAll('.project-mobile-pill').forEach(function(p) {
-                p.classList.remove('active');
-            });
+            var loadMoreWrapper = this.closest('.project-load-more-wrapper');
+            var hiddenItems = container.querySelectorAll('.project-grid-item.mobile-hidden');
+            var limit = parseInt(container.getAttribute('data-mobile-limit')) || 6;
             
-            // Remove active from all nav links (desktop)
-            document.querySelectorAll('.project-category-nav .nav-link').forEach(function(link) {
-                link.classList.remove('active');
-                link.setAttribute('aria-selected', 'false');
-            });
-            
-            // Remove active from dropdown items
-            document.querySelectorAll('.project-dropdown-item').forEach(function(item) {
-                item.classList.remove('active');
-            });
-            
-            // Activate selected tab
-            if (targetTab) {
-                targetTab.classList.add('show', 'active');
+            // Show loading state
+            this.classList.add('loading');
+            var icon = this.querySelector('i');
+            if (icon) {
+                icon.className = 'fas fa-spinner ml-2';
             }
             
-            // Mark this pill as active
+            // Simulate loading delay for smooth UX
+            setTimeout(function() {
+                // Show next batch of items
+                var shown = 0;
+                hiddenItems.forEach(function(item) {
+                    if (shown < limit) {
+                        item.classList.remove('mobile-hidden');
+                        shown++;
+                    }
+                });
+                
+                // Reset button state
+                btn.classList.remove('loading');
+                if (icon) {
+                    icon.className = 'fas fa-chevron-down ml-2';
+                }
+                
+                // Check if all items are now visible
+                var remainingHidden = container.querySelectorAll('.project-grid-item.mobile-hidden');
+                if (remainingHidden.length === 0) {
+                    loadMoreWrapper.classList.add('all-loaded');
+                }
+            }, 300);
+        });
+    });
+    
+    // Initialize on page load
+    initMobileLoadMore();
+    
+    // Re-initialize on window resize
+    var resizeTimeout;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function() {
+            initMobileLoadMore();
+        }, 250);
+    });
+    
+    // Reset load more when switching tabs
+    function resetTabLoadMore(targetId) {
+        var tabPane = document.getElementById(targetId);
+        if (!tabPane) return;
+        
+        var container = tabPane.querySelector('.project-grid-container');
+        if (!container) return;
+        
+        var limit = parseInt(container.getAttribute('data-mobile-limit')) || 6;
+        var items = container.querySelectorAll('.project-grid-item');
+        
+        if (isMobileOrTablet()) {
+            items.forEach(function(item, index) {
+                if (index >= limit) {
+                    item.classList.add('mobile-hidden');
+                } else {
+                    item.classList.remove('mobile-hidden');
+                }
+            });
+            
+            // Reset load more button
+            var loadMoreWrapper = tabPane.querySelector('.project-load-more-wrapper');
+            if (loadMoreWrapper) {
+                var hiddenItems = container.querySelectorAll('.project-grid-item.mobile-hidden');
+                if (hiddenItems.length === 0) {
+                    loadMoreWrapper.classList.add('all-loaded');
+                } else {
+                    loadMoreWrapper.classList.remove('all-loaded');
+                }
+            }
+        }
+    }
+    
+    // Helper function to switch tabs
+    function switchToTab(targetId) {
+        var targetTab = document.getElementById(targetId);
+        
+        // Remove active from all tabs
+        document.querySelectorAll('#pills-projects-tabContent .tab-pane').forEach(function(pane) {
+            pane.classList.remove('show', 'active');
+        });
+        
+        // Remove active from all mobile pills
+        document.querySelectorAll('.project-mobile-pill:not(.project-mobile-more-btn)').forEach(function(p) {
+            p.classList.remove('active');
+        });
+        
+        // Remove active from all nav links (desktop)
+        document.querySelectorAll('.project-category-nav .nav-link').forEach(function(link) {
+            link.classList.remove('active');
+            link.setAttribute('aria-selected', 'false');
+        });
+        
+        // Remove active from desktop dropdown items
+        document.querySelectorAll('.project-dropdown-item').forEach(function(item) {
+            item.classList.remove('active');
+        });
+        
+        // Remove active from mobile dropdown items
+        document.querySelectorAll('.project-mobile-dropdown-item').forEach(function(item) {
+            item.classList.remove('active');
+        });
+        
+        // Activate selected tab
+        if (targetTab) {
+            targetTab.classList.add('show', 'active');
+        }
+        
+        // Sync desktop nav if visible
+        var desktopTab = document.querySelector('[href="#' + targetId + '"]');
+        if (desktopTab && desktopTab.classList.contains('nav-link')) {
+            desktopTab.classList.add('active');
+            desktopTab.setAttribute('aria-selected', 'true');
+        }
+        
+        // Sync desktop dropdown item
+        var desktopDropdownItem = document.querySelector('.project-dropdown-item[href="#' + targetId + '"]');
+        if (desktopDropdownItem) {
+            desktopDropdownItem.classList.add('active');
+        }
+        
+        // Reset load more for the new tab
+        resetTabLoadMore(targetId);
+    }
+    
+    // Mobile pill buttons functionality (not the More button)
+    document.querySelectorAll('.project-mobile-pill:not(.project-mobile-more-btn)').forEach(function(pill) {
+        pill.addEventListener('click', function() {
+            var targetId = this.getAttribute('data-target');
+            if (!targetId) return;
+            
+            switchToTab(targetId);
             this.classList.add('active');
             
-            // Sync desktop nav if visible
-            var desktopTab = document.querySelector('[href="#' + targetId + '"]');
-            if (desktopTab && desktopTab.classList.contains('nav-link')) {
-                desktopTab.classList.add('active');
-                desktopTab.setAttribute('aria-selected', 'true');
+            // Close mobile dropdown if open
+            var mobileDropdown = document.querySelector('.project-mobile-more-dropdown');
+            if (mobileDropdown) {
+                mobileDropdown.classList.remove('open');
+            }
+        });
+    });
+    
+    // Mobile More dropdown toggle
+    var mobileMoreBtn = document.querySelector('.project-mobile-more-btn');
+    var mobileMoreDropdown = document.querySelector('.project-mobile-more-dropdown');
+    
+    if (mobileMoreBtn && mobileMoreDropdown) {
+        mobileMoreBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            mobileMoreDropdown.classList.toggle('open');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!mobileMoreDropdown.contains(e.target)) {
+                mobileMoreDropdown.classList.remove('open');
+            }
+        });
+    }
+    
+    // Mobile dropdown items
+    document.querySelectorAll('.project-mobile-dropdown-item').forEach(function(item) {
+        item.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var targetId = this.getAttribute('data-target');
+            if (!targetId) return;
+            
+            switchToTab(targetId);
+            this.classList.add('active');
+            
+            // Update More button to show it has active selection
+            if (mobileMoreBtn) {
+                mobileMoreBtn.classList.add('active');
+            }
+            
+            // Close mobile dropdown
+            if (mobileMoreDropdown) {
+                mobileMoreDropdown.classList.remove('open');
             }
         });
     });
@@ -385,41 +793,17 @@ document.addEventListener('DOMContentLoaded', function() {
         item.addEventListener('click', function(e) {
             e.preventDefault();
             var targetId = this.getAttribute('href').replace('#', '');
-            var targetTab = document.getElementById(targetId);
             
-            // Remove active from all tabs
-            document.querySelectorAll('#pills-projects-tabContent .tab-pane').forEach(function(pane) {
-                pane.classList.remove('show', 'active');
-            });
-            
-            // Remove active from all nav links
-            document.querySelectorAll('.project-category-nav .nav-link').forEach(function(link) {
-                link.classList.remove('active');
-                link.setAttribute('aria-selected', 'false');
-            });
-            
-            // Remove active from all dropdown items
-            document.querySelectorAll('.project-dropdown-item').forEach(function(di) {
-                di.classList.remove('active');
-            });
-            
-            // Remove active from all mobile pills
-            document.querySelectorAll('.project-mobile-pill').forEach(function(p) {
-                p.classList.remove('active');
-            });
-            
-            // Activate selected tab
-            if (targetTab) {
-                targetTab.classList.add('show', 'active');
-            }
-            
-            // Mark dropdown item as active
+            switchToTab(targetId);
             this.classList.add('active');
             
-            // Sync mobile pill
-            var mobilePill = document.querySelector('.project-mobile-pill[data-target="' + targetId + '"]');
-            if (mobilePill) {
-                mobilePill.classList.add('active');
+            // Sync mobile dropdown item
+            var mobileDropdownItem = document.querySelector('.project-mobile-dropdown-item[data-target="' + targetId + '"]');
+            if (mobileDropdownItem) {
+                mobileDropdownItem.classList.add('active');
+                if (mobileMoreBtn) {
+                    mobileMoreBtn.classList.add('active');
+                }
             }
             
             // Close dropdown
@@ -445,16 +829,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 p.classList.remove('active');
             });
             
+            // Remove active from mobile dropdown items
+            document.querySelectorAll('.project-mobile-dropdown-item').forEach(function(item) {
+                item.classList.remove('active');
+            });
+            
             // Sync mobile pill
             var mobilePill = document.querySelector('.project-mobile-pill[data-target="' + targetId + '"]');
             if (mobilePill) {
                 mobilePill.classList.add('active');
             }
             
-            // Remove active from dropdown items
+            // Sync mobile dropdown item
+            var mobileDropdownItem = document.querySelector('.project-mobile-dropdown-item[data-target="' + targetId + '"]');
+            if (mobileDropdownItem) {
+                mobileDropdownItem.classList.add('active');
+                if (mobileMoreBtn) {
+                    mobileMoreBtn.classList.add('active');
+                }
+            }
+            
+            // Remove active from desktop dropdown items
             document.querySelectorAll('.project-dropdown-item').forEach(function(item) {
                 item.classList.remove('active');
             });
+            
+            // Reset load more for the new tab
+            resetTabLoadMore(targetId);
         });
     });
 });

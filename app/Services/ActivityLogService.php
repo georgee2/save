@@ -247,7 +247,7 @@ class ActivityLogService
     /**
      * Main logging method
      */
-    protected static function log(
+    public static function log(
         string $action,
         Model $model,
         ?array $oldValues,
@@ -278,6 +278,41 @@ class ActivityLogService
             'old_values' => self::filterSensitiveData($oldValues),
             'new_values' => self::filterSensitiveData($newValues),
             'changed_fields' => $changedFields,
+            'ip_address' => Request::ip(),
+            'user_agent' => Request::userAgent(),
+            'description' => $description,
+        ]);
+    }
+
+    /**
+     * Log authentication events (login, logout, etc.)
+     */
+    public static function logAuth(
+        string $action,
+        ?Model $user = null,
+        ?array $metadata = null
+    ): ?ActivityLog {
+        $authUser = $user ?? Auth::user();
+        
+        $description = match($action) {
+            'login' => 'User logged in successfully',
+            'logout' => 'User logged out',
+            'failed_login' => 'Failed login attempt',
+            default => ucfirst($action),
+        };
+
+        return ActivityLog::create([
+            'user_id' => $authUser?->id,
+            'user_name' => $authUser?->name ?? 'Unknown',
+            'user_email' => $authUser?->email,
+            'action' => $action,
+            'model_type' => 'App\Models\User',
+            'model_name' => 'Authentication',
+            'model_id' => $authUser?->id,
+            'record_title' => $authUser?->name ?? 'Unknown User',
+            'old_values' => null,
+            'new_values' => $metadata,
+            'changed_fields' => null,
             'ip_address' => Request::ip(),
             'user_agent' => Request::userAgent(),
             'description' => $description,

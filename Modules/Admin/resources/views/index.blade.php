@@ -4,16 +4,17 @@
 @section('css')
 <style>
     :root {
-        --primary-color: #1a7d6b;
-        --primary-dark: #145f52;
-        --primary-light: #22a88f;
-        --secondary-color: #2d3748;
-        --accent-color: #e8b85e;
+        --primary-color: #19868b;
+        --primary-dark: #146a6e;
+        --primary-light: #1fa0a6;
+        --secondary-color: #172e38;
+        --accent-color: #e1273d;
         --accent-light: #f0cb82;
         --success-color: #10b981;
-        --warning-color: #f59e0b;
+        --warning-color: #f6b500;
         --danger-color: #ef4444;
         --info-color: #3b82f6;
+        --orange-color: #ff6935;
         --light-bg: #f7f9fc;
         --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     }
@@ -24,13 +25,14 @@
         padding: 20px;
     }
 
+    /* Dashboard Header */
     .dashboard-header {
         background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 50%, var(--secondary-color) 100%);
         color: white;
         padding: 35px 40px;
         border-radius: 16px;
         margin-bottom: 30px;
-        box-shadow: 0 10px 40px rgba(26, 125, 107, 0.3);
+        box-shadow: 0 10px 40px rgba(25, 134, 139, 0.3);
         position: relative;
         overflow: hidden;
     }
@@ -53,7 +55,7 @@
         left: 10%;
         width: 200px;
         height: 200px;
-        background: radial-gradient(circle, rgba(232,184,94,0.2) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(225,39,61,0.2) 0%, transparent 70%);
         border-radius: 50%;
     }
 
@@ -85,10 +87,11 @@
 
     .dashboard-header .header-stats {
         display: flex;
-        gap: 30px;
+        gap: 20px;
         margin-top: 25px;
         position: relative;
         z-index: 1;
+        flex-wrap: wrap;
     }
 
     .dashboard-header .header-stat {
@@ -98,12 +101,13 @@
         border-radius: 12px;
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255,255,255,0.15);
+        min-width: 120px;
     }
 
     .dashboard-header .header-stat .number {
         font-size: 28px;
         font-weight: 700;
-        color: var(--accent-color);
+        color: #fff;
     }
 
     .dashboard-header .header-stat .label {
@@ -114,6 +118,94 @@
         margin-top: 5px;
     }
 
+    .dashboard-header .header-stat.highlight .number {
+        color: var(--warning-color);
+    }
+
+    /* Summary Cards Row */
+    .summary-row {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .summary-mini-card {
+        background: white;
+        border-radius: 14px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        box-shadow: var(--card-shadow);
+        transition: all 0.3s ease;
+        border-left: 4px solid var(--primary-color);
+    }
+
+    .summary-mini-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .summary-mini-card.primary { border-left-color: var(--primary-color); }
+    .summary-mini-card.accent { border-left-color: var(--accent-color); }
+    .summary-mini-card.success { border-left-color: var(--success-color); }
+    .summary-mini-card.warning { border-left-color: var(--warning-color); }
+    .summary-mini-card.info { border-left-color: var(--info-color); }
+    .summary-mini-card.orange { border-left-color: var(--orange-color); }
+
+    .summary-mini-card .mini-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .summary-mini-card.primary .mini-icon { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); }
+    .summary-mini-card.accent .mini-icon { background: linear-gradient(135deg, var(--accent-color), #c41f33); }
+    .summary-mini-card.success .mini-icon { background: linear-gradient(135deg, var(--success-color), #059669); }
+    .summary-mini-card.warning .mini-icon { background: linear-gradient(135deg, var(--warning-color), #d97706); }
+    .summary-mini-card.info .mini-icon { background: linear-gradient(135deg, var(--info-color), #2563eb); }
+    .summary-mini-card.orange .mini-icon { background: linear-gradient(135deg, var(--orange-color), #e55a2b); }
+
+    .summary-mini-card .mini-content .mini-value {
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--secondary-color);
+        line-height: 1;
+    }
+
+    .summary-mini-card .mini-content .mini-label {
+        font-size: 12px;
+        color: #6b7280;
+        font-weight: 500;
+        margin-top: 4px;
+    }
+
+    .summary-mini-card .mini-badge {
+        margin-left: auto;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .summary-mini-card .mini-badge.up {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success-color);
+    }
+
+    .summary-mini-card .mini-badge.pending {
+        background: rgba(246, 181, 0, 0.1);
+        color: var(--warning-color);
+    }
+
+    /* Stat Cards */
     .stat-card {
         background: white;
         border-radius: 16px;
@@ -128,7 +220,7 @@
 
     .stat-card:hover {
         transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(26, 125, 107, 0.15);
+        box-shadow: 0 20px 40px rgba(25, 134, 139, 0.15);
     }
 
     .stat-card::before {
@@ -141,29 +233,13 @@
         background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
     }
 
-    .stat-card.primary::before {
-        background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
-    }
-
-    .stat-card.accent::before {
-        background: linear-gradient(90deg, var(--accent-color), var(--accent-light));
-    }
-
-    .stat-card.success::before {
-        background: linear-gradient(90deg, var(--success-color), #34d399);
-    }
-
-    .stat-card.info::before {
-        background: linear-gradient(90deg, var(--info-color), #60a5fa);
-    }
-
-    .stat-card.warning::before {
-        background: linear-gradient(90deg, var(--warning-color), #fbbf24);
-    }
-
-    .stat-card.danger::before {
-        background: linear-gradient(90deg, var(--danger-color), #f87171);
-    }
+    .stat-card.primary::before { background: linear-gradient(90deg, var(--primary-color), var(--primary-light)); }
+    .stat-card.accent::before { background: linear-gradient(90deg, var(--accent-color), #f0424e); }
+    .stat-card.success::before { background: linear-gradient(90deg, var(--success-color), #34d399); }
+    .stat-card.info::before { background: linear-gradient(90deg, var(--info-color), #60a5fa); }
+    .stat-card.warning::before { background: linear-gradient(90deg, var(--warning-color), #fbbf24); }
+    .stat-card.danger::before { background: linear-gradient(90deg, var(--danger-color), #f87171); }
+    .stat-card.orange::before { background: linear-gradient(90deg, var(--orange-color), #ff8c5a); }
 
     .stat-card .icon {
         width: 64px;
@@ -176,34 +252,15 @@
         font-size: 28px;
         color: white;
         margin-bottom: 20px;
-        box-shadow: 0 8px 20px rgba(26, 125, 107, 0.3);
-        position: relative;
+        box-shadow: 0 8px 20px rgba(25, 134, 139, 0.3);
     }
 
-    .stat-card.accent .icon {
-        background: linear-gradient(135deg, var(--accent-color), #d4a44e);
-        box-shadow: 0 8px 20px rgba(232, 184, 94, 0.3);
-    }
-
-    .stat-card.success .icon {
-        background: linear-gradient(135deg, var(--success-color), #059669);
-        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-    }
-
-    .stat-card.info .icon {
-        background: linear-gradient(135deg, var(--info-color), #2563eb);
-        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
-    }
-
-    .stat-card.warning .icon {
-        background: linear-gradient(135deg, var(--warning-color), #d97706);
-        box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
-    }
-
-    .stat-card.danger .icon {
-        background: linear-gradient(135deg, var(--danger-color), #dc2626);
-        box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
-    }
+    .stat-card.accent .icon { background: linear-gradient(135deg, var(--accent-color), #c41f33); box-shadow: 0 8px 20px rgba(225, 39, 61, 0.3); }
+    .stat-card.success .icon { background: linear-gradient(135deg, var(--success-color), #059669); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
+    .stat-card.info .icon { background: linear-gradient(135deg, var(--info-color), #2563eb); box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3); }
+    .stat-card.warning .icon { background: linear-gradient(135deg, var(--warning-color), #d97706); box-shadow: 0 8px 20px rgba(246, 181, 0, 0.3); }
+    .stat-card.danger .icon { background: linear-gradient(135deg, var(--danger-color), #dc2626); box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3); }
+    .stat-card.orange .icon { background: linear-gradient(135deg, var(--orange-color), #e55a2b); box-shadow: 0 8px 20px rgba(255, 105, 53, 0.3); }
 
     .stat-card .title {
         font-size: 13px;
@@ -236,9 +293,10 @@
         margin-right: 5px;
     }
 
-    .stat-card .subtitle .status-indicator.published {
-        background: var(--success-color);
-    }
+    .stat-card .subtitle .status-indicator.published { background: var(--success-color); }
+    .stat-card .subtitle .status-indicator.unpublished { background: var(--danger-color); }
+    .stat-card .subtitle .status-indicator.pending { background: var(--warning-color); }
+    .stat-card .subtitle .status-indicator.trashed { background: #9ca3af; }
 
     .stat-card .badge-info {
         position: absolute;
@@ -250,9 +308,10 @@
         border-radius: 30px;
         font-size: 12px;
         font-weight: 600;
-        box-shadow: 0 4px 10px rgba(26, 125, 107, 0.25);
+        box-shadow: 0 4px 10px rgba(25, 134, 139, 0.25);
     }
 
+    /* Chart Cards */
     .chart-card {
         background: white;
         border-radius: 16px;
@@ -283,6 +342,7 @@
         margin-top: 4px;
     }
 
+    /* Section Title */
     .section-title {
         font-size: 24px;
         font-weight: 700;
@@ -304,25 +364,7 @@
         border-radius: 2px;
     }
 
-    .activity-badge {
-        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-        color: white;
-        padding: 3px 10px;
-        border-radius: 15px;
-        font-size: 11px;
-        font-weight: 600;
-        margin-left: 8px;
-    }
-
-    .activity-badge.success {
-        background: linear-gradient(135deg, var(--success-color), #059669);
-    }
-
-    canvas {
-        max-height: 350px;
-    }
-
-    /* Quick Actions Panel */
+    /* Quick Actions */
     .quick-actions {
         background: white;
         border-radius: 16px;
@@ -347,15 +389,15 @@
 
     .quick-actions .action-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        gap: 15px;
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 12px;
     }
 
     .quick-actions .action-item {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 20px 15px;
+        padding: 18px 12px;
         background: linear-gradient(135deg, #f7f9fc, #eef2f7);
         border-radius: 12px;
         text-decoration: none;
@@ -368,12 +410,12 @@
         background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
         color: white;
         transform: translateY(-3px);
-        box-shadow: 0 10px 25px rgba(26, 125, 107, 0.25);
+        box-shadow: 0 10px 25px rgba(25, 134, 139, 0.25);
     }
 
     .quick-actions .action-item i {
-        font-size: 24px;
-        margin-bottom: 10px;
+        font-size: 22px;
+        margin-bottom: 8px;
         color: var(--primary-color);
         transition: color 0.3s ease;
     }
@@ -383,82 +425,240 @@
     }
 
     .quick-actions .action-item span {
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 600;
         text-align: center;
     }
 
-    /* Stats Summary Row */
-    .stats-summary {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-        margin-bottom: 30px;
-    }
-
-    .summary-card {
+    /* Activity Log Panel */
+    .activity-panel {
         background: white;
         border-radius: 16px;
         padding: 25px;
+        box-shadow: var(--card-shadow);
+        height: 100%;
+    }
+
+    .activity-panel .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f3f4f6;
+    }
+
+    .activity-panel .panel-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--secondary-color);
         display: flex;
         align-items: center;
-        gap: 20px;
-        box-shadow: var(--card-shadow);
-        transition: all 0.3s ease;
+        gap: 10px;
     }
 
-    .summary-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    .activity-panel .panel-title i {
+        color: var(--primary-color);
     }
 
-    .summary-card .summary-icon {
-        width: 56px;
-        height: 56px;
-        border-radius: 14px;
+    .activity-panel .view-all-link {
+        font-size: 13px;
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .activity-panel .view-all-link:hover {
+        text-decoration: underline;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-item .activity-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 24px;
+        font-size: 14px;
         color: white;
+        flex-shrink: 0;
     }
 
-    .summary-card .summary-icon.primary {
-        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    .activity-item .activity-icon.create { background: linear-gradient(135deg, var(--success-color), #059669); }
+    .activity-item .activity-icon.update { background: linear-gradient(135deg, var(--info-color), #2563eb); }
+    .activity-item .activity-icon.delete { background: linear-gradient(135deg, var(--danger-color), #dc2626); }
+    .activity-item .activity-icon.login { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); }
+    .activity-item .activity-icon.view { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+    .activity-item .activity-icon.restore { background: linear-gradient(135deg, var(--warning-color), #d97706); }
+
+    .activity-item .activity-content {
+        flex: 1;
+        min-width: 0;
     }
 
-    .summary-card .summary-icon.accent {
-        background: linear-gradient(135deg, var(--accent-color), #d4a44e);
+    .activity-item .activity-text {
+        font-size: 13px;
+        color: var(--secondary-color);
+        line-height: 1.4;
+        margin-bottom: 4px;
     }
 
-    .summary-card .summary-icon.success {
-        background: linear-gradient(135deg, var(--success-color), #059669);
+    .activity-item .activity-text strong {
+        color: var(--primary-color);
     }
 
-    .summary-card .summary-icon.info {
-        background: linear-gradient(135deg, var(--info-color), #2563eb);
+    .activity-item .activity-meta {
+        font-size: 11px;
+        color: #9ca3af;
     }
 
-    .summary-card .summary-content .summary-value {
-        font-size: 28px;
-        font-weight: 800;
+    /* Top Creators Panel */
+    .creators-panel {
+        background: white;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: var(--card-shadow);
+    }
+
+    .creator-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .creator-item:last-child {
+        border-bottom: none;
+    }
+
+    .creator-item .creator-rank {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .creator-item:nth-child(1) .creator-rank { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
+    .creator-item:nth-child(2) .creator-rank { background: linear-gradient(135deg, #9ca3af, #6b7280); }
+    .creator-item:nth-child(3) .creator-rank { background: linear-gradient(135deg, #cd7f32, #b87333); }
+    .creator-item:nth-child(n+4) .creator-rank { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); }
+
+    .creator-item .creator-info {
+        flex: 1;
+    }
+
+    .creator-item .creator-name {
+        font-size: 14px;
+        font-weight: 600;
         color: var(--secondary-color);
     }
 
-    .summary-card .summary-content .summary-label {
-        font-size: 13px;
+    .creator-item .creator-actions {
+        font-size: 12px;
         color: #9ca3af;
+    }
+
+    .creator-item .creator-count {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    /* System Health Panel */
+    .health-panel {
+        background: white;
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: var(--card-shadow);
+    }
+
+    .health-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .health-item:last-child {
+        border-bottom: none;
+    }
+
+    .health-item .health-label {
+        font-size: 14px;
+        color: var(--secondary-color);
         font-weight: 500;
     }
 
-    @media (max-width: 1200px) {
-        .stats-summary {
+    .health-item .health-value {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .health-item .health-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .health-item .health-badge.good {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success-color);
+    }
+
+    .health-item .health-badge.warning {
+        background: rgba(246, 181, 0, 0.1);
+        color: var(--warning-color);
+    }
+
+    .health-item .health-badge.danger {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger-color);
+    }
+
+    canvas {
+        max-height: 350px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1400px) {
+        .summary-row {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 992px) {
+        .summary-row {
             grid-template-columns: repeat(2, 1fr);
         }
     }
 
     @media (max-width: 768px) {
-        .stats-summary {
+        .summary-row {
             grid-template-columns: 1fr;
         }
 
@@ -471,14 +671,20 @@
         }
 
         .dashboard-header .header-stats {
-            flex-wrap: wrap;
-            gap: 15px;
+            gap: 10px;
         }
 
         .dashboard-header .header-stat {
             padding: 10px 15px;
+            min-width: 100px;
         }
 
+        .quick-actions .action-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 576px) {
         .quick-actions .action-grid {
             grid-template-columns: repeat(2, 1fr);
         }
@@ -487,30 +693,85 @@
 @endsection
 
 @section('content')
-                    <div class="page-content-wrapper">
-                        <div class="container-fluid">
+<div class="page-content-wrapper">
+    <div class="container-fluid">
 
         <!-- Dashboard Header -->
         <div class="dashboard-header animate__animated animate__fadeInDown" style="margin-top:70px">
             <h2><i class="fa fa-pie-chart"></i> CMS Dashboard</h2>
-            <p>Welcome back! Here's an overview of your content management system.</p>
+            <p>Welcome back, {{ auth()->user()->name }}! Here's an overview of your content management system.</p>
             <div class="header-stats">
                 <div class="header-stat">
-                    <div class="number">{{ $stats['services'] + $stats['projects'] + $stats['offers'] + $stats['news'] }}</div>
+                    <div class="number">{{ number_format($stats['services'] + $stats['projects'] + $stats['offers'] + $stats['interior_galleries']) }}</div>
                     <div class="label">Total Content</div>
                 </div>
                 <div class="header-stat">
-                    <div class="number">{{ $stats['services_published'] + $stats['projects_published'] + $stats['offers_published'] }}</div>
-                    <div class="label">Published Items</div>
+                    <div class="number">{{ number_format($stats['services_published'] + $stats['projects_published'] + $stats['offers_published'] + $stats['interior_galleries_published']) }}</div>
+                    <div class="label">Published</div>
+                </div>
+                <div class="header-stat highlight">
+                    <div class="number">{{ $weeklyActivity['services'] + $weeklyActivity['projects'] + $weeklyActivity['offers'] + $weeklyActivity['news'] }}</div>
+                    <div class="label">New This Week</div>
                 </div>
                 <div class="header-stat">
-                    <div class="number">{{ $recentActivity['services'] + $recentActivity['projects'] + $recentActivity['offers'] + $recentActivity['news'] }}</div>
-                    <div class="label">New This Month</div>
+                    <div class="number">{{ number_format($stats['contact_pending'] ?? 0) }}</div>
+                    <div class="label">Pending Contacts</div>
                 </div>
                 <div class="header-stat">
-                    <div class="number">{{ $stats['contact_submissions'] ?? 0 }}</div>
-                    <div class="label">Contact Forms</div>
+                    <div class="number">{{ number_format($stats['activity_logs_today']) }}</div>
+                    <div class="label">Actions Today</div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Quick Summary Row -->
+        <div class="summary-row animate__animated animate__fadeInUp">
+            <div class="summary-mini-card primary">
+                <div class="mini-icon"><i class="fa fa-cogs"></i></div>
+                <div class="mini-content">
+                    <div class="mini-value">{{ $stats['services'] }}</div>
+                    <div class="mini-label">Services</div>
+                </div>
+                @if($weeklyActivity['services'] > 0)
+                <span class="mini-badge up">+{{ $weeklyActivity['services'] }}</span>
+                @endif
+            </div>
+            <div class="summary-mini-card accent">
+                <div class="mini-icon"><i class="fa fa-building"></i></div>
+                <div class="mini-content">
+                    <div class="mini-value">{{ $stats['projects'] }}</div>
+                    <div class="mini-label">Projects</div>
+                </div>
+                @if($weeklyActivity['projects'] > 0)
+                <span class="mini-badge up">+{{ $weeklyActivity['projects'] }}</span>
+                @endif
+            </div>
+            <div class="summary-mini-card success">
+                <div class="mini-icon"><i class="fa fa-tags"></i></div>
+                <div class="mini-content">
+                    <div class="mini-value">{{ $stats['offers'] }}</div>
+                    <div class="mini-label">Offers</div>
+                </div>
+                @if($weeklyActivity['offers'] > 0)
+                <span class="mini-badge up">+{{ $weeklyActivity['offers'] }}</span>
+                @endif
+            </div>
+            <div class="summary-mini-card info">
+                <div class="mini-icon"><i class="fa fa-paint-brush"></i></div>
+                <div class="mini-content">
+                    <div class="mini-value">{{ $stats['interior_galleries'] }}</div>
+                    <div class="mini-label">Interior Galleries</div>
+                </div>
+            </div>
+            <div class="summary-mini-card warning">
+                <div class="mini-icon"><i class="fa fa-envelope"></i></div>
+                <div class="mini-content">
+                    <div class="mini-value">{{ $stats['contact_pending'] ?? 0 }}</div>
+                    <div class="mini-label">Pending Contacts</div>
+                </div>
+                @if(($stats['contact_pending'] ?? 0) > 0)
+                <span class="mini-badge pending">Needs Review</span>
+                @endif
             </div>
         </div>
 
@@ -518,66 +779,256 @@
         <div class="quick-actions animate__animated animate__fadeInUp">
             <div class="action-title"><i class="fa fa-bolt"></i> Quick Actions</div>
             <div class="action-grid">
+                @permission('services-view')
                 <a href="{{ route('service.index') }}" class="action-item">
-                    <i class="fa fa-cogs"></i>
+                    <i class="mdi mdi-briefcase"></i>
                     <span>Services</span>
                 </a>
+                @endpermission
+                
+                @permission('projects-view')
                 <a href="{{ route('project.index') }}" class="action-item">
                     <i class="fa fa-building"></i>
                     <span>Projects</span>
                 </a>
+                @endpermission
+                
+                @permission('offers-view')
                 <a href="{{ route('offer.index') }}" class="action-item">
-                    <i class="fa fa-tags"></i>
+                    <i class="fa fa-tag"></i>
                     <span>Offers</span>
                 </a>
+                @endpermission
+                
+                @permission('interior-design-galleries-view')
+                <a href="{{ route('interior-design-gallery.index') }}" class="action-item">
+                    <i class="fa fa-paint-brush"></i>
+                    <span>Interior Gallery</span>
+                </a>
+                @endpermission
+                
+                @permission('news-view')
                 <a href="{{ route('news-back.index') }}" class="action-item">
                     <i class="fa fa-newspaper-o"></i>
                     <span>News</span>
                 </a>
+                @endpermission
+                
+                @permission('sliders-view')
+                <a href="{{ route('slider.index') }}" class="action-item">
+                    <i class="mdi mdi-view-carousel"></i>
+                    <span>Sliders</span>
+                </a>
+                @endpermission
+                
+                @permission('team-view')
                 <a href="{{ route('admin.team.index') }}" class="action-item">
                     <i class="fa fa-users"></i>
                     <span>Team</span>
                 </a>
+                @endpermission
+                
+                @permission('partners-view')
                 <a href="{{ route('partner.index') }}" class="action-item">
                     <i class="fa fa-handshake-o"></i>
                     <span>Partners</span>
                 </a>
-                <a href="{{ route('slider.index') }}" class="action-item">
-                    <i class="fa fa-picture-o"></i>
-                    <span>Sliders</span>
+                @endpermission
+                
+                @permission('contact-information-view')
+                <a href="{{ route('contact-information.index') }}" class="action-item">
+                    <i class="fa fa-envelope"></i>
+                    <span>Contact Info</span>
                 </a>
-                <a href="{{ route('faq.index') }}" class="action-item">
-                    <i class="fa fa-question-circle"></i>
-                    <span>FAQs</span>
+                @endpermission
+                
+                @permission('jobs-postings-view')
+                <a href="{{ route('jobs-posting.index') }}" class="action-item">
+                    <i class="fa fa-briefcase"></i>
+                    <span>Jobs</span>
                 </a>
+                @endpermission
+                
+                @permission('users-view')
+                <a href="{{ route('users.index') }}" class="action-item">
+                    <i class="fa fa-user"></i>
+                    <span>Users</span>
+                </a>
+                @endpermission
+                
+                @permission('roles-view')
+                <a href="{{ route('admin.roles.index') }}" class="action-item">
+                    <i class="fa fa-shield"></i>
+                    <span>Roles</span>
+                </a>
+                @endpermission
+                
+                @permission('activity-logs-view')
+                <a href="{{ route('admin.activity-logs.index') }}" class="action-item">
+                    <i class="fa fa-history"></i>
+                    <span>Activity Logs</span>
+                </a>
+                @endpermission
+                
+                @permission('settings-view')
+                <a href="{{ route('site-settings.index') }}" class="action-item">
+                    <i class="fa fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                @endpermission
             </div>
         </div>
 
-        <!-- Quick Overview Charts -->
+        <!-- Charts Row -->
         <div class="row animate__animated animate__fadeInUp">
-            <!-- Total Content Overview -->
-            <div class="col-lg-6">
+            <div class="col-lg-8">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <div class="chart-title">Content Growth Trend</div>
+                            <div class="chart-subtitle">Last 6 months content creation analysis</div>
+                        </div>
+                    </div>
+                    <canvas id="monthlyGrowthChart"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-4">
                 <div class="chart-card">
                     <div class="chart-header">
                         <div>
                             <div class="chart-title">Content Overview</div>
-                            <div class="chart-subtitle">Total items by content type</div>
+                            <div class="chart-subtitle">Total items by type</div>
                         </div>
                     </div>
                     <canvas id="contentOverviewChart"></canvas>
                 </div>
             </div>
+        </div>
 
-            <!-- Recent Activity Chart -->
-            <div class="col-lg-6">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <div>
-                            <div class="chart-title">Recent Activity (Last 30 Days)</div>
-                            <div class="chart-subtitle">New additions this month</div>
+        <!-- Activity & Creators Row -->
+        <div class="row animate__animated animate__fadeInUp">
+            <div class="col-lg-8">
+                <div class="activity-panel">
+                    <div class="panel-header">
+                        <div class="panel-title"><i class="fa fa-history"></i> Recent Activity</div>
+                        @permission('activity-logs-view')
+                        <a href="{{ route('admin.activity-logs.index') }}" class="view-all-link">View All <i class="fa fa-arrow-right"></i></a>
+                        @endpermission
+                    </div>
+                    @forelse($recentLogs as $log)
+                    <div class="activity-item">
+                        <div class="activity-icon {{ $log->action }}">
+                            @if($log->action == 'create')
+                            <i class="fa fa-plus"></i>
+                            @elseif($log->action == 'update')
+                            <i class="fa fa-pencil"></i>
+                            @elseif($log->action == 'delete')
+                            <i class="fa fa-trash"></i>
+                            @elseif($log->action == 'login' || $log->action == 'logout')
+                            <i class="fa fa-sign-in"></i>
+                            @elseif($log->action == 'restore')
+                            <i class="fa fa-undo"></i>
+                            @else
+                            <i class="fa fa-eye"></i>
+                            @endif
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">
+                                <strong>{{ $log->user_name }}</strong> 
+                                {{ $log->action == 'create' ? 'created' : ($log->action == 'update' ? 'updated' : ($log->action == 'delete' ? 'deleted' : ($log->action == 'restore' ? 'restored' : $log->action))) }}
+                                {{ $log->model_name ? strtolower($log->model_name) : 'record' }}
+                                @if($log->record_title)
+                                "<em>{{ Str::limit($log->record_title, 30) }}</em>"
+                                @endif
+                            </div>
+                            <div class="activity-meta">
+                                <i class="fa fa-clock-o"></i> {{ $log->created_at->diffForHumans() }}
+                                @if($log->ip_address)
+                                &bull; <i class="fa fa-globe"></i> {{ $log->ip_address }}
+                                @endif
+                            </div>
                         </div>
                     </div>
-                    <canvas id="recentActivityChart"></canvas>
+                    @empty
+                    <div class="text-center text-muted py-4">
+                        <i class="fa fa-info-circle fa-2x mb-2"></i>
+                        <p>No recent activity found</p>
+                    </div>
+                    @endforelse
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="creators-panel mb-4">
+                    <div class="panel-header">
+                        <div class="panel-title"><i class="fa fa-trophy"></i> Top Contributors</div>
+                    </div>
+                    @forelse($topCreators as $index => $creator)
+                    <div class="creator-item">
+                        <div class="creator-rank">{{ $index + 1 }}</div>
+                        <div class="creator-info">
+                            <div class="creator-name">{{ $creator->user_name }}</div>
+                            <div class="creator-actions">{{ $creator->actions_count }} actions this month</div>
+                        </div>
+                        <span class="creator-count">{{ $creator->actions_count }}</span>
+                    </div>
+                    @empty
+                    <div class="text-center text-muted py-4">
+                        <i class="fa fa-users fa-2x mb-2"></i>
+                        <p>No activity data yet</p>
+                    </div>
+                    @endforelse
+                </div>
+
+                <div class="health-panel">
+                    <div class="panel-header">
+                        <div class="panel-title"><i class="fa fa-heartbeat"></i> System Health</div>
+                    </div>
+                    <div class="health-item">
+                        <span class="health-label">Published Content</span>
+                        <div class="health-value">
+                            @php
+                                $totalContent = $stats['services'] + $stats['projects'] + $stats['offers'];
+                                $publishedContent = $stats['services_published'] + $stats['projects_published'] + $stats['offers_published'];
+                                $publishRate = $totalContent > 0 ? round(($publishedContent / $totalContent) * 100) : 0;
+                            @endphp
+                            <span class="health-badge {{ $publishRate >= 70 ? 'good' : ($publishRate >= 40 ? 'warning' : 'danger') }}">
+                                {{ $publishRate }}%
+                            </span>
+                        </div>
+                    </div>
+                    <div class="health-item">
+                        <span class="health-label">Pending Contacts</span>
+                        <div class="health-value">
+                            <span class="health-badge {{ ($stats['contact_pending'] ?? 0) == 0 ? 'good' : (($stats['contact_pending'] ?? 0) <= 5 ? 'warning' : 'danger') }}">
+                                {{ $stats['contact_pending'] ?? 0 }} pending
+                            </span>
+                        </div>
+                    </div>
+                    <div class="health-item">
+                        <span class="health-label">Active Sliders</span>
+                        <div class="health-value">
+                            <span class="health-badge {{ $stats['sliders_active'] > 0 ? 'good' : 'warning' }}">
+                                {{ $stats['sliders_active'] }} / {{ $stats['sliders'] }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="health-item">
+                        <span class="health-label">Active Jobs</span>
+                        <div class="health-value">
+                            <span class="health-badge {{ ($stats['jobs_active'] ?? 0) > 0 ? 'good' : 'warning' }}">
+                                {{ $stats['jobs_active'] ?? 0 }} active
+                            </span>
+                        </div>
+                    </div>
+                    <div class="health-item">
+                        <span class="health-label">Trashed Items</span>
+                        <div class="health-value">
+                            @php $trashedTotal = $stats['services_trashed'] + $stats['projects_trashed'] + $stats['offers_trashed'] + $stats['interior_galleries_trashed']; @endphp
+                            <span class="health-badge {{ $trashedTotal == 0 ? 'good' : ($trashedTotal <= 10 ? 'warning' : 'danger') }}">
+                                {{ $trashedTotal }} items
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -588,53 +1039,53 @@
             <!-- Services -->
             <div class="col-md-6 col-xl-3">
                 <div class="stat-card primary">
-                    <div class="icon">
-                        <i class="fa fa-cogs"></i>
-                    </div>
+                    <div class="icon"><i class="fa fa-cogs"></i></div>
                     <div class="title">Services</div>
                     <div class="value">{{ $stats['services'] }}</div>
                     <div class="subtitle">
                         <span class="status-indicator published"></span> {{ $stats['services_published'] }} Published
                         <br>
-                        <span class="status-indicator published"></span> {{ $stats['services_featured'] }} Featured
-                                        </div>
+                        <span class="status-indicator unpublished"></span> {{ $stats['services_unpublished'] }} Unpublished
+                        <br>
+                        <span class="status-indicator trashed"></span> {{ $stats['services_trashed'] }} Trashed
+                    </div>
                     @if($recentActivity['services'] > 0)
                     <span class="badge-info">+{{ $recentActivity['services'] }} this month</span>
                     @endif
-                                    </div>
-                                </div>
+                </div>
+            </div>
 
             <!-- Projects -->
-                                <div class="col-md-6 col-xl-3">
+            <div class="col-md-6 col-xl-3">
                 <div class="stat-card accent">
-                    <div class="icon">
-                        <i class="fa fa-building"></i>
-                    </div>
+                    <div class="icon"><i class="fa fa-building"></i></div>
                     <div class="title">Projects</div>
                     <div class="value">{{ $stats['projects'] }}</div>
                     <div class="subtitle">
                         <span class="status-indicator published"></span> {{ $stats['projects_published'] }} Published
                         <br>
-                        <span class="status-indicator published"></span> {{ $stats['projects_featured'] }} Featured
-                                        </div>
+                        <span class="status-indicator unpublished"></span> {{ $stats['projects_unpublished'] }} Unpublished
+                        <br>
+                        <span class="status-indicator trashed"></span> {{ $stats['projects_trashed'] }} Trashed
+                    </div>
                     @if($recentActivity['projects'] > 0)
                     <span class="badge-info">+{{ $recentActivity['projects'] }} this month</span>
                     @endif
-                                    </div>
-                                </div>
+                </div>
+            </div>
 
             <!-- Offers -->
-                                <div class="col-md-6 col-xl-3">
+            <div class="col-md-6 col-xl-3">
                 <div class="stat-card success">
-                    <div class="icon">
-                        <i class="fa fa-tags"></i>
-                    </div>
+                    <div class="icon"><i class="fa fa-tags"></i></div>
                     <div class="title">Offers</div>
                     <div class="value">{{ $stats['offers'] }}</div>
                     <div class="subtitle">
                         <span class="status-indicator published"></span> {{ $stats['offers_published'] }} Published
                         <br>
-                        <span class="status-indicator published"></span> {{ $stats['offers_featured'] }} Featured
+                        <span class="status-indicator unpublished"></span> {{ $stats['offers_unpublished'] }} Unpublished
+                        <br>
+                        <span class="status-indicator trashed"></span> {{ $stats['offers_trashed'] }} Trashed
                     </div>
                     @if($recentActivity['offers'] > 0)
                     <span class="badge-info">+{{ $recentActivity['offers'] }} this month</span>
@@ -642,23 +1093,25 @@
                 </div>
             </div>
 
-            <!-- News -->
+            <!-- Interior Galleries -->
             <div class="col-md-6 col-xl-3">
-                <div class="stat-card info">
-                    <div class="icon">
-                        <i class="fa fa-newspaper-o"></i>
-                    </div>
-                    <div class="title">News Articles</div>
-                    <div class="value">{{ $stats['news'] }}</div>
+                <div class="stat-card orange">
+                    <div class="icon"><i class="fa fa-paint-brush"></i></div>
+                    <div class="title">Interior Galleries</div>
+                    <div class="value">{{ $stats['interior_galleries'] }}</div>
                     <div class="subtitle">
-                        {{ $stats['news_categories'] }} Categories
+                        <span class="status-indicator published"></span> {{ $stats['interior_galleries_published'] }} Published
+                        <br>
+                        <span class="status-indicator published"></span> {{ $stats['interior_galleries_featured'] }} Featured
+                        <br>
+                        <span class="status-indicator trashed"></span> {{ $stats['interior_galleries_trashed'] }} Trashed
                     </div>
-                    @if($recentActivity['news'] > 0)
-                    <span class="badge-info">+{{ $recentActivity['news'] }} this month</span>
+                    @if($recentActivity['interior_galleries'] > 0)
+                    <span class="badge-info">+{{ $recentActivity['interior_galleries'] }} this month</span>
                     @endif
-                                        </div>
-                                    </div>
-                                </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Contact & Careers -->
         <h3 class="section-title">Contact & Careers</h3>
@@ -666,23 +1119,24 @@
             <!-- Contact Submissions -->
             <div class="col-md-6 col-xl-3">
                 <div class="stat-card warning">
-                    <div class="icon">
-                        <i class="fa fa-envelope"></i>
-                    </div>
+                    <div class="icon"><i class="fa fa-envelope"></i></div>
                     <div class="title">Contact Submissions</div>
                     <div class="value">{{ $stats['contact_submissions'] ?? 0 }}</div>
                     <div class="subtitle">
-                        <span class="status-indicator" style="background: var(--warning-color);"></span> {{ $stats['contact_pending'] ?? 0 }} Pending Review
+                        <span class="status-indicator pending"></span> {{ $stats['contact_pending'] ?? 0 }} Pending
+                        <br>
+                        <span class="status-indicator published"></span> {{ $stats['contact_replied'] ?? 0 }} Replied
                     </div>
+                    @if(($recentActivity['contact_submissions'] ?? 0) > 0)
+                    <span class="badge-info">+{{ $recentActivity['contact_submissions'] }} this month</span>
+                    @endif
                 </div>
             </div>
 
             <!-- Job Postings -->
             <div class="col-md-6 col-xl-3">
                 <div class="stat-card primary">
-                    <div class="icon">
-                        <i class="fa fa-briefcase"></i>
-                    </div>
+                    <div class="icon"><i class="fa fa-briefcase"></i></div>
                     <div class="title">Job Postings</div>
                     <div class="value">{{ $stats['jobs_postings'] ?? 0 }}</div>
                     <div class="subtitle">
@@ -694,199 +1148,230 @@
             <!-- Job Applications -->
             <div class="col-md-6 col-xl-3">
                 <div class="stat-card accent">
-                    <div class="icon">
-                        <i class="fa fa-file-text-o"></i>
-                    </div>
+                    <div class="icon"><i class="fa fa-file-text-o"></i></div>
                     <div class="title">Job Applications</div>
                     <div class="value">{{ $stats['job_applications'] ?? 0 }}</div>
                     <div class="subtitle">
-                        <span class="status-indicator" style="background: var(--warning-color);"></span> {{ $stats['job_applications_pending'] ?? 0 }} Pending
+                        <span class="status-indicator pending"></span> {{ $stats['job_applications_pending'] ?? 0 }} Pending
+                        <br>
+                        <span class="status-indicator published"></span> {{ $stats['job_applications_reviewed'] ?? 0 }} Reviewed
                     </div>
+                    @if(($recentActivity['job_applications'] ?? 0) > 0)
+                    <span class="badge-info">+{{ $recentActivity['job_applications'] }} this month</span>
+                    @endif
                 </div>
             </div>
 
-            <!-- System Users -->
+            <!-- News -->
             <div class="col-md-6 col-xl-3">
                 <div class="stat-card info">
-                    <div class="icon">
-                        <i class="fa fa-user-secret"></i>
+                    <div class="icon"><i class="fa fa-newspaper-o"></i></div>
+                    <div class="title">News Articles</div>
+                    <div class="value">{{ $stats['news'] }}</div>
+                    <div class="subtitle">
+                        {{ $stats['news_categories'] }} Categories
                     </div>
-                    <div class="title">System Users</div>
-                    <div class="value">{{ $stats['users'] }}</div>
-                    <div class="subtitle">Admin users</div>
-                                        </div>
-                                    </div>
-                                </div>
+                    @if($recentActivity['news'] > 0)
+                    <span class="badge-info">+{{ $recentActivity['news'] }} this month</span>
+                    @endif
+                </div>
+            </div>
+        </div>
 
-        <!-- Team & Partners -->
-        <h3 class="section-title">Team & Partners</h3>
+        <!-- Team & System -->
+        <h3 class="section-title">Team & System</h3>
         <div class="row animate__animated animate__fadeInUp">
             <!-- Team Members -->
-                                <div class="col-md-6 col-xl-3">
+            <div class="col-md-6 col-xl-3">
                 <div class="stat-card primary">
-                    <div class="icon">
-                        <i class="fa fa-users"></i>
-                                        </div>
+                    <div class="icon"><i class="fa fa-users"></i></div>
                     <div class="title">Team Members</div>
                     <div class="value">{{ $stats['team_members'] }}</div>
-                    <div class="subtitle">Active team members</div>
+                    <div class="subtitle">
+                        <span class="status-indicator published"></span> {{ $stats['team_board_members'] }} Board Members
+                    </div>
                     @if($recentActivity['team_members'] > 0)
                     <span class="badge-info">+{{ $recentActivity['team_members'] }} this month</span>
                     @endif
-                                    </div>
-                                </div>
+                </div>
+            </div>
 
             <!-- Partners -->
             <div class="col-md-6 col-xl-3">
                 <div class="stat-card accent">
-                    <div class="icon">
-                        <i class="fa fa-handshake-o"></i>
-                    </div>
+                    <div class="icon"><i class="fa fa-handshake-o"></i></div>
                     <div class="title">Partners</div>
                     <div class="value">{{ $stats['partners'] }}</div>
                     <div class="subtitle">Business partners</div>
                 </div>
             </div>
 
-            <!-- Feasibility Studies -->
+            <!-- System Users -->
             <div class="col-md-6 col-xl-3">
                 <div class="stat-card success">
-                    <div class="icon">
-                        <i class="fa fa-line-chart"></i>
+                    <div class="icon"><i class="fa fa-user-secret"></i></div>
+                    <div class="title">System Users</div>
+                    <div class="value">{{ $stats['users'] }}</div>
+                    <div class="subtitle">
+                        {{ $stats['roles'] }} Roles ({{ $stats['roles_active'] }} active)
                     </div>
-                    <div class="title">Feasibility Studies</div>
-                    <div class="value">{{ $stats['feasibility_studies'] }}</div>
-                    <div class="subtitle">Total studies</div>
                 </div>
             </div>
 
-            <!-- FAQs -->
+            <!-- Activity Logs -->
             <div class="col-md-6 col-xl-3">
                 <div class="stat-card info">
-                    <div class="icon">
-                        <i class="fa fa-question-circle"></i>
-                            </div>
-                    <div class="title">FAQs</div>
-                    <div class="value">{{ $stats['faqs'] }}</div>
-                    <div class="subtitle">Frequently asked questions</div>
-                                        </div>
-                                    </div>
-                                </div>
+                    <div class="icon"><i class="fa fa-history"></i></div>
+                    <div class="title">Activity Logs</div>
+                    <div class="value">{{ number_format($stats['activity_logs']) }}</div>
+                    <div class="subtitle">
+                        {{ $stats['activity_logs_today'] }} Today
+                        <br>
+                        {{ $stats['activity_logs_week'] }} This Week
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Website Content -->
         <h3 class="section-title">Website Content</h3>
         <div class="row animate__animated animate__fadeInUp">
             <!-- Sliders -->
-                                <div class="col-md-6 col-xl-3">
+            <div class="col-md-6 col-xl-3">
                 <div class="stat-card primary">
-                    <div class="icon">
-                        <i class="fa fa-picture-o"></i>
-                    </div>
+                    <div class="icon"><i class="fa fa-picture-o"></i></div>
                     <div class="title">Sliders</div>
                     <div class="value">{{ $stats['sliders'] }}</div>
                     <div class="subtitle">
                         <span class="status-indicator published"></span> {{ $stats['sliders_active'] }} Active
-                                        </div>
-                                    </div>
-                                </div>
-
-            <!-- Showcases -->
-                                <div class="col-md-6 col-xl-3">
-                <div class="stat-card accent">
-                    <div class="icon">
-                        <i class="fa fa-star"></i>
+                        <br>
+                        <span class="status-indicator unpublished"></span> {{ $stats['sliders_inactive'] }} Inactive
                     </div>
-                    <div class="title">Showcases</div>
-                    <div class="value">{{ $stats['showcases'] }}</div>
+                </div>
+            </div>
+
+            <!-- Certificates -->
+            <div class="col-md-6 col-xl-3">
+                <div class="stat-card accent">
+                    <div class="icon"><i class="fa fa-certificate"></i></div>
+                    <div class="title">Certificates</div>
+                    <div class="value">{{ $stats['certificates'] }}</div>
                     <div class="subtitle">
-                        <span class="status-indicator published"></span> {{ $stats['showcases_active'] }} Active
-                                        </div>
+                        <span class="status-indicator published"></span> {{ $stats['certificates_active'] }} Active
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menus -->
+            <div class="col-md-6 col-xl-3">
+                <div class="stat-card success">
+                    <div class="icon"><i class="fa fa-bars"></i></div>
+                    <div class="title">Menus</div>
+                    <div class="value">{{ $stats['menus'] }}</div>
+                    <div class="subtitle">
+                        {{ $stats['menu_items'] }} Menu Items
+                        <br>
+                        {{ $stats['menus_active'] }} Active Menus
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Banners -->
+            <div class="col-md-6 col-xl-3">
+                <div class="stat-card info">
+                    <div class="icon"><i class="fa fa-image"></i></div>
+                    <div class="title">Page Banners</div>
+                    <div class="value">{{ $stats['page_banners'] }}</div>
+                    <div class="subtitle">Page header banners</div>
+                </div>
+            </div>
+
+            <!-- FAQs -->
+            <div class="col-md-6 col-xl-3">
+                <div class="stat-card warning">
+                    <div class="icon"><i class="fa fa-question-circle"></i></div>
+                    <div class="title">FAQs</div>
+                    <div class="value">{{ $stats['faqs'] }}</div>
+                    <div class="subtitle">Frequently asked questions</div>
                 </div>
             </div>
 
             <!-- Home Blocks -->
             <div class="col-md-6 col-xl-3">
-                <div class="stat-card success">
-                    <div class="icon">
-                        <i class="fa fa-th-large"></i>
-                    </div>
+                <div class="stat-card orange">
+                    <div class="icon"><i class="fa fa-th-large"></i></div>
                     <div class="title">Home Blocks</div>
                     <div class="value">{{ $stats['home_blocks'] }}</div>
-                    <div class="subtitle">Homepage blocks</div>
+                    <div class="subtitle">Homepage content blocks</div>
                 </div>
             </div>
 
             <!-- Cards -->
             <div class="col-md-6 col-xl-3">
-                <div class="stat-card info">
-                    <div class="icon">
-                        <i class="fa fa-id-card"></i>
-                    </div>
+                <div class="stat-card primary">
+                    <div class="icon"><i class="fa fa-id-card"></i></div>
                     <div class="title">Cards</div>
                     <div class="value">{{ $stats['cards'] }}</div>
                     <div class="subtitle">Content cards</div>
                 </div>
-                            </div>
-
-            <!-- Home FAQs -->
-            <div class="col-md-6 col-xl-3">
-                <div class="stat-card warning">
-                    <div class="icon">
-                        <i class="fa fa-home"></i>
-                    </div>
-                    <div class="title">Home FAQs</div>
-                    <div class="value">{{ $stats['home_faqs'] }}</div>
-                    <div class="subtitle">Homepage FAQs</div>
-                </div>
-                            </div>
+            </div>
 
             <!-- About Features -->
             <div class="col-md-6 col-xl-3">
-                <div class="stat-card primary">
-                    <div class="icon">
-                        <i class="fa fa-info-circle"></i>
-                    </div>
+                <div class="stat-card accent">
+                    <div class="icon"><i class="fa fa-star"></i></div>
                     <div class="title">About Features</div>
                     <div class="value">{{ $stats['about_features'] }}</div>
-                    <div class="subtitle">About page features</div>
+                    <div class="subtitle">
+                        <span class="status-indicator published"></span> {{ $stats['about_features_active'] }} Active
+                    </div>
                 </div>
-                         </div>
-            
-            <!-- About Custom Blocks -->
+            </div>
+        </div>
+
+        <!-- Basic Data Categories -->
+        <h3 class="section-title">Basic Data Categories</h3>
+        <div class="row animate__animated animate__fadeInUp">
+            <div class="col-md-6 col-xl-3">
+                <div class="stat-card primary">
+                    <div class="icon"><i class="fa fa-folder-open"></i></div>
+                    <div class="title">Engineering Categories</div>
+                    <div class="value">{{ $stats['engineering_categories'] }}</div>
+                    <div class="subtitle">{{ $stats['engineering_subcategories'] }} Subcategories</div>
+                </div>
+            </div>
             <div class="col-md-6 col-xl-3">
                 <div class="stat-card accent">
-                    <div class="icon">
-                        <i class="fa fa-cube"></i>
-                    </div>
-                    <div class="title">About Custom Blocks</div>
-                    <div class="value">{{ $stats['about_custom_blocks'] }}</div>
-                    <div class="subtitle">Custom about blocks</div>
+                    <div class="icon"><i class="fa fa-folder"></i></div>
+                    <div class="title">Offer Categories</div>
+                    <div class="value">{{ $stats['offer_categories'] }}</div>
+                    <div class="subtitle">{{ $stats['offer_subcategories'] }} Subcategories</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="stat-card success">
+                    <div class="icon"><i class="fa fa-paint-brush"></i></div>
+                    <div class="title">Interior Categories</div>
+                    <div class="value">{{ $stats['interior_categories'] }}</div>
+                    <div class="subtitle">Design categories</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="stat-card info">
+                    <div class="icon"><i class="fa fa-line-chart"></i></div>
+                    <div class="title">Feasibility Studies</div>
+                    <div class="value">{{ $stats['feasibility_studies'] }}</div>
+                    <div class="subtitle">Total studies</div>
                 </div>
             </div>
         </div>
 
         <!-- Charts Section -->
-        <h3 class="section-title">Analytics & Trends</h3>
+        <h3 class="section-title">Analytics & Distribution</h3>
         
-        <!-- Monthly Growth Chart - Full Width -->
+        <!-- Status Charts - Row 1 -->
         <div class="row animate__animated animate__fadeInUp">
-            <div class="col-12">
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <div>
-                            <div class="chart-title">Monthly Content Growth</div>
-                            <div class="chart-subtitle">Last 6 months trend analysis</div>
-                        </div>
-                    </div>
-                    <canvas id="monthlyGrowthChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- Status Charts - Two per Row -->
-        <div class="row animate__animated animate__fadeInUp">
-            <!-- Services Status -->
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <div class="chart-card">
                     <div class="chart-header">
                         <div>
@@ -897,9 +1382,7 @@
                     <canvas id="servicesStatusChart"></canvas>
                 </div>
             </div>
-
-            <!-- Projects Status -->
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <div class="chart-card">
                     <div class="chart-header">
                         <div>
@@ -908,11 +1391,13 @@
                         </div>
                     </div>
                     <canvas id="projectsStatusChart"></canvas>
+                </div>
             </div>
         </div>
-
-            <!-- Offers Status -->
-            <div class="col-lg-4">
+        
+        <!-- Status Charts - Row 2 -->
+        <div class="row animate__animated animate__fadeInUp">
+            <div class="col-lg-6">
                 <div class="chart-card">
                     <div class="chart-header">
                         <div>
@@ -922,20 +1407,42 @@
                     </div>
                     <canvas id="offersStatusChart"></canvas>
                 </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <div class="chart-title">Interior Status</div>
+                            <div class="chart-subtitle">Published vs Unpublished</div>
+                        </div>
+                    </div>
+                    <canvas id="interiorStatusChart"></canvas>
                 </div>
             </div>
+        </div>
 
-            <!-- Category Distribution -->
+        <!-- Category Distribution -->
         <div class="row animate__animated animate__fadeInUp">
             <div class="col-lg-6">
                 <div class="chart-card">
                     <div class="chart-header">
                         <div>
                             <div class="chart-title">Projects by Category</div>
-                            <div class="chart-subtitle">Category distribution</div>
+                            <div class="chart-subtitle">Distribution across engineering categories</div>
                         </div>
                     </div>
                     <canvas id="categoryDistributionChart"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <div class="chart-title">Offers by Category</div>
+                            <div class="chart-subtitle">Distribution across offer categories</div>
+                        </div>
+                    </div>
+                    <canvas id="offersCategoryChart"></canvas>
                 </div>
             </div>
         </div>
@@ -947,378 +1454,364 @@
 @section('js')
 <script>
     $(document).ready(function() {
-        // Check if Chart is available
         if (typeof Chart === 'undefined') {
             console.error('Chart.js is not loaded');
             return;
         }
 
-        // Custom color palette matching the new theme
         const colors = {
-            primary: '#1a7d6b',
-            primaryDark: '#145f52',
-            accent: '#e8b85e',
+            primary: '#19868b',
+            primaryDark: '#146a6e',
+            accent: '#e1273d',
             success: '#10b981',
             info: '#3b82f6',
-            warning: '#f59e0b',
+            warning: '#f6b500',
             danger: '#ef4444',
-            secondary: '#2d3748'
+            orange: '#ff6935',
+            secondary: '#172e38'
         };
 
-    // Monthly Growth Chart
-    var monthlyGrowthCtx = document.getElementById('monthlyGrowthChart');
-    if (monthlyGrowthCtx) {
-        monthlyGrowthCtx = monthlyGrowthCtx.getContext('2d');
-    var monthlyGrowthChart = new Chart(monthlyGrowthCtx, {
-        type: 'line',
-        data: {
-            labels: {!! json_encode($monthlyData['months']) !!},
-            datasets: [
-                {
-                    label: 'Services',
-                    data: {!! json_encode($monthlyData['services']) !!},
+        // Monthly Growth Chart
+        var monthlyGrowthCtx = document.getElementById('monthlyGrowthChart');
+        if (monthlyGrowthCtx) {
+            monthlyGrowthCtx = monthlyGrowthCtx.getContext('2d');
+            new Chart(monthlyGrowthCtx, {
+                type: 'line',
+                data: {
+                    labels: {!! json_encode($monthlyData['months']) !!},
+                    datasets: [
+                        {
+                            label: 'Services',
+                            data: {!! json_encode($monthlyData['services']) !!},
                             borderColor: colors.primary,
-                            backgroundColor: 'rgba(26, 125, 107, 0.1)',
-                    borderWidth: 3,
-                    tension: 0.4,
+                            backgroundColor: 'rgba(25, 134, 139, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
                             fill: true,
                             pointBackgroundColor: colors.primary,
                             pointRadius: 5,
                             pointHoverRadius: 7
-                },
-                {
-                    label: 'Projects',
-                    data: {!! json_encode($monthlyData['projects']) !!},
+                        },
+                        {
+                            label: 'Projects',
+                            data: {!! json_encode($monthlyData['projects']) !!},
                             borderColor: colors.accent,
-                            backgroundColor: 'rgba(232, 184, 94, 0.1)',
-                    borderWidth: 3,
-                    tension: 0.4,
+                            backgroundColor: 'rgba(225, 39, 61, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
                             fill: true,
                             pointBackgroundColor: colors.accent,
                             pointRadius: 5,
                             pointHoverRadius: 7
-                },
-                {
+                        },
+                        {
                             label: 'Offers',
                             data: {!! json_encode($monthlyData['offers']) !!},
                             borderColor: colors.success,
                             backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                    borderWidth: 3,
-                    tension: 0.4,
+                            borderWidth: 3,
+                            tension: 0.4,
                             fill: true,
                             pointBackgroundColor: colors.success,
                             pointRadius: 5,
                             pointHoverRadius: 7
-                },
-                {
-                    label: 'News',
-                    data: {!! json_encode($monthlyData['news']) !!},
+                        },
+                        {
+                            label: 'Interior Galleries',
+                            data: {!! json_encode($monthlyData['interior_galleries']) !!},
+                            borderColor: colors.orange,
+                            backgroundColor: 'rgba(255, 105, 53, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true,
+                            pointBackgroundColor: colors.orange,
+                            pointRadius: 5,
+                            pointHoverRadius: 7
+                        },
+                        {
+                            label: 'News',
+                            data: {!! json_encode($monthlyData['news']) !!},
                             borderColor: colors.info,
                             backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    borderWidth: 3,
-                    tension: 0.4,
+                            borderWidth: 3,
+                            tension: 0.4,
                             fill: true,
                             pointBackgroundColor: colors.info,
                             pointRadius: 5,
                             pointHoverRadius: 7
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'bottom',
-                    labels: {
-                                padding: 20,
-                                usePointStyle: true,
-                                font: { size: 12, weight: '600' }
-                    }
+                        }
+                    ]
                 },
-                tooltip: {
-                            backgroundColor: 'rgba(45, 55, 72, 0.95)',
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: { padding: 20, usePointStyle: true, font: { size: 12, weight: '600' } }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(23, 46, 56, 0.95)',
                             padding: 14,
                             titleFont: { size: 14, weight: '700' },
                             bodyFont: { size: 13 },
                             cornerRadius: 8
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
                             grid: { color: 'rgba(0, 0, 0, 0.04)' },
                             ticks: { font: { size: 11 } }
-                },
-                x: {
+                        },
+                        x: {
                             grid: { display: false },
                             ticks: { font: { size: 11 } }
+                        }
+                    }
                 }
-            }
+            });
         }
-    });
-    }
 
-    // Services Status Chart
-    var servicesStatusCtx = document.getElementById('servicesStatusChart');
-    if (servicesStatusCtx) {
-        servicesStatusCtx = servicesStatusCtx.getContext('2d');
-    var servicesStatusChart = new Chart(servicesStatusCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Published', 'Unpublished'],
-            datasets: [{
-                data: [
-                    {{ $statusDistribution['services']['published'] }},
-                    {{ $statusDistribution['services']['unpublished'] }}
-                ],
+        // Content Overview Chart
+        var contentOverviewCtx = document.getElementById('contentOverviewChart');
+        if (contentOverviewCtx) {
+            contentOverviewCtx = contentOverviewCtx.getContext('2d');
+            new Chart(contentOverviewCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Services', 'Projects', 'Offers', 'Interior', 'News', 'Team'],
+                    datasets: [{
+                        data: [
+                            {{ $stats['services'] }},
+                            {{ $stats['projects'] }},
+                            {{ $stats['offers'] }},
+                            {{ $stats['interior_galleries'] }},
+                            {{ $stats['news'] }},
+                            {{ $stats['team_members'] }}
+                        ],
+                        backgroundColor: [
+                            colors.primary,
+                            colors.accent,
+                            colors.success,
+                            colors.orange,
+                            colors.info,
+                            colors.warning
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    cutout: '60%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { padding: 12, usePointStyle: true, font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Services Status Chart
+        var servicesStatusCtx = document.getElementById('servicesStatusChart');
+        if (servicesStatusCtx) {
+            servicesStatusCtx = servicesStatusCtx.getContext('2d');
+            new Chart(servicesStatusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Published', 'Unpublished'],
+                    datasets: [{
+                        data: [{{ $statusDistribution['services']['published'] }}, {{ $statusDistribution['services']['unpublished'] }}],
                         backgroundColor: [colors.success, colors.danger],
                         borderWidth: 0,
                         hoverOffset: 10
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
                     cutout: '65%',
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                            labels: { padding: 15, usePointStyle: true, font: { size: 12 } }
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 15, usePointStyle: true, font: { size: 12 } } }
+                    }
                 }
-            }
+            });
         }
-    });
-    }
 
-    // Projects Status Chart
-    var projectsStatusCtx = document.getElementById('projectsStatusChart');
-    if (projectsStatusCtx) {
-        projectsStatusCtx = projectsStatusCtx.getContext('2d');
-    var projectsStatusChart = new Chart(projectsStatusCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Published', 'Unpublished'],
-            datasets: [{
-                data: [
-                    {{ $statusDistribution['projects']['published'] }},
-                    {{ $statusDistribution['projects']['unpublished'] }}
-                ],
+        // Projects Status Chart
+        var projectsStatusCtx = document.getElementById('projectsStatusChart');
+        if (projectsStatusCtx) {
+            projectsStatusCtx = projectsStatusCtx.getContext('2d');
+            new Chart(projectsStatusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Published', 'Unpublished'],
+                    datasets: [{
+                        data: [{{ $statusDistribution['projects']['published'] }}, {{ $statusDistribution['projects']['unpublished'] }}],
                         backgroundColor: [colors.success, colors.danger],
                         borderWidth: 0,
                         hoverOffset: 10
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
                     cutout: '65%',
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                            labels: { padding: 15, usePointStyle: true, font: { size: 12 } }
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 15, usePointStyle: true, font: { size: 12 } } }
+                    }
                 }
-            }
+            });
         }
-    });
-    }
 
         // Offers Status Chart
         var offersStatusCtx = document.getElementById('offersStatusChart');
         if (offersStatusCtx) {
             offersStatusCtx = offersStatusCtx.getContext('2d');
-            var offersStatusChart = new Chart(offersStatusCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Published', 'Unpublished'],
-            datasets: [{
-                data: [
-                            {{ $statusDistribution['offers']['published'] }},
-                            {{ $statusDistribution['offers']['unpublished'] }}
-                ],
+            new Chart(offersStatusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Published', 'Unpublished'],
+                    datasets: [{
+                        data: [{{ $statusDistribution['offers']['published'] }}, {{ $statusDistribution['offers']['unpublished'] }}],
                         backgroundColor: [colors.success, colors.danger],
                         borderWidth: 0,
                         hoverOffset: 10
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
                     cutout: '65%',
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                            labels: { padding: 15, usePointStyle: true, font: { size: 12 } }
-                }
-            }
-        }
-    });
-    }
-
-    // Category Distribution Chart
-    var categoryDistributionCtx = document.getElementById('categoryDistributionChart');
-    if (categoryDistributionCtx) {
-        categoryDistributionCtx = categoryDistributionCtx.getContext('2d');
-    var categoryDistributionChart = new Chart(categoryDistributionCtx, {
-        type: 'pie',
-        data: {
-            labels: {!! json_encode($categoryDistribution['labels']) !!},
-            datasets: [{
-                data: {!! json_encode($categoryDistribution['data']) !!},
-                backgroundColor: [
-                            colors.primary,
-                            colors.accent,
-                            colors.success,
-                            colors.info,
-                            colors.warning,
-                            '#8b5cf6',
-                            '#ec4899',
-                            colors.secondary
-                ],
-                        borderWidth: 0,
-                        hoverOffset: 10
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                                padding: 12,
-                        usePointStyle: true,
-                                font: { size: 11 }
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 15, usePointStyle: true, font: { size: 12 } } }
                     }
                 }
-            }
+            });
         }
-    });
-    }
 
-    // Content Overview Chart
-    var contentOverviewCtx = document.getElementById('contentOverviewChart');
-    if (contentOverviewCtx) {
-        contentOverviewCtx = contentOverviewCtx.getContext('2d');
-    var contentOverviewChart = new Chart(contentOverviewCtx, {
-        type: 'bar',
-        data: {
-                    labels: ['Services', 'Projects', 'Offers', 'News', 'Team', 'Partners', 'FAQs', 'Sliders'],
-            datasets: [{
-                label: 'Total Items',
-                data: [
-                    {{ $stats['services'] }},
-                    {{ $stats['projects'] }},
-                            {{ $stats['offers'] }},
-                    {{ $stats['news'] }},
-                    {{ $stats['team_members'] }},
-                    {{ $stats['partners'] }},
-                    {{ $stats['faqs'] }},
-                    {{ $stats['sliders'] }}
-                ],
-                backgroundColor: [
+        // Interior Status Chart
+        var interiorStatusCtx = document.getElementById('interiorStatusChart');
+        if (interiorStatusCtx) {
+            interiorStatusCtx = interiorStatusCtx.getContext('2d');
+            new Chart(interiorStatusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Published', 'Unpublished'],
+                    datasets: [{
+                        data: [{{ $statusDistribution['interior_galleries']['published'] }}, {{ $statusDistribution['interior_galleries']['unpublished'] }}],
+                        backgroundColor: [colors.success, colors.danger],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    cutout: '65%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 15, usePointStyle: true, font: { size: 12 } } }
+                    }
+                }
+            });
+        }
+
+        // Category Distribution Chart
+        var categoryDistributionCtx = document.getElementById('categoryDistributionChart');
+        if (categoryDistributionCtx) {
+            categoryDistributionCtx = categoryDistributionCtx.getContext('2d');
+            new Chart(categoryDistributionCtx, {
+                type: 'bar',
+                data: {
+                    labels: {!! json_encode($categoryDistribution['labels']) !!},
+                    datasets: [{
+                        label: 'Projects',
+                        data: {!! json_encode($categoryDistribution['data']) !!},
+                        backgroundColor: [
                             colors.primary,
                             colors.accent,
                             colors.success,
                             colors.info,
                             colors.warning,
+                            colors.orange,
                             '#8b5cf6',
-                            '#ec4899',
                             colors.secondary
-                ],
-                borderWidth: 0,
+                        ],
+                        borderWidth: 0,
                         borderRadius: 8,
-                        barThickness: 35
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                        legend: { display: false },
-                tooltip: {
-                            backgroundColor: 'rgba(45, 55, 72, 0.95)',
-                    padding: 12,
-                            titleFont: { size: 14, weight: '700' },
-                            bodyFont: { size: 13 },
-                            cornerRadius: 8
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                            grid: { color: 'rgba(0, 0, 0, 0.04)' },
-                            ticks: { precision: 0, font: { size: 11 } }
+                        barThickness: 30
+                    }]
                 },
-                x: {
-                            grid: { display: false },
-                            ticks: { font: { size: 11 } }
-                }
-            }
-        }
-    });
-    }
-
-    // Recent Activity Chart
-    var recentActivityCtx = document.getElementById('recentActivityChart');
-    if (recentActivityCtx) {
-        recentActivityCtx = recentActivityCtx.getContext('2d');
-    var recentActivityChart = new Chart(recentActivityCtx, {
-        type: 'doughnut',
-        data: {
-                    labels: ['Services', 'Projects', 'Offers', 'News', 'Team Members'],
-            datasets: [{
-                data: [
-                    {{ $recentActivity['services'] }},
-                    {{ $recentActivity['projects'] }},
-                            {{ $recentActivity['offers'] }},
-                    {{ $recentActivity['news'] }},
-                    {{ $recentActivity['team_members'] }}
-                ],
-                backgroundColor: [
-                            colors.primary,
-                            colors.accent,
-                            colors.success,
-                            colors.info,
-                            colors.warning
-                ],
-                        borderWidth: 0,
-                        hoverOffset: 10
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-                    cutout: '60%',
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 15,
-                        usePointStyle: true,
-                                font: { size: 12 }
-                    }
-                },
-                tooltip: {
-                            backgroundColor: 'rgba(45, 55, 72, 0.95)',
-                    padding: 12,
-                            cornerRadius: 8,
-                    callbacks: {
-                        label: function(context) {
-                            var label = context.label || '';
-                            if (label) {
-                                label += ': ';
-                            }
-                            label += context.parsed + ' new items';
-                            return label;
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(0, 0, 0, 0.04)' }
+                        },
+                        y: {
+                            grid: { display: false }
                         }
                     }
                 }
-            }
+            });
         }
-    });
-    }
+
+        // Offers Category Chart
+        var offersCategoryCtx = document.getElementById('offersCategoryChart');
+        if (offersCategoryCtx) {
+            offersCategoryCtx = offersCategoryCtx.getContext('2d');
+            new Chart(offersCategoryCtx, {
+                type: 'bar',
+                data: {
+                    labels: {!! json_encode($offersCategoryDistribution['labels']) !!},
+                    datasets: [{
+                        label: 'Offers',
+                        data: {!! json_encode($offersCategoryDistribution['data']) !!},
+                        backgroundColor: [
+                            colors.accent,
+                            colors.primary,
+                            colors.success,
+                            colors.info,
+                            colors.warning,
+                            colors.orange,
+                            '#8b5cf6',
+                            colors.secondary
+                        ],
+                        borderWidth: 0,
+                        borderRadius: 8,
+                        barThickness: 30
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(0, 0, 0, 0.04)' }
+                        },
+                        y: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
     });
 </script>
 @endsection

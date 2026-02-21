@@ -28,7 +28,7 @@
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 9999;
+    z-index: 9999992;
     display: flex;
     align-items: center;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
