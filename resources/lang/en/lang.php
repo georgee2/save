@@ -1,14 +1,11 @@
 <?php
 
 return [
-    // Subcategories Section
     'subcategories_title' => 'Explore',
-    'subcategories_title_highlight' => 'by Engineering Type',
-    'subcategories_bio' => 'Discover our comprehensive range of engineering services designed to bring your vision to life with precision and excellence.',
+    'subcategories_title_highlight' => 'by Project Type',
+    'subcategories_bio' => 'Explore our diverse portfolio of landmark projects where innovative design meets expert execution for lasting excellence.',
     'subcategories_button' => 'Available Projects',
     'view_projects' => 'View Projects',
-    
-    // Featured Projects Section
     'our_work' => 'Our Work',
     'featured_projects_title' => 'Featured Projects',
     'featured_projects_bio' => 'Explore our handpicked selection of exceptional engineering projects that showcase innovation, precision, and architectural excellence.',
@@ -19,8 +16,6 @@ return [
     'view_project' => 'View',
     'project' => 'Project',
     'for_sale' => 'For Sale',
-    
-    // Featured Offers Section
     'special_deals' => 'Special Deals',
     'featured_offers_title' => 'Exclusive Offers',
     'featured_offers_bio' => 'Discover our premium engineering packages with competitive pricing tailored for each emirate. Limited time offers on exceptional projects.',
@@ -38,8 +33,6 @@ return [
     'emirate' => 'Emirate',
     'images' => 'Images',
     'videos' => 'Videos',
-    
-    // Offers Page
     'offers' => 'Offers',
     'all_offers' => 'All Offers',
     'offers_subtitle' => 'Discover our exclusive engineering offers and special packages with competitive pricing tailored for your needs.',
@@ -48,7 +41,6 @@ return [
     'offers_available' => 'offers available for you',
     'no_offers_found' => 'No offers found.',
     'find_your_offer' => 'Find your offer',
-    'emirate' => 'Emirate',
     'all_emirates' => 'All Emirates',
     'sqft_range' => 'Area (Sq.Ft)',
     'sqm_range' => 'Area (Sq.M)',
@@ -61,8 +53,6 @@ return [
     'no_price_available' => 'Price not available for this emirate',
     'price_by_emirate' => 'Prices by Emirate',
     'contact_us' => 'Contact Us',
-    
-    // Category Page
     'home' => 'Home',
     'we_found' => 'We found',
     'projects_available' => 'projects available for you',
@@ -91,8 +81,6 @@ return [
     'value' => 'Value',
     'enter_value' => 'Enter value',
     'select_value' => 'Select Value',
-    
-    // Projects Page
     'projects_seo_desc' => 'Explore our complete portfolio of engineering projects including residential, commercial, and industrial designs.',
     'category' => 'Category',
     'subcategory' => 'Subcategory',
@@ -107,18 +95,13 @@ return [
     'no_results_found' => 'No results found',
     'project_code' => 'Project Code',
     'offer' => 'Offer',
-    
-    // Mobile Bottom Nav
     'wishlist' => 'Wishlist',
     'login' => 'Login',
     'contact' => 'Contact',
     'chat_with_us' => 'Chat with us',
-    'send_message' => 'Send us a message',
-    'project' => 'Project',
+    'send_message' => 'Send Message',
     'search_placeholder' => 'Search offers and projects...',
     'select_type' => 'Select Type',
-    
-    // Project Details Page
     'share' => 'Share',
     'print' => 'Print',
     'facebook' => 'Facebook',
@@ -130,7 +113,6 @@ return [
     'no_description' => 'No description available.',
     'facts_and_features' => 'Facts and Features',
     'type' => 'Type',
-    'location' => 'Location',
     'partner' => 'Partner',
     'specifications' => 'Specifications',
     'site_plan_3d' => 'Site Plan & 3D View',
@@ -156,8 +138,6 @@ return [
     'area' => 'Area',
     'floor_specifications' => 'Floor Specifications',
     'floor_amenities' => 'Floor Amenities',
-    
-    // Feasibility Studies
     'feasibility_studies' => 'Feasibility Studies',
     'building_components' => 'Building Components',
     'length_components' => 'Length Components',
@@ -182,8 +162,6 @@ return [
     'substation_room' => 'Substation Room',
     'pumps_room' => 'Pumps Room',
     'no_feasibility_for_emirate' => 'No feasibility studies available for the selected emirate.',
-    
-    // Tour & Request Form
     'schedule_a_tour' => 'Schedule A Tour',
     'request_info' => 'Request Info',
     'preferred_time' => 'Preferred Time',
@@ -193,8 +171,6 @@ return [
     'phone_number' => 'Phone Number',
     'interested_message' => 'Your message...',
     'interested_in_offer' => 'Hello, I am interested in :offer',
-    
-    // Interior Design Gallery Section
     'interior_design' => 'Interior Design',
     'interior_gallery_title' => 'Our Interior Gallery',
     'interior_gallery_bio' => 'Explore our stunning collection of interior design projects showcasing elegance, creativity, and modern aesthetics.',
@@ -212,31 +188,21 @@ return [
     'browse_by_category' => 'Browse by Category',
     'interior_category' => 'Interior Category',
     'view_category' => 'View Category',
-    
-    // Services Section
     'what_we_do' => 'What We Do',
     'our_services' => 'Our Services',
     'services_bio' => 'We provide comprehensive engineering solutions tailored to meet your unique project requirements.',
     'view_all_services' => 'View All Services',
     'service' => 'Service',
-    
-    // Home Projects Section
     'explore' => 'Explore',
     'our_projects' => 'Our Projects',
     'projects_bio' => 'Discover our portfolio of exceptional engineering projects across various categories.',
     'all' => 'All',
     'more' => 'More',
-    
-    // Home Contact & FAQ Section
     'why_choose_us' => 'Why Choose Us',
-    
-    // Home News Section
     'latest_news' => 'Latest News',
     'news_and_articles' => 'News & Articles',
     'news_bio' => 'Stay updated with the latest news, insights, and articles from our team of experts.',
     'view_all_news' => 'View All News',
-    
-    // Footer
     'footer_default_bio' => 'We are a leading engineering company providing innovative solutions for residential, commercial, and industrial projects across the UAE.',
     'categories' => 'Categories',
     'resources' => 'Resources',
@@ -248,8 +214,6 @@ return [
     'all_rights_reserved' => 'All Rights Reserved',
     'privacy_policy' => 'Privacy Policy',
     'terms_of_service' => 'Terms of Service',
-    
-    // Common
     'read_more' => 'Read More',
     'learn_more' => 'Learn More',
     'load_more' => 'Load More',
@@ -258,8 +222,6 @@ return [
     'all_projects' => 'All Projects',
     'loading' => 'Loading',
     'to' => 'to',
-    
-    // About Page
     'about_us' => 'About Us',
     'who_we_are' => 'Who We Are',
     'what_we_offer' => 'What We Offer',
@@ -274,31 +236,22 @@ return [
     'our_mission' => 'Our Mission',
     'our_vision' => 'Our Vision',
     'our_values' => 'Our Values',
-    'ready_to_start' => 'Ready to Start Your Project?',
+    'ready_to_start' => 'Ready to Get Started?',
     'cta_description' => 'Let us help you bring your vision to life with our expert engineering solutions.',
-    'contact_us' => 'Contact Us',
     'download_company_profile' => 'Download Company Profile',
     'company_profile' => 'Company Profile',
     'company_profile_description' => 'Download our company profile to learn more about our services, projects, and expertise.',
-
-    // News/Blogs Page
     'news' => 'News',
     'all_news' => 'All News',
     'news_articles' => 'News & Articles',
     'news_seo_desc' => 'Stay updated with the latest news and articles from our company.',
     'stay_updated' => 'Stay updated with the latest news and insights',
-    'read_more' => 'Read More',
     'no_news_found' => 'No News Found',
     'no_news_desc' => 'There are no news articles available at the moment. Please check back later.',
-    'view_all_news' => 'View All News',
-    'categories' => 'Categories',
-    'all_categories' => 'All Categories',
     'recent_news' => 'Recent News',
     'tags' => 'Tags',
     'share_article' => 'Share this article',
     'back_to_news' => 'Back to News',
-
-    // Contact Page
     'contact_us_title' => 'Contact Us',
     'contact_us_subtitle' => 'We\'d love to hear from you. Get in touch with us!',
     'contact_us_seo_desc' => 'Contact Smart Vision UAE for inquiries about our engineering services and projects.',
@@ -317,7 +270,6 @@ return [
     'enter_subject' => 'Enter your subject',
     'your_message' => 'Your Message',
     'enter_your_message' => 'Write your message here...',
-    'send_message' => 'Send Message',
     'our_location' => 'Our Location',
     'find_us' => 'Find Us on Map',
     'map_not_available' => 'Map is not available',
@@ -332,17 +284,12 @@ return [
     'sending' => 'Sending',
     'sending_message' => 'Sending Message',
     'please_wait' => 'Please wait while we send your message...',
-    
-    // Services Page
     'services' => 'Services',
-    'our_services' => 'Our Services',
     'services_subtitle' => 'Comprehensive engineering and design solutions tailored to your needs',
     'services_seo_desc' => 'Explore our comprehensive range of engineering and design services tailored to bring your vision to life with precision and excellence.',
-    'what_we_offer' => 'What We Offer',
     'comprehensive_solutions' => 'Comprehensive Engineering Solutions',
     'services_intro_text' => 'From concept to completion, we deliver exceptional engineering and design services that transform your vision into reality. Our team of experts brings decades of experience across multiple disciplines.',
     'included_services' => 'Included Services',
-    'learn_more' => 'Learn More',
     'no_services_found' => 'No Services Available',
     'no_services_desc' => 'We are currently updating our services. Please check back soon.',
     'back_to_home' => 'Back to Home',
@@ -355,9 +302,7 @@ return [
     'about_service' => 'About This Service',
     'key_features' => 'Key Features',
     'service_features' => 'What We Provide',
-    'features_subtitle' => 'Discover the key features that make our service stand out',
-    'our_values' => 'Our Values',
-    'why_choose_us' => 'Why Choose Us',
+    'features_subtitle' => 'Discover what makes us stand out from the rest',
     'values_subtitle' => 'The core values that drive our commitment to excellence',
     'how_we_work' => 'How We Work',
     'our_process' => 'Our Process',
@@ -373,25 +318,20 @@ return [
     'frequently_asked' => 'Frequently Asked Questions',
     'faq_subtitle' => 'Find answers to common questions about this service',
     'have_more_questions' => 'Have more questions?',
-    'ready_to_start' => 'Ready to Get Started?',
     'service_cta_text' => 'Contact us today to discuss your project and discover how we can help bring your vision to life.',
     'get_started' => 'Get Started',
-    
-    // Careers Page
     'careers' => 'Careers',
     'careers_seo_desc' => 'Join our team and build your career with Smart Vision. Explore current job openings and opportunities.',
-    'join_our_team' => 'Join Our Team',
+    'join_our_team' => 'Want to Join Our Team?',
     'careers_subtitle' => 'Build your future with Smart Vision and be part of something extraordinary',
     'work_with_us' => 'Work With Us',
     'build_your_future' => 'Build Your Future With Us',
     'careers_intro_text' => 'We are always looking for talented and passionate individuals to join our growing team. At Smart Vision, we believe in nurturing talent and providing opportunities for professional growth.',
     'team_members' => 'Team Members',
     'open_positions' => 'Open Positions',
-    'location' => 'Location',
     'opportunities' => 'Opportunities',
     'find_your_role' => 'Find the perfect role that matches your skills and aspirations',
     'deadline' => 'Deadline',
-    'view_details' => 'View Details',
     'no_open_positions' => 'No Open Positions Currently',
     'no_positions_desc' => 'We don\'t have any open positions at the moment, but we\'re always interested in hearing from talented individuals.',
     'submit_resume' => 'Submit Your Resume',
@@ -408,8 +348,6 @@ return [
     'dont_see_position' => 'Don\'t See a Position That Fits?',
     'submit_resume_text' => 'We\'re always interested in meeting talented individuals. Send us your resume and we\'ll keep you in mind for future opportunities.',
     'contact_hr' => 'Contact HR',
-    
-    // Job Single Page
     'job_type' => 'Job Type',
     'salary' => 'Salary',
     'job_code' => 'Job Code',
@@ -418,10 +356,6 @@ return [
     'responsibilities' => 'Responsibilities',
     'apply_now' => 'Apply Now',
     'application_form_subtitle' => 'Fill out the form below to apply for this position',
-    'full_name' => 'Full Name',
-    'enter_your_name' => 'Enter your full name',
-    'enter_your_email' => 'Enter your email address',
-    'enter_your_phone' => 'Enter your phone number',
     'resume_cv' => 'Resume / CV',
     'choose_file' => 'Choose a file',
     'max_5mb' => 'Max 5MB',
@@ -443,8 +377,6 @@ return [
     'view_all_positions' => 'View All Positions',
     'have_questions' => 'Have Questions About This Position?',
     'contact_hr_about_job' => 'Feel free to reach out to our HR team for any queries about this job opportunity.',
-    
-    // Team Page
     'our_team' => 'Our Team',
     'team_seo_desc' => 'Meet our talented team of professionals dedicated to delivering exceptional results.',
     'team_hero_subtitle' => 'Meet the talented professionals behind our success',
@@ -456,16 +388,12 @@ return [
     'team_subtitle' => 'Dedicated experts committed to excellence in every project',
     'no_team_members' => 'No Team Members Yet',
     'team_coming_soon' => 'Our team information is coming soon. Stay tuned!',
-    'join_our_team' => 'Want to Join Our Team?',
     'team_cta_description' => 'We are always looking for talented individuals to join our growing team.',
     'about_company' => 'About Company',
     'team_member_seo_desc' => 'Learn more about our team member and their professional background.',
     'board_member' => 'Board Member',
     'contact_information' => 'Contact Information',
-    'email' => 'Email',
-    'phone' => 'Phone',
     'send_email' => 'Send Email',
-    'call_now' => 'Call Now',
     'professional_background' => 'Professional Background',
     'work_experience' => 'Work Experience',
     'meet_more_team' => 'Meet More Team Members',
@@ -473,8 +401,6 @@ return [
     'view_all_team' => 'View All Team',
     'view_profile' => 'View Profile',
     'team_slider_bio' => 'Meet the talented professionals driving our success and delivering excellence in every project.',
-    
-    // Board of Directors Page
     'board_seo_desc' => 'Meet the visionary leaders guiding our company towards excellence and innovation.',
     'board_hero_subtitle' => 'The visionary leaders guiding our success with experience and expertise',
     'meet_our_leaders' => 'Meet Our Leaders',
@@ -483,8 +409,6 @@ return [
     'board_coming_soon' => 'Board of Directors information is coming soon. Stay tuned!',
     'meet_full_team' => 'Meet Our Full Team',
     'meet_full_team_text' => 'Discover all the talented professionals who make our success possible.',
-    
-    // Branches Page
     'our_branches' => 'Our Branches',
     'branches_seo_desc' => 'Find our branch locations near you. Visit any of our offices for personalized service and support.',
     'branches_hero_subtitle' => 'Visit any of our conveniently located branches for personalized service',
@@ -498,17 +422,13 @@ return [
     'branches_cta_text' => 'Can\'t find a branch near you? Contact us and we\'ll help you find the best solution.',
     'branch' => 'Branch',
     'location_on_map' => 'Location on Map',
-    'address' => 'Address',
     'office_phone' => 'Office Phone',
     'working_hours' => 'Working Hours',
-    'follow_us' => 'Follow Us',
     'other_branches' => 'Other Branches',
     'visit_us_today' => 'Visit Us Today',
     'branch_cta_text' => 'Experience our commitment to excellence at any of our branches.',
     'view_all_branches' => 'View All Branches',
     'about' => 'About',
-    
-    // Partners Page
     'our_partners' => 'Our Partners',
     'partners_seo_desc' => 'Discover our trusted partners and collaborations',
     'partners_hero_subtitle' => 'Building success together with our trusted partners and collaborations',
@@ -531,7 +451,6 @@ return [
     'other_partners' => 'Other Partners',
     'view_all_partners' => 'View All Partners',
     'verified' => 'Verified',
-    'view_details' => 'View Details',
     'quick_actions' => 'Quick Actions',
     'tax_number' => 'Tax Number',
     'mobile' => 'Mobile',
@@ -540,45 +459,27 @@ return [
     'government_entity' => 'Government Entity',
     'quick_links' => 'Quick Links',
     'company' => 'Company',
-    'projects' => 'Projects',
-    
-    // Topbar
     'whatsapp' => 'WhatsApp',
-    
-    // Offer Code Actions
     'copy_code' => 'Copy Code',
     'share_whatsapp' => 'Share on WhatsApp',
     'check_this_offer' => 'Check this offer',
     'code_copied' => 'Code Copied!',
-    
-    // General Actions & Messages
     'success' => 'Success!',
     'error' => 'Error',
     'cancel' => 'Cancel',
     'something_went_wrong' => 'Something went wrong. Please try again.',
     'message_sent_successfully' => 'Your message has been sent successfully. We will get back to you soon!',
-    
-    // Under Construction Page
     'under_construction' => 'Under Construction',
     'under_construction_title' => 'We\'re Building Something Amazing',
     'under_construction_message' => 'Our website is currently under construction. We\'re working hard to bring you a better experience. Please check back soon!',
-    
-    // 404 Error Page
     'page_not_found' => 'Page Not Found',
     'page_not_found_message' => 'Sorry, the page you are looking for doesn\'t exist or has been moved. Please check the URL or return to the homepage.',
-    'back_to_home' => 'Back to Home',
-    
-    // About Page Modern Section
     'years_experience' => 'Years Experience',
     'professional_team' => 'Professional Team',
     'quality_service' => 'Quality Service',
     'customer_satisfaction' => 'Customer Satisfaction',
-    'features_subtitle' => 'Discover what makes us stand out from the rest',
     'mvv_subtitle' => 'The principles that guide everything we do',
-    
-    // Certificates Section
     'our_achievements' => 'Our Achievements',
     'certificates' => 'Certificates & Awards',
     'certificates_subtitle' => 'Recognitions and certifications that reflect our commitment to excellence',
 ];
-

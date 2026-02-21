@@ -1,14 +1,11 @@
 <?php
 
 return [
-    // Subcategories Section
     'subcategories_title' => 'استكشف',
     'subcategories_title_highlight' => 'حسب نوع الهندسة',
-    'subcategories_bio' => 'اكتشف مجموعتنا الشاملة من الخدمات الهندسية المصممة لتحويل رؤيتك إلى واقع بدقة وتميز.',
+    'subcategories_bio' => 'Explore our diverse portfolio of landmark projects where innovative design meets expert execution for lasting excellence.',
     'subcategories_button' => 'المشاريع المتاحة',
     'view_projects' => 'عرض المشاريع',
-    
-    // Featured Projects Section
     'our_work' => 'أعمالنا',
     'featured_projects_title' => 'مشاريع مميزة',
     'featured_projects_bio' => 'اكتشف مجموعتنا المختارة من المشاريع الهندسية الاستثنائية التي تعرض الابتكار والدقة والتميز المعماري.',
@@ -19,8 +16,6 @@ return [
     'view_project' => 'عرض',
     'project' => 'مشروع',
     'for_sale' => 'للبيع',
-    
-    // Featured Offers Section
     'special_deals' => 'عروض خاصة',
     'featured_offers_title' => 'عروض حصرية',
     'featured_offers_bio' => 'اكتشف باقاتنا الهندسية المميزة بأسعار تنافسية مخصصة لكل إمارة. عروض محدودة على مشاريع استثنائية.',
@@ -38,8 +33,6 @@ return [
     'emirate' => 'الإمارة',
     'images' => 'صور',
     'videos' => 'فيديو',
-    
-    // Offers Page
     'offers' => 'العروض',
     'all_offers' => 'جميع العروض',
     'offers_subtitle' => 'اكتشف عروضنا الهندسية الحصرية والباقات الخاصة بأسعار تنافسية مصممة لتلبية احتياجاتك.',
@@ -48,7 +41,6 @@ return [
     'offers_available' => 'عروض متاحة لك',
     'no_offers_found' => 'لا توجد عروض.',
     'find_your_offer' => 'ابحث عن عرضك',
-    'emirate' => 'الإمارة',
     'all_emirates' => 'جميع الإمارات',
     'sqft_range' => 'المساحة (قدم مربع)',
     'sqm_range' => 'المساحة (متر مربع)',
@@ -60,9 +52,7 @@ return [
     'price_for' => 'السعر في',
     'no_price_available' => 'السعر غير متوفر لهذه الإمارة',
     'price_by_emirate' => 'الأسعار حسب الإمارة',
-    'contact_us' => 'اتصل بنا',
-    
-    // Category Page
+    'contact_us' => 'تواصل معنا',
     'home' => 'الرئيسية',
     'we_found' => 'وجدنا',
     'projects_available' => 'مشاريع متاحة لك',
@@ -91,13 +81,11 @@ return [
     'value' => 'القيمة',
     'enter_value' => 'أدخل القيمة',
     'select_value' => 'اختر القيمة',
-    
-    // Projects Page
     'projects_seo_desc' => 'استكشف محفظتنا الكاملة من المشاريع الهندسية بما في ذلك التصاميم السكنية والتجارية والصناعية.',
     'category' => 'الفئة',
     'subcategory' => 'الفئة الفرعية',
     'style' => 'النمط',
-    'all_categories' => 'جميع الفئات',
+    'all_categories' => 'جميع التصنيفات',
     'all_subcategories' => 'جميع الفئات الفرعية',
     'all_styles' => 'جميع الأنماط',
     'area_size' => 'حجم المساحة',
@@ -107,18 +95,13 @@ return [
     'no_results_found' => 'لا توجد نتائج',
     'project_code' => 'كود المشروع',
     'offer' => 'عرض',
-    
-    // Mobile Bottom Nav
     'wishlist' => 'المفضلة',
     'login' => 'تسجيل الدخول',
     'contact' => 'اتصل بنا',
     'chat_with_us' => 'تواصل معنا',
-    'send_message' => 'أرسل لنا رسالة',
-    'project' => 'مشروع',
+    'send_message' => 'إرسال الرسالة',
     'search_placeholder' => 'ابحث في العروض والمشاريع...',
     'select_type' => 'اختر النوع',
-    
-    // Project Details Page
     'share' => 'مشاركة',
     'print' => 'طباعة',
     'facebook' => 'فيسبوك',
@@ -130,7 +113,6 @@ return [
     'no_description' => 'لا يوجد وصف متاح.',
     'facts_and_features' => 'الحقائق والميزات',
     'type' => 'النوع',
-    'location' => 'الموقع',
     'partner' => 'الشريك',
     'specifications' => 'المواصفات',
     'site_plan_3d' => 'مخطط الموقع والعرض ثلاثي الأبعاد',
@@ -156,8 +138,6 @@ return [
     'area' => 'المساحة',
     'floor_specifications' => 'مواصفات الطابق',
     'floor_amenities' => 'مرافق الطابق',
-    
-    // Feasibility Studies
     'feasibility_studies' => 'دراسات الجدوى',
     'building_components' => 'مكونات البناء',
     'length_components' => 'مكونات الطول',
@@ -182,8 +162,6 @@ return [
     'substation_room' => 'غرفة المحولات',
     'pumps_room' => 'غرفة المضخات',
     'no_feasibility_for_emirate' => 'لا توجد دراسات جدوى متاحة للإمارة المحددة.',
-    
-    // Tour & Request Form
     'schedule_a_tour' => 'حجز جولة',
     'request_info' => 'طلب معلومات',
     'preferred_time' => 'الوقت المفضل',
@@ -193,8 +171,6 @@ return [
     'phone_number' => 'رقم الهاتف',
     'interested_message' => 'رسالتك...',
     'interested_in_offer' => 'مرحباً، أنا مهتم بـ :offer',
-    
-    // Interior Design Gallery Section
     'interior_design' => 'التصميم الداخلي',
     'interior_gallery_title' => 'معرض التصميم الداخلي',
     'interior_gallery_bio' => 'استكشف مجموعتنا المذهلة من مشاريع التصميم الداخلي التي تعرض الأناقة والإبداع والجماليات العصرية.',
@@ -212,33 +188,23 @@ return [
     'browse_by_category' => 'تصفح حسب الفئة',
     'interior_category' => 'فئة التصميم الداخلي',
     'view_category' => 'عرض الفئة',
-    
-    // Services Section
     'what_we_do' => 'ماذا نقدم',
     'our_services' => 'خدماتنا',
     'services_bio' => 'نقدم حلولاً هندسية شاملة مصممة لتلبية متطلبات مشروعك الفريدة.',
     'view_all_services' => 'عرض جميع الخدمات',
     'service' => 'خدمة',
-    
-    // Home Projects Section
     'explore' => 'استكشف',
     'our_projects' => 'مشاريعنا',
     'projects_bio' => 'اكتشف مجموعتنا من المشاريع الهندسية الاستثنائية عبر مختلف الفئات.',
     'all' => 'الكل',
     'more' => 'المزيد',
-    
-    // Home Contact & FAQ Section
     'why_choose_us' => 'لماذا تختارنا',
-    
-    // Home News Section
     'latest_news' => 'آخر الأخبار',
     'news_and_articles' => 'الأخبار والمقالات',
     'news_bio' => 'ابق على اطلاع بآخر الأخبار والرؤى والمقالات من فريق خبرائنا.',
     'view_all_news' => 'عرض جميع الأخبار',
-    
-    // Footer
     'footer_default_bio' => 'نحن شركة هندسية رائدة نقدم حلولاً مبتكرة للمشاريع السكنية والتجارية والصناعية في جميع أنحاء الإمارات.',
-    'categories' => 'الفئات',
+    'categories' => 'التصنيفات',
     'resources' => 'الموارد',
     'sitemap' => 'خريطة الموقع',
     'contact_info' => 'معلومات الاتصال',
@@ -248,18 +214,14 @@ return [
     'all_rights_reserved' => 'جميع الحقوق محفوظة',
     'privacy_policy' => 'سياسة الخصوصية',
     'terms_of_service' => 'شروط الخدمة',
-    
-    // Common
     'read_more' => 'اقرأ المزيد',
-    'learn_more' => 'معرفة المزيد',
+    'learn_more' => 'اعرف المزيد',
     'load_more' => 'تحميل المزيد',
     'view_all' => 'عرض الكل',
-    'projects' => 'مشاريع',
+    'projects' => 'المشاريع',
     'all_projects' => 'جميع المشاريع',
     'loading' => 'جاري التحميل',
     'to' => 'إلى',
-    
-    // About Page
     'about_us' => 'من نحن',
     'who_we_are' => 'من نحن',
     'what_we_offer' => 'ما نقدمه',
@@ -274,31 +236,22 @@ return [
     'our_mission' => 'رسالتنا',
     'our_vision' => 'رؤيتنا',
     'our_values' => 'قيمنا',
-    'ready_to_start' => 'هل أنت مستعد لبدء مشروعك؟',
+    'ready_to_start' => 'مستعد للبدء؟',
     'cta_description' => 'دعنا نساعدك في تحقيق رؤيتك من خلال حلولنا الهندسية المتخصصة.',
-    'contact_us' => 'تواصل معنا',
     'download_company_profile' => 'تحميل ملف الشركة',
     'company_profile' => 'ملف الشركة',
     'company_profile_description' => 'قم بتحميل ملف الشركة لمعرفة المزيد عن خدماتنا ومشاريعنا وخبراتنا.',
-
-    // News/Blogs Page
     'news' => 'الأخبار',
     'all_news' => 'جميع الأخبار',
     'news_articles' => 'الأخبار والمقالات',
     'news_seo_desc' => 'ابقَ على اطلاع بأحدث الأخبار والمقالات من شركتنا.',
     'stay_updated' => 'ابقَ على اطلاع بأحدث الأخبار والرؤى',
-    'read_more' => 'اقرأ المزيد',
     'no_news_found' => 'لا توجد أخبار',
     'no_news_desc' => 'لا توجد مقالات إخبارية متاحة في الوقت الحالي. يرجى المحاولة لاحقاً.',
-    'view_all_news' => 'عرض جميع الأخبار',
-    'categories' => 'التصنيفات',
-    'all_categories' => 'جميع التصنيفات',
     'recent_news' => 'أخبار حديثة',
     'tags' => 'الوسوم',
     'share_article' => 'شارك هذا المقال',
     'back_to_news' => 'العودة للأخبار',
-
-    // Contact Page
     'contact_us_title' => 'تواصل معنا',
     'contact_us_subtitle' => 'نحن نحب أن نسمع منك. تواصل معنا!',
     'contact_us_seo_desc' => 'تواصل مع سمارت فيجن الإمارات للاستفسارات حول خدماتنا الهندسية ومشاريعنا.',
@@ -317,7 +270,6 @@ return [
     'enter_subject' => 'أدخل الموضوع',
     'your_message' => 'رسالتك',
     'enter_your_message' => 'اكتب رسالتك هنا...',
-    'send_message' => 'إرسال الرسالة',
     'our_location' => 'موقعنا',
     'find_us' => 'اعثر علينا على الخريطة',
     'map_not_available' => 'الخريطة غير متاحة',
@@ -332,17 +284,12 @@ return [
     'sending' => 'جاري الإرسال',
     'sending_message' => 'جاري إرسال الرسالة',
     'please_wait' => 'يرجى الانتظار بينما نرسل رسالتك...',
-    
-    // Services Page
     'services' => 'الخدمات',
-    'our_services' => 'خدماتنا',
     'services_subtitle' => 'حلول هندسية وتصميمية شاملة مصممة خصيصاً لتلبية احتياجاتك',
     'services_seo_desc' => 'اكتشف مجموعتنا الشاملة من خدمات الهندسة والتصميم المصممة لتحويل رؤيتك إلى واقع بدقة وتميز.',
-    'what_we_offer' => 'ما نقدمه',
     'comprehensive_solutions' => 'حلول هندسية شاملة',
     'services_intro_text' => 'من الفكرة إلى الإنجاز، نقدم خدمات هندسية وتصميمية استثنائية تحول رؤيتك إلى واقع. يجمع فريق خبرائنا عقوداً من الخبرة عبر تخصصات متعددة.',
     'included_services' => 'الخدمات المضمنة',
-    'learn_more' => 'اعرف المزيد',
     'no_services_found' => 'لا توجد خدمات متاحة',
     'no_services_desc' => 'نحن نقوم حالياً بتحديث خدماتنا. يرجى التحقق مرة أخرى قريباً.',
     'back_to_home' => 'العودة للرئيسية',
@@ -355,9 +302,7 @@ return [
     'about_service' => 'عن هذه الخدمة',
     'key_features' => 'المميزات الرئيسية',
     'service_features' => 'ما نقدمه',
-    'features_subtitle' => 'اكتشف المميزات الرئيسية التي تجعل خدمتنا مميزة',
-    'our_values' => 'قيمنا',
-    'why_choose_us' => 'لماذا تختارنا',
+    'features_subtitle' => 'اكتشف ما يميزنا عن الآخرين',
     'values_subtitle' => 'القيم الأساسية التي تدفع التزامنا بالتميز',
     'how_we_work' => 'كيف نعمل',
     'our_process' => 'عمليتنا',
@@ -373,25 +318,20 @@ return [
     'frequently_asked' => 'الأسئلة المتكررة',
     'faq_subtitle' => 'اعثر على إجابات للأسئلة الشائعة حول هذه الخدمة',
     'have_more_questions' => 'لديك المزيد من الأسئلة؟',
-    'ready_to_start' => 'مستعد للبدء؟',
     'service_cta_text' => 'تواصل معنا اليوم لمناقشة مشروعك واكتشاف كيف يمكننا مساعدتك في تحقيق رؤيتك.',
     'get_started' => 'ابدأ الآن',
-    
-    // Careers Page
     'careers' => 'الوظائف',
     'careers_seo_desc' => 'انضم إلى فريقنا وابنِ مسيرتك المهنية مع سمارت فيجن. استكشف فرص العمل المتاحة.',
-    'join_our_team' => 'انضم إلى فريقنا',
+    'join_our_team' => 'هل تريد الانضمام لفريقنا؟',
     'careers_subtitle' => 'ابنِ مستقبلك مع سمارت فيجن وكن جزءاً من شيء استثنائي',
     'work_with_us' => 'اعمل معنا',
     'build_your_future' => 'ابنِ مستقبلك معنا',
     'careers_intro_text' => 'نحن دائماً نبحث عن أفراد موهوبين وشغوفين للانضمام إلى فريقنا المتنامي. في سمارت فيجن، نؤمن برعاية المواهب وتوفير فرص النمو المهني.',
     'team_members' => 'أعضاء الفريق',
     'open_positions' => 'الوظائف المتاحة',
-    'location' => 'الموقع',
     'opportunities' => 'الفرص',
     'find_your_role' => 'اعثر على الدور المثالي الذي يتناسب مع مهاراتك وتطلعاتك',
     'deadline' => 'الموعد النهائي',
-    'view_details' => 'عرض التفاصيل',
     'no_open_positions' => 'لا توجد وظائف متاحة حالياً',
     'no_positions_desc' => 'ليس لدينا أي وظائف شاغرة في الوقت الحالي، لكننا دائماً مهتمون بسماع أخبار الأفراد الموهوبين.',
     'submit_resume' => 'أرسل سيرتك الذاتية',
@@ -408,8 +348,6 @@ return [
     'dont_see_position' => 'لا ترى وظيفة تناسبك؟',
     'submit_resume_text' => 'نحن دائماً مهتمون بمقابلة الأفراد الموهوبين. أرسل لنا سيرتك الذاتية وسنضعك في اعتبارنا للفرص المستقبلية.',
     'contact_hr' => 'تواصل مع الموارد البشرية',
-    
-    // Job Single Page
     'job_type' => 'نوع الوظيفة',
     'salary' => 'الراتب',
     'job_code' => 'رمز الوظيفة',
@@ -418,10 +356,6 @@ return [
     'responsibilities' => 'المسؤوليات',
     'apply_now' => 'قدم الآن',
     'application_form_subtitle' => 'املأ النموذج أدناه للتقديم على هذه الوظيفة',
-    'full_name' => 'الاسم الكامل',
-    'enter_your_name' => 'أدخل اسمك الكامل',
-    'enter_your_email' => 'أدخل بريدك الإلكتروني',
-    'enter_your_phone' => 'أدخل رقم هاتفك',
     'resume_cv' => 'السيرة الذاتية',
     'choose_file' => 'اختر ملف',
     'max_5mb' => 'الحد الأقصى 5 ميجابايت',
@@ -443,8 +377,6 @@ return [
     'view_all_positions' => 'عرض جميع الوظائف',
     'have_questions' => 'لديك أسئلة حول هذه الوظيفة؟',
     'contact_hr_about_job' => 'لا تتردد في التواصل مع فريق الموارد البشرية لأي استفسارات حول هذه الفرصة الوظيفية.',
-    
-    // Team Page
     'our_team' => 'فريقنا',
     'team_seo_desc' => 'تعرف على فريقنا الموهوب من المحترفين الملتزمين بتقديم نتائج استثنائية.',
     'team_hero_subtitle' => 'تعرف على المحترفين الموهوبين وراء نجاحنا',
@@ -456,16 +388,12 @@ return [
     'team_subtitle' => 'خبراء متخصصون ملتزمون بالتميز في كل مشروع',
     'no_team_members' => 'لا يوجد أعضاء فريق حتى الآن',
     'team_coming_soon' => 'معلومات فريقنا قادمة قريباً. ترقبوا!',
-    'join_our_team' => 'هل تريد الانضمام لفريقنا؟',
     'team_cta_description' => 'نحن نبحث دائماً عن الأفراد الموهوبين للانضمام إلى فريقنا المتنامي.',
     'about_company' => 'عن الشركة',
     'team_member_seo_desc' => 'تعرف على المزيد عن عضو فريقنا وخلفيته المهنية.',
     'board_member' => 'عضو مجلس الإدارة',
     'contact_information' => 'معلومات الاتصال',
-    'email' => 'البريد الإلكتروني',
-    'phone' => 'الهاتف',
     'send_email' => 'إرسال بريد',
-    'call_now' => 'اتصل الآن',
     'professional_background' => 'الخلفية المهنية',
     'work_experience' => 'الخبرة العملية',
     'meet_more_team' => 'تعرف على المزيد من الفريق',
@@ -473,8 +401,6 @@ return [
     'view_all_team' => 'عرض كل الفريق',
     'view_profile' => 'عرض الملف',
     'team_slider_bio' => 'تعرف على المحترفين الموهوبين الذين يقودون نجاحنا ويحققون التميز في كل مشروع.',
-    
-    // Board of Directors Page
     'board_seo_desc' => 'تعرف على القادة أصحاب الرؤية الذين يوجهون شركتنا نحو التميز والابتكار.',
     'board_hero_subtitle' => 'القادة أصحاب الرؤية الذين يوجهون نجاحنا بالخبرة والكفاءة',
     'meet_our_leaders' => 'تعرف على قادتنا',
@@ -483,8 +409,6 @@ return [
     'board_coming_soon' => 'معلومات مجلس الإدارة قادمة قريباً. ترقبوا!',
     'meet_full_team' => 'تعرف على فريقنا الكامل',
     'meet_full_team_text' => 'اكتشف جميع المحترفين الموهوبين الذين يصنعون نجاحنا.',
-    
-    // Branches Page
     'our_branches' => 'فروعنا',
     'branches_seo_desc' => 'ابحث عن مواقع فروعنا القريبة منك. قم بزيارة أي من مكاتبنا للحصول على خدمة ودعم شخصي.',
     'branches_hero_subtitle' => 'قم بزيارة أي من فروعنا ذات المواقع الملائمة للحصول على خدمة شخصية',
@@ -498,17 +422,13 @@ return [
     'branches_cta_text' => 'لا تجد فرعاً قريباً منك؟ تواصل معنا وسنساعدك في إيجاد أفضل حل.',
     'branch' => 'فرع',
     'location_on_map' => 'الموقع على الخريطة',
-    'address' => 'العنوان',
     'office_phone' => 'هاتف المكتب',
     'working_hours' => 'ساعات العمل',
-    'follow_us' => 'تابعنا',
     'other_branches' => 'فروع أخرى',
     'visit_us_today' => 'زُرنا اليوم',
     'branch_cta_text' => 'اختبر التزامنا بالتميز في أي من فروعنا.',
     'view_all_branches' => 'عرض جميع الفروع',
     'about' => 'عن',
-    
-    // Partners Page
     'our_partners' => 'شركاؤنا',
     'partners_seo_desc' => 'اكتشف شركاءنا الموثوقين وتعاوناتنا',
     'partners_hero_subtitle' => 'بناء النجاح معًا مع شركائنا وتعاوناتنا الموثوقة',
@@ -531,7 +451,6 @@ return [
     'other_partners' => 'شركاء آخرون',
     'view_all_partners' => 'عرض جميع الشركاء',
     'verified' => 'موثق',
-    'view_details' => 'عرض التفاصيل',
     'quick_actions' => 'إجراءات سريعة',
     'tax_number' => 'الرقم الضريبي',
     'mobile' => 'الجوال',
@@ -540,45 +459,27 @@ return [
     'government_entity' => 'جهة حكومية',
     'quick_links' => 'روابط سريعة',
     'company' => 'الشركة',
-    'projects' => 'المشاريع',
-    
-    // Topbar
     'whatsapp' => 'واتساب',
-    
-    // Offer Code Actions
     'copy_code' => 'نسخ الكود',
     'share_whatsapp' => 'مشاركة على واتساب',
     'check_this_offer' => 'شاهد هذا العرض',
     'code_copied' => 'تم نسخ الكود!',
-    
-    // General Actions & Messages
     'success' => 'تم بنجاح!',
     'error' => 'خطأ',
     'cancel' => 'إلغاء',
     'something_went_wrong' => 'حدث خطأ ما. يرجى المحاولة مرة أخرى.',
     'message_sent_successfully' => 'تم إرسال رسالتك بنجاح. سنتواصل معك قريباً!',
-    
-    // Under Construction Page
     'under_construction' => 'تحت الإنشاء',
     'under_construction_title' => 'نحن نبني شيئاً مذهلاً',
     'under_construction_message' => 'موقعنا الإلكتروني قيد الإنشاء حالياً. نعمل بجد لنقدم لك تجربة أفضل. يرجى العودة قريباً!',
-    
-    // 404 Error Page
     'page_not_found' => 'الصفحة غير موجودة',
     'page_not_found_message' => 'عذراً، الصفحة التي تبحث عنها غير موجودة أو تم نقلها. يرجى التحقق من الرابط أو العودة إلى الصفحة الرئيسية.',
-    'back_to_home' => 'العودة للرئيسية',
-    
-    // About Page Modern Section
     'years_experience' => 'سنوات الخبرة',
     'professional_team' => 'فريق محترف',
     'quality_service' => 'خدمة عالية الجودة',
     'customer_satisfaction' => 'رضا العملاء',
-    'features_subtitle' => 'اكتشف ما يميزنا عن الآخرين',
     'mvv_subtitle' => 'المبادئ التي توجه كل ما نقوم به',
-    
-    // Certificates Section
     'our_achievements' => 'إنجازاتنا',
     'certificates' => 'الشهادات والجوائز',
     'certificates_subtitle' => 'التقديرات والشهادات التي تعكس التزامنا بالتميز',
 ];
-
