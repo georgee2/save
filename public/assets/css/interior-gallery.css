@@ -847,6 +847,12 @@ body.filter-open {
     background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
 }
 
+/* Section title - same size on all devices */
+.interior-gallery-section .text-heading {
+    font-size: 30px !important;
+    line-height: 1.3 !important;
+}
+
 .interior-gallery-section .heading-divider {
     background: #19868b;
 }
@@ -1191,7 +1197,7 @@ body.filter-open {
 }
 
 .interior-gallery-slider .interior-gallery-card .card-category-title {
-    font-size: 16px;
+    font-size: 20px;
 }
 
 .interior-gallery-slider .interior-gallery-card .view-btn {
@@ -1301,7 +1307,7 @@ body.filter-open {
     }
     
     .interior-gallery-slider .interior-gallery-card .card-category-title {
-        font-size: 14px;
+        font-size: 20px;
     }
 }
 
@@ -1325,12 +1331,239 @@ body.filter-open {
     }
     
     .interior-gallery-slider .interior-gallery-card .card-category-title {
-        font-size: 13px;
+        font-size: 20px;
     }
     
     .interior-gallery-slider .interior-gallery-card .view-btn {
         width: 35px;
         height: 35px;
         font-size: 12px;
+    }
+}
+
+/* =====================================================
+   SMART PAGINATION STYLES FOR INTERIOR GALLERY
+   Max 4 visible pages with dots navigation
+   ===================================================== */
+
+.interior-pagination-wrapper {
+    margin-top: 30px;
+}
+
+.interior-smart-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.interior-smart-pagination .page-item {
+    margin: 0;
+}
+
+.interior-smart-pagination .page-item .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    height: 42px;
+    padding: 0 12px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #333333;
+    background: #ffffff;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.interior-smart-pagination .page-item .page-link:hover {
+    color: #19868b;
+    border-color: #19868b;
+    background: rgba(25, 134, 139, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(25, 134, 139, 0.15);
+}
+
+/* Active page */
+.interior-smart-pagination .page-item.active .page-link {
+    color: #ffffff;
+    background: linear-gradient(135deg, #19868b 0%, #0d6d71 100%);
+    border-color: #19868b;
+    box-shadow: 0 4px 12px rgba(25, 134, 139, 0.3);
+}
+
+/* Disabled state */
+.interior-smart-pagination .page-item.disabled .page-link {
+    color: #adb5bd;
+    background: #f8f9fa;
+    border-color: #e9ecef;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.interior-smart-pagination .page-item.disabled .page-link:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Navigation arrows */
+.interior-smart-pagination .page-item.page-nav .page-link {
+    min-width: 42px;
+    background: #19868b;
+    border-color: #19868b;
+    color: #ffffff;
+}
+
+.interior-smart-pagination .page-item.page-nav .page-link:hover {
+    background: #0d6d71;
+    border-color: #0d6d71;
+    color: #ffffff;
+}
+
+.interior-smart-pagination .page-item.page-nav.disabled .page-link {
+    background: #e9ecef;
+    border-color: #e9ecef;
+    color: #adb5bd;
+}
+
+/* Dots */
+.interior-smart-pagination .page-item.page-dots .page-link {
+    min-width: 32px;
+    background: transparent;
+    border: none;
+    color: #6c757d;
+    font-weight: 700;
+    letter-spacing: 2px;
+    box-shadow: none;
+}
+
+.interior-smart-pagination .page-item.page-dots .page-link:hover {
+    transform: none;
+    box-shadow: none;
+    background: transparent;
+}
+
+/* RTL Support */
+[dir="rtl"] .interior-smart-pagination .page-item.page-nav .page-link i {
+    transform: rotate(180deg);
+}
+
+/* =====================================================
+   PAGINATION RESPONSIVE - TABLET (Interior)
+   ===================================================== */
+
+@media (max-width: 991px) {
+    .interior-pagination-wrapper {
+        margin-top: 25px;
+    }
+    
+    .interior-smart-pagination {
+        gap: 6px;
+    }
+    
+    .interior-smart-pagination .page-item .page-link {
+        min-width: 40px;
+        height: 40px;
+        font-size: 14px;
+        padding: 0 10px;
+        border-radius: 8px;
+    }
+    
+    .interior-smart-pagination .page-item.page-dots .page-link {
+        min-width: 28px;
+    }
+}
+
+/* =====================================================
+   PAGINATION RESPONSIVE - MOBILE (Interior)
+   ===================================================== */
+
+@media (max-width: 767px) {
+    .interior-pagination-wrapper {
+        margin-top: 20px;
+    }
+    
+    .interior-smart-pagination {
+        gap: 5px;
+    }
+    
+    .interior-smart-pagination .page-item .page-link {
+        min-width: 38px;
+        height: 38px;
+        font-size: 13px;
+        padding: 0 8px;
+        border-radius: 8px;
+    }
+    
+    .interior-smart-pagination .page-item.page-nav .page-link {
+        min-width: 38px;
+    }
+    
+    .interior-smart-pagination .page-item.page-dots .page-link {
+        min-width: 24px;
+        padding: 0 4px;
+    }
+}
+
+/* =====================================================
+   PAGINATION RESPONSIVE - SMALL MOBILE (Interior)
+   ===================================================== */
+
+@media (max-width: 575px) {
+    .interior-pagination-wrapper {
+        margin-top: 15px;
+        padding: 0 10px;
+    }
+    
+    .interior-smart-pagination {
+        gap: 4px;
+    }
+    
+    .interior-smart-pagination .page-item .page-link {
+        min-width: 36px;
+        height: 36px;
+        font-size: 12px;
+        padding: 0 6px;
+        border-radius: 6px;
+        border-width: 1px;
+    }
+    
+    .interior-smart-pagination .page-item.page-nav .page-link {
+        min-width: 36px;
+    }
+    
+    .interior-smart-pagination .page-item.page-dots .page-link {
+        min-width: 20px;
+        padding: 0 2px;
+        font-size: 10px;
+    }
+}
+
+/* =====================================================
+   PAGINATION RESPONSIVE - EXTRA SMALL MOBILE (Interior)
+   ===================================================== */
+
+@media (max-width: 400px) {
+    .interior-smart-pagination {
+        gap: 3px;
+    }
+    
+    .interior-smart-pagination .page-item .page-link {
+        min-width: 32px;
+        height: 32px;
+        font-size: 11px;
+        padding: 0 5px;
+    }
+    
+    .interior-smart-pagination .page-item.page-nav .page-link {
+        min-width: 32px;
+    }
+    
+    .interior-smart-pagination .page-item.page-dots .page-link {
+        min-width: 18px;
     }
 }

@@ -297,7 +297,7 @@
                             @endif
 
                             {{-- Settings Section --}}
-                            @if(auth()->user()->isSuperAdmin() || auth()->user()->hasAnyPermission(['home-sections-view', 'menus-view', 'users-view', 'roles-view', 'settings-view', 'activity-logs-view']))
+                            @if(auth()->user()->isSuperAdmin() || auth()->user()->hasAnyPermission(['home-sections-view', 'interior-order-view', 'contact-page-sections-view', 'about-page-sections-view', 'menus-view', 'users-view', 'roles-view', 'settings-view', 'activity-logs-view']))
                             <li style="color:#e8e8e8" class="menu-title">Settings</li>
 
                             @permission('home-sections-view')
@@ -312,6 +312,30 @@
                                 </ul>
                             </li>
                             @endpermission
+
+                            @if(auth()->user()->hasPermission('interior-order-view'))
+                            <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect"><i class="fa fa-paint-brush"></i><span> Interior Order <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                                <ul class="list-unstyled">
+                                    <li><a href="{{route('home-interior-settings.index')}}">Home Slider Settings</a></li>
+                                    <li><a href="{{route('interior-category-order.index')}}">Category Order</a></li>
+                                    <li><a href="{{route('interior-design-gallery.order-index')}}">Index Page Order</a></li>
+                                    <li><a href="{{route('interior-design-gallery.order-all')}}">All Images Order</a></li>
+                                </ul>
+                            </li>
+                            @endif
+
+                            @if(auth()->user()->hasPermission('contact-page-sections-view'))
+                            <li>
+                                <a href="{{route('contact-page-sections.index')}}" class="waves-effect"><i class="fa fa-file-text-o"></i><span> Contact Page Sections </span></a>
+                            </li>
+                            @endif
+
+                            @if(auth()->user()->hasPermission('about-page-sections-view'))
+                            <li>
+                                <a href="{{route('about-page-sections.index')}}" class="waves-effect"><i class="fa fa-info-circle"></i><span> About Page Sections </span></a>
+                            </li>
+                            @endif
 
                             @permission('menus-view')
                             <li class="has_sub">

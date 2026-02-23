@@ -156,5 +156,53 @@ class AboutInformationController extends Controller
         
         return '/uploads/about/' . $folder . '/' . $filename;
     }
+    
+    /**
+     * Remove a specific image field
+     */
+    public function removeImage(Request $request)
+    {
+        $field = $request->input('field');
+        
+        // Allowed fields that can be removed
+        $allowedFields = [
+            'about_image',
+            'mission_image',
+            'vision_image',
+            'values_image',
+            'page_cover_image',
+            'company_profile',
+        ];
+        
+        if (!in_array($field, $allowedFields)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid field specified.',
+            ], 400);
+        }
+        
+        $aboutInfo = AboutInformation::getAboutInfo();
+        
+        // Check if the field has a value
+        if (empty($aboutInfo->$field)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No file to remove.',
+            ], 400);
+        }
+        
+        // Delete the file from storage
+        if (Storage::exists('public' . $aboutInfo->$field)) {
+            Storage::delete('public' . $aboutInfo->$field);
+        }
+        
+        // Update the database to set the field to null
+        AboutInformation::updateAboutInfo([$field => null]);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'File removed successfully!',
+        ]);
+    }
 }
 

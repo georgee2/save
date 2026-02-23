@@ -10,6 +10,7 @@ use App\Models\AboutCustomBlock;
 use App\Models\Team;
 use App\Models\Partner;
 use App\Models\Certificate;
+use App\Models\AboutPageSection;
 
 class AboutController extends Controller
 {
@@ -48,6 +49,9 @@ class AboutController extends Controller
         // Fetch published certificates
         $certificates = Certificate::getPublished();
         
-        return view('pages.about.index', compact('aboutInfo', 'contactInfo', 'features', 'customBlocks', 'allTeamMembers', 'governmentPartners', 'certificates'));
+        // Get active sections ordered by ordering field
+        $sections = AboutPageSection::getActiveSections();
+        
+        return view('pages.about.index', compact('aboutInfo', 'contactInfo', 'features', 'customBlocks', 'allTeamMembers', 'governmentPartners', 'certificates', 'sections'));
     }
 }

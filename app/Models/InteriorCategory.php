@@ -45,9 +45,9 @@ class InteriorCategory extends Model
     public static function list()
     {
         return DB::table('interior_categories')
-            ->select('id', 'title_english', 'title_arabic', 'bio_english', 'icon', 'image', 'slug', 'created_at', 'updated_at')
+            ->select('id', 'title_english', 'title_arabic', 'bio_english', 'icon', 'image', 'slug', 'ordering', 'publish_status', 'created_at', 'updated_at')
             ->whereNull('deleted_at')
-            ->orderBy('created_at', 'desc')
+            ->orderBy('ordering', 'asc')
             ->get();
     }
     

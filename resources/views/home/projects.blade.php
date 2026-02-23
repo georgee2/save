@@ -552,14 +552,25 @@
 {{-- Project Category Filter Script --}}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Track if initial load has been done for each container
+    var initializedContainers = new Set();
+    var previousWidth = window.innerWidth;
+    
     // Check if we're on mobile/tablet
     function isMobileOrTablet() {
         return window.innerWidth < 992;
     }
     
-    // Initialize mobile load more functionality
-    function initMobileLoadMore() {
+    // Initialize mobile load more functionality (only on first load or when crossing breakpoint)
+    function initMobileLoadMore(forceReset) {
         document.querySelectorAll('.project-grid-container').forEach(function(container) {
+            var containerId = container.closest('.tab-pane')?.id || 'default';
+            
+            // Only initialize if not already done (unless forced)
+            if (!forceReset && initializedContainers.has(containerId)) {
+                return;
+            }
+            
             var limit = parseInt(container.getAttribute('data-mobile-limit')) || 6;
             var items = container.querySelectorAll('.project-grid-item');
             
@@ -570,6 +581,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     item.classList.remove('mobile-hidden');
                 }
             });
+            
+            // Mark as initialized
+            initializedContainers.add(containerId);
             
             // Update load more button visibility
             var tabPane = container.closest('.tab-pane');
@@ -615,6 +629,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 hiddenItems.forEach(function(item) {
                     if (shown < limit) {
                         item.classList.remove('mobile-hidden');
+                        item.setAttribute('data-loaded', 'true');
                         shown++;
                     }
                 });
@@ -635,14 +650,24 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Initialize on page load
-    initMobileLoadMore();
+    initMobileLoadMore(true);
     
-    // Re-initialize on window resize
+    // Re-initialize on window resize ONLY when crossing the mobile/desktop breakpoint
     var resizeTimeout;
     window.addEventListener('resize', function() {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(function() {
-            initMobileLoadMore();
+            var currentWidth = window.innerWidth;
+            var crossedBreakpoint = (previousWidth >= 992 && currentWidth < 992) || 
+                                    (previousWidth < 992 && currentWidth >= 992);
+            
+            if (crossedBreakpoint) {
+                // Reset all containers when crossing breakpoint
+                initializedContainers.clear();
+                initMobileLoadMore(true);
+            }
+            
+            previousWidth = currentWidth;
         }, 250);
     });
     
@@ -661,6 +686,7 @@ document.addEventListener('DOMContentLoaded', function() {
             items.forEach(function(item, index) {
                 if (index >= limit) {
                     item.classList.add('mobile-hidden');
+                    item.removeAttribute('data-loaded');
                 } else {
                     item.classList.remove('mobile-hidden');
                 }
