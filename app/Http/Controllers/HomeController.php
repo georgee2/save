@@ -30,6 +30,7 @@ use App\Models\InteriorDesignGallery;
 use App\Models\HomeSection;
 use App\Models\HomeProjectSetting;
 use App\Models\Emirate;
+use App\Models\HomeInteriorSetting;
 
 class HomeController extends Controller
 {
@@ -301,15 +302,8 @@ class HomeController extends Controller
         // Fetch government partners for slider
         $governmentPartners = Partner::getGovernmentPartners();
         
-        // Fetch Interior Design Gallery items (published and shown on home)
-        $interiorGallery = InteriorDesignGallery::with(['category', 'projectType', 'project', 'projectStyle', 'emirate'])
-            ->where('publish_status', 0) // Published
-            ->where('home_status', 0)    // Shown on home
-            ->whereNull('deleted_at')
-            ->orderBy('ordering', 'asc')
-            ->orderBy('created_at', 'desc')
-            ->limit(12)
-            ->get();
+        // Fetch Interior Design Gallery items using HomeInteriorSetting
+        $interiorGallery = HomeInteriorSetting::getGalleriesForHome();
         
         // Fetch active home sections ordered by ordering field
         $homeSections = HomeSection::getActiveSections();

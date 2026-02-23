@@ -9,6 +9,7 @@ use App\Models\Service;
 use App\Models\PageBanner;
 use App\Models\Partner;
 use App\Models\AboutInformation;
+use App\Models\ContactPageSection;
 
 class ContactController extends Controller
 {
@@ -35,8 +36,11 @@ class ContactController extends Controller
         
         // Get branches
         $branches = Partner::getBranches();
+        
+        // Get active sections ordered by ordering field
+        $sections = ContactPageSection::getActiveSections();
 
-        return view('pages.contact.contact', compact('contactInfo', 'aboutInfo', 'services', 'pageBanner', 'branches'));
+        return view('pages.contact.contact', compact('contactInfo', 'aboutInfo', 'services', 'pageBanner', 'branches', 'sections'));
     }
 
     /**

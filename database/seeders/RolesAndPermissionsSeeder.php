@@ -191,6 +191,18 @@ class RolesAndPermissionsSeeder extends Seeder
                 'name' => 'Home Projects',
                 'actions' => ['view', 'edit'],
             ],
+            'interior-order' => [
+                'name' => 'Interior Gallery Order',
+                'actions' => ['view', 'edit'],
+            ],
+            'contact-page-sections' => [
+                'name' => 'Contact Page Sections',
+                'actions' => ['view', 'edit'],
+            ],
+            'about-page-sections' => [
+                'name' => 'About Page Sections',
+                'actions' => ['view', 'edit'],
+            ],
             'page-banners' => [
                 'name' => 'Page Banners',
                 'actions' => ['view', 'edit'],

@@ -2,6 +2,7 @@
 @section('title', 'About Information')
 
 @section('css')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <style>
     :root {
         --main-color: #19868b;
@@ -53,6 +54,12 @@
     .btn-primary:hover {
         background-color: var(--secondary-color) !important;
         border-color: var(--secondary-color) !important;
+    }
+    .remove-image-btn {
+        transition: all 0.2s ease;
+    }
+    .remove-image-btn:hover {
+        transform: scale(1.05);
     }
 </style>
 @endsection
@@ -143,8 +150,13 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Page Cover Image <small>(1920x450)</small></label>
-                                        <input accept="image/*" class="form-control dropify" type="file" name="page_cover_image" data-default-file="{{ $aboutInfo->page_cover_image ? asset('storage' . $aboutInfo->page_cover_image) : '' }}">
+                                        <input accept="image/*" class="form-control dropify" type="file" name="page_cover_image" id="page_cover_image_input" data-default-file="{{ $aboutInfo->page_cover_image ? asset('storage' . $aboutInfo->page_cover_image) : '' }}">
                                         <small class="form-text text-muted">Will be converted to WebP format</small>
+                                        @if($aboutInfo->page_cover_image)
+                                        <button type="button" class="btn btn-danger btn-sm mt-2 remove-image-btn" data-field="page_cover_image" data-input-id="page_cover_image_input">
+                                            <i class="fa fa-trash"></i> Remove Page Cover Image
+                                        </button>
+                                        @endif
                                         @error('page_cover_image')<span class="text-danger">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
@@ -178,8 +190,13 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>About Image <small>(850x795)</small></label>
-                                        <input accept="image/*" class="form-control dropify" type="file" name="about_image" data-default-file="{{ $aboutInfo->about_image ? asset('storage' . $aboutInfo->about_image) : '' }}">
+                                        <input accept="image/*" class="form-control dropify" type="file" name="about_image" id="about_image_input" data-default-file="{{ $aboutInfo->about_image ? asset('storage' . $aboutInfo->about_image) : '' }}">
                                         <small class="form-text text-muted">Will be converted to WebP format</small>
+                                        @if($aboutInfo->about_image)
+                                        <button type="button" class="btn btn-danger btn-sm mt-2 remove-image-btn" data-field="about_image" data-input-id="about_image_input">
+                                            <i class="fa fa-trash"></i> Remove About Image
+                                        </button>
+                                        @endif
                                         @error('about_image')<span class="text-danger">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
@@ -213,8 +230,13 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Mission Image <small>(880x900)</small></label>
-                                        <input accept="image/*" class="form-control dropify" type="file" name="mission_image" data-default-file="{{ $aboutInfo->mission_image ? asset('storage' . $aboutInfo->mission_image) : '' }}">
+                                        <input accept="image/*" class="form-control dropify" type="file" name="mission_image" id="mission_image_input" data-default-file="{{ $aboutInfo->mission_image ? asset('storage' . $aboutInfo->mission_image) : '' }}">
                                         <small class="form-text text-muted">Will be converted to WebP format</small>
+                                        @if($aboutInfo->mission_image)
+                                        <button type="button" class="btn btn-danger btn-sm mt-2 remove-image-btn" data-field="mission_image" data-input-id="mission_image_input">
+                                            <i class="fa fa-trash"></i> Remove Mission Image
+                                        </button>
+                                        @endif
                                         @error('mission_image')<span class="text-danger">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
@@ -248,8 +270,13 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Vision Image <small>(880x900)</small></label>
-                                        <input accept="image/*" class="form-control dropify" type="file" name="vision_image" data-default-file="{{ $aboutInfo->vision_image ? asset('storage' . $aboutInfo->vision_image) : '' }}">
+                                        <input accept="image/*" class="form-control dropify" type="file" name="vision_image" id="vision_image_input" data-default-file="{{ $aboutInfo->vision_image ? asset('storage' . $aboutInfo->vision_image) : '' }}">
                                         <small class="form-text text-muted">Will be converted to WebP format</small>
+                                        @if($aboutInfo->vision_image)
+                                        <button type="button" class="btn btn-danger btn-sm mt-2 remove-image-btn" data-field="vision_image" data-input-id="vision_image_input">
+                                            <i class="fa fa-trash"></i> Remove Vision Image
+                                        </button>
+                                        @endif
                                         @error('vision_image')<span class="text-danger">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
@@ -283,8 +310,13 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Values Image <small>(880x900)</small></label>
-                                        <input accept="image/*" class="form-control dropify" type="file" name="values_image" data-default-file="{{ $aboutInfo->values_image ? asset('storage' . $aboutInfo->values_image) : '' }}">
+                                        <input accept="image/*" class="form-control dropify" type="file" name="values_image" id="values_image_input" data-default-file="{{ $aboutInfo->values_image ? asset('storage' . $aboutInfo->values_image) : '' }}">
                                         <small class="form-text text-muted">Will be converted to WebP format</small>
+                                        @if($aboutInfo->values_image)
+                                        <button type="button" class="btn btn-danger btn-sm mt-2 remove-image-btn" data-field="values_image" data-input-id="values_image_input">
+                                            <i class="fa fa-trash"></i> Remove Values Image
+                                        </button>
+                                        @endif
                                         @error('values_image')<span class="text-danger">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
@@ -298,9 +330,9 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Company Profile PDF <small>(Max 15 MB)</small></label>
-                                        <input accept=".pdf,application/pdf" class="form-control dropify" type="file" name="company_profile" data-allowed-file-extensions="pdf" data-max-file-size="15M">
+                                        <input accept=".pdf,application/pdf" class="form-control dropify" type="file" name="company_profile" id="company_profile_input" data-allowed-file-extensions="pdf" data-max-file-size="15M">
                                         @if($aboutInfo->company_profile)
-                                            <div class="mt-3 p-3" style="background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
+                                            <div class="mt-3 p-3 company-profile-preview" style="background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
                                                 <div class="d-flex align-items-center">
                                                     <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
                                                         <i class="fa fa-file-pdf-o text-white" style="font-size: 24px;"></i>
@@ -314,9 +346,12 @@
                                                         <a href="{{ asset('storage' . $aboutInfo->company_profile) }}" target="_blank" class="btn btn-sm btn-outline-primary mr-2">
                                                             <i class="fa fa-eye"></i> View
                                                         </a>
-                                                        <a href="{{ asset('storage' . $aboutInfo->company_profile) }}" download class="btn btn-sm btn-outline-success">
+                                                        <a href="{{ asset('storage' . $aboutInfo->company_profile) }}" download class="btn btn-sm btn-outline-success mr-2">
                                                             <i class="fa fa-download"></i> Download
                                                         </a>
+                                                        <button type="button" class="btn btn-sm btn-danger remove-image-btn" data-field="company_profile" data-input-id="company_profile_input">
+                                                            <i class="fa fa-trash"></i> Remove
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -345,6 +380,7 @@
 
 @section('js')
 <script src="{{ asset('/js/dropify.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     $(document).ready(function() {
@@ -415,6 +451,97 @@
         updateCharCount('vision_arabic', 'vision_arabic_count', 2000);
         updateCharCount('values_english', 'values_english_count', 2000);
         updateCharCount('values_arabic', 'values_arabic_count', 2000);
+        
+        // Remove image functionality
+        $('.remove-image-btn').on('click', function() {
+            const btn = $(this);
+            const field = btn.data('field');
+            const inputId = btn.data('input-id');
+            
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'This will permanently remove the image/file. This action cannot be undone!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, remove it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Show loading
+                    Swal.fire({
+                        title: 'Removing...',
+                        text: 'Please wait',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    // Send AJAX request
+                    $.ajax({
+                        url: '{{ route("about-information.remove-image") }}',
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            field: field
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Removed!',
+                                    text: response.message,
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    // Reset the dropify input
+                                    const dropifyInput = $('#' + inputId);
+                                    if (dropifyInput.length) {
+                                        const dropifyInstance = dropifyInput.data('dropify');
+                                        if (dropifyInstance) {
+                                            dropifyInstance.resetPreview();
+                                            dropifyInstance.clearElement();
+                                        }
+                                    }
+                                    
+                                    // Hide the remove button
+                                    btn.fadeOut(300, function() {
+                                        $(this).remove();
+                                    });
+                                    
+                                    // If it's company profile, also remove the preview box
+                                    if (field === 'company_profile') {
+                                        btn.closest('.company-profile-preview').fadeOut(300, function() {
+                                            $(this).remove();
+                                        });
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: response.message
+                                });
+                            }
+                        },
+                        error: function(xhr) {
+                            let errorMessage = 'Failed to remove the file. Please try again.';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errorMessage = xhr.responseJSON.message;
+                            }
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: errorMessage
+                            });
+                        }
+                    });
+                }
+            });
+        });
     });
 </script>
 @endsection

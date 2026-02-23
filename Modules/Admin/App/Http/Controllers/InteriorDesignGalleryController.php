@@ -154,8 +154,17 @@ class InteriorDesignGalleryController extends Controller
             'seo_description_arabic' => 'nullable|string',
         ]);
 
-        // Auto-generate slug from English title
-        $data['slug'] = Str::slug($data['title_english']);
+        // Auto-generate unique slug from English title
+        $baseSlug = Str::slug($data['title_english']);
+        $slug = $baseSlug;
+        $slugCounter = 1;
+        
+        // Check for existing slugs (including soft-deleted)
+        while (InteriorDesignGallery::withTrashed()->where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . $slugCounter;
+            $slugCounter++;
+        }
+        $data['slug'] = $slug;
 
         // SEO Tags Insertion (Helper Function)
         if($request->seo_tags != null)
@@ -259,8 +268,20 @@ class InteriorDesignGalleryController extends Controller
             'seo_description_arabic' => 'nullable|string',
         ]);
 
-        // Auto-generate slug from English title
-        $data['slug'] = Str::slug($data['title_english']);
+        // Auto-generate unique slug from English title
+        $baseSlug = Str::slug($data['title_english']);
+        $slug = $baseSlug;
+        $slugCounter = 1;
+        
+        // Check for existing slugs (excluding current record, including soft-deleted)
+        while (InteriorDesignGallery::withTrashed()
+            ->where('slug', $slug)
+            ->where('id', '!=', $id)
+            ->exists()) {
+            $slug = $baseSlug . '-' . $slugCounter;
+            $slugCounter++;
+        }
+        $data['slug'] = $slug;
 
         // SEO Tags Insertion (Helper Function)
         if($request->seo_tags != null)
@@ -459,7 +480,8 @@ class InteriorDesignGalleryController extends Controller
         $categoryName = $category->title_english;
         
         // Find all existing titles that match the pattern "CategoryName X" where X is a number
-        $existingNumbers = InteriorDesignGallery::whereNull('deleted_at')
+        // Include soft-deleted records to avoid slug conflicts
+        $existingNumbers = InteriorDesignGallery::withTrashed()
             ->where('category_id', $categoryId)
             ->where('title_english', 'LIKE', $categoryName . ' %')
             ->pluck('title_english')
@@ -519,8 +541,8 @@ class InteriorDesignGalleryController extends Controller
         $categoryNameEnglish = $category->title_english;
         $categoryNameArabic = $category->title_arabic;
         
-        // Get existing numbers for this category
-        $existingNumbers = InteriorDesignGallery::whereNull('deleted_at')
+        // Get existing numbers for this category (including soft-deleted to avoid slug conflicts)
+        $existingNumbers = InteriorDesignGallery::withTrashed()
             ->where('category_id', $categoryId)
             ->where('title_english', 'LIKE', $categoryNameEnglish . ' %')
             ->pluck('title_english')
@@ -532,6 +554,11 @@ class InteriorDesignGalleryController extends Controller
                 return null;
             })
             ->filter()
+            ->toArray();
+        
+        // Also check existing slugs to avoid unique constraint violations
+        $existingSlugs = InteriorDesignGallery::withTrashed()
+            ->pluck('slug')
             ->toArray();
         
         // Get max ordering
@@ -562,6 +589,17 @@ class InteriorDesignGalleryController extends Controller
                     $titleEnglish = $categoryNameEnglish . ' ' . $nextNumber;
                     $titleArabic = $categoryNameArabic . ' ' . $nextNumber;
                     
+                    // Generate unique slug
+                    $baseSlug = Str::slug($titleEnglish);
+                    $slug = $baseSlug;
+                    $slugCounter = 1;
+                    while (in_array($slug, $existingSlugs)) {
+                        $slug = $baseSlug . '-' . $slugCounter;
+                        $slugCounter++;
+                    }
+                    // Add this slug to existing slugs for next iteration
+                    $existingSlugs[] = $slug;
+                    
                     // Handle image upload
                     $imagePath = $this->handleImageUpload($image);
                     
@@ -572,7 +610,7 @@ class InteriorDesignGalleryController extends Controller
                     InteriorDesignGallery::create([
                         'title_english' => $titleEnglish,
                         'title_arabic' => $titleArabic,
-                        'slug' => Str::slug($titleEnglish),
+                        'slug' => $slug,
                         'image' => $imagePath,
                         'category_id' => $categoryId,
                         'project_type_id' => $projectTypeId,
@@ -599,5 +637,77 @@ class InteriorDesignGalleryController extends Controller
         }
         
         return redirect()->back()->with('error', 'No images were uploaded. ' . implode(', ', $errors));
+    }
+
+    /**
+     * Display the index page ordering screen (first 6 images)
+     */
+    public function orderIndex()
+    {
+        $galleries = InteriorDesignGallery::with('category')
+            ->where('publish_status', 0)
+            ->whereNull('deleted_at')
+            ->orderBy('ordering', 'asc')
+            ->get();
+        
+        return view('admin::interior-design-galleries.order-index', compact('galleries'));
+    }
+
+    /**
+     * Display the all images ordering screen
+     */
+    public function orderAll(Request $request)
+    {
+        $query = InteriorDesignGallery::with('category')
+            ->whereNull('deleted_at')
+            ->orderBy('ordering', 'asc');
+        
+        // Filter by category if specified
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+        
+        $galleries = $query->get();
+        $categories = InteriorCategory::whereNull('deleted_at')
+            ->orderBy('ordering', 'asc')
+            ->get();
+        
+        return view('admin::interior-design-galleries.order-all', compact('galleries', 'categories'));
+    }
+
+    /**
+     * Update ordering for index page (first 6)
+     */
+    public function updateIndexOrder(Request $request)
+    {
+        $orders = $request->input('orders', []);
+        
+        foreach ($orders as $order) {
+            InteriorDesignGallery::where('id', $order['id'])
+                ->update(['ordering' => $order['ordering']]);
+        }
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Index page order updated successfully!',
+        ]);
+    }
+
+    /**
+     * Update ordering for all images
+     */
+    public function updateAllOrder(Request $request)
+    {
+        $orders = $request->input('orders', []);
+        
+        foreach ($orders as $order) {
+            InteriorDesignGallery::where('id', $order['id'])
+                ->update(['ordering' => $order['ordering']]);
+        }
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Order updated successfully!',
+        ]);
     }
 }

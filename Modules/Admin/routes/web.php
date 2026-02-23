@@ -73,6 +73,10 @@ use Modules\Admin\App\Http\Controllers\CertificateController;
 use Modules\Admin\App\Http\Controllers\ActivityLogController;
 use Modules\Admin\App\Http\Controllers\RoleController;
 use Modules\Admin\App\Http\Controllers\UserRoleController;
+use Modules\Admin\App\Http\Controllers\HomeInteriorSettingController;
+use Modules\Admin\App\Http\Controllers\InteriorCategoryOrderController;
+use Modules\Admin\App\Http\Controllers\ContactPageSectionController;
+use Modules\Admin\App\Http\Controllers\AboutPageSectionController;
 
 
 /*
@@ -256,6 +260,7 @@ Route::group(
             Route::prefix('about-information')->group(function () {
                 Route::get('/', [AboutInformationController::class, 'index'])->name('about-information.index');
                 Route::post('/update', [AboutInformationController::class, 'update'])->name('about-information.update');
+                Route::post('/remove-image', [AboutInformationController::class, 'removeImage'])->name('about-information.remove-image');
             });
             
             // About Features Routes
@@ -765,6 +770,51 @@ Route::group(
                 Route::get('/bulk-add', [InteriorDesignGalleryController::class, 'bulkAdd'])->name('interior-design-gallery.bulk-add');
                 Route::post('/bulk-store', [InteriorDesignGalleryController::class, 'bulkStore'])->name('interior-design-gallery.bulk-store');
                 Route::get('/get-next-number/{categoryId}', [InteriorDesignGalleryController::class, 'getNextNumber'])->name('interior-design-gallery.get-next-number');
+                Route::get('/order-index', [InteriorDesignGalleryController::class, 'orderIndex'])->name('interior-design-gallery.order-index');
+                Route::get('/order-all', [InteriorDesignGalleryController::class, 'orderAll'])->name('interior-design-gallery.order-all');
+                Route::post('/update-index-order', [InteriorDesignGalleryController::class, 'updateIndexOrder'])->name('interior-design-gallery.update-index-order');
+                Route::post('/update-all-order', [InteriorDesignGalleryController::class, 'updateAllOrder'])->name('interior-design-gallery.update-all-order');
+            });
+
+            // Home Interior Settings Routes
+            Route::prefix('home-interior-settings')->group(function () {
+                Route::get('/index', [HomeInteriorSettingController::class, 'index'])->name('home-interior-settings.index');
+                Route::get('/select-images', [HomeInteriorSettingController::class, 'selectImages'])->name('home-interior-settings.select-images');
+                Route::post('/save-images', [HomeInteriorSettingController::class, 'saveImages'])->name('home-interior-settings.save-images');
+                Route::post('/clear-images', [HomeInteriorSettingController::class, 'clearImages'])->name('home-interior-settings.clear-images');
+                Route::post('/update', [HomeInteriorSettingController::class, 'update'])->name('home-interior-settings.update');
+                Route::post('/update-order', [HomeInteriorSettingController::class, 'updateOrder'])->name('home-interior-settings.update-order');
+            });
+
+            // Interior Category Order Routes
+            Route::prefix('interior-category-order')->group(function () {
+                Route::get('/index', [InteriorCategoryOrderController::class, 'index'])->name('interior-category-order.index');
+                Route::post('/update-order', [InteriorCategoryOrderController::class, 'updateOrder'])->name('interior-category-order.update-order');
+                Route::post('/toggle-publish/{id}', [InteriorCategoryOrderController::class, 'togglePublish'])->name('interior-category-order.toggle-publish');
+                Route::get('/category-images/{id}', [InteriorCategoryOrderController::class, 'categoryImages'])->name('interior-category-order.category-images');
+                Route::post('/update-category-images-order/{id}', [InteriorCategoryOrderController::class, 'updateCategoryImagesOrder'])->name('interior-category-order.update-category-images-order');
+            });
+
+            // Contact Page Sections Management Routes
+            Route::prefix('contact-page-sections')->group(function () {
+                Route::get('/index', [ContactPageSectionController::class, 'index'])->name('contact-page-sections.index');
+                Route::post('/update-order', [ContactPageSectionController::class, 'updateOrder'])->name('contact-page-sections.update-order');
+                Route::post('/toggle-status/{id}', [ContactPageSectionController::class, 'toggleStatus'])->name('contact-page-sections.toggle-status');
+                Route::post('/move-up/{id}', [ContactPageSectionController::class, 'moveUp'])->name('contact-page-sections.move-up');
+                Route::post('/move-down/{id}', [ContactPageSectionController::class, 'moveDown'])->name('contact-page-sections.move-down');
+                Route::get('/edit/{id}', [ContactPageSectionController::class, 'edit'])->name('contact-page-sections.edit');
+                Route::post('/update/{id}', [ContactPageSectionController::class, 'update'])->name('contact-page-sections.update');
+            });
+
+            // About Page Sections Management Routes
+            Route::prefix('about-page-sections')->group(function () {
+                Route::get('/index', [AboutPageSectionController::class, 'index'])->name('about-page-sections.index');
+                Route::post('/update-order', [AboutPageSectionController::class, 'updateOrder'])->name('about-page-sections.update-order');
+                Route::post('/toggle-status/{id}', [AboutPageSectionController::class, 'toggleStatus'])->name('about-page-sections.toggle-status');
+                Route::post('/move-up/{id}', [AboutPageSectionController::class, 'moveUp'])->name('about-page-sections.move-up');
+                Route::post('/move-down/{id}', [AboutPageSectionController::class, 'moveDown'])->name('about-page-sections.move-down');
+                Route::get('/edit/{id}', [AboutPageSectionController::class, 'edit'])->name('about-page-sections.edit');
+                Route::post('/update/{id}', [AboutPageSectionController::class, 'update'])->name('about-page-sections.update');
             });
 
             // Home Sections Management Routes

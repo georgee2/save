@@ -69,12 +69,13 @@ class InteriorGalleryController extends Controller
         // Get paginated results
         $galleries = $query->paginate(12)->withQueryString();
 
-        // Get filter data
+        // Get filter data - ordered by the new ordering field
         $categories = InteriorCategory::whereNull('deleted_at')
+            ->where('publish_status', 0) // Only published categories
             ->withCount(['galleries' => function($q) {
                 $q->where('publish_status', 0)->whereNull('deleted_at');
             }])
-            ->orderBy('title_english')
+            ->orderBy('ordering', 'asc')
             ->get();
 
         $styles = ProjectStyle::whereNull('deleted_at')
@@ -155,12 +156,13 @@ class InteriorGalleryController extends Controller
         // Get paginated results
         $galleries = $query->paginate(12)->withQueryString();
 
-        // Get filter data
+        // Get filter data - ordered by the new ordering field
         $categories = InteriorCategory::whereNull('deleted_at')
+            ->where('publish_status', 0) // Only published categories
             ->withCount(['galleries' => function($q) {
                 $q->where('publish_status', 0)->whereNull('deleted_at');
             }])
-            ->orderBy('title_english')
+            ->orderBy('ordering', 'asc')
             ->get();
 
         $styles = ProjectStyle::whereNull('deleted_at')->orderBy('title_english')->get();
