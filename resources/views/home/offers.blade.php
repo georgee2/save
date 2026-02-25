@@ -18,7 +18,7 @@
         </div>
         
         <div class="slick-slider offers-slider custom-arrow-spacing-30"
-            data-slick-options='{"slidesToShow": 3,"dots":true,"arrows":false,"autoplay":true,"autoplaySpeed":4000,"responsive":[{"breakpoint": 1400,"settings": {"slidesToShow":3}},{"breakpoint": 1200,"settings": {"slidesToShow":2}},{"breakpoint": 768,"settings": {"slidesToShow": 1,"arrows":false,"dots":true}}]}'>
+            data-slick-options='{"slidesToShow": 3,"dots":true,"arrows":false,"autoplay":true,"autoplaySpeed":4000,"infinite":true,"responsive":[{"breakpoint": 1400,"settings": {"slidesToShow":3}},{"breakpoint": 1200,"settings": {"slidesToShow":2}},{"breakpoint": 768,"settings": {"slidesToShow": 1,"arrows":false,"dots":true}}]}'>
             
             @foreach($featuredOffers as $offer)
             <div class="box pb-7 pt-2 px-2" data-animate="fadeInUp">
@@ -206,7 +206,7 @@
     </div>
 </section>
 
-{{-- Copy Code Script --}}
+{{-- Copy Code & Smart Dots Script --}}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.copy-code-btn').forEach(function(btn) {
@@ -222,6 +222,35 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
+
+    // Smart Dots for Offers Slider
+    var maxVisible = 5;
+
+    function updateOffersSmartDots() {
+        var $dots = $('.offers-slider .slick-dots li');
+        var total = $dots.length;
+        if (total <= maxVisible) return;
+
+        var activeIndex = $dots.filter('.slick-active').index();
+
+        $dots.removeClass('smart-dot-hidden smart-dot-far');
+
+        $dots.each(function(i) {
+            var distance = Math.abs(i - activeIndex);
+            if (distance > Math.floor(maxVisible / 2) + 1) {
+                $(this).addClass('smart-dot-far');
+            } else if (distance > Math.floor(maxVisible / 2)) {
+                $(this).addClass('smart-dot-hidden');
+            }
+        });
+    }
+
+    var $offersSlider = $('.offers-slider');
+    if ($offersSlider.length) {
+        $offersSlider.on('afterChange', updateOffersSmartDots);
+        $offersSlider.on('init', updateOffersSmartDots);
+        setTimeout(updateOffersSmartDots, 500);
+    }
 });
 </script>
 @endif

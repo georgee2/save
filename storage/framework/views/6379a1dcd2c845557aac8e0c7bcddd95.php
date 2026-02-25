@@ -196,6 +196,34 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Smart Dots for Interior Mobile Slider
+    var interiorMaxVisible = 5;
+
+    function updateInteriorSmartDots() {
+        var $dots = $('.interior-gallery-slider .slick-dots li');
+        var total = $dots.length;
+        if (total <= interiorMaxVisible) return;
+
+        var activeIndex = $dots.filter('.slick-active').index();
+
+        $dots.removeClass('smart-dot-hidden smart-dot-far');
+
+        $dots.each(function(i) {
+            var distance = Math.abs(i - activeIndex);
+            if (distance > Math.floor(interiorMaxVisible / 2) + 1) {
+                $(this).addClass('smart-dot-far');
+            } else if (distance > Math.floor(interiorMaxVisible / 2)) {
+                $(this).addClass('smart-dot-hidden');
+            }
+        });
+    }
+
+    var $interiorSlider = $('.interior-mobile-slider');
+    if ($interiorSlider.length) {
+        $interiorSlider.on('afterChange', updateInteriorSmartDots);
+        $interiorSlider.on('init', updateInteriorSmartDots);
+        setTimeout(updateInteriorSmartDots, 500);
+    }
     const galleryCards = document.querySelectorAll('.interior-gallery-card');
     const modal = document.getElementById('interiorGalleryModal');
     const closeBtn = document.getElementById('closeGalleryModal');

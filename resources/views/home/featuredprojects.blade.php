@@ -397,5 +397,110 @@
     color: #adb5bd;
     margin: 0 6px;
 }
+
+/* Smart Dots for Featured Projects Slider */
+.featured-projects-section .slick-dots {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+    margin: 15px 0 0;
+    list-style: none;
+}
+
+.featured-projects-section .slick-dots li {
+    margin: 0;
+    padding: 0;
+    width: auto;
+    height: auto;
+}
+
+.featured-projects-section .slick-dots li span,
+.featured-projects-section .slick-dots li button {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border-radius: 50%;
+    background: #cdd5db;
+    border: none;
+    font-size: 0;
+    line-height: 0;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    display: block;
+    opacity: 1;
+}
+
+.featured-projects-section .slick-dots li button:before,
+.featured-projects-section .slick-dots li span:before {
+    display: none;
+}
+
+.featured-projects-section .slick-dots li.slick-active span,
+.featured-projects-section .slick-dots li.slick-active button {
+    background: #19868b;
+    width: 28px;
+    border-radius: 10px;
+}
+
+.featured-projects-section .slick-dots li:not(.slick-active):hover span,
+.featured-projects-section .slick-dots li:not(.slick-active):hover button {
+    background: #19868b;
+    opacity: 0.5;
+}
+
+/* Show only nearby dots (smart visibility) */
+.featured-projects-section .slick-dots li {
+    transition: all 0.4s ease;
+}
+
+.featured-projects-section .slick-dots li.smart-dot-hidden {
+    width: 6px !important;
+    height: 6px !important;
+    opacity: 0.3;
+}
+
+.featured-projects-section .slick-dots li.smart-dot-hidden span,
+.featured-projects-section .slick-dots li.smart-dot-hidden button {
+    width: 6px !important;
+    height: 6px !important;
+}
+
+.featured-projects-section .slick-dots li.smart-dot-far {
+    display: none !important;
+}
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var maxVisible = 5;
+
+    function updateSmartDots() {
+        var $dots = $('.featured-projects-section .slick-dots li');
+        var total = $dots.length;
+        if (total <= maxVisible) return;
+
+        var activeIndex = $dots.filter('.slick-active').index();
+        
+        $dots.removeClass('smart-dot-hidden smart-dot-far');
+        
+        $dots.each(function(i) {
+            var distance = Math.abs(i - activeIndex);
+            if (distance > Math.floor(maxVisible / 2) + 1) {
+                $(this).addClass('smart-dot-far');
+            } else if (distance > Math.floor(maxVisible / 2)) {
+                $(this).addClass('smart-dot-hidden');
+            }
+        });
+    }
+
+    var $slider = $('.featured-projects-section .slick-slider');
+    if ($slider.length) {
+        $slider.on('afterChange', updateSmartDots);
+        $slider.on('init', updateSmartDots);
+        setTimeout(updateSmartDots, 500);
+    }
+});
+</script>
 @endif

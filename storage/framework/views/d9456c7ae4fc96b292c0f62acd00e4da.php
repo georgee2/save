@@ -89,55 +89,53 @@
         cursor: pointer;
         font-weight: bold;
     }
-    .pagination-info {
-        font-size: 14px;
-        color: #6c757d;
-        margin-top: 10px;
-    }
-    /* Custom Pagination Styles */
-    .pagination {
+    .pagination-wrapper {
         display: flex;
-        padding-left: 0;
-        list-style: none;
-        border-radius: 0.25rem;
-        justify-content: center;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e9ecef;
     }
-    .page-item:first-child .page-link {
-        border-top-left-radius: 0.25rem;
-        border-bottom-left-radius: 0.25rem;
+    .pagination-info {
+        color: #6c757d;
+        font-size: 14px;
     }
-    .page-item:last-child .page-link {
-        border-top-right-radius: 0.25rem;
-        border-bottom-right-radius: 0.25rem;
+    .pagination-wrapper .pagination {
+        margin: 0;
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
     }
-    .page-link {
-        position: relative;
-        display: block;
-        padding: 0.5rem 0.75rem;
-        margin-left: -1px;
-        line-height: 1.25;
-        color: #19868b;
-        background-color: #fff;
+    .pagination-wrapper .pagination .page-item .page-link {
+        border-radius: 6px;
+        padding: 8px 14px;
+        font-size: 14px;
+        color: #495057;
         border: 1px solid #dee2e6;
-        transition: all 0.3s;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 5px;
     }
-    .page-link:hover {
-        color: #0d6b6f;
-        text-decoration: none;
-        background-color: #e9ecef;
-        border-color: #dee2e6;
+    .pagination-wrapper .pagination .page-item .page-link:hover {
+        background: #19868b;
+        border-color: #19868b;
+        color: white;
     }
-    .page-item.active .page-link {
-        z-index: 1;
-        color: #fff;
+    .pagination-wrapper .pagination .page-item.active .page-link {
         background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
         border-color: #19868b;
+        color: white;
+        font-weight: 600;
     }
-    .page-item.disabled .page-link {
-        color: #6c757d;
-        pointer-events: none;
-        background-color: #fff;
-        border-color: #dee2e6;
+    .pagination-wrapper .pagination .page-item.disabled .page-link {
+        background: #f8f9fa;
+        color: #adb5bd;
+        cursor: not-allowed;
+    }
+    .pagination-wrapper .pagination .page-item .page-link i {
+        font-size: 12px;
     }
     
     /* Bulk Actions Styles */
@@ -683,48 +681,14 @@
                         
                         <!-- Pagination -->
                         <?php if($galleries->hasPages()): ?>
-                        <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div class="pagination-wrapper">
                             <div class="pagination-info">
                                 Showing <?php echo e($galleries->firstItem()); ?> to <?php echo e($galleries->lastItem()); ?> of <?php echo e($galleries->total()); ?> galleries
                             </div>
-                            <nav aria-label="Page navigation">
-                                <ul class="pagination mb-0">
-                                    
-                                    <?php if($galleries->onFirstPage()): ?>
-                                        <li class="page-item disabled">
-                                            <span class="page-link">&laquo; Previous</span>
-                                        </li>
-                                    <?php else: ?>
-                                        <li class="page-item">
-                                            <a class="page-link" href="<?php echo e($galleries->previousPageUrl()); ?>" rel="prev">&laquo; Previous</a>
-                                        </li>
-                                    <?php endif; ?>
+                            <div>
+                                <?php echo e($galleries->links('admin::pagination.admin')); ?>
 
-                                    
-                                    <?php $__currentLoopData = $galleries->getUrlRange(1, $galleries->lastPage()); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page => $url): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <?php if($page == $galleries->currentPage()): ?>
-                                            <li class="page-item active">
-                                                <span class="page-link"><?php echo e($page); ?></span>
-                                            </li>
-                                        <?php else: ?>
-                                            <li class="page-item">
-                                                <a class="page-link" href="<?php echo e($url); ?>"><?php echo e($page); ?></a>
-                                            </li>
-                                        <?php endif; ?>
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-
-                                    
-                                    <?php if($galleries->hasMorePages()): ?>
-                                        <li class="page-item">
-                                            <a class="page-link" href="<?php echo e($galleries->nextPageUrl()); ?>" rel="next">Next &raquo;</a>
-                                        </li>
-                                    <?php else: ?>
-                                        <li class="page-item disabled">
-                                            <span class="page-link">Next &raquo;</span>
-                                        </li>
-                                    <?php endif; ?>
-                                </ul>
-                            </nav>
+                            </div>
                         </div>
                         <?php endif; ?>
                     <?php else: ?>

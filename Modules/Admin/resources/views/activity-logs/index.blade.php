@@ -143,6 +143,55 @@
         color: #6c757d;
         text-transform: uppercase;
     }
+    
+    .pagination-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e9ecef;
+    }
+    .pagination-info {
+        color: #6c757d;
+        font-size: 14px;
+    }
+    .pagination-wrapper .pagination {
+        margin: 0;
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+    .pagination-wrapper .pagination .page-item .page-link {
+        border-radius: 6px;
+        padding: 8px 14px;
+        font-size: 14px;
+        color: #495057;
+        border: 1px solid #dee2e6;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .pagination-wrapper .pagination .page-item .page-link:hover {
+        background: #19868b;
+        border-color: #19868b;
+        color: white;
+    }
+    .pagination-wrapper .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+        border-color: #19868b;
+        color: white;
+        font-weight: 600;
+    }
+    .pagination-wrapper .pagination .page-item.disabled .page-link {
+        background: #f8f9fa;
+        color: #adb5bd;
+        cursor: not-allowed;
+    }
+    .pagination-wrapper .pagination .page-item .page-link i {
+        font-size: 12px;
+    }
 </style>
 @endsection
 
@@ -300,9 +349,16 @@
                     </div>
                     
                     {{-- Pagination --}}
-                    <div class="d-flex justify-content-center mt-4">
-                        {{ $logs->appends($filters)->links() }}
+                    @if($logs->hasPages())
+                    <div class="pagination-wrapper">
+                        <div class="pagination-info">
+                            Showing {{ $logs->firstItem() }} to {{ $logs->lastItem() }} of {{ $logs->total() }} logs
+                        </div>
+                        <div>
+                            {{ $logs->appends($filters)->links('admin::pagination.admin') }}
+                        </div>
                     </div>
+                    @endif
                     @else
                     <div class="alert alert-info text-center">
                         <i class="fa fa-info-circle fa-2x mb-2"></i>

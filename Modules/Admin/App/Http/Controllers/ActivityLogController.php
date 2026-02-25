@@ -22,7 +22,7 @@ class ActivityLogController extends Controller
             'search' => $request->get('search'),
         ];
 
-        $logs = ActivityLog::getFiltered($filters, 20);
+        $logs = ActivityLog::getFiltered($filters, 10);
         
         // Get filter options
         $modelNames = ActivityLog::getDistinctModelNames();
