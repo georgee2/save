@@ -92,6 +92,15 @@
     transform: translateX(3px);
 }
 
+/* Desktop/Mobile Card Toggle */
+.about-cards-desktop {
+    display: contents;
+}
+
+.about-cards-mobile {
+    display: none;
+}
+
 /* About Cards Grid */
 .svg-about-cards {
     display: grid;
@@ -298,42 +307,98 @@
     }
     
     .svg-about-cards {
-        grid-template-columns: 1fr;
+        display: block;
+    }
+    
+    .about-cards-desktop {
+        display: none;
+    }
+    
+    .about-cards-mobile {
+        display: block;
+        margin-top: 25px;
+        padding-bottom: 20px;
     }
     
     .svg-about-cards .svg-center-content {
-        grid-column: 1;
         padding: 20px 0;
     }
     
-    .svg-about-cards .svg-card-1,
-    .svg-about-cards .svg-card-2,
-    .svg-about-cards .svg-card-3,
-    .svg-about-cards .svg-card-4 {
-        grid-column: 1;
+    .about-mobile-slide {
+        padding: 0 8px;
     }
     
-    .svg-about-cards .svg-card-1 { grid-row: 2; }
-    .svg-about-cards .svg-card-2 { grid-row: 3; }
-    .svg-about-cards .svg-card-3 { grid-row: 4; }
-    .svg-about-cards .svg-card-4 { grid-row: 5; }
-    .svg-about-cards .svg-card-5 { 
-        grid-column: 1;
-        grid-row: 6;
+    .about-cards-mobile .svg-icon-card {
+        padding: 25px;
+        margin: 0;
+        height: 100%;
+    }
+    
+    .about-cards-mobile .svg-bg-card {
         min-height: 250px;
+        border-radius: 12px;
     }
     
     .svg-about-section .section-title {
         font-size: 28px;
     }
     
-    .svg-icon-card {
-        padding: 25px;
-    }
-    
     .svg-icon-card .card-icon {
         width: 50px;
         height: 50px;
+    }
+    
+    /* Smart Dots for About Mobile Slider */
+    .about-cards-mobile .slick-dots {
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        padding: 0;
+        margin: 25px 0 0;
+        list-style: none;
+    }
+    
+    .about-cards-mobile .slick-dots li {
+        margin: 0;
+        padding: 0;
+        width: auto;
+        height: auto;
+        transition: all 0.4s ease;
+    }
+    
+    .about-cards-mobile .slick-dots li span,
+    .about-cards-mobile .slick-dots li button {
+        width: 10px;
+        height: 10px;
+        padding: 0;
+        border-radius: 50%;
+        background: #cdd5db;
+        border: none;
+        font-size: 0;
+        line-height: 0;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        display: block;
+        opacity: 1;
+    }
+    
+    .about-cards-mobile .slick-dots li button:before,
+    .about-cards-mobile .slick-dots li span:before {
+        display: none;
+    }
+    
+    .about-cards-mobile .slick-dots li.slick-active span,
+    .about-cards-mobile .slick-dots li.slick-active button {
+        background: #19868b;
+        width: 28px;
+        border-radius: 10px;
+    }
+    
+    .about-cards-mobile .slick-dots li:not(.slick-active):hover span,
+    .about-cards-mobile .slick-dots li:not(.slick-active):hover button {
+        background: #19868b;
+        opacity: 0.5;
     }
 }
 

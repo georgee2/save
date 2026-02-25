@@ -1206,12 +1206,13 @@ body.filter-open {
     font-size: 14px;
 }
 
-/* Slider Dots Styling */
+/* Smart Dots Styling */
 .interior-gallery-slider .slick-dots {
     bottom: -30px;
     display: flex !important;
     justify-content: center;
-    gap: 8px;
+    align-items: center;
+    gap: 6px;
     padding: 0;
     margin: 0;
     list-style: none;
@@ -1219,34 +1220,60 @@ body.filter-open {
 
 .interior-gallery-slider .slick-dots li {
     margin: 0;
+    padding: 0;
     width: auto;
     height: auto;
+    transition: all 0.4s ease;
 }
 
+.interior-gallery-slider .slick-dots li span,
 .interior-gallery-slider .slick-dots li button {
     width: 10px;
     height: 10px;
     padding: 0;
     border-radius: 50%;
-    background: #ddd;
+    background: #cdd5db;
     border: none;
     font-size: 0;
+    line-height: 0;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
+    display: block;
+    opacity: 1;
 }
 
-.interior-gallery-slider .slick-dots li button:before {
+.interior-gallery-slider .slick-dots li button:before,
+.interior-gallery-slider .slick-dots li span:before {
     display: none;
 }
 
+.interior-gallery-slider .slick-dots li.slick-active span,
 .interior-gallery-slider .slick-dots li.slick-active button {
     background: #19868b;
-    width: 24px;
+    width: 28px;
     border-radius: 10px;
 }
 
-/* Max 4 dots visible */
-.interior-gallery-slider .slick-dots li:nth-child(n+5) {
+.interior-gallery-slider .slick-dots li:not(.slick-active):hover span,
+.interior-gallery-slider .slick-dots li:not(.slick-active):hover button {
+    background: #19868b;
+    opacity: 0.5;
+}
+
+/* Smart dot visibility classes */
+.interior-gallery-slider .slick-dots li.smart-dot-hidden {
+    width: 6px !important;
+    height: 6px !important;
+    opacity: 0.3;
+}
+
+.interior-gallery-slider .slick-dots li.smart-dot-hidden span,
+.interior-gallery-slider .slick-dots li.smart-dot-hidden button {
+    width: 6px !important;
+    height: 6px !important;
+}
+
+.interior-gallery-slider .slick-dots li.smart-dot-far {
     display: none !important;
 }
 

@@ -34,40 +34,115 @@
                 $cardPositions = ['svg-card-1', 'svg-card-2', 'svg-card-3', 'svg-card-4'];
             @endphp
 
-            {{-- Icon Cards (up to 4) --}}
-            @foreach($iconCards->take(4) as $index => $card)
-            <div class="svg-icon-card {{ $cardPositions[$index] ?? '' }}" data-animate="fadeInUp">
-                @if($card->icon_dark)
-                <div class="card-icon">
-                    <img src="{{ asset('storage' . $card->icon_dark) }}" 
-                         alt="{{ app()->getLocale() == 'ar' ? $card->title_arabic : $card->title_english }}">
+            {{-- Desktop: Grid Cards --}}
+            <div class="about-cards-desktop">
+                @foreach($iconCards->take(4) as $index => $card)
+                <div class="svg-icon-card {{ $cardPositions[$index] ?? '' }}" data-animate="fadeInUp">
+                    @if($card->icon_dark)
+                    <div class="card-icon">
+                        <img src="{{ asset('storage' . $card->icon_dark) }}" 
+                             alt="{{ app()->getLocale() == 'ar' ? $card->title_arabic : $card->title_english }}">
+                    </div>
+                    @endif
+                    
+                    <h3 class="card-title">
+                        {{ app()->getLocale() == 'ar' ? $card->title_arabic : $card->title_english }}
+                    </h3>
+                    
+                    <p class="card-text">
+                        {{ app()->getLocale() == 'ar' ? $card->bio_arabic : $card->bio_english }}
+                    </p>
                 </div>
-                @endif
-                
-                <h3 class="card-title">
-                    {{ app()->getLocale() == 'ar' ? $card->title_arabic : $card->title_english }}
-                </h3>
-                
-                <p class="card-text">
-                    {{ app()->getLocale() == 'ar' ? $card->bio_arabic : $card->bio_english }}
-                </p>
-            </div>
-            @endforeach
+                @endforeach
 
-            {{-- Background Card (last position) --}}
-            @if($bgCard)
-            <div class="svg-bg-card svg-card-5" 
-                 style="background-image: url('{{ asset('storage' . $bgCard->background) }}')"
-                 data-animate="fadeInUp">
-                @if($bgCard->icon_white)
-                <div class="card-icon-overlay">
-                    <img src="{{ asset('storage' . $bgCard->icon_white) }}" alt="Icon">
+                @if($bgCard)
+                <div class="svg-bg-card svg-card-5" 
+                     style="background-image: url('{{ asset('storage' . $bgCard->background) }}')"
+                     data-animate="fadeInUp">
+                    @if($bgCard->icon_white)
+                    <div class="card-icon-overlay">
+                        <img src="{{ asset('storage' . $bgCard->icon_white) }}" alt="Icon">
+                    </div>
+                    @endif
                 </div>
                 @endif
             </div>
-            @endif
+
+            {{-- Mobile: Slider Cards --}}
+            <div class="about-cards-mobile">
+                @foreach($iconCards->take(4) as $index => $card)
+                <div class="about-mobile-slide">
+                    <div class="svg-icon-card">
+                        @if($card->icon_dark)
+                        <div class="card-icon">
+                            <img src="{{ asset('storage' . $card->icon_dark) }}" 
+                                 alt="{{ app()->getLocale() == 'ar' ? $card->title_arabic : $card->title_english }}">
+                        </div>
+                        @endif
+                        
+                        <h3 class="card-title">
+                            {{ app()->getLocale() == 'ar' ? $card->title_arabic : $card->title_english }}
+                        </h3>
+                        
+                        <p class="card-text">
+                            {{ app()->getLocale() == 'ar' ? $card->bio_arabic : $card->bio_english }}
+                        </p>
+                    </div>
+                </div>
+                @endforeach
+
+                @if($bgCard)
+                <div class="about-mobile-slide">
+                    <div class="svg-bg-card" 
+                         style="background-image: url('{{ asset('storage' . $bgCard->background) }}')">
+                        @if($bgCard->icon_white)
+                        <div class="card-icon-overlay">
+                            <img src="{{ asset('storage' . $bgCard->icon_white) }}" alt="Icon">
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                @endif
+            </div>
         </div>
     </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var $mobileSlider = $('.about-cards-mobile');
+    var mobileInitialized = false;
+
+    function initMobileSlider() {
+        if ($(window).width() <= 767) {
+            if (!mobileInitialized && $mobileSlider.length) {
+                $mobileSlider.slick({
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    dots: true,
+                    arrows: false,
+                    autoplay: true,
+                    autoplaySpeed: 3500,
+                    infinite: true,
+                    speed: 400,
+                    adaptiveHeight: true,
+                    customPaging: function() {
+                        return '<span></span>';
+                    }
+                });
+                mobileInitialized = true;
+            }
+        } else {
+            if (mobileInitialized) {
+                $mobileSlider.slick('unslick');
+                mobileInitialized = false;
+            }
+        }
+    }
+
+    initMobileSlider();
+    $(window).on('resize', initMobileSlider);
+});
+</script>
 @endif
 

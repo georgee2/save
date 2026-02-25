@@ -38,42 +38,119 @@
             ?>
 
             
-            <?php $__currentLoopData = $iconCards->take(4); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $card): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-            <div class="svg-icon-card <?php echo e($cardPositions[$index] ?? ''); ?>" data-animate="fadeInUp">
-                <?php if($card->icon_dark): ?>
-                <div class="card-icon">
-                    <img src="<?php echo e(asset('storage' . $card->icon_dark)); ?>" 
-                         alt="<?php echo e(app()->getLocale() == 'ar' ? $card->title_arabic : $card->title_english); ?>">
+            <div class="about-cards-desktop">
+                <?php $__currentLoopData = $iconCards->take(4); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $card): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <div class="svg-icon-card <?php echo e($cardPositions[$index] ?? ''); ?>" data-animate="fadeInUp">
+                    <?php if($card->icon_dark): ?>
+                    <div class="card-icon">
+                        <img src="<?php echo e(asset('storage' . $card->icon_dark)); ?>" 
+                             alt="<?php echo e(app()->getLocale() == 'ar' ? $card->title_arabic : $card->title_english); ?>">
+                    </div>
+                    <?php endif; ?>
+                    
+                    <h3 class="card-title">
+                        <?php echo e(app()->getLocale() == 'ar' ? $card->title_arabic : $card->title_english); ?>
+
+                    </h3>
+                    
+                    <p class="card-text">
+                        <?php echo e(app()->getLocale() == 'ar' ? $card->bio_arabic : $card->bio_english); ?>
+
+                    </p>
+                </div>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+                <?php if($bgCard): ?>
+                <div class="svg-bg-card svg-card-5" 
+                     style="background-image: url('<?php echo e(asset('storage' . $bgCard->background)); ?>')"
+                     data-animate="fadeInUp">
+                    <?php if($bgCard->icon_white): ?>
+                    <div class="card-icon-overlay">
+                        <img src="<?php echo e(asset('storage' . $bgCard->icon_white)); ?>" alt="Icon">
+                    </div>
+                    <?php endif; ?>
                 </div>
                 <?php endif; ?>
-                
-                <h3 class="card-title">
-                    <?php echo e(app()->getLocale() == 'ar' ? $card->title_arabic : $card->title_english); ?>
-
-                </h3>
-                
-                <p class="card-text">
-                    <?php echo e(app()->getLocale() == 'ar' ? $card->bio_arabic : $card->bio_english); ?>
-
-                </p>
             </div>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
             
-            <?php if($bgCard): ?>
-            <div class="svg-bg-card svg-card-5" 
-                 style="background-image: url('<?php echo e(asset('storage' . $bgCard->background)); ?>')"
-                 data-animate="fadeInUp">
-                <?php if($bgCard->icon_white): ?>
-                <div class="card-icon-overlay">
-                    <img src="<?php echo e(asset('storage' . $bgCard->icon_white)); ?>" alt="Icon">
+            <div class="about-cards-mobile">
+                <?php $__currentLoopData = $iconCards->take(4); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $card): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <div class="about-mobile-slide">
+                    <div class="svg-icon-card">
+                        <?php if($card->icon_dark): ?>
+                        <div class="card-icon">
+                            <img src="<?php echo e(asset('storage' . $card->icon_dark)); ?>" 
+                                 alt="<?php echo e(app()->getLocale() == 'ar' ? $card->title_arabic : $card->title_english); ?>">
+                        </div>
+                        <?php endif; ?>
+                        
+                        <h3 class="card-title">
+                            <?php echo e(app()->getLocale() == 'ar' ? $card->title_arabic : $card->title_english); ?>
+
+                        </h3>
+                        
+                        <p class="card-text">
+                            <?php echo e(app()->getLocale() == 'ar' ? $card->bio_arabic : $card->bio_english); ?>
+
+                        </p>
+                    </div>
+                </div>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+                <?php if($bgCard): ?>
+                <div class="about-mobile-slide">
+                    <div class="svg-bg-card" 
+                         style="background-image: url('<?php echo e(asset('storage' . $bgCard->background)); ?>')">
+                        <?php if($bgCard->icon_white): ?>
+                        <div class="card-icon-overlay">
+                            <img src="<?php echo e(asset('storage' . $bgCard->icon_white)); ?>" alt="Icon">
+                        </div>
+                        <?php endif; ?>
+                    </div>
                 </div>
                 <?php endif; ?>
             </div>
-            <?php endif; ?>
         </div>
     </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var $mobileSlider = $('.about-cards-mobile');
+    var mobileInitialized = false;
+
+    function initMobileSlider() {
+        if ($(window).width() <= 767) {
+            if (!mobileInitialized && $mobileSlider.length) {
+                $mobileSlider.slick({
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    dots: true,
+                    arrows: false,
+                    autoplay: true,
+                    autoplaySpeed: 3500,
+                    infinite: true,
+                    speed: 400,
+                    adaptiveHeight: true,
+                    customPaging: function() {
+                        return '<span></span>';
+                    }
+                });
+                mobileInitialized = true;
+            }
+        } else {
+            if (mobileInitialized) {
+                $mobileSlider.slick('unslick');
+                mobileInitialized = false;
+            }
+        }
+    }
+
+    initMobileSlider();
+    $(window).on('resize', initMobileSlider);
+});
+</script>
 <?php endif; ?>
 
 <?php /**PATH C:\wamp64\www\smartvisionuae\resources\views/home/about.blade.php ENDPATH**/ ?>

@@ -3,8 +3,8 @@
 <section class="why-choose-us-section">
     <div class="container">
         <div class="why-choose-us-grid">
-            {{-- Left Cards (2 cards) --}}
-            <div class="why-cards-left">
+            {{-- Left Cards (2 cards) - Desktop --}}
+            <div class="why-cards-left why-cards-desktop">
                 @foreach($whyChooseUsCards->take(2) as $card)
                 <div class="why-card" data-animate="fadeInLeft">
                     <div class="why-card-icon">
@@ -53,8 +53,8 @@
                 </div>
             </div>
             
-            {{-- Right Cards (2 cards) --}}
-            <div class="why-cards-right">
+            {{-- Right Cards (2 cards) - Desktop --}}
+            <div class="why-cards-right why-cards-desktop">
                 @foreach($whyChooseUsCards->skip(2)->take(2) as $card)
                 <div class="why-card" data-animate="fadeInRight">
                     <div class="why-card-icon">
@@ -75,7 +75,68 @@
                 @endforeach
             </div>
         </div>
+        
+        {{-- Mobile Cards Slider --}}
+        <div class="why-cards-mobile">
+            @foreach($whyChooseUsCards->take(4) as $card)
+            <div class="why-mobile-slide">
+                <div class="why-card">
+                    <div class="why-card-icon">
+                        @if($card->icon_dark)
+                        <img src="{{ url('/storage' . $card->icon_dark) }}" 
+                             alt="{{ app()->getLocale() == 'ar' ? $card->title_arabic : $card->title_english }}">
+                        @else
+                        <i class="fas fa-star"></i>
+                        @endif
+                    </div>
+                    <h3 class="why-card-title">
+                        {{ app()->getLocale() == 'ar' ? $card->title_arabic : $card->title_english }}
+                    </h3>
+                    <p class="why-card-text">
+                        {{ app()->getLocale() == 'ar' ? $card->bio_arabic : $card->bio_english }}
+                    </p>
+                </div>
+            </div>
+            @endforeach
+        </div>
     </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var $whySlider = $('.why-cards-mobile');
+    var whyInitialized = false;
+
+    function initWhySlider() {
+        if ($(window).width() <= 767) {
+            if (!whyInitialized && $whySlider.length) {
+                $whySlider.slick({
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    dots: true,
+                    arrows: false,
+                    autoplay: true,
+                    autoplaySpeed: 3500,
+                    infinite: true,
+                    speed: 400,
+                    adaptiveHeight: true,
+                    customPaging: function() {
+                        return '<span></span>';
+                    }
+                });
+                whyInitialized = true;
+            }
+        } else {
+            if (whyInitialized) {
+                $whySlider.slick('unslick');
+                whyInitialized = false;
+            }
+        }
+    }
+
+    initWhySlider();
+    $(window).on('resize', initWhySlider);
+});
+</script>
 @endif
 

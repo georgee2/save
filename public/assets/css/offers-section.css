@@ -797,25 +797,75 @@
     color: #fff !important;
 }
 
-/* Slider Dots Customization for Offers - Primary Color */
+/* Smart Dots for Offers Slider */
 .offers-slider .slick-dots {
-    margin-top: 50px;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+    margin: 40px 0 0;
+    list-style: none;
     position: relative;
     bottom: auto;
 }
 
-.offers-slider .slick-dots li button:before {
-    color: #19868b;
-    font-size: 10px;
+.offers-slider .slick-dots li {
+    margin: 0;
+    padding: 0;
+    width: auto;
+    height: auto;
+    transition: all 0.4s ease;
 }
 
-.offers-slider .slick-dots li.slick-active button:before {
-    color: #19868b;
+.offers-slider .slick-dots li span,
+.offers-slider .slick-dots li button {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border-radius: 50%;
+    background: #cdd5db;
+    border: none;
+    font-size: 0;
+    line-height: 0;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    display: block;
     opacity: 1;
 }
 
-/* Maximum 4 dots only */
-.offers-slider .slick-dots li:nth-child(n+5) {
+.offers-slider .slick-dots li button:before,
+.offers-slider .slick-dots li span:before {
+    display: none;
+}
+
+.offers-slider .slick-dots li.slick-active span,
+.offers-slider .slick-dots li.slick-active button {
+    background: #19868b;
+    width: 28px;
+    border-radius: 10px;
+}
+
+.offers-slider .slick-dots li:not(.slick-active):hover span,
+.offers-slider .slick-dots li:not(.slick-active):hover button {
+    background: #19868b;
+    opacity: 0.5;
+}
+
+/* Smart dot visibility classes */
+.offers-slider .slick-dots li.smart-dot-hidden {
+    width: 6px !important;
+    height: 6px !important;
+    opacity: 0.3;
+}
+
+.offers-slider .slick-dots li.smart-dot-hidden span,
+.offers-slider .slick-dots li.smart-dot-hidden button {
+    width: 6px !important;
+    height: 6px !important;
+}
+
+.offers-slider .slick-dots li.smart-dot-far {
     display: none !important;
 }
 

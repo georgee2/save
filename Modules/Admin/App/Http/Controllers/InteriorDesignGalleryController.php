@@ -78,7 +78,7 @@ class InteriorDesignGalleryController extends Controller
         // Order and paginate
         $galleries = $query->orderBy('interior_design_galleries.ordering', 'asc')
             ->orderBy('interior_design_galleries.created_at', 'desc')
-            ->paginate(15)
+            ->paginate(10)
             ->withQueryString();
         
         // Get filter options
