@@ -74,17 +74,6 @@
     margin-right: 4px;
 }
 
-/* RTL Support for show page price tag */
-[dir="rtl"] .offer-price-tag.offer-price-tag-show {
-    right: auto;
-    left: 20px;
-}
-
-[dir="rtl"] .offer-price-tag.offer-price-tag-show .price-emirate::before {
-    margin-right: 0;
-    margin-left: 4px;
-}
-
 /* ===================================================
    Emirates Selector Grid Styles (3 per row)
    =================================================== */
@@ -194,16 +183,6 @@
     .emirate-item .emirate-name {
         font-size: 11px;
     }
-}
-
-/* RTL Support for emirate items */
-[dir="rtl"] .emirate-item:hover {
-    transform: translateY(-3px);
-}
-
-[dir="rtl"] .offer-price-tag .price-emirate::before {
-    margin-right: 0;
-    margin-left: 5px;
 }
 
 /* ===================================================
@@ -851,52 +830,6 @@
 }
 
 /* ===================================================
-   RTL Support
-   =================================================== */
-[dir="rtl"] .offer-thumbnails-wrapper {
-    order: 2;
-}
-
-[dir="rtl"] .offer-main-slider-wrapper {
-    border-radius: 12px 0 0 12px;
-}
-
-[dir="rtl"] .slider-prev {
-    left: auto;
-    right: 15px;
-}
-
-[dir="rtl"] .slider-next {
-    right: auto;
-    left: 15px;
-}
-
-[dir="rtl"] .spec-icon-wrapper {
-    margin-right: 0;
-    margin-left: 14px;
-}
-
-[dir="rtl"] .fact-icon-wrapper {
-    margin-right: 0;
-    margin-left: 14px;
-}
-
-[dir="rtl"] .spec-item::before {
-    left: auto;
-    right: 0;
-}
-
-[dir="rtl"] .section-header::after {
-    left: auto;
-    right: 0;
-}
-
-[dir="rtl"] .section-header h3 i {
-    margin-right: 0;
-    margin-left: 10px;
-}
-
-/* ===================================================
    Responsive Styles
    =================================================== */
 @media (max-width: 991px) {
@@ -1168,17 +1101,6 @@
 .calendar-slider .slick-prev,
 .calendar-slider .slick-next {
     display: none !important;
-}
-
-/* RTL Support */
-[dir="rtl"] .widget-request-tour .nav-link i {
-    margin-right: 0;
-    margin-left: 8px;
-}
-
-[dir="rtl"] .widget-request-tour .btn i {
-    margin-right: 0;
-    margin-left: 8px;
 }
 
 /* ===================================================
@@ -1476,29 +1398,6 @@
     background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
 }
 
-/* RTL Support for Offer Contact Card */
-[dir="rtl"] .offer-contact-method:hover {
-    transform: translateX(-4px);
-}
-
-[dir="rtl"] .offer-method-icon {
-    margin-right: 0;
-    margin-left: 12px;
-}
-
-[dir="rtl"] .offer-contact-method:hover .offer-method-arrow {
-    transform: translateX(-3px);
-}
-
-[dir="rtl"] .offer-method-arrow i {
-    transform: rotate(180deg);
-}
-
-[dir="rtl"] .offer-download-icon {
-    margin-left: 0;
-    margin-right: auto;
-}
-
 /* Offer Contact Card Responsive Styles */
 @media (max-width: 1199px) {
     .offer-contact-card {
@@ -1691,10 +1590,6 @@
         font-size: 13px;
     }
     
-    /* RTL adjustments for mobile */
-    [dir="rtl"] .offer-method-icon {
-        margin-left: 10px;
-    }
 }
 
 @media (max-width: 480px) {
@@ -1763,9 +1658,5 @@
         font-size: 12px;
     }
     
-    /* RTL adjustments for small mobile */
-    [dir="rtl"] .offer-method-icon {
-        margin-left: 8px;
-    }
 }
 

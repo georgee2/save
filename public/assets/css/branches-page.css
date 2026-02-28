@@ -242,11 +242,6 @@
     border-left: 4px solid #19868b;
 }
 
-[dir="rtl"] .branch-location {
-    border-left: none;
-    border-right: 4px solid #19868b;
-}
-
 .branch-location i {
     color: #19868b;
     font-size: 18px;
@@ -685,20 +680,6 @@
     transform: translateY(2px);
 }
 
-/* RTL Support for Company Profile */
-[dir="rtl"] .company-profile-wrapper::before {
-    left: auto;
-    right: 0;
-}
-
-[dir="rtl"] .profile-content {
-    flex-direction: row-reverse;
-}
-
-[dir="rtl"] .btn-download-profile {
-    flex-direction: row-reverse;
-}
-
 /* Responsive Styles for Company Profile */
 @media (max-width: 991px) {
     .company-profile-wrapper {
@@ -718,10 +699,6 @@
     .btn-download-profile {
         width: 100%;
         justify-content: center;
-    }
-    
-    [dir="rtl"] .profile-content {
-        flex-direction: column;
     }
 }
 
@@ -754,16 +731,4 @@
     }
 }
 
-/* ===========================================
-   RTL Support
-   =========================================== */
-[dir="rtl"] .text-lg-right {
-    text-align: left !important;
-}
-
-@media (max-width: 991px) {
-    [dir="rtl"] .text-lg-right {
-        text-align: center !important;
-    }
-}
 

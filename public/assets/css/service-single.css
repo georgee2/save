@@ -708,10 +708,6 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
-[dir="rtl"] .value-number-badge {
-    right: auto;
-    left: 20px;
-}
 
 .value-icon-wrapper {
     width: 55px;
@@ -1217,26 +1213,6 @@
     }
 }
 
-/* RTL Support */
-[dir="rtl"] .process-content-inner {
-    text-align: left;
-}
-
-[dir="rtl"] .process-modern-item.process-item-reverse .process-content-inner {
-    text-align: right;
-}
-
-[dir="rtl"] .process-visual-overlay {
-    right: auto;
-    left: 15px;
-}
-
-@media (max-width: 992px) {
-    [dir="rtl"] .process-content-inner,
-    [dir="rtl"] .process-modern-item.process-item-reverse .process-content-inner {
-        text-align: right;
-    }
-}
 
 /* ===========================================
    Related Services Section (Parent Services)
@@ -1371,24 +1347,6 @@
     background: #19868b;
 }
 
-/* RTL Support for Slider */
-[dir="rtl"] .related-slider-prev {
-    left: auto;
-    right: 0;
-}
-
-[dir="rtl"] .related-slider-next {
-    right: auto;
-    left: 0;
-}
-
-[dir="rtl"] .related-slider-prev i {
-    transform: rotate(180deg);
-}
-
-[dir="rtl"] .related-slider-next i {
-    transform: rotate(180deg);
-}
 
 /* Legacy grid support - kept for fallback */
 .related-services-grid {
@@ -1603,18 +1561,6 @@
     transform: translateX(5px);
 }
 
-[dir="rtl"] .related-service-number {
-    left: auto;
-    right: 15px;
-}
-
-[dir="rtl"] .related-service-overlay {
-    justify-content: flex-start;
-}
-
-[dir="rtl"] .related-service-card:hover .related-service-link i {
-    transform: translateX(-5px);
-}
 
 @media (max-width: 991px) {
     .related-services-slider-wrapper {
@@ -2702,135 +2648,6 @@
     }
 }
 
-/* ===========================================
-   RTL Support
-   =========================================== */
-[dir="rtl"] .description-content {
-    padding-left: 0;
-    padding-right: 40px;
-}
-
-[dir="rtl"] .description-image-accent {
-    right: -20px;
-    left: auto;
-}
-
-[dir="rtl"] .block-image-accent {
-    left: auto;
-    right: -15px;
-}
-
-/* RTL Image Text Block */
-[dir="rtl"] .image-text-wrapper {
-    flex-direction: row-reverse;
-}
-
-[dir="rtl"] .image-frame-border {
-    right: auto;
-    left: 40px;
-}
-
-[dir="rtl"] .image-text-img {
-    transform: translate(-20px, 20px);
-}
-
-[dir="rtl"] .image-decoration-top {
-    right: auto;
-    left: 30px;
-}
-
-[dir="rtl"] .image-decoration-bottom {
-    left: auto;
-    right: 10px;
-}
-
-[dir="rtl"] .service-image-text-block::before {
-    right: auto;
-    left: 0;
-    clip-path: polygon(0 0, 70% 0, 100% 100%, 0% 100%);
-}
-
-[dir="rtl"] .action-btn-primary:hover i {
-    transform: translateX(-5px);
-}
-
-@media (max-width: 991px) {
-    [dir="rtl"] .image-text-wrapper {
-        flex-direction: column;
-    }
-}
-
-@media (max-width: 767px) {
-    [dir="rtl"] .image-text-img {
-        transform: translate(-15px, 15px);
-    }
-    
-    [dir="rtl"] .image-frame-border {
-        left: 30px;
-    }
-}
-
-[dir="rtl"] .process-step-card {
-    /* No margin needed - using gap in flexbox */
-}
-
-[dir="rtl"] .faq-answer {
-    padding-left: 25px;
-    padding-right: 80px;
-}
-
-[dir="rtl"] .sub-service-link i {
-    transform: scaleX(-1);
-}
-
-[dir="rtl"] .sub-service-card:hover .sub-service-link i {
-    transform: scaleX(-1) translateX(-5px);
-}
-
-[dir="rtl"] .value-number {
-    right: auto;
-    left: 20px;
-}
-
-[dir="rtl"] .cta-btn-primary {
-    margin-right: 0;
-    margin-left: 15px;
-}
-
-@media (max-width: 991px) {
-    [dir="rtl"] .description-content {
-        padding-right: 0;
-    }
-}
-
-/* RTL Slider Support */
-[dir="rtl"] .slider-arrow-prev {
-    left: auto;
-    right: 0;
-}
-
-[dir="rtl"] .slider-arrow-next {
-    right: auto;
-    left: 0;
-}
-
-[dir="rtl"] .slider-arrow i {
-    transform: scaleX(-1);
-}
-
-@media (max-width: 767px) {
-    [dir="rtl"] .process-step-card {
-        /* No additional styling needed for mobile RTL */
-    }
-    
-    [dir="rtl"] .faq-answer {
-        padding-right: 25px;
-    }
-    
-    [dir="rtl"] .cta-btn-primary {
-        margin-left: 0;
-    }
-}
 
 /* Animation */
 [data-animate] {

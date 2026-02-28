@@ -58,13 +58,18 @@ class AboutInformationController extends Controller
             'vision_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'values_english' => 'nullable|string|max:2000',
             'values_arabic' => 'nullable|string|max:2000',
+            'values_points_english' => 'nullable|string',
+            'values_points_arabic' => 'nullable|string',
             'values_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'page_cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'company_profile' => 'nullable|file|mimes:pdf|max:15360',
         ]);
         
         $aboutInfo = AboutInformation::getAboutInfo();
-        $data = $request->except(['about_image', 'mission_image', 'vision_image', 'values_image', 'page_cover_image', 'company_profile']);
+        $data = $request->except(['about_image', 'mission_image', 'vision_image', 'values_image', 'page_cover_image', 'company_profile', 'values_points_english', 'values_points_arabic']);
+        
+        $data['values_points_english'] = $request->values_points_english ? tags($request->values_points_english) : null;
+        $data['values_points_arabic'] = $request->values_points_arabic ? tags($request->values_points_arabic) : null;
         
         // Handle About Image (850x795)
         if ($request->hasFile('about_image')) {

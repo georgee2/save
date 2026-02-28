@@ -207,15 +207,6 @@
     transform: translateX(5px);
 }
 
-/* RTL Support */
-[dir="rtl"] .why-btn i {
-    transform: scaleX(-1);
-}
-
-[dir="rtl"] .why-btn:hover i {
-    transform: scaleX(-1) translateX(-5px);
-}
-
 /* Mobile Slider - Hidden by default */
 .why-cards-mobile {
     display: none;

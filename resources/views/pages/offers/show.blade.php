@@ -515,45 +515,74 @@
                         {{-- Share Buttons --}}
                         @php
                             $shareTitle = app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english;
-                            $sharePrice = ($offer->default_price && $offer->currency) 
-                                ? ($offer->currency->abbreviation ?? 'AED') . ' ' . number_format($offer->default_price->price)
-                                : '';
-                            $shareEmirate = ($offer->default_price && $offer->default_price->emirate)
-                                ? (app()->getLocale() == 'ar' ? $offer->default_price->emirate->title_arabic : $offer->default_price->emirate->title_english)
-                                : '';
-                            $shareText = $shareTitle;
-                            if($sharePrice) {
-                                $shareText .= ' - ' . $sharePrice;
-                            }
-                            if($shareEmirate) {
-                                $shareText .= ' (' . $shareEmirate . ')';
-                            }
+                            $shareCurrency = $offer->currency->abbreviation ?? 'AED';
                             $shareUrl = request()->url();
                             $shareImage = url('/storage' . $offer->main_image);
                         @endphp
                         <div class="share-section pt-3 border-top">
                             <h6 class="fs-13 text-muted text-uppercase mb-3">{{ __('lang.share') }}</h6>
                             <div class="d-flex justify-content-between flex-wrap">
-                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode($shareUrl) }}&quote={{ urlencode($shareText) }}" target="_blank" class="btn btn-sm btn-outline-primary flex-fill mr-1 mb-2" title="Facebook">
+                                <a id="shareFacebook" href="#" target="_blank" class="btn btn-sm btn-outline-primary flex-fill mr-1 mb-2" title="Facebook">
                                     <i class="fab fa-facebook-f"></i>
                                 </a>
-                                <a href="https://twitter.com/intent/tweet?url={{ urlencode($shareUrl) }}&text={{ urlencode($shareText) }}" target="_blank" class="btn btn-sm btn-outline-info flex-fill mr-1 mb-2" title="Twitter">
+                                <a id="shareTwitter" href="#" target="_blank" class="btn btn-sm btn-outline-info flex-fill mr-1 mb-2" title="Twitter">
                                     <i class="fab fa-twitter"></i>
                                 </a>
-                                <a href="https://wa.me/?text={{ urlencode($shareText . "\n" . $shareUrl) }}" target="_blank" class="btn btn-sm btn-outline-success flex-fill mr-1 mb-2" title="WhatsApp">
+                                <a id="shareWhatsapp" href="#" target="_blank" class="btn btn-sm btn-outline-success flex-fill mr-1 mb-2" title="WhatsApp">
                                     <i class="fab fa-whatsapp"></i>
                                 </a>
-                                <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode($shareUrl) }}&title={{ urlencode($shareTitle) }}&summary={{ urlencode($shareText) }}" target="_blank" class="btn btn-sm btn-outline-primary flex-fill mr-1 mb-2" title="LinkedIn" style="border-color: #0077b5; color: #0077b5;">
+                                <a id="shareLinkedin" href="#" target="_blank" class="btn btn-sm btn-outline-primary flex-fill mr-1 mb-2" title="LinkedIn" style="border-color: #0077b5; color: #0077b5;">
                                     <i class="fab fa-linkedin-in"></i>
                                 </a>
-                                <a href="https://pinterest.com/pin/create/button/?url={{ urlencode($shareUrl) }}&media={{ urlencode($shareImage) }}&description={{ urlencode($shareText) }}" target="_blank" class="btn btn-sm btn-outline-danger flex-fill mr-1 mb-2" title="Pinterest" style="border-color: #e60023; color: #e60023;">
+                                <a id="sharePinterest" href="#" target="_blank" class="btn btn-sm btn-outline-danger flex-fill mr-1 mb-2" title="Pinterest" style="border-color: #e60023; color: #e60023;">
                                     <i class="fab fa-pinterest-p"></i>
                                 </a>
-                                <a href="mailto:?subject={{ rawurlencode($shareTitle) }}&body={{ urlencode($shareText . "\n\n" . $shareUrl) }}" class="btn btn-sm btn-outline-secondary flex-fill mb-2" title="Email">
+                                <a id="shareEmail" href="#" class="btn btn-sm btn-outline-secondary flex-fill mb-2" title="Email">
                                     <i class="fas fa-envelope"></i>
                                 </a>
                             </div>
                         </div>
+                        <script>
+                        (function() {
+                            var shareTitle = @json($shareTitle);
+                            var shareCurrency = @json($shareCurrency);
+                            var shareUrl = @json($shareUrl);
+                            var shareImage = @json($shareImage);
+                            var currentPrice = '';
+                            var currentEmirate = '';
+
+                            @if($offer->selected_price)
+                                currentPrice = '{{ number_format($offer->selected_price->price) }}';
+                                currentEmirate = '{{ $offer->selected_price->emirate ? (app()->getLocale() == "ar" ? $offer->selected_price->emirate->title_arabic : $offer->selected_price->emirate->title_english) : "" }}';
+                            @endif
+
+                            function buildShareText() {
+                                var text = shareTitle;
+                                if (currentPrice) text += ' - ' + shareCurrency + ' ' + currentPrice;
+                                if (currentEmirate) text += ' (' + currentEmirate + ')';
+                                return text;
+                            }
+
+                            function updateShareLinks() {
+                                var text = buildShareText();
+                                var enc = encodeURIComponent;
+                                document.getElementById('shareFacebook').href = 'https://www.facebook.com/sharer/sharer.php?u=' + enc(shareUrl) + '&quote=' + enc(text);
+                                document.getElementById('shareTwitter').href = 'https://twitter.com/intent/tweet?url=' + enc(shareUrl) + '&text=' + enc(text);
+                                document.getElementById('shareWhatsapp').href = 'https://wa.me/?text=' + enc(text + '\n' + shareUrl);
+                                document.getElementById('shareLinkedin').href = 'https://www.linkedin.com/shareArticle?mini=true&url=' + enc(shareUrl) + '&title=' + enc(shareTitle) + '&summary=' + enc(text);
+                                document.getElementById('sharePinterest').href = 'https://pinterest.com/pin/create/button/?url=' + enc(shareUrl) + '&media=' + enc(shareImage) + '&description=' + enc(text);
+                                document.getElementById('shareEmail').href = 'mailto:?subject=' + enc(shareTitle) + '&body=' + enc(text + '\n\n' + shareUrl);
+                            }
+
+                            updateShareLinks();
+
+                            window.updateSharePrice = function(price, emirateName) {
+                                currentPrice = price;
+                                currentEmirate = emirateName;
+                                updateShareLinks();
+                            };
+                        })();
+                        </script>
                     </div>
                 </div>
                 
@@ -726,6 +755,11 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Update gallery price tag
             updateGalleryPrice(price, emirateName);
+            
+            // Update share links with selected emirate price
+            if (typeof updateSharePrice === 'function') {
+                updateSharePrice(price, emirateName);
+            }
             
             // Update active state in emirates grid
             emirateItems.forEach(function(el) {

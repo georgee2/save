@@ -1,10 +1,11 @@
 @extends('layouts.master')
+@php $seo = \App\Models\SeoPage::getSeo('partners'); @endphp
 
-@section('title', __('lang.our_partners'))
+@section('title', $seo['title'] ?? __('lang.our_partners'))
 
-@section('seo_desc', __('lang.partners_seo_desc'))
+@section('seo_desc', $seo['description'] ?? __('lang.partners_seo_desc'))
 
-@section('seo_tags', __('lang.our_partners'))
+@section('seo_tags', $seo['tags'] ?? __('lang.our_partners'))
 
 @section('content')
 

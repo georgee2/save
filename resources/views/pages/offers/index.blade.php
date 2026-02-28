@@ -1,7 +1,8 @@
 @extends('layouts.master')
-@section('title' , __('lang.offers'))
-@section('seo_desc', __('lang.offers_seo_desc'))
-@section('seo_tags', __('lang.offers'))
+@php $seo = \App\Models\SeoPage::getSeo('offers_index'); @endphp
+@section('title' , $seo['title'] ?? __('lang.offers'))
+@section('seo_desc', $seo['description'] ?? __('lang.offers_seo_desc'))
+@section('seo_tags', $seo['tags'] ?? __('lang.offers'))
 
 @php
     // Helper function to build offer URL with emirate_id if filtered
@@ -198,59 +199,47 @@
                                     </button>
                                     @php
                                         $shareTitle = app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english;
-                                        $sharePrice = ($offer->default_price && $offer->currency) 
-                                            ? ($offer->currency->abbreviation ?? 'AED') . ' ' . number_format($offer->default_price->price)
-                                            : '';
-                                        $shareEmirate = ($offer->default_price && $offer->default_price->emirate)
-                                            ? (app()->getLocale() == 'ar' ? $offer->default_price->emirate->title_arabic : $offer->default_price->emirate->title_english)
-                                            : '';
-                                        $shareText = $shareTitle;
-                                        if($sharePrice) {
-                                            $shareText .= ' - ' . $sharePrice;
-                                        }
-                                        if($shareEmirate) {
-                                            $shareText .= ' (' . $shareEmirate . ')';
-                                        }
+                                        $shareCurrency = $offer->currency->abbreviation ?? 'AED';
                                         $shareUrl = $offerUrl($offer->slug);
                                         $shareImage = url('/storage' . $offer->main_image);
+                                        $pricesData = [];
+                                        if($offer->prices) {
+                                            foreach($offer->prices->where('status', 0) as $p) {
+                                                if($p->emirate) {
+                                                    $pricesData[] = [
+                                                        'emirate_id' => $p->emirate_id,
+                                                        'price' => number_format($p->price),
+                                                        'emirate' => app()->getLocale() == 'ar' ? $p->emirate->title_arabic : $p->emirate->title_english,
+                                                    ];
+                                                }
+                                            }
+                                        }
                                     @endphp
                                     {{-- Share Slide Out --}}
-                                    <div class="share-slide-wrapper">
-                                        <button type="button" class="code-action-btn share-slide-btn">
-                                            <i class="fas fa-share-alt"></i>
-                                        </button>
-                                        <div class="share-slide-icons">
-                                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode($shareUrl) }}&quote={{ urlencode($shareText) }}" 
-                                               target="_blank" class="code-action-btn facebook-btn">
-                                                <i class="fab fa-facebook-f"></i>
-                                            </a>
-                                            <a href="https://twitter.com/intent/tweet?url={{ urlencode($shareUrl) }}&text={{ urlencode($shareText) }}" 
-                                               target="_blank" class="code-action-btn twitter-btn">
-                                                <i class="fab fa-twitter"></i>
-                                            </a>
-                                            <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode($shareUrl) }}&title={{ urlencode($shareTitle) }}&summary={{ urlencode($shareText) }}" 
-                                               target="_blank" class="code-action-btn linkedin-btn">
-                                                <i class="fab fa-linkedin-in"></i>
-                                            </a>
-                                            <a href="https://pinterest.com/pin/create/button/?url={{ urlencode($shareUrl) }}&media={{ urlencode($shareImage) }}&description={{ urlencode($shareText) }}" 
-                                               target="_blank" class="code-action-btn pinterest-btn">
-                                                <i class="fab fa-pinterest-p"></i>
-                                            </a>
-                                            <a href="mailto:?subject={{ rawurlencode($shareTitle) }}&body={{ urlencode($shareText . "\n\n" . $shareUrl) }}" 
-                                               class="code-action-btn email-btn">
-                                                <i class="fas fa-envelope"></i>
-                                            </a>
+                                    <div class="offer-share-group"
+                                         data-share-title="{{ $shareTitle }}"
+                                         data-share-currency="{{ $shareCurrency }}"
+                                         data-share-url="{{ $shareUrl }}"
+                                         data-share-image="{{ $shareImage }}"
+                                         data-share-prices="{{ json_encode($pricesData) }}">
+                                        <div class="share-slide-wrapper">
+                                            <button type="button" class="code-action-btn share-slide-btn">
+                                                <i class="fas fa-share-alt"></i>
+                                            </button>
+                                            <div class="share-slide-icons">
+                                                <a href="#" target="_blank" class="code-action-btn facebook-btn offer-share-fb"><i class="fab fa-facebook-f"></i></a>
+                                                <a href="#" target="_blank" class="code-action-btn twitter-btn offer-share-tw"><i class="fab fa-twitter"></i></a>
+                                                <a href="#" target="_blank" class="code-action-btn linkedin-btn offer-share-li"><i class="fab fa-linkedin-in"></i></a>
+                                                <a href="#" target="_blank" class="code-action-btn pinterest-btn offer-share-pi"><i class="fab fa-pinterest-p"></i></a>
+                                                <a href="#" class="code-action-btn email-btn offer-share-em"><i class="fas fa-envelope"></i></a>
+                                            </div>
                                         </div>
+                                        {{-- WhatsApp Separate --}}
+                                        <a href="#" target="_blank" class="code-action-btn whatsapp-share-btn offer-share-wa"
+                                           data-toggle="tooltip" data-placement="left" title="{{ __('lang.share_whatsapp') }}">
+                                            <i class="fab fa-whatsapp"></i>
+                                        </a>
                                     </div>
-                                    {{-- WhatsApp Separate --}}
-                                    <a href="https://wa.me/?text={{ urlencode($shareText . "\n" . $shareUrl) }}" 
-                                       target="_blank" 
-                                       class="code-action-btn whatsapp-share-btn" 
-                                       data-toggle="tooltip" 
-                                       data-placement="left"
-                                       title="{{ __('lang.share_whatsapp') }}">
-                                        <i class="fab fa-whatsapp"></i>
-                                    </a>
                                 </div>
                             </div>
                             @endif
@@ -547,6 +536,48 @@
 
 @section('js')
 <script>
+// Dynamic share links - uses selected emirate price
+document.addEventListener('DOMContentLoaded', function() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var selectedEmirateId = urlParams.get('emirate_id');
+
+    document.querySelectorAll('.offer-share-group').forEach(function(group) {
+        var title = group.getAttribute('data-share-title');
+        var currency = group.getAttribute('data-share-currency');
+        var url = group.getAttribute('data-share-url');
+        var image = group.getAttribute('data-share-image');
+        var prices = JSON.parse(group.getAttribute('data-share-prices') || '[]');
+
+        var matched = null;
+        if (selectedEmirateId) {
+            matched = prices.find(function(p) { return p.emirate_id == selectedEmirateId; });
+        }
+        if (!matched && prices.length > 0) {
+            matched = prices[0];
+        }
+
+        var text = title;
+        if (matched) {
+            text += ' - ' + currency + ' ' + matched.price + ' (' + matched.emirate + ')';
+        }
+
+        var enc = encodeURIComponent;
+        var fb = group.querySelector('.offer-share-fb');
+        var tw = group.querySelector('.offer-share-tw');
+        var li = group.querySelector('.offer-share-li');
+        var pi = group.querySelector('.offer-share-pi');
+        var em = group.querySelector('.offer-share-em');
+        var wa = group.querySelector('.offer-share-wa');
+
+        if (fb) fb.href = 'https://www.facebook.com/sharer/sharer.php?u=' + enc(url) + '&quote=' + enc(text);
+        if (tw) tw.href = 'https://twitter.com/intent/tweet?url=' + enc(url) + '&text=' + enc(text);
+        if (li) li.href = 'https://www.linkedin.com/shareArticle?mini=true&url=' + enc(url) + '&title=' + enc(title) + '&summary=' + enc(text);
+        if (pi) pi.href = 'https://pinterest.com/pin/create/button/?url=' + enc(url) + '&media=' + enc(image) + '&description=' + enc(text);
+        if (em) em.href = 'mailto:?subject=' + enc(title) + '&body=' + enc(text + '\n\n' + url);
+        if (wa) wa.href = 'https://wa.me/?text=' + enc(text + '\n' + url);
+    });
+});
+
 // Copy Code functionality
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.copy-code-btn').forEach(function(btn) {

@@ -718,33 +718,4 @@
     }
 }
 
-/* ===========================================
-   RTL Support
-   =========================================== */
-
-html[dir="rtl"] .badge-line:first-child {
-    background: linear-gradient(90deg, #19868b, transparent);
-}
-
-html[dir="rtl"] .badge-line:last-child {
-    background: linear-gradient(90deg, transparent, #19868b);
-}
-
-html[dir="rtl"] .job-apply-btn:hover {
-    transform: translateX(-5px);
-}
-
-html[dir="rtl"] .job-apply-btn:hover i {
-    transform: translateX(-4px);
-}
-
-html[dir="rtl"] .job-code {
-    right: auto;
-    left: 15px;
-}
-
-html[dir="rtl"] .careers-cta-section::before {
-    right: auto;
-    left: -20%;
-}
 

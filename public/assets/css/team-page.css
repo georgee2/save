@@ -304,11 +304,6 @@
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-[dir="rtl"] .board-star-badge {
-    right: auto;
-    left: 15px;
-}
-
 /* Rank Label in Content - Above Job Title */
 .board-rank-label {
     display: inline-block;
@@ -772,11 +767,6 @@
         font-size: 14px;
     }
     
-    [dir="rtl"] .board-star-badge {
-        right: auto;
-        left: 8px;
-    }
-    
     .team-section {
         padding: 50px 0;
     }
@@ -840,11 +830,6 @@
         font-size: 18px;
     }
     
-    [dir="rtl"] .board-star-badge {
-        right: auto;
-        left: 12px;
-    }
-    
     .board-content {
         padding: 16px 14px;
     }
@@ -873,27 +858,3 @@
     }
 }
 
-/* ===========================================
-   RTL Support
-   =========================================== */
-[dir="rtl"] .label-line {
-    background: linear-gradient(-90deg, #19868b 0%, #0d6b6f 100%);
-}
-
-[dir="rtl"] .btn-cta:hover i {
-    transform: translateX(-5px);
-}
-
-[dir="rtl"] .board-accent {
-    transform-origin: right;
-}
-
-[dir="rtl"] .text-lg-right {
-    text-align: left !important;
-}
-
-@media (max-width: 991px) {
-    [dir="rtl"] .text-lg-right {
-        text-align: center !important;
-    }
-}

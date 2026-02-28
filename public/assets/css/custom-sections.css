@@ -418,17 +418,4 @@
     }
 }
 
-/* RTL Support */
-[dir="rtl"] .svg-about-section .section-btn .btn-icon {
-    transform: rotate(180deg);
-}
-
-[dir="rtl"] .svg-about-section .section-btn:hover .btn-icon {
-    transform: rotate(180deg) translateX(-3px);
-}
-
-[dir="rtl"] .svg-bg-card .card-icon-overlay {
-    left: auto;
-    right: 25px;
-}
 

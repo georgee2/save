@@ -15,9 +15,49 @@ use App\Models\OfferSubCategory;
 use App\Models\Team;
 use App\Models\Partner;
 use App\Models\JobsPosting;
+use App\Models\InteriorCategory;
 
 class SitemapController extends Controller
 {
+    /**
+     * Display the visual HTML sitemap page
+     */
+    public function html()
+    {
+        $services = Service::where('publish_status', 0)->whereNull('deleted_at')->orderBy('title_english')->get();
+
+        $projectCategories = EngineeringCategory::whereNull('deleted_at')
+            ->with(['subCategories' => function ($q) { $q->whereNull('deleted_at'); }])
+            ->orderBy('title_english')->get();
+
+        $offerCategories = OfferCategory::whereNull('deleted_at')
+            ->with(['subCategories' => function ($q) { $q->whereNull('deleted_at'); }])
+            ->orderBy('title_english')->get();
+
+        $news = DB::table('news')->orderBy('created_at', 'desc')->limit(20)->get();
+
+        $interiorCategories = InteriorCategory::whereNull('deleted_at')->orderBy('ordering')->get();
+
+        $teamMembers = Team::whereNull('deleted_at')->get();
+
+        $partners = Partner::where('partner_type', 'partner')->whereNull('deleted_at')->get();
+        $branches = Partner::where('partner_type', 'branch')->whereNull('deleted_at')->get();
+
+        $activeJobs = DB::table('jobs_postings')
+            ->leftJoin('job_titles', 'jobs_postings.job_title_id', '=', 'job_titles.id')
+            ->select('jobs_postings.id', 'job_titles.name_english as job_title_english', 'job_titles.name_arabic as job_title_arabic')
+            ->where('jobs_postings.status', 'Publish')
+            ->where('jobs_postings.registration_start_date', '<=', now())
+            ->where('jobs_postings.registration_end_date', '>=', now())
+            ->whereNull('jobs_postings.deleted_at')
+            ->get();
+
+        return view('sitemap.html', compact(
+            'services', 'projectCategories', 'offerCategories',
+            'news', 'teamMembers', 'partners', 'branches', 'activeJobs', 'interiorCategories'
+        ));
+    }
+
     /**
      * Generate the sitemap XML
      */

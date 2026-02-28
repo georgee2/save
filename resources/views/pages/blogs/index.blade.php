@@ -1,10 +1,11 @@
 @extends('layouts.master')
+@php $seo = \App\Models\SeoPage::getSeo('news_index'); @endphp
 
-@section('title', $selectedCategory ? (app()->getLocale() == 'ar' ? $selectedCategory->name_arabic : $selectedCategory->name_english) : __('lang.news'))
+@section('title', $seo['title'] ?? ($selectedCategory ? (app()->getLocale() == 'ar' ? $selectedCategory->name_arabic : $selectedCategory->name_english) : __('lang.news')))
 
-@section('seo_desc', __('lang.news_seo_desc'))
+@section('seo_desc', $seo['description'] ?? __('lang.news_seo_desc'))
 
-@section('seo_tags', __('lang.news'))
+@section('seo_tags', $seo['tags'] ?? __('lang.news'))
 
 @section('content')
 

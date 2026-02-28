@@ -282,7 +282,7 @@
                     <ul class="footer-bottom-links">
                         <li><a href="<?php echo e(route('about')); ?>"><?php echo e(__('lang.about_us')); ?></a></li>
                         <li><a href="<?php echo e(route('contact')); ?>"><?php echo e(__('lang.contact_us')); ?></a></li>
-                        <li><a href="<?php echo e(route('sitemap')); ?>" target="_blank"><?php echo e(__('lang.sitemap')); ?></a></li>
+                        <li><a href="<?php echo e(route('sitemap.html')); ?>"><?php echo e(__('lang.sitemap')); ?></a></li>
                     </ul>
                 </div>
             </div>

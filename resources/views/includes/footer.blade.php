@@ -268,7 +268,7 @@
                     <ul class="footer-bottom-links">
                         <li><a href="{{ route('about') }}">{{ __('lang.about_us') }}</a></li>
                         <li><a href="{{ route('contact') }}">{{ __('lang.contact_us') }}</a></li>
-                        <li><a href="{{ route('sitemap') }}" target="_blank">{{ __('lang.sitemap') }}</a></li>
+                        <li><a href="{{ route('sitemap.html') }}">{{ __('lang.sitemap') }}</a></li>
                     </ul>
                 </div>
             </div>

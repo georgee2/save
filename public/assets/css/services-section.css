@@ -98,11 +98,6 @@
     z-index: 3;
 }
 
-[dir="rtl"] .service-icon-badge {
-    right: auto;
-    left: 15px;
-}
-
 .service-icon-badge img {
     width: 32px;
     height: 32px;
@@ -159,10 +154,6 @@
     background: linear-gradient(135deg, #e1273d 0%, #c41f33 100%);
     box-shadow: 0 4px 15px rgba(225, 39, 61, 0.3);
     transform: translateX(5px);
-}
-
-[dir="rtl"] .service-card .card-footer .btn-primary:hover {
-    transform: translateX(-5px);
 }
 
 /* Services Slider */
@@ -236,17 +227,6 @@
     .service-title {
         font-size: 16px !important;
     }
-}
-
-/* RTL Support */
-[dir="rtl"] .services-section .text-md-right {
-    text-align: left !important;
-}
-
-[dir="rtl"] .service-card .card-footer .btn-primary i {
-    margin-left: 0;
-    margin-right: 0.25rem;
-    transform: scaleX(-1);
 }
 
 /* Heading Divider - Matching other sections */

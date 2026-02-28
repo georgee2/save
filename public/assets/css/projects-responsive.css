@@ -562,11 +562,6 @@
     background: transparent;
 }
 
-/* RTL Support */
-[dir="rtl"] .projects-smart-pagination .page-item.page-nav .page-link i {
-    transform: rotate(180deg);
-}
-
 /* =====================================================
    PAGINATION RESPONSIVE - TABLET (Projects)
    ===================================================== */

@@ -386,6 +386,12 @@
                             </li>
                             <?php endif; ?>
 
+                            <?php if (\Illuminate\Support\Facades\Blade::check('permission', 'settings-view')): ?>
+                            <li>
+                                <a href="<?php echo e(route('admin.seo-pages.index')); ?>" class="waves-effect"><i class="fa fa-search"></i><span> SEO Pages </span></a>
+                            </li>
+                            <?php endif; ?>
+
                             <?php if (\Illuminate\Support\Facades\Blade::check('permission', 'activity-logs-view')): ?>
                             <li>
                                 <a href="<?php echo e(route('admin.activity-logs.index')); ?>" class="waves-effect"><i class="fa fa-history"></i><span> Activity Logs </span></a>

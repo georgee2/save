@@ -21,9 +21,9 @@
         {{-- News Slider --}}
         <div class="news-slider-wrapper">
             <div class="slick-slider news-slider" 
-                 data-slick-options='{"slidesToShow": 3, "autoplay": true, "dots": true, "arrows": true, "responsive":[{"breakpoint": 1200,"settings": {"slidesToShow": 3}},{"breakpoint": 992,"settings": {"slidesToShow": 2}},{"breakpoint": 576,"settings": {"slidesToShow": 1}}]}'>
+                 data-slick-options='{"slidesToShow": 3, "autoplay": true, "dots": true, "arrows": true, "infinite": true, "rtl": {{ app()->getLocale() == "ar" ? "true" : "false" }}, "responsive":[{"breakpoint": 1200,"settings": {"slidesToShow": 3}},{"breakpoint": 992,"settings": {"slidesToShow": 2}},{"breakpoint": 576,"settings": {"slidesToShow": 1}}]}'>
                 @foreach($blogs as $news)
-                <div class="box px-2" data-animate="fadeInUp">
+                <div class="box px-2">
                     <div class="news-card">
                         <div class="news-card-image">
                             <a href="{{ route('blogs.show', $news->slug) }}">
@@ -48,7 +48,6 @@
                             </h3>
                             @php
                                 $excerpt = app()->getLocale() == 'ar' ? $news->bio_arabic : $news->bio_english;
-                                // If bio is 'none' or empty, use stripped body content instead
                                 if (empty($excerpt) || strtolower($excerpt) == 'none') {
                                     $bodyContent = app()->getLocale() == 'ar' ? $news->body_arabic : $news->body_english;
                                     $excerpt = strip_tags($bodyContent);
@@ -71,5 +70,36 @@
         </div>
     </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var maxVisible = 5;
+
+    function updateNewsSmartDots() {
+        var $dots = $('.home-news-section .news-slider .slick-dots li');
+        var total = $dots.length;
+        if (total <= maxVisible) return;
+
+        var activeIndex = $dots.filter('.slick-active').index();
+        $dots.removeClass('smart-dot-hidden smart-dot-far');
+
+        $dots.each(function(i) {
+            var distance = Math.abs(i - activeIndex);
+            if (distance > Math.floor(maxVisible / 2) + 1) {
+                $(this).addClass('smart-dot-far');
+            } else if (distance > Math.floor(maxVisible / 2)) {
+                $(this).addClass('smart-dot-hidden');
+            }
+        });
+    }
+
+    var $newsSlider = $('.home-news-section .news-slider');
+    if ($newsSlider.length) {
+        $newsSlider.on('afterChange', updateNewsSmartDots);
+        $newsSlider.on('init', updateNewsSmartDots);
+        setTimeout(updateNewsSmartDots, 500);
+    }
+});
+</script>
 @endif
 

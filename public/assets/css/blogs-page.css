@@ -543,20 +543,3 @@
     }
 }
 
-/* ===========================================
-   RTL Support
-   =========================================== */
-[dir="rtl"] .blog-read-more:hover i {
-    transform: translateX(-5px);
-}
-
-[dir="rtl"] .blog-category {
-    left: auto;
-    right: 15px;
-}
-
-[dir="rtl"] .widget-title::after {
-    left: auto;
-    right: 0;
-}
-

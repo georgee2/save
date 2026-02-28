@@ -181,21 +181,6 @@
         visibility: visible !important;
     }
     
-    /* RTL Support */
-    [dir="rtl"] .filter-sidebar-wrapper {
-        right: auto;
-        left: -100%;
-        box-shadow: 5px 0 30px rgba(0, 0, 0, 0.2);
-    }
-    
-    [dir="rtl"] .filter-sidebar-wrapper.visible {
-        left: 0;
-    }
-    
-    [dir="rtl"] .filter-sidebar-wrapper.hidden {
-        left: -100%;
-    }
-    
     /* Mobile filter header */
     .mobile-filter-header {
         display: flex;
@@ -590,30 +575,6 @@ body.filter-open {
 .subcategory-filter-slider .slick-next.slick-disabled:hover {
     transform: translateY(-50%) !important;
     box-shadow: 0 4px 12px rgba(25, 134, 139, 0.3);
-}
-
-/* RTL Support */
-[dir="rtl"] .subcategory-filter-section .container {
-    padding-left: 50px;
-    padding-right: 50px;
-}
-
-[dir="rtl"] .subcategory-filter-slider .slick-prev {
-    left: auto !important;
-    right: -45px !important;
-}
-
-[dir="rtl"] .subcategory-filter-slider .slick-next {
-    right: auto !important;
-    left: -45px !important;
-}
-
-[dir="rtl"] .subcategory-filter-slider .slick-prev::before {
-    content: '\f105' !important;
-}
-
-[dir="rtl"] .subcategory-filter-slider .slick-next::before {
-    content: '\f104' !important;
 }
 
 /* Responsive */

@@ -869,29 +869,6 @@
     background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
 }
 
-/* RTL Support */
-html[dir="rtl"] .contact-method:hover {
-    transform: translateX(-5px);
-}
-
-html[dir="rtl"] .contact-method .method-icon {
-    margin-right: 0;
-    margin-left: 14px;
-}
-
-html[dir="rtl"] .contact-method:hover .method-arrow {
-    transform: translateX(-3px);
-}
-
-html[dir="rtl"] .contact-method .method-arrow i {
-    transform: rotate(180deg);
-}
-
-html[dir="rtl"] .btn-company-profile .download-icon {
-    margin-left: 0;
-    margin-right: auto;
-}
-
 /* Contact Card Responsive Styles */
 @media (max-width: 1199px) {
     .contact-info-card {

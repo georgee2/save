@@ -582,24 +582,6 @@
     text-decoration: none;
 }
 
-/* ===========================================
-   RTL Support
-   =========================================== */
-[dir="rtl"] .section-label {
-    flex-direction: row-reverse;
-}
-
-[dir="rtl"] .btn-submit i,
-[dir="rtl"] .cta-button i {
-    margin-right: 0;
-    margin-left: 8px;
-}
-
-[dir="rtl"] .contact-hero-content .breadcrumb-item + .breadcrumb-item::before {
-    content: "/";
-    padding-right: 0.5rem;
-    padding-left: 0.5rem;
-}
 
 /* ===========================================
    Animations
@@ -758,23 +740,6 @@
     transform: translateY(2px);
 }
 
-/* RTL Support for Company Profile */
-[dir="rtl"] .company-profile-wrapper::before {
-    left: auto;
-    right: 0;
-}
-
-[dir="rtl"] .profile-content {
-    flex-direction: row-reverse;
-}
-
-[dir="rtl"] .btn-download-profile {
-    flex-direction: row-reverse;
-}
-
-[dir="rtl"] .text-lg-right {
-    text-align: left !important;
-}
 
 /* Responsive Styles for Company Profile */
 @media (max-width: 991px) {
@@ -795,10 +760,6 @@
     .btn-download-profile {
         width: 100%;
         justify-content: center;
-    }
-    
-    [dir="rtl"] .profile-content {
-        flex-direction: column;
     }
 }
 

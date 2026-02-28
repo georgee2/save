@@ -128,38 +128,6 @@
     color: #ffffff;
 }
 
-/* RTL Support */
-[dir="rtl"] .topbar-content {
-    flex-direction: row-reverse;
-}
-
-[dir="rtl"] .topbar-social {
-    flex-direction: row-reverse;
-}
-
-[dir="rtl"] .topbar-links {
-    flex-direction: row-reverse;
-    margin-left: 0;
-    margin-right: 20px;
-    padding-left: 0;
-    padding-right: 20px;
-    border-left: none;
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-[dir="rtl"] .topbar-link {
-    flex-direction: row-reverse;
-}
-
-[dir="rtl"] .topbar-link::after {
-    left: auto;
-    right: 0;
-}
-
-[dir="rtl"] .topbar-contact {
-    flex-direction: row-reverse;
-}
-
 /* Responsive */
 @media (max-width: 991px) {
     .topbar-links {

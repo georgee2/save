@@ -62,11 +62,6 @@
     z-index: 2;
 }
 
-[dir="rtl"] .news-category {
-    left: auto;
-    right: 15px;
-}
-
 .news-category span {
     display: inline-block;
     background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
@@ -101,11 +96,6 @@
 .news-date i {
     color: #19868b;
     margin-right: 6px;
-}
-
-[dir="rtl"] .news-date i {
-    margin-right: 0;
-    margin-left: 6px;
 }
 
 /* News Title */
@@ -154,22 +144,12 @@
     transition: transform 0.3s ease;
 }
 
-[dir="rtl"] .news-read-more i {
-    margin-left: 0;
-    margin-right: 8px;
-    transform: rotate(180deg);
-}
-
 .news-read-more:hover {
     color: #0d6b6f;
 }
 
 .news-read-more:hover i {
     transform: translateX(5px);
-}
-
-[dir="rtl"] .news-read-more:hover i {
-    transform: translateX(-5px) rotate(180deg);
 }
 
 /* Slick Slider Customization */
@@ -182,19 +162,75 @@
     padding: 0 15px;
 }
 
+/* Smart Dots for News Slider */
 .news-slider .slick-dots {
-    bottom: -10px;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+    margin: 25px 0 0;
+    list-style: none;
+    bottom: auto;
+    position: relative;
 }
 
-.news-slider .slick-dots li button:before {
-    font-size: 10px;
-    color: #19868b;
+.news-slider .slick-dots li {
+    margin: 0;
+    padding: 0;
+    width: auto;
+    height: auto;
+    transition: all 0.4s ease;
+}
+
+.news-slider .slick-dots li span,
+.news-slider .slick-dots li button {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border-radius: 50%;
+    background: #cdd5db;
+    border: none;
+    font-size: 0;
+    line-height: 0;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    display: block;
+    opacity: 1;
+}
+
+.news-slider .slick-dots li button:before,
+.news-slider .slick-dots li span:before {
+    display: none;
+}
+
+.news-slider .slick-dots li.slick-active span,
+.news-slider .slick-dots li.slick-active button {
+    background: #19868b;
+    width: 28px;
+    border-radius: 10px;
+}
+
+.news-slider .slick-dots li:not(.slick-active):hover span,
+.news-slider .slick-dots li:not(.slick-active):hover button {
+    background: #19868b;
+    opacity: 0.5;
+}
+
+.news-slider .slick-dots li.smart-dot-hidden {
+    width: 6px !important;
+    height: 6px !important;
     opacity: 0.3;
 }
 
-.news-slider .slick-dots li.slick-active button:before {
-    opacity: 1;
-    color: #19868b;
+.news-slider .slick-dots li.smart-dot-hidden span,
+.news-slider .slick-dots li.smart-dot-hidden button {
+    width: 6px !important;
+    height: 6px !important;
+}
+
+.news-slider .slick-dots li.smart-dot-far {
+    display: none !important;
 }
 
 /* Slick Arrows */

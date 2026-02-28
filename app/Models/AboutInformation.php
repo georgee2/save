@@ -40,6 +40,8 @@ class AboutInformation extends Model
                 'vision_image' => null,
                 'values_english' => null,
                 'values_arabic' => null,
+                'values_points_english' => null,
+                'values_points_arabic' => null,
                 'values_image' => null,
                 'page_cover_image' => null,
                 'company_profile' => null,

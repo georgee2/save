@@ -179,11 +179,6 @@
     border-radius: 14px;
 }
 
-[dir="rtl"] .content-card .card-icon {
-    right: auto;
-    left: 40px;
-}
-
 .content-card .card-icon i {
     font-size: 22px;
     color: var(--primary);
@@ -195,11 +190,6 @@
     color: var(--dark);
     margin-bottom: 20px;
     padding-right: 70px;
-}
-
-[dir="rtl"] .content-card .card-title {
-    padding-right: 0;
-    padding-left: 70px;
 }
 
 .content-card .card-content {
@@ -688,10 +678,6 @@
     transform: translateX(5px);
 }
 
-[dir="rtl"] .btn-view-all:hover i {
-    transform: translateX(-5px);
-}
-
 /* ===========================================
    Animation Classes
    =========================================== */
@@ -733,10 +719,6 @@
     
     .content-card .card-title {
         padding-right: 0;
-    }
-    
-    [dir="rtl"] .content-card .card-title {
-        padding-left: 0;
     }
     
     .other-partners-grid {
@@ -801,10 +783,3 @@
     }
 }
 
-/* ===========================================
-   RTL Support
-   =========================================== */
-[dir="rtl"] .contact-value {
-    direction: ltr;
-    text-align: right;
-}
