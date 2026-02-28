@@ -305,32 +305,4 @@ a.project-card-square {
     }
 }
 
-/* RTL Support */
-[dir="rtl"] .home-projects-section .mr-auto {
-    margin-right: 0 !important;
-    margin-left: auto !important;
-}
-
-[dir="rtl"] .home-projects-section .mr-2 {
-    margin-right: 0 !important;
-    margin-left: 0.5rem !important;
-}
-
-[dir="rtl"] .home-projects-section .mr-4 {
-    margin-right: 0 !important;
-    margin-left: 1rem !important;
-}
-
-[dir="rtl"] .home-projects-section .mr-1 {
-    margin-right: 0 !important;
-    margin-left: 0.25rem !important;
-}
-
-/* RTL Support for mobile */
-@media (max-width: 576px) {
-    [dir="rtl"] .home-projects-section .project-card-square .card-img-overlay .list-inline-item {
-        margin-right: 0 !important;
-        margin-left: 8px !important;
-    }
-}
 

@@ -55,10 +55,9 @@ $(document).ready(function() {
             arrows: true,
             infinite: true,
             pauseOnHover: true,
-            prevArrow: '.cert-prev',
-            nextArrow: '.cert-next',
+            prevArrow: '<button class="cert-nav-btn cert-prev"><i class="fas fa-chevron-left"></i></button>',
+            nextArrow: '<button class="cert-nav-btn cert-next"><i class="fas fa-chevron-right"></i></button>',
             appendDots: '.certificates-dots',
-            rtl: {{ app()->getLocale() == 'ar' ? 'true' : 'false' }},
             responsive: [
                 {
                     breakpoint: 768,

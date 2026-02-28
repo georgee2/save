@@ -77,6 +77,7 @@ use Modules\Admin\App\Http\Controllers\HomeInteriorSettingController;
 use Modules\Admin\App\Http\Controllers\InteriorCategoryOrderController;
 use Modules\Admin\App\Http\Controllers\ContactPageSectionController;
 use Modules\Admin\App\Http\Controllers\AboutPageSectionController;
+use Modules\Admin\App\Http\Controllers\SeoPageController;
 
 
 /*
@@ -924,6 +925,13 @@ Route::group(
                 Route::get('/edit/{user}', [UserRoleController::class, 'edit'])->name('edit');
                 Route::put('/update/{user}', [UserRoleController::class, 'update'])->name('update');
                 Route::get('/permissions/{user}', [UserRoleController::class, 'permissions'])->name('permissions');
+            });
+
+            // SEO Pages Management Routes
+            Route::prefix('seo-pages')->name('admin.seo-pages.')->group(function () {
+                Route::get('/', [SeoPageController::class, 'index'])->name('index');
+                Route::get('/edit/{id}', [SeoPageController::class, 'edit'])->name('edit');
+                Route::post('/update/{id}', [SeoPageController::class, 'update'])->name('update');
             });
 
         });

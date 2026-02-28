@@ -149,6 +149,9 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 		Route::get('/{slug}', [InteriorGalleryController::class, 'show'])->name('show');
 	});
 
+	// HTML Sitemap
+	Route::get('/sitemap', [SitemapController::class, 'html'])->name('sitemap.html');
+
 });
 
 // Sitemap Route (outside localization group for clean URL)

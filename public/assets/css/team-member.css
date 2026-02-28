@@ -178,21 +178,6 @@
     font-size: 10px;
 }
 
-[dir="rtl"] .member-board-badge {
-    left: auto;
-    right: 20px;
-}
-
-[dir="rtl"] .member-image-frame {
-    left: -15px;
-    right: 15px;
-}
-
-[dir="rtl"] .member-image-accent {
-    right: auto;
-    left: -25px;
-}
-
 /* Member Info */
 .member-info {
     padding: 0 20px;
@@ -273,10 +258,6 @@
     box-shadow: 0 8px 25px rgba(25, 134, 139, 0.1);
     transform: translateX(5px);
     text-decoration: none;
-}
-
-[dir="rtl"] .contact-item:hover {
-    transform: translateX(-5px);
 }
 
 .contact-icon {
@@ -672,23 +653,6 @@
     .btn-cta {
         padding: 14px 28px;
         font-size: 15px;
-    }
-}
-
-/* ===========================================
-   RTL Support
-   =========================================== */
-[dir="rtl"] .label-line {
-    background: linear-gradient(-90deg, #19868b 0%, #0d6b6f 100%);
-}
-
-[dir="rtl"] .member-divider {
-    background: linear-gradient(-90deg, #19868b 0%, #0d6b6f 100%);
-}
-
-@media (max-width: 991px) {
-    [dir="rtl"] .text-lg-right {
-        text-align: center !important;
     }
 }
 

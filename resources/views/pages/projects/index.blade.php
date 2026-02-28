@@ -1,7 +1,8 @@
 @extends('layouts.master')
-@section('title' , __('lang.projects'))
-@section('seo_desc', __('lang.projects_seo_desc'))
-@section('seo_tags', __('lang.projects'))
+@php $seo = \App\Models\SeoPage::getSeo('projects_index'); @endphp
+@section('title' , $seo['title'] ?? __('lang.projects'))
+@section('seo_desc', $seo['description'] ?? __('lang.projects_seo_desc'))
+@section('seo_tags', $seo['tags'] ?? __('lang.projects'))
 @section('content')
 
 

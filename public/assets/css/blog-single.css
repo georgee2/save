@@ -637,23 +637,3 @@
     }
 }
 
-/* ===========================================
-   RTL Support
-   =========================================== */
-[dir="rtl"] .blog-body blockquote {
-    border-left: none;
-    border-right: 4px solid #19868b;
-    border-radius: 12px 0 0 12px;
-}
-
-[dir="rtl"] .blog-body ul,
-[dir="rtl"] .blog-body ol {
-    padding-left: 0;
-    padding-right: 25px;
-}
-
-[dir="rtl"] .widget-title::after {
-    left: auto;
-    right: 0;
-}
-

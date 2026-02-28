@@ -3,6 +3,7 @@
 
 @section('css')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<link rel="stylesheet" href="{{ asset('/css/tagify.css') }}">
 <style>
     :root {
         --main-color: #19868b;
@@ -321,6 +322,24 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Values Points (English) <small><span class="text-danger">Press Enter after each point</span></small></label>
+                                        <input type="text" class="tagify-values-en form-control" name="values_points_english" value="{{ old('values_points_english', $aboutInfo->values_points_english) }}" placeholder="Add value points...">
+                                        @error('values_points_english')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Values Points (Arabic) <small><span class="text-danger">Press Enter after each point</span></small></label>
+                                        <input type="text" class="tagify-values-ar form-control" name="values_points_arabic" value="{{ old('values_points_arabic', $aboutInfo->values_points_arabic) }}" placeholder="أضف نقاط القيم..." dir="rtl">
+                                        @error('values_points_arabic')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Company Profile Section -->
@@ -380,6 +399,7 @@
 
 @section('js')
 <script src="{{ asset('/js/dropify.min.js') }}"></script>
+<script src="{{ asset('/js/tagify.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
@@ -434,6 +454,14 @@
                 update();
                 input.addEventListener('input', update);
             }
+        }
+        
+        // Initialize Tagify for values points
+        if (document.querySelector('.tagify-values-en')) {
+            new Tagify(document.querySelector('.tagify-values-en'), { delimiters: "\n", maxTags: 30, dropdown: { enabled: 0 } });
+        }
+        if (document.querySelector('.tagify-values-ar')) {
+            new Tagify(document.querySelector('.tagify-values-ar'), { delimiters: "\n", maxTags: 30, dropdown: { enabled: 0 } });
         }
         
         // Apply word counters

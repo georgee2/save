@@ -1,10 +1,11 @@
 /**
- * RTL (Right-to-Left) Fixes for Arabic Language
- * This file overrides LTR styles for proper Arabic/RTL display
+ * RTL (Right-to-Left) Global Styles for Arabic Language
+ * Consolidated from all section-specific CSS files
+ * Uses [dir="rtl"] attribute selector set on <html>
  */
 
 /* ===========================================
-   General RTL Fixes
+   1. GENERAL RTL FIXES
    =========================================== */
 [dir="rtl"] {
     text-align: right;
@@ -19,109 +20,21 @@
 }
 
 /* ===========================================
-   Header RTL - Keep Logo on Left (same as English)
+   2. TYPOGRAPHY & TEXT ALIGNMENT
    =========================================== */
-[dir="rtl"] .main-header {
-    direction: ltr !important;
-}
-
-[dir="rtl"] .main-header .navbar {
-    direction: ltr !important;
-    flex-direction: row !important;
-}
-
-[dir="rtl"] .main-header .navbar-brand {
-    order: 0 !important;
-    margin-right: 30px !important;
-    margin-left: 0 !important;
-}
-
-[dir="rtl"] .main-header .navbar-collapse {
-    order: 1 !important;
-    direction: rtl !important;
-}
-
-[dir="rtl"] .main-header .navbar-nav {
-    direction: rtl !important;
-    flex-direction: row !important;
-}
-
-[dir="rtl"] .main-header .nav-item {
-    direction: rtl !important;
-}
-
-[dir="rtl"] .main-header .mobile-toggle {
-    order: 2 !important;
-    margin-left: auto !important;
-    margin-right: 0 !important;
-}
-
-[dir="rtl"] .main-header .dropdown-menu {
-    direction: rtl !important;
-    text-align: right !important;
-}
-
-/* Topbar RTL - Keep same layout */
-[dir="rtl"] .site-topbar {
-    direction: ltr !important;
-}
-
-[dir="rtl"] .site-topbar .topbar-content {
-    direction: ltr !important;
-}
-
-[dir="rtl"] .site-topbar .topbar-social {
-    direction: ltr !important;
-}
-
-[dir="rtl"] .site-topbar .topbar-contact {
-    direction: rtl !important;
-}
+[dir="rtl"] .text-left { text-align: right !important; }
+[dir="rtl"] .text-right { text-align: left !important; }
+[dir="rtl"] .text-md-left { text-align: right !important; }
+[dir="rtl"] .text-md-right { text-align: left !important; }
+[dir="rtl"] .text-lg-left { text-align: right !important; }
+[dir="rtl"] .text-lg-right { text-align: left !important; }
 
 /* ===========================================
-   Typography & Text
-   =========================================== */
-[dir="rtl"] p,
-[dir="rtl"] h1,
-[dir="rtl"] h2,
-[dir="rtl"] h3,
-[dir="rtl"] h4,
-[dir="rtl"] h5,
-[dir="rtl"] h6 {
-    text-align: right;
-}
-
-[dir="rtl"] .text-left {
-    text-align: right !important;
-}
-
-[dir="rtl"] .text-right {
-    text-align: left !important;
-}
-
-[dir="rtl"] .text-md-left {
-    text-align: right !important;
-}
-
-[dir="rtl"] .text-md-right {
-    text-align: left !important;
-}
-
-[dir="rtl"] .text-lg-left {
-    text-align: right !important;
-}
-
-[dir="rtl"] .text-lg-right {
-    text-align: left !important;
-}
-
-/* ===========================================
-   Margins & Paddings
+   3. MARGINS & PADDINGS (Bootstrap Utilities)
    =========================================== */
 [dir="rtl"] .ml-1, [dir="rtl"] .ml-2, [dir="rtl"] .ml-3, [dir="rtl"] .ml-4, [dir="rtl"] .ml-5 {
     margin-left: 0 !important;
 }
-
 [dir="rtl"] .mr-1, [dir="rtl"] .mr-2, [dir="rtl"] .mr-3, [dir="rtl"] .mr-4, [dir="rtl"] .mr-5 {
     margin-right: 0 !important;
 }
@@ -141,7 +54,6 @@
 [dir="rtl"] .pl-1, [dir="rtl"] .pl-2, [dir="rtl"] .pl-3, [dir="rtl"] .pl-4, [dir="rtl"] .pl-5 {
     padding-left: 0 !important;
 }
-
 [dir="rtl"] .pr-1, [dir="rtl"] .pr-2, [dir="rtl"] .pr-3, [dir="rtl"] .pr-4, [dir="rtl"] .pr-5 {
     padding-right: 0 !important;
 }
@@ -158,149 +70,72 @@
 [dir="rtl"] .pr-4 { padding-left: 1.5rem !important; }
 [dir="rtl"] .pr-5 { padding-left: 3rem !important; }
 
-[dir="rtl"] .ml-auto {
-    margin-left: 0 !important;
-    margin-right: auto !important;
-}
-
-[dir="rtl"] .mr-auto {
-    margin-right: 0 !important;
-    margin-left: auto !important;
-}
+[dir="rtl"] .ml-auto { margin-left: 0 !important; margin-right: auto !important; }
+[dir="rtl"] .mr-auto { margin-right: 0 !important; margin-left: auto !important; }
 
 /* ===========================================
-   Flexbox
+   4. FLEXBOX
    =========================================== */
-[dir="rtl"] .flex-row {
-    flex-direction: row-reverse;
-}
-
-[dir="rtl"] .justify-content-start {
-    justify-content: flex-end !important;
-}
-
-[dir="rtl"] .justify-content-end {
-    justify-content: flex-start !important;
-}
+[dir="rtl"] .flex-row { flex-direction: row-reverse; }
+[dir="rtl"] .justify-content-start { justify-content: flex-end !important; }
+[dir="rtl"] .justify-content-end { justify-content: flex-start !important; }
 
 /* ===========================================
-   Float
+   5. FLOAT
    =========================================== */
-[dir="rtl"] .float-left {
-    float: right !important;
-}
-
-[dir="rtl"] .float-right {
-    float: left !important;
-}
-
-[dir="rtl"] .float-md-left {
-    float: right !important;
-}
-
-[dir="rtl"] .float-md-right {
-    float: left !important;
-}
-
-[dir="rtl"] .float-lg-left {
-    float: right !important;
-}
-
-[dir="rtl"] .float-lg-right {
-    float: left !important;
-}
+[dir="rtl"] .float-left { float: right !important; }
+[dir="rtl"] .float-right { float: left !important; }
+[dir="rtl"] .float-md-left { float: right !important; }
+[dir="rtl"] .float-md-right { float: left !important; }
+[dir="rtl"] .float-lg-left { float: right !important; }
+[dir="rtl"] .float-lg-right { float: left !important; }
 
 /* ===========================================
-   Header & Navigation
+   6. ORDER CLASSES
    =========================================== */
-[dir="rtl"] .navbar {
-    direction: rtl;
+[dir="rtl"] .order-lg-1 { order: 2 !important; }
+[dir="rtl"] .order-lg-2 { order: 1 !important; }
+
+/* ===========================================
+   7. ICONS & ARROWS (Mirror Direction)
+   =========================================== */
+[dir="rtl"] .fa-chevron-right:before { content: "\f053"; }
+[dir="rtl"] .fa-chevron-left:before { content: "\f054"; }
+[dir="rtl"] .fa-arrow-right:before { content: "\f060"; }
+[dir="rtl"] .fa-arrow-left:before { content: "\f061"; }
+[dir="rtl"] .fa-angle-right:before { content: "\f104"; }
+[dir="rtl"] .fa-angle-left:before { content: "\f105"; }
+[dir="rtl"] .fal.fa-angle-right:before { content: "\f104"; }
+[dir="rtl"] .fal.fa-angle-left:before { content: "\f105"; }
+
+/* ===========================================
+   8. LISTS
+   =========================================== */
+[dir="rtl"] ul,
+[dir="rtl"] ol {
+    padding-left: 0;
+    padding-right: 2rem;
 }
 
-[dir="rtl"] .navbar-nav {
-    padding-right: 0;
-}
+[dir="rtl"] .list-unstyled { padding-right: 0; }
 
-[dir="rtl"] .navbar-brand {
+[dir="rtl"] .list-inline-item:not(:last-child) {
     margin-right: 0;
-    margin-left: 1rem;
-}
-
-[dir="rtl"] .nav-item {
-    text-align: right;
-}
-
-[dir="rtl"] .dropdown-menu {
-    text-align: right;
-    left: auto;
-    right: 0;
-}
-
-[dir="rtl"] .dropdown-menu .dropdown-submenu {
-    left: auto;
-    right: 100%;
-}
-
-[dir="rtl"] .dropdown-item {
-    text-align: right;
-}
-
-[dir="rtl"] .dropdown-item i,
-[dir="rtl"] .dropdown-link i {
-    margin-right: 0;
-    margin-left: 8px;
-}
-
-[dir="rtl"] .dropdown-item img,
-[dir="rtl"] .dropdown-link img {
-    margin-right: 0 !important;
-    margin-left: 8px !important;
-}
-
-[dir="rtl"] .dropright .dropdown-toggle::after {
-    margin-left: 0;
-    margin-right: 0.255em;
-    border-right: 0;
-    border-left: 0.3em solid;
-}
-
-[dir="rtl"] .dropdown-toggle::after {
-    margin-left: 0;
-    margin-right: 0.255em;
+    margin-left: 0.5rem;
 }
 
 /* ===========================================
-   Breadcrumb
+   9. FORMS
    =========================================== */
-[dir="rtl"] .breadcrumb {
-    direction: rtl;
-}
-
-[dir="rtl"] .breadcrumb-item + .breadcrumb-item::before {
-    content: "\f104";
-    font-family: "Font Awesome 5 Pro", "Font Awesome 5 Free";
-    font-weight: 900;
-    padding-right: 0;
-    padding-left: 0.5rem;
-    float: right;
-    padding-right: 0.5rem;
-}
-
-/* ===========================================
-   Forms
-   =========================================== */
-[dir="rtl"] .form-group {
-    text-align: right;
-}
-
-[dir="rtl"] .form-control {
-    text-align: right;
-}
+[dir="rtl"] .form-group { text-align: right; }
+[dir="rtl"] .form-control { text-align: right; }
 
 [dir="rtl"] input[type="text"],
 [dir="rtl"] input[type="email"],
 [dir="rtl"] input[type="tel"],
 [dir="rtl"] input[type="password"],
+[dir="rtl"] input[type="number"],
+[dir="rtl"] input[type="search"],
 [dir="rtl"] textarea,
 [dir="rtl"] select {
     text-align: right;
@@ -321,331 +156,86 @@
     border-bottom-right-radius: 0;
 }
 
-[dir="rtl"] .input-group-prepend {
-    margin-right: 0;
-    margin-left: -1px;
-}
+[dir="rtl"] .input-group-prepend { margin-right: 0; margin-left: -1px; }
+[dir="rtl"] .input-group-append { margin-left: 0; margin-right: -1px; }
 
-[dir="rtl"] .input-group-append {
-    margin-left: 0;
-    margin-right: -1px;
-}
-
-[dir="rtl"] .custom-control {
-    padding-left: 0;
-    padding-right: 1.5rem;
-}
-
+[dir="rtl"] .custom-control { padding-left: 0; padding-right: 1.5rem; }
 [dir="rtl"] .custom-control-label::before,
-[dir="rtl"] .custom-control-label::after {
-    left: auto;
-    right: -1.5rem;
-}
+[dir="rtl"] .custom-control-label::after { left: auto; right: -1.5rem; }
 
 /* ===========================================
-   Lists
+   10. CARDS
    =========================================== */
-[dir="rtl"] ul,
-[dir="rtl"] ol {
-    padding-left: 0;
-    padding-right: 2rem;
-}
-
-[dir="rtl"] .list-unstyled {
-    padding-right: 0;
-}
-
-[dir="rtl"] .list-inline-item:not(:last-child) {
-    margin-right: 0;
-    margin-left: 0.5rem;
-}
-
-/* ===========================================
-   Icons & Arrows
-   =========================================== */
-[dir="rtl"] .fa-chevron-right:before {
-    content: "\f053";
-}
-
-[dir="rtl"] .fa-chevron-left:before {
-    content: "\f054";
-}
-
-[dir="rtl"] .fa-arrow-right:before {
-    content: "\f060";
-}
-
-[dir="rtl"] .fa-arrow-left:before {
-    content: "\f061";
-}
-
-[dir="rtl"] .fa-angle-right:before {
-    content: "\f104";
-}
-
-[dir="rtl"] .fa-angle-left:before {
-    content: "\f105";
-}
-
-[dir="rtl"] .fal.fa-angle-right:before {
-    content: "\f104";
-}
-
-[dir="rtl"] .fal.fa-angle-left:before {
-    content: "\f105";
-}
-
-/* ===========================================
-   Cards
-   =========================================== */
-[dir="rtl"] .card {
-    text-align: right;
-}
-
+[dir="rtl"] .card { text-align: right; }
 [dir="rtl"] .card-header,
 [dir="rtl"] .card-body,
-[dir="rtl"] .card-footer {
-    text-align: right;
-}
+[dir="rtl"] .card-footer { text-align: right; }
 
 /* ===========================================
-   Footer
+   11. TABLES
    =========================================== */
-[dir="rtl"] .site-footer {
-    text-align: right;
-}
-
-[dir="rtl"] .footer-widget {
-    text-align: right;
-}
-
-[dir="rtl"] .footer-links li a i {
-    margin-right: 0;
-    margin-left: 8px;
-}
-
-[dir="rtl"] .footer-contact-list .contact-icon {
-    margin-right: 0;
-    margin-left: 15px;
-}
-
-[dir="rtl"] .footer-social {
-    justify-content: flex-start;
-}
-
-[dir="rtl"] .footer-bottom-links {
-    justify-content: flex-start;
-}
-
-[dir="rtl"] .footer-bottom-links li:not(:last-child)::after {
-    margin-left: 0;
-    margin-right: 10px;
-}
-
-/* ===========================================
-   Slick Slider
-   =========================================== */
-[dir="rtl"] .slick-slider {
-    direction: ltr;
-}
-
-[dir="rtl"] .slick-slide {
-    direction: rtl;
-}
-
-[dir="rtl"] .slick-prev {
-    left: auto;
-    right: -25px;
-}
-
-[dir="rtl"] .slick-next {
-    right: auto;
-    left: -25px;
-}
-
-[dir="rtl"] .slick-dots {
-    direction: ltr;
-}
-
-/* ===========================================
-   Tables
-   =========================================== */
-[dir="rtl"] .table {
-    text-align: right;
-}
-
+[dir="rtl"] .table { text-align: right; }
 [dir="rtl"] .table th,
-[dir="rtl"] .table td {
-    text-align: right;
-}
+[dir="rtl"] .table td { text-align: right; }
 
 /* ===========================================
-   Modals
+   12. MODALS
    =========================================== */
-[dir="rtl"] .modal-header .close {
-    margin: -1rem auto -1rem -1rem;
-}
-
-[dir="rtl"] .modal-body {
-    text-align: right;
-}
+[dir="rtl"] .modal-header .close { margin: -1rem auto -1rem -1rem; }
+[dir="rtl"] .modal-body { text-align: right; }
 
 /* ===========================================
-   Alerts
+   13. ALERTS
    =========================================== */
-[dir="rtl"] .alert {
-    text-align: right;
-}
-
-[dir="rtl"] .alert-dismissible {
-    padding-right: 1.25rem;
-    padding-left: 4rem;
-}
-
-[dir="rtl"] .alert-dismissible .close {
-    right: auto;
-    left: 0;
-}
+[dir="rtl"] .alert { text-align: right; }
+[dir="rtl"] .alert-dismissible { padding-right: 1.25rem; padding-left: 4rem; }
+[dir="rtl"] .alert-dismissible .close { right: auto; left: 0; }
 
 /* ===========================================
-   Buttons with Icons
+   14. BUTTONS WITH ICONS
    =========================================== */
-[dir="rtl"] .btn i {
-    margin-left: 0;
-    margin-right: 0.5rem;
-}
-
-[dir="rtl"] .btn i:first-child {
-    margin-right: 0;
-    margin-left: 0.5rem;
-}
+[dir="rtl"] .btn i { margin-left: 0; margin-right: 0.5rem; }
+[dir="rtl"] .btn i:first-child { margin-right: 0; margin-left: 0.5rem; }
 
 /* ===========================================
-   Contact Items
+   15. BREADCRUMB
    =========================================== */
-[dir="rtl"] .contact-item,
-[dir="rtl"] .contact-row {
-    flex-direction: row-reverse;
-    text-align: right;
-}
-
-[dir="rtl"] .contact-icon {
-    margin-right: 0;
-    margin-left: 15px;
-}
-
-[dir="rtl"] .contact-details {
-    text-align: right;
+[dir="rtl"] .breadcrumb { direction: rtl; }
+[dir="rtl"] .breadcrumb-item + .breadcrumb-item::before {
+    content: "\f104";
+    font-family: "Font Awesome 5 Pro", "Font Awesome 5 Free";
+    font-weight: 900;
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+    float: right;
 }
 
 /* ===========================================
-   Social Links
+   16. PAGINATION
    =========================================== */
-[dir="rtl"] .social-links {
-    justify-content: flex-start;
+[dir="rtl"] .pagination { direction: ltr; }
+[dir="rtl"] .projects-smart-pagination .page-item.page-nav .page-link i,
+[dir="rtl"] .offers-smart-pagination .page-item.page-nav .page-link i,
+[dir="rtl"] .interior-smart-pagination .page-item.page-nav .page-link i {
+    transform: rotate(180deg);
 }
 
 /* ===========================================
-   Pagination
+   17. SLICK SLIDER
    =========================================== */
-[dir="rtl"] .pagination {
-    direction: ltr;
-}
+[dir="rtl"] .slick-slider { direction: ltr; }
+[dir="rtl"] .slick-slider[dir="rtl"] { direction: rtl; }
+[dir="rtl"] .slick-slide { direction: rtl; }
+[dir="rtl"] .slick-slider:not([dir="rtl"]) .slick-prev { left: auto; right: -25px; }
+[dir="rtl"] .slick-slider:not([dir="rtl"]) .slick-next { right: auto; left: -25px; }
+[dir="rtl"] .slick-dots { direction: ltr; }
+
+/* Home slider arrows */
+[dir="rtl"] .home-slider-wrapper .slick-prev { left: auto !important; right: 30px !important; }
+[dir="rtl"] .home-slider-wrapper .slick-next { right: auto !important; left: 30px !important; }
 
 /* ===========================================
-   Order Classes
-   =========================================== */
-[dir="rtl"] .order-lg-1 {
-    order: 2 !important;
-}
-
-[dir="rtl"] .order-lg-2 {
-    order: 1 !important;
-}
-
-/* ===========================================
-   Hero Sections
-   =========================================== */
-[dir="rtl"] .hero-content,
-[dir="rtl"] .partners-hero-content,
-[dir="rtl"] .about-hero-content {
-    text-align: center;
-}
-
-/* ===========================================
-   Section Headers
-   =========================================== */
-[dir="rtl"] .section-header {
-    text-align: center;
-}
-
-[dir="rtl"] .section-label {
-    direction: rtl;
-}
-
-/* ===========================================
-   Partner Cards
-   =========================================== */
-[dir="rtl"] .partner-card-body {
-    text-align: right;
-}
-
-[dir="rtl"] .partner-badge {
-    right: auto;
-    left: 15px;
-}
-
-/* ===========================================
-   Process Section
-   =========================================== */
-[dir="rtl"] .process-timeline {
-    direction: rtl;
-}
-
-/* ===========================================
-   Feature Cards
-   =========================================== */
-[dir="rtl"] .feature-card,
-[dir="rtl"] .value-card {
-    text-align: right;
-}
-
-/* ===========================================
-   Team Section
-   =========================================== */
-[dir="rtl"] .team-card {
-    text-align: center;
-}
-
-/* ===========================================
-   News/Blog Cards
-   =========================================== */
-[dir="rtl"] .blog-card,
-[dir="rtl"] .news-card {
-    text-align: right;
-}
-
-/* ===========================================
-   CTA Sections
-   =========================================== */
-[dir="rtl"] .cta-wrapper {
-    direction: rtl;
-}
-
-[dir="rtl"] .cta-content {
-    text-align: right;
-}
-
-/* ===========================================
-   Back to Top Button
-   =========================================== */
-[dir="rtl"] .back-to-top {
-    right: auto;
-    left: 30px;
-}
-
-/* ===========================================
-   Phone & Email Links (Keep LTR)
+   18. PHONE & EMAIL (Keep LTR)
    =========================================== */
 [dir="rtl"] a[href^="tel:"],
 [dir="rtl"] a[href^="mailto:"] {
@@ -654,33 +244,645 @@
 }
 
 /* ===========================================
-   Responsive RTL Fixes
+   19. BACK TO TOP BUTTON
    =========================================== */
+[dir="rtl"] .back-to-top { right: auto; left: 30px; }
+
+/* =====================================================================
+   COMPONENT-SPECIFIC RTL FIXES
+   ===================================================================== */
+
+/* ===========================================
+   20. TOPBAR
+   =========================================== */
+[dir="rtl"] .site-topbar { direction: ltr !important; }
+[dir="rtl"] .site-topbar .topbar-content { direction: ltr !important; }
+[dir="rtl"] .site-topbar .topbar-social { direction: ltr !important; }
+[dir="rtl"] .site-topbar .topbar-contact { direction: rtl !important; }
+
+[dir="rtl"] .topbar-content { flex-direction: row-reverse; }
+[dir="rtl"] .topbar-social { flex-direction: row-reverse; }
+[dir="rtl"] .topbar-links {
+    flex-direction: row-reverse;
+    margin-left: 0;
+    margin-right: 20px;
+    padding-left: 0;
+    padding-right: 20px;
+    border-left: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+[dir="rtl"] .topbar-link { flex-direction: row-reverse; }
+[dir="rtl"] .topbar-link::after { left: auto; right: 0; }
+[dir="rtl"] .topbar-contact { flex-direction: row-reverse; }
+
+/* ===========================================
+   21. HEADER & NAVIGATION
+   =========================================== */
+[dir="rtl"] .main-header { direction: ltr !important; }
+[dir="rtl"] .main-header .navbar { direction: ltr !important; flex-direction: row !important; }
+[dir="rtl"] .main-header .navbar-brand { order: 0 !important; margin-right: 30px !important; margin-left: 0 !important; }
+[dir="rtl"] .main-header .navbar-collapse { order: 1 !important; direction: rtl !important; }
+[dir="rtl"] .main-header .navbar-nav { direction: rtl !important; flex-direction: row !important; }
+[dir="rtl"] .main-header .nav-item { direction: rtl !important; }
+[dir="rtl"] .main-header .mobile-toggle { order: 2 !important; margin-left: auto !important; margin-right: 0 !important; }
+[dir="rtl"] .main-header .dropdown-menu { direction: rtl !important; text-align: right !important; }
+
+[dir="rtl"] .navbar { direction: rtl; }
+[dir="rtl"] .navbar-nav { padding-right: 0; }
+[dir="rtl"] .navbar-brand { margin-right: 0; margin-left: 1rem; }
+[dir="rtl"] .nav-item { text-align: right; }
+[dir="rtl"] .dropdown-menu { text-align: right; left: auto; right: 0; }
+[dir="rtl"] .dropdown-menu .dropdown-submenu { left: auto; right: 100%; }
+[dir="rtl"] .dropdown-item { text-align: right; }
+[dir="rtl"] .dropdown-item i,
+[dir="rtl"] .dropdown-link i { margin-right: 0; margin-left: 8px; }
+[dir="rtl"] .dropdown-item img,
+[dir="rtl"] .dropdown-link img { margin-right: 0 !important; margin-left: 8px !important; }
+[dir="rtl"] .dropright .dropdown-toggle::after { margin-left: 0; margin-right: 0.255em; border-right: 0; border-left: 0.3em solid; }
+[dir="rtl"] .dropdown-toggle::after { margin-left: 0; margin-right: 0.255em; }
+
+/* ===========================================
+   22. MOBILE HEADER / SIDEBAR
+   =========================================== */
+[dir="rtl"] .mobile-sidebar {
+    left: auto;
+    right: 0;
+    transform: translateX(100%);
+    box-shadow: -5px 0 30px rgba(0, 0, 0, 0.2);
+}
+[dir="rtl"] .mobile-sidebar.active { transform: translateX(0); }
+[dir="rtl"] .mobile-nav-item.open > .mobile-nav-link i { transform: rotate(-90deg); }
+[dir="rtl"] .mobile-submenu-link { padding: 12px 35px 12px 20px; }
+[dir="rtl"] .mobile-submenu-link img { margin-right: 0; margin-left: 10px; }
+[dir="rtl"] .mobile-submenu-link i { margin-right: 0; margin-left: 10px; }
+[dir="rtl"] .mobile-nested-link { padding: 10px 50px 10px 20px; }
+[dir="rtl"] .mobile-nested-link img { margin-right: 0; margin-left: 8px; }
+
+/* ===========================================
+   23. MOBILE BOTTOM NAV
+   =========================================== */
+[dir="rtl"] .contact-popup-link:hover { transform: translateX(-5px); }
+[dir="rtl"] .contact-popup-link > i:last-child { transform: rotate(180deg); }
+[dir="rtl"] .wishlist-badge { right: auto; left: 50%; transform: translateX(-12px); }
+
+/* ===========================================
+   24. GLOBAL SEARCH
+   =========================================== */
+[dir="rtl"] .search-result-image { margin-right: 0; margin-left: 14px; }
+[dir="rtl"] .search-results-loading i { margin-right: 0; margin-left: 8px; }
+[dir="rtl"] .search-results-footer a { flex-direction: row-reverse; }
+[dir="rtl"] .search-result-meta { flex-direction: row-reverse; }
+
+/* Search form layout - Emirates dropdown: block clicks on gap between dropdown and tabs */
+[dir="rtl"] .global-search-form .bootstrap-select.emirate-selector {
+    margin-left: 0 !important;
+    pointer-events: none;
+}
+[dir="rtl"] .global-search-form .bootstrap-select.emirate-selector > .dropdown-toggle {
+    border-radius: 0 4px 4px 0 !important;
+    border-right: none !important;
+    border-left: 1px solid #dee2e6 !important;
+    pointer-events: auto;
+}
+[dir="rtl"] .global-search-form .bootstrap-select.emirate-selector .dropdown-menu {
+    pointer-events: auto;
+}
+
+/* Search input - swap border radius & padding for icon on left */
+[dir="rtl"] .global-search-form #globalSearchInput {
+    border-radius: 4px 0 0 4px !important;
+    padding-right: 15px !important;
+    padding-left: 3.5rem !important;
+}
+
+/* Search icon position - move to left side in RTL */
+[dir="rtl"] .global-search-form .pos-fixed-right-center { right: auto; left: 0; }
+[dir="rtl"] .global-search-form .pos-fixed-right-center.mr-4 { margin-right: 0 !important; margin-left: 1.5rem !important; }
+
+/* ===========================================
+   25. FOOTER
+   =========================================== */
+[dir="rtl"] .site-footer { text-align: right; }
+[dir="rtl"] .footer-widget { text-align: right; }
+[dir="rtl"] .footer-links li a i { margin-right: 0; margin-left: 8px; }
+[dir="rtl"] .footer-contact-list .contact-icon { margin-right: 0; margin-left: 15px; }
+[dir="rtl"] .footer-social { justify-content: flex-start; }
+[dir="rtl"] .footer-bottom-links { justify-content: flex-start; }
+[dir="rtl"] .footer-bottom-links li:not(:last-child)::after { margin-left: 0; margin-right: 10px; }
+[dir="rtl"] .footer-widget-title::after { left: auto; right: 0; }
+[dir="rtl"] .footer-links a i { margin-right: 0; margin-left: 10px; transform: rotate(180deg); }
+[dir="rtl"] .footer-links a:hover { padding-left: 0; padding-right: 5px; }
+[dir="rtl"] .footer-links a:hover i { transform: translateX(-3px) rotate(180deg); }
+[dir="rtl"] .contact-icon { margin-right: 0; margin-left: 15px; }
+
+/* ===========================================
+   26. CONTACT ITEMS
+   =========================================== */
+[dir="rtl"] .contact-item,
+[dir="rtl"] .contact-row { flex-direction: row-reverse; text-align: right; }
+[dir="rtl"] .contact-icon { margin-right: 0; margin-left: 15px; }
+[dir="rtl"] .contact-details { text-align: right; }
+[dir="rtl"] .social-links { justify-content: flex-start; }
+
+/* ===========================================
+   27. HERO SECTIONS
+   =========================================== */
+[dir="rtl"] .hero-content,
+[dir="rtl"] .partners-hero-content,
+[dir="rtl"] .about-hero-content { text-align: center; }
+
+/* ===========================================
+   28. SECTION HEADERS
+   =========================================== */
+[dir="rtl"] .section-header { text-align: center; }
+[dir="rtl"] .section-label { direction: rtl; }
+[dir="rtl"] .section-label { flex-direction: row-reverse; }
+
+/* =====================================================================
+   HOME SECTION RTL FIXES
+   ===================================================================== */
+
+/* ===========================================
+   29. ABOUT SECTION (Home)
+   =========================================== */
+[dir="rtl"] .svg-about-section .section-btn .btn-icon { transform: rotate(180deg); }
+[dir="rtl"] .svg-about-section .section-btn:hover .btn-icon { transform: rotate(180deg) translateX(-3px); }
+[dir="rtl"] .svg-bg-card .card-icon-overlay { left: auto; right: 25px; }
+
+/* ===========================================
+   30. FEATURED PROJECTS (Home)
+   =========================================== */
+[dir="rtl"] .home-projects-section .mr-auto { margin-right: 0 !important; margin-left: auto !important; }
+[dir="rtl"] .home-projects-section .mr-2 { margin-right: 0 !important; margin-left: 0.5rem !important; }
+[dir="rtl"] .home-projects-section .mr-4 { margin-right: 0 !important; margin-left: 1rem !important; }
+[dir="rtl"] .home-projects-section .mr-1 { margin-right: 0 !important; margin-left: 0.25rem !important; }
+
+/* ===========================================
+   31. OFFERS SECTION (Home)
+   =========================================== */
+[dir="rtl"] .offer-price-tag { right: auto; left: 20px; }
+[dir="rtl"] .offer-price-tag .price-emirate::before { margin-right: 0; margin-left: 4px; }
+[dir="rtl"] .offer-badges { right: auto; left: 20px; align-items: flex-start; }
+[dir="rtl"] .offer-media-count { right: auto; left: 20px; }
+[dir="rtl"] .offer-media-count .media-item i { margin-right: 0; margin-left: 5px; }
+[dir="rtl"] .btn-offer-view i { margin-left: 0; margin-right: 8px; transform: scaleX(-1); }
+[dir="rtl"] .btn-offer-view:hover { transform: translateX(-3px); }
+
+/* ===========================================
+   32. SERVICES SECTION (Home)
+   =========================================== */
+[dir="rtl"] .service-icon-badge { right: auto; left: 15px; }
+[dir="rtl"] .service-card .card-footer .btn-primary:hover { transform: translateX(-5px); }
+[dir="rtl"] .services-section .text-md-right { text-align: left !important; }
+[dir="rtl"] .service-card .card-footer .btn-primary i { margin-left: 0; margin-right: 0.25rem; transform: scaleX(-1); }
+
+/* ===========================================
+   33. INTERIOR GALLERY (Home)
+   =========================================== */
+[dir="rtl"] .interior-share-badge { right: auto; left: 15px; }
+[dir="rtl"] .interior-share-badge .share-slide-icons { right: auto; left: 100%; margin-right: 0; margin-left: 6px; }
+
+/* ===========================================
+   34. WHY CHOOSE US (Home)
+   =========================================== */
+[dir="rtl"] .why-btn i { transform: scaleX(-1); }
+[dir="rtl"] .why-btn:hover i { transform: scaleX(-1) translateX(-5px); }
+
+/* ===========================================
+   35. CONTACT & FAQ (Home)
+   =========================================== */
+[dir="rtl"] .contact-phone-card { right: auto; left: 30px; }
+[dir="rtl"] .inline-contact-form .input-icon-wrapper i { left: auto; right: 15px; }
+[dir="rtl"] .inline-contact-form .form-control { padding: 14px 45px 14px 15px; }
+[dir="rtl"] .faq-wrapper { padding-left: 0; padding-right: 20px; }
+[dir="rtl"] .faq-question { text-align: right; padding-right: 0; padding-left: 15px; }
+
+/* ===========================================
+   36. NEWS / BLOG (Home)
+   =========================================== */
+[dir="rtl"] .home-news-section .text-md-right { text-align: left !important; }
+[dir="rtl"] .news-card-content { text-align: right; }
+[dir="rtl"] .news-category { left: auto; right: 15px; }
+[dir="rtl"] .news-date i { margin-right: 0; margin-left: 6px; }
+[dir="rtl"] .news-read-more { flex-direction: row-reverse; }
+[dir="rtl"] .news-read-more i { margin-left: 0; margin-right: 8px; transform: rotate(180deg); }
+[dir="rtl"] .news-read-more:hover i { transform: translateX(-5px) rotate(180deg); }
+[dir="rtl"] .news-slider .slick-prev { right: auto; left: -25px; }
+[dir="rtl"] .news-slider .slick-next { left: auto; right: -25px; }
+[dir="rtl"] .news-slider .slick-prev:before { content: "\f105"; }
+[dir="rtl"] .news-slider .slick-next:before { content: "\f104"; }
+
+/* ===========================================
+   37. PARTNER CARDS
+   =========================================== */
+[dir="rtl"] .partner-card-body { text-align: right; }
+[dir="rtl"] .partner-badge { right: auto; left: 15px; }
+[dir="rtl"] .btn-view-partner:hover i { transform: translateX(-4px); }
+
+/* ===========================================
+   38. TEAM SECTION
+   =========================================== */
+[dir="rtl"] .team-card { text-align: center; }
+
+/* ===========================================
+   39. NEWS/BLOG CARDS
+   =========================================== */
+[dir="rtl"] .blog-card,
+[dir="rtl"] .news-card { text-align: right; }
+
+/* ===========================================
+   40. CTA SECTIONS
+   =========================================== */
+[dir="rtl"] .cta-wrapper { direction: rtl; }
+[dir="rtl"] .cta-content { text-align: right; }
+
+/* ===========================================
+   41. PROCESS SECTION
+   =========================================== */
+[dir="rtl"] .process-timeline { direction: rtl; }
+
+/* ===========================================
+   42. FEATURE CARDS
+   =========================================== */
+[dir="rtl"] .feature-card,
+[dir="rtl"] .value-card { text-align: right; }
+
+/* ===========================================
+   43. AREA SLIDER
+   =========================================== */
+[dir="rtl"] .area-range-slider.ui-slider .ui-slider-range {
+    background: linear-gradient(-90deg, #19868b 0%, #0d6b6f 100%);
+}
+
+/* =====================================================================
+   INNER PAGE RTL FIXES
+   ===================================================================== */
+
+/* ===========================================
+   44. ABOUT PAGE
+   =========================================== */
+[dir="rtl"] .about-content-modern { padding: 20px 40px 20px 0; }
+[dir="rtl"] .about-image-border { left: 15px; right: -15px; }
+[dir="rtl"] .about-image-modern:hover .about-image-border { left: 20px; right: -20px; }
+[dir="rtl"] .about-float-1 { right: auto; left: 0; }
+[dir="rtl"] .about-float-2 { left: auto; right: 0; }
+[dir="rtl"] .about-experience-badge { right: auto; left: 0; transform: translate(-10%, 10%); }
+[dir="rtl"] .btn-about-secondary:hover i { transform: translateX(-5px); }
+[dir="rtl"] .feature-number { right: auto; left: 20px; }
+[dir="rtl"] .feature-arrow { right: auto; left: 30px; transform: translateX(20px); }
+[dir="rtl"] .feature-card-modern:hover .feature-arrow { transform: translateX(0); }
+[dir="rtl"] .feature-arrow i { transform: rotate(180deg); }
+[dir="rtl"] .feature-card-modern:hover .feature-arrow:hover i { transform: rotate(180deg) translateX(3px); }
+[dir="rtl"] .feature-accent-line { transform-origin: right; }
+[dir="rtl"] .mvv-item-reverse .mvv-item-row { flex-direction: row; }
+[dir="rtl"] .mvv-image-badge { right: auto; left: 20px; }
+[dir="rtl"] .mvv-item-reverse .mvv-image-badge { left: auto; right: 20px; }
+[dir="rtl"] .custom-block-wrapper { flex-direction: row-reverse; }
+[dir="rtl"] .custom-block-reverse .custom-block-wrapper { flex-direction: row; }
+[dir="rtl"] .block-img-number { left: auto; right: 25px; }
+[dir="rtl"] .custom-block-reverse .block-img-number { right: auto; left: 25px; }
+[dir="rtl"] .label-line { background: linear-gradient(-90deg, #19868b 0%, #0d6b6f 100%); }
+[dir="rtl"] .about-image-accent { right: auto; left: -20px; }
+[dir="rtl"] .btn-cta:hover i { transform: translateX(-5px); }
+[dir="rtl"] .btn-company-profile { flex-direction: row-reverse; }
+[dir="rtl"] .cert-prev { left: auto; right: 0; }
+[dir="rtl"] .cert-next { right: auto; left: 0; }
+
+/* ===========================================
+   45. SERVICES PAGE
+   =========================================== */
+[dir="rtl"] .service-number { left: auto; right: 25px; }
+[dir="rtl"] .sub-service-item:hover { transform: translateX(-5px); }
+[dir="rtl"] .sub-service-arrow { transform: scaleX(-1); }
+[dir="rtl"] .sub-service-item:hover .sub-service-arrow { transform: scaleX(-1) translateX(3px); }
+[dir="rtl"] .service-link-btn i { transform: scaleX(-1); }
+[dir="rtl"] .service-link-btn:hover i { transform: scaleX(-1) translateX(-4px); }
+[dir="rtl"] .badge-line:first-child { background: linear-gradient(90deg, #19868b, transparent); }
+[dir="rtl"] .badge-line:last-child { background: linear-gradient(90deg, transparent, #19868b); }
+
+/* ===========================================
+   46. SINGLE SERVICE PAGE
+   =========================================== */
+[dir="rtl"] .value-number-badge { right: auto; left: 20px; }
+[dir="rtl"] .value-number { right: auto; left: 20px; }
+[dir="rtl"] .process-content-inner { text-align: left; }
+[dir="rtl"] .process-modern-item.process-item-reverse .process-content-inner { text-align: right; }
+[dir="rtl"] .process-visual-overlay { right: auto; left: 15px; }
+[dir="rtl"] .related-slider-prev { left: auto; right: 0; }
+[dir="rtl"] .related-slider-next { right: auto; left: 0; }
+[dir="rtl"] .related-slider-prev i { transform: rotate(180deg); }
+[dir="rtl"] .related-slider-next i { transform: rotate(180deg); }
+[dir="rtl"] .related-service-number { left: auto; right: 15px; }
+[dir="rtl"] .related-service-overlay { justify-content: flex-start; }
+[dir="rtl"] .related-service-card:hover .related-service-link i { transform: translateX(-5px); }
+[dir="rtl"] .description-content { padding-left: 0; padding-right: 40px; }
+[dir="rtl"] .description-image-accent { right: -20px; left: auto; }
+[dir="rtl"] .block-image-accent { left: auto; right: -15px; }
+[dir="rtl"] .image-text-wrapper { flex-direction: row-reverse; }
+[dir="rtl"] .image-frame-border { right: auto; left: 40px; }
+[dir="rtl"] .image-text-img { transform: translate(-20px, 20px); }
+[dir="rtl"] .image-decoration-top { right: auto; left: 30px; }
+[dir="rtl"] .image-decoration-bottom { left: auto; right: 10px; }
+[dir="rtl"] .service-image-text-block::before { right: auto; left: 0; clip-path: polygon(0 0, 70% 0, 100% 100%, 0% 100%); }
+[dir="rtl"] .action-btn-primary:hover i { transform: translateX(-5px); }
+[dir="rtl"] .faq-answer { padding-left: 25px; padding-right: 80px; }
+[dir="rtl"] .sub-service-link i { transform: scaleX(-1); }
+[dir="rtl"] .sub-service-card:hover .sub-service-link i { transform: scaleX(-1) translateX(-5px); }
+[dir="rtl"] .cta-btn-primary { margin-right: 0; margin-left: 15px; }
+[dir="rtl"] .slider-arrow-prev { left: auto; right: 0; }
+[dir="rtl"] .slider-arrow-next { right: auto; left: 0; }
+[dir="rtl"] .slider-arrow i { transform: scaleX(-1); }
+
+/* ===========================================
+   47. CONTACT PAGE
+   =========================================== */
+[dir="rtl"] .contact-info-section .contact-info-card { text-align: center; }
+[dir="rtl"] .contact-info-section .contact-info-card .contact-card-title { text-align: center; }
+[dir="rtl"] .contact-info-section .contact-info-card .contact-card-content { align-items: center; }
+[dir="rtl"] .social-links-wrapper { text-align: center; }
+[dir="rtl"] .social-links { justify-content: center; }
+[dir="rtl"] .social-title { text-align: center; }
+[dir="rtl"] .btn-submit i,
+[dir="rtl"] .cta-button i { margin-right: 0; margin-left: 8px; }
+[dir="rtl"] .contact-hero-content .breadcrumb-item + .breadcrumb-item::before {
+    content: "/";
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+}
+[dir="rtl"] .company-profile-wrapper::before { left: auto; right: 0; }
+[dir="rtl"] .profile-content { flex-direction: row-reverse; }
+[dir="rtl"] .btn-download-profile { flex-direction: row-reverse; }
+
+/* ===========================================
+   48. OFFER SHOW PAGE
+   =========================================== */
+[dir="rtl"] .offer-price-tag.offer-price-tag-show { right: auto; left: 20px; }
+[dir="rtl"] .offer-price-tag.offer-price-tag-show .price-emirate::before { margin-right: 0; margin-left: 4px; }
+[dir="rtl"] .offer-thumbnails-wrapper { order: 2; }
+[dir="rtl"] .offer-main-slider-wrapper { border-radius: 12px 0 0 12px; }
+[dir="rtl"] .slider-prev { left: auto; right: 15px; }
+[dir="rtl"] .slider-next { right: auto; left: 15px; }
+[dir="rtl"] .spec-icon-wrapper { margin-right: 0; margin-left: 14px; }
+[dir="rtl"] .fact-icon-wrapper { margin-right: 0; margin-left: 14px; }
+[dir="rtl"] .spec-item::before { left: auto; right: 0; }
+[dir="rtl"] .section-header::after { left: auto; right: 0; }
+[dir="rtl"] .section-header h3 i { margin-right: 0; margin-left: 10px; }
+[dir="rtl"] .widget-request-tour .nav-link i { margin-right: 0; margin-left: 8px; }
+[dir="rtl"] .widget-request-tour .btn i { margin-right: 0; margin-left: 8px; }
+[dir="rtl"] .offer-contact-card { text-align: right; }
+[dir="rtl"] .offer-contact-body { display: flex; flex-direction: column; }
+[dir="rtl"] .offer-contact-method { display: flex; width: 100%; }
+[dir="rtl"] .offer-contact-method:hover { transform: translateX(-4px); }
+[dir="rtl"] .offer-method-icon { margin-right: 0; margin-left: 12px; }
+[dir="rtl"] .offer-method-info { text-align: right; }
+[dir="rtl"] .offer-contact-method:hover .offer-method-arrow { transform: translateX(-3px); }
+[dir="rtl"] .offer-method-arrow i { transform: rotate(180deg); }
+[dir="rtl"] .offer-download-icon { margin-left: 0; margin-right: auto; }
+
+/* Project Single - Contact Card */
+[dir="rtl"] .contact-info-card { text-align: right; }
+[dir="rtl"] .contact-card-body { display: flex; flex-direction: column; }
+[dir="rtl"] .contact-method { display: flex; width: 100%; }
+[dir="rtl"] .contact-method:hover { transform: translateX(-5px); }
+[dir="rtl"] .contact-method .method-icon { margin-right: 0; margin-left: 14px; }
+[dir="rtl"] .contact-method .method-info { text-align: right; }
+[dir="rtl"] .contact-method:hover .method-arrow { transform: translateX(-3px); }
+[dir="rtl"] .contact-method .method-arrow i { transform: rotate(180deg); }
+[dir="rtl"] .btn-company-profile .download-icon { margin-left: 0; margin-right: auto; }
+
+/* ===========================================
+   49. OFFERS FILTER / LISTING PAGE
+   =========================================== */
+[dir="rtl"] .offers-hero-section .breadcrumb-item + .breadcrumb-item::before {
+    content: "\f104";
+    font-family: "Font Awesome 5 Pro", "Font Awesome 5 Free";
+    font-weight: 900;
+}
+[dir="rtl"] .offers-page .offer-price-tag { left: auto; right: 20px; }
+[dir="rtl"] .offers-page .offer-badges { right: auto; left: 20px; align-items: flex-start; }
+[dir="rtl"] .offers-page .offer-media-count { right: auto; left: 20px; }
+[dir="rtl"] .offers-page .btn-primary i { margin-left: 0; margin-right: 8px; transform: scaleX(-1); }
+
+/* Subcategory filter slider */
+[dir="rtl"] .subcategory-filter-section .container { padding-left: 50px; padding-right: 50px; }
+[dir="rtl"] .subcategory-filter-slider .slick-prev { left: auto !important; right: -45px !important; }
+[dir="rtl"] .subcategory-filter-slider .slick-next { right: auto !important; left: -45px !important; }
+[dir="rtl"] .subcategory-filter-slider .slick-prev::before { content: '\f105' !important; }
+[dir="rtl"] .subcategory-filter-slider .slick-next::before { content: '\f104' !important; }
+
+/* ===========================================
+   50. PROJECTS FILTER / LISTING PAGE
+   =========================================== */
+
+/* ===========================================
+   51. BLOG PAGES
+   =========================================== */
+[dir="rtl"] .blog-body blockquote {
+    border-left: none;
+    border-right: 4px solid #19868b;
+    border-radius: 12px 0 0 12px;
+}
+[dir="rtl"] .blog-body ul,
+[dir="rtl"] .blog-body ol { padding-left: 0; padding-right: 25px; }
+[dir="rtl"] .widget-title::after { left: auto; right: 0; }
+[dir="rtl"] .blog-read-more:hover i { transform: translateX(-5px); }
+[dir="rtl"] .blog-category { left: auto; right: 15px; }
+
+/* ===========================================
+   52. PARTNERS PAGES
+   =========================================== */
+[dir="rtl"] .contact-row a { direction: ltr; text-align: right; }
+[dir="rtl"] .cta-btn:hover i { transform: translateX(-5px); }
+
+/* ===========================================
+   53. PARTNER SINGLE PAGE
+   =========================================== */
+[dir="rtl"] .content-card .card-icon { right: auto; left: 40px; }
+[dir="rtl"] .content-card .card-title { padding-right: 0; padding-left: 70px; }
+[dir="rtl"] .btn-view-all:hover i { transform: translateX(-5px); }
+[dir="rtl"] .contact-value { direction: ltr; text-align: right; }
+
+/* ===========================================
+   54. TEAM PAGES
+   =========================================== */
+[dir="rtl"] .board-star-badge { right: auto; left: 15px; }
+[dir="rtl"] .board-accent { transform-origin: right; }
+[dir="rtl"] .member-board-badge { left: auto; right: 20px; }
+[dir="rtl"] .member-image-frame { left: -15px; right: 15px; }
+[dir="rtl"] .member-image-accent { right: auto; left: -25px; }
+[dir="rtl"] .contact-item:hover { transform: translateX(-5px); }
+[dir="rtl"] .member-divider { background: linear-gradient(-90deg, #19868b 0%, #0d6b6f 100%); }
+
+/* ===========================================
+   55. BOARD PAGE
+   =========================================== */
+[dir="rtl"] .board-member-badge { left: auto; right: 35px; }
+[dir="rtl"] .board-member-number { right: auto; left: 0; }
+[dir="rtl"] .board-view-btn:hover i { transform: translateX(-5px); }
+[dir="rtl"] .board-frame-accent { transform: rotate(3deg); }
+[dir="rtl"] .board-divider { background: linear-gradient(-90deg, #19868b 0%, #0d6b6f 100%); }
+
+/* ===========================================
+   56. BRANCH SINGLE PAGE
+   =========================================== */
+[dir="rtl"] .info-content { padding-left: 0; padding-right: 52px; }
+[dir="rtl"] .other-branch-item:hover { transform: translateX(-5px); }
+
+/* =====================================================================
+   RESPONSIVE RTL FIXES
+   ===================================================================== */
+
 @media (max-width: 991px) {
-    [dir="rtl"] .navbar-collapse {
-        text-align: right;
-    }
-    
-    [dir="rtl"] .navbar-nav {
-        padding-right: 0;
-    }
-    
-    [dir="rtl"] .dropdown-menu {
-        text-align: right;
-    }
+    /* Navigation */
+    [dir="rtl"] .navbar-collapse { text-align: right; }
+    [dir="rtl"] .navbar-nav { padding-right: 0; }
+    [dir="rtl"] .dropdown-menu { text-align: right; }
+
+    /* About Page */
+    [dir="rtl"] .about-content-modern { padding: 40px 0 0 0; }
+    [dir="rtl"] .mvv-item-reverse .mvv-item-row { flex-direction: column; }
+    [dir="rtl"] .mvv-image-badge,
+    [dir="rtl"] .mvv-item-reverse .mvv-image-badge { left: 20px; right: auto; }
+    [dir="rtl"] .custom-block-wrapper,
+    [dir="rtl"] .custom-block-reverse .custom-block-wrapper { flex-direction: column; }
+    [dir="rtl"] .block-img-number,
+    [dir="rtl"] .custom-block-reverse .block-img-number { right: 25px; left: auto; }
+    [dir="rtl"] .text-lg-right { text-align: center !important; }
+
+    /* Service Single */
+    [dir="rtl"] .process-content-inner,
+    [dir="rtl"] .process-modern-item.process-item-reverse .process-content-inner { text-align: right; }
+    [dir="rtl"] .description-content { padding-right: 0; }
+    [dir="rtl"] .image-text-wrapper { flex-direction: column; }
+
+    /* Contact Page */
+    [dir="rtl"] .profile-content { flex-direction: column; }
+
+    /* Partner Single */
+    [dir="rtl"] .content-card .card-title { padding-left: 0; }
+
+    /* Contact & FAQ */
+    [dir="rtl"] .contact-phone-card { left: auto; right: 15px; }
+    [dir="rtl"] .faq-wrapper { padding-right: 0; }
+
+    /* Filter Sidebars */
+    [dir="rtl"] .filter-sidebar-wrapper { right: auto; left: -100%; box-shadow: 5px 0 30px rgba(0, 0, 0, 0.2); }
+    [dir="rtl"] .filter-sidebar-wrapper.visible { left: 0; }
+    [dir="rtl"] .filter-sidebar-wrapper.hidden { left: -100%; }
+    [dir="rtl"] .offers-page .filter-sidebar-wrapper { right: auto; left: -100%; box-shadow: 5px 0 30px rgba(0, 0, 0, 0.2); }
+    [dir="rtl"] .offers-page .filter-sidebar-wrapper.visible { left: 0; }
+    [dir="rtl"] .offers-page .filter-sidebar-wrapper.hidden { left: -100%; }
+    [dir="rtl"] .interior-gallery-page .filter-sidebar-wrapper { right: auto; left: -100%; box-shadow: 5px 0 30px rgba(0, 0, 0, 0.2); }
+    [dir="rtl"] .interior-gallery-page .filter-sidebar-wrapper.visible { left: 0; }
+    [dir="rtl"] .interior-gallery-page .filter-sidebar-wrapper.hidden { left: -100%; }
+
+    /* Subcategory filter slider */
+    [dir="rtl"] .subcategory-filter-slider .slick-prev { left: auto !important; right: -38px !important; }
+    [dir="rtl"] .subcategory-filter-slider .slick-next { right: auto !important; left: -38px !important; }
+
+    /* Branch Single */
+    [dir="rtl"] .info-content { padding-right: 0; }
+
+    /* News Slider */
+    [dir="rtl"] .home-news-section .text-md-right { text-align: right !important; }
+}
+
+@media (max-width: 1200px) {
+    [dir="rtl"] .news-slider .slick-prev { right: auto; left: 10px; }
+    [dir="rtl"] .news-slider .slick-next { left: auto; right: 10px; }
 }
 
 @media (max-width: 767px) {
-    [dir="rtl"] .text-center {
-        text-align: center !important;
-    }
-    
-    [dir="rtl"] .footer-widget {
-        text-align: center;
-    }
-    
-    [dir="rtl"] .footer-social {
-        justify-content: center;
-    }
+    [dir="rtl"] .text-center { text-align: center !important; }
+    [dir="rtl"] .footer-widget { text-align: center; }
+    [dir="rtl"] .footer-social { justify-content: center; }
+    [dir="rtl"] .back-to-top { right: auto; left: 20px; }
+
+    /* About Page */
+    [dir="rtl"] .about-experience-badge { transform: translate(0, 0); left: 10px; right: auto; }
+    [dir="rtl"] .block-img-number,
+    [dir="rtl"] .custom-block-reverse .block-img-number { right: 20px; }
+
+    /* Service Single */
+    [dir="rtl"] .image-text-img { transform: translate(-15px, 15px); }
+    [dir="rtl"] .image-frame-border { left: 30px; }
+    [dir="rtl"] .faq-answer { padding-right: 25px; }
+    [dir="rtl"] .cta-btn-primary { margin-left: 0; }
+
+    /* Interior Gallery */
+    [dir="rtl"] .interior-share-badge { left: 10px; }
+
+    /* Contact & FAQ */
+    [dir="rtl"] .contact-phone-card { left: auto; right: 12px; }
+    [dir="rtl"] .inline-contact-form .form-control { padding: 12px 40px 12px 12px; }
+    [dir="rtl"] .inline-contact-form .input-icon-wrapper i { left: auto; right: 12px; }
+
+    /* Subcategory filter slider */
+    [dir="rtl"] .subcategory-filter-slider .slick-prev { left: auto !important; right: -35px !important; }
+    [dir="rtl"] .subcategory-filter-slider .slick-next { right: auto !important; left: -35px !important; }
+
+    /* Team Pages */
+    [dir="rtl"] .board-star-badge { right: auto; left: 8px; }
+
+    /* Offer Show */
+    [dir="rtl"] .offer-method-icon { margin-left: 10px; }
 }
 
+@media (max-width: 576px) {
+    /* Featured Projects */
+    [dir="rtl"] .home-projects-section .project-card-square .card-img-overlay .list-inline-item {
+        margin-right: 0 !important;
+        margin-left: 8px !important;
+    }
+
+    /* About Page */
+    [dir="rtl"] .block-img-number,
+    [dir="rtl"] .custom-block-reverse .block-img-number { right: 15px; }
+
+    /* Contact & FAQ */
+    [dir="rtl"] .contact-phone-card { left: auto; right: 10px; }
+    [dir="rtl"] .faq-question { padding-right: 0; padding-left: 8px; }
+    [dir="rtl"] .inline-contact-form .form-control { padding: 10px 36px 10px 10px; }
+    [dir="rtl"] .inline-contact-form .input-icon-wrapper i { left: auto; right: 10px; }
+
+    /* Subcategory filter slider */
+    [dir="rtl"] .subcategory-filter-slider .slick-prev { left: auto !important; right: -30px !important; }
+    [dir="rtl"] .subcategory-filter-slider .slick-next { right: auto !important; left: -30px !important; }
+
+    /* Team Pages */
+    [dir="rtl"] .board-star-badge { right: auto; left: 12px; }
+
+    /* Offer Show */
+    [dir="rtl"] .offer-method-icon { margin-left: 8px; }
+}
+
+/* ===========================================
+   57. BRANCHES PAGE
+   =========================================== */
+[dir="rtl"] .branch-location {
+    border-left: none;
+    border-right: 4px solid #19868b;
+}
+
+/* ===========================================
+   58. CAREERS PAGE
+   =========================================== */
+[dir="rtl"] .badge-line:first-child { background: linear-gradient(90deg, #19868b, transparent); }
+[dir="rtl"] .badge-line:last-child { background: linear-gradient(90deg, transparent, #19868b); }
+[dir="rtl"] .job-apply-btn:hover { transform: translateX(-5px); }
+[dir="rtl"] .job-apply-btn:hover i { transform: translateX(-4px); }
+[dir="rtl"] .job-code { right: auto; left: 15px; }
+[dir="rtl"] .careers-cta-section::before { right: auto; left: -20%; }
+
+/* ===========================================
+   59. JOB SINGLE PAGE
+   =========================================== */
+[dir="rtl"] .job-hero-category i { margin-right: 0; margin-left: 8px; }
+[dir="rtl"] .job-section-title { flex-direction: row-reverse; }
+[dir="rtl"] .application-title { flex-direction: row-reverse; }
+[dir="rtl"] .application-form label { flex-direction: row-reverse; }
+[dir="rtl"] .job-section-content ul { padding-left: 0; padding-right: 20px; }
+[dir="rtl"] .quick-info-item { flex-direction: row-reverse; }
+[dir="rtl"] .quick-info-content { text-align: right; }
+[dir="rtl"] .share-title { flex-direction: row-reverse; }
+[dir="rtl"] .application-deadline i { margin-right: 0; margin-left: 6px; }

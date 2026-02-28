@@ -309,6 +309,16 @@
     margin-right: -0.25rem !important;
 }
 
+[dir="rtl"] .home-slider-wrapper .slick-prev {
+    left: auto !important;
+    right: 30px !important;
+}
+
+[dir="rtl"] .home-slider-wrapper .slick-next {
+    right: auto !important;
+    left: 30px !important;
+}
+
 /* Responsive - maintain aspect ratio but set min-height for small screens */
 @media (max-width: 1199px) {
     .home-slider-wrapper .custom-vh-04 {

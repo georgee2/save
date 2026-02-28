@@ -87,6 +87,18 @@
                         <div class="mvv-item-text">
                             {!! nl2br(e(app()->getLocale() == 'ar' ? $aboutInfo->values_arabic : $aboutInfo->values_english)) !!}
                         </div>
+                        @php
+                            $valuesPoints = app()->getLocale() == 'ar' ? $aboutInfo->values_points_arabic : $aboutInfo->values_points_english;
+                        @endphp
+                        @if($valuesPoints)
+                        <ul class="mvv-values-points">
+                            @foreach(explode(', ', $valuesPoints) as $point)
+                                @if(trim($point))
+                                <li><i class="fas fa-check-circle"></i> {{ trim($point) }}</li>
+                                @endif
+                            @endforeach
+                        </ul>
+                        @endif
                     </div>
                 </div>
             </div>

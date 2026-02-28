@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('title', (app()->getLocale() == 'ar' ? $currentCategory->title_arabic : $currentCategory->title_english) . ' - ' . __('lang.interior_design'))
-@section('seo_desc', app()->getLocale() == 'ar' ? ($currentCategory->bio_arabic ?? $currentCategory->title_arabic) : ($currentCategory->bio_english ?? $currentCategory->title_english))
-@section('seo_tags', (app()->getLocale() == 'ar' ? $currentCategory->title_arabic : $currentCategory->title_english) . ', ' . __('lang.interior_design'))
+@section('seo_desc', app()->getLocale() == 'ar' ? ($currentCategory->seo_description_arabic ?? $currentCategory->bio_arabic ?? $currentCategory->title_arabic) : ($currentCategory->seo_description_english ?? $currentCategory->bio_english ?? $currentCategory->title_english))
+@section('seo_tags', $currentCategory->seo_tags ?? ((app()->getLocale() == 'ar' ? $currentCategory->title_arabic : $currentCategory->title_english) . ', ' . __('lang.interior_design')))
 
 @section('content')
 

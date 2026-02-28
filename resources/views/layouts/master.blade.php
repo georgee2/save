@@ -65,7 +65,7 @@
           <link rel="stylesheet" href="{{asset('/assets/css/mobile-hero.css')}}">
 
           <!-- Google fonts -->
-          <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap"
+          <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Tajawal:wght@300;400;500;700;800&display=swap"
             rel="stylesheet">
           <!-- Vendors CSS -->
           <link rel="stylesheet" href="{{asset('/assets/vendors/fontawesome-pro-5/css/all.css')}}">
@@ -120,6 +120,7 @@
           <!-- RTL CSS for Arabic -->
           @if(app()->getLocale() == 'ar')
           <link rel="stylesheet" href="{{asset('/assets/css/rtl.css')}}?v={{ time() }}">
+          <link rel="stylesheet" href="{{asset('/assets/css/arabic-global.css')}}?v={{ time() }}">
           @endif
           
           {{-- SweetAlert2 CSS - Global --}}

@@ -220,11 +220,6 @@
     padding-left: 52px;
 }
 
-[dir="rtl"] .info-content {
-    padding-left: 0;
-    padding-right: 52px;
-}
-
 /* ===========================================
    Map Card
    =========================================== */
@@ -540,10 +535,6 @@ a.contact-value:hover {
     transform: translateX(5px);
 }
 
-[dir="rtl"] .other-branch-item:hover {
-    transform: translateX(-5px);
-}
-
 .other-branch-logo {
     width: 45px;
     height: 45px;
@@ -703,10 +694,6 @@ a.contact-value:hover {
         padding-left: 0;
     }
     
-    [dir="rtl"] .info-content {
-        padding-right: 0;
-    }
-    
     .branch-cta-wrapper {
         padding: 40px 30px;
         text-align: center;
@@ -759,19 +746,6 @@ a.contact-value:hover {
     .btn-cta {
         padding: 14px 28px;
         font-size: 15px;
-    }
-}
-
-/* ===========================================
-   RTL Support
-   =========================================== */
-[dir="rtl"] .text-lg-right {
-    text-align: left !important;
-}
-
-@media (max-width: 991px) {
-    [dir="rtl"] .text-lg-right {
-        text-align: center !important;
     }
 }
 

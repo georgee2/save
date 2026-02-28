@@ -62,11 +62,6 @@
     padding: 5px 0;
 }
 
-/* RTL Support */
-[dir="rtl"] .area-range-slider.ui-slider .ui-slider-range {
-    background: linear-gradient(-90deg, #19868b 0%, #0d6b6f 100%);
-}
-
 /* Mobile Responsiveness */
 @media (max-width: 576px) {
     .area-range-slider.ui-slider .ui-slider-handle {

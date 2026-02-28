@@ -1,5 +1,8 @@
 @extends('layouts.master')
-@section('title' , 'SVEC')
+@php $seo = \App\Models\SeoPage::getSeo('home'); @endphp
+@section('title', $seo['title'] ?? 'SVEC')
+@section('seo_desc', $seo['description'] ?? '')
+@section('seo_tags', $seo['tags'] ?? '')
 @section('content')
 
 {{-- Dynamic Home Sections --}}

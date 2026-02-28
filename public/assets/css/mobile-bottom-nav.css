@@ -282,10 +282,6 @@
     transform: translateX(5px);
 }
 
-[dir="rtl"] .contact-popup-link:hover {
-    transform: translateX(-5px);
-}
-
 .contact-popup-link-icon {
     width: 45px;
     height: 45px;
@@ -487,16 +483,3 @@ body.contact-popup-open {
     }
 }
 
-/* ========================================
-   RTL SUPPORT
-   ======================================== */
-
-[dir="rtl"] .contact-popup-link > i:last-child {
-    transform: rotate(180deg);
-}
-
-[dir="rtl"] .wishlist-badge {
-    right: auto;
-    left: 50%;
-    transform: translateX(-12px);
-}

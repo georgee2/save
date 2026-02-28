@@ -3,7 +3,7 @@
 <section class="certificates-section">
     <div class="container">
         {{-- Section Header --}}
-        <div class="certificates-header text-center" data-animate="fadeInUp">
+        <div class="certificates-header text-center">
             <span class="certificates-label">{{ __('lang.our_achievements') }}</span>
             <h2 class="certificates-title">{{ __('lang.certificates') }}</h2>
             <div class="certificates-title-line"></div>
@@ -11,7 +11,7 @@
         </div>
         
         {{-- Certificates Slider --}}
-        <div class="certificates-slider-wrapper" data-animate="fadeInUp">
+        <div class="certificates-slider-wrapper">
             <div class="certificates-slider">
                 @foreach($certificates as $certificate)
                 <div class="certificate-slide">
@@ -53,15 +53,7 @@
                 @endforeach
             </div>
             
-            {{-- Slider Navigation --}}
-            <div class="certificates-nav">
-                <button class="cert-nav-btn cert-prev">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="cert-nav-btn cert-next">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
+            {{-- Slider Navigation is injected by slick via prevArrow/nextArrow --}}
             
             {{-- Slider Dots --}}
             <div class="certificates-dots"></div>

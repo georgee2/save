@@ -621,46 +621,4 @@
     }
 }
 
-/* ===========================================
-   RTL Support
-   =========================================== */
-
-html[dir="rtl"] .job-hero-category i {
-    margin-right: 0;
-    margin-left: 8px;
-}
-
-html[dir="rtl"] .job-section-title {
-    flex-direction: row-reverse;
-}
-
-html[dir="rtl"] .application-title {
-    flex-direction: row-reverse;
-}
-
-html[dir="rtl"] .application-form label {
-    flex-direction: row-reverse;
-}
-
-html[dir="rtl"] .job-section-content ul {
-    padding-left: 0;
-    padding-right: 20px;
-}
-
-html[dir="rtl"] .quick-info-item {
-    flex-direction: row-reverse;
-}
-
-html[dir="rtl"] .quick-info-content {
-    text-align: right;
-}
-
-html[dir="rtl"] .share-title {
-    flex-direction: row-reverse;
-}
-
-html[dir="rtl"] .application-deadline i {
-    margin-right: 0;
-    margin-left: 6px;
-}
 

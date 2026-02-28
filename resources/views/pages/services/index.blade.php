@@ -1,10 +1,11 @@
 @extends('layouts.master')
+@php $seo = \App\Models\SeoPage::getSeo('services_index'); @endphp
 
-@section('title', __('lang.our_services'))
+@section('title', $seo['title'] ?? __('lang.our_services'))
 
-@section('seo_desc', __('lang.services_seo_desc'))
+@section('seo_desc', $seo['description'] ?? __('lang.services_seo_desc'))
 
-@section('seo_tags', __('lang.services'))
+@section('seo_tags', $seo['tags'] ?? __('lang.services'))
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('/assets/css/services-page.css') }}?v={{ time() }}">

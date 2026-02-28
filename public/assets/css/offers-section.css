@@ -255,11 +255,6 @@
     font-size: 10px;
 }
 
-[dir="rtl"] .offer-price-tag .price-emirate::before {
-    margin-right: 0;
-    margin-left: 4px;
-}
-
 /* Badges - Enhanced visibility - Positioned on Right */
 .offer-badges {
     top: 20px !important;
@@ -980,38 +975,6 @@
     }
 }
 
-/* RTL Support */
-[dir="rtl"] .offer-price-tag {
-    right: auto;
-    left: 20px;
-}
-
-[dir="rtl"] .offer-badges {
-    right: auto;
-    left: 20px;
-    align-items: flex-start;
-}
-
-[dir="rtl"] .offer-media-count {
-    right: auto;
-    left: 20px;
-}
-
-[dir="rtl"] .btn-offer-view i {
-    margin-left: 0;
-    margin-right: 8px;
-    transform: scaleX(-1);
-}
-
-[dir="rtl"] .btn-offer-view:hover {
-    transform: translateX(-3px);
-}
-
-[dir="rtl"] .offer-media-count .media-item i {
-    margin-right: 0;
-    margin-left: 5px;
-}
-
 /* Responsive Adjustments */
 @media (max-width: 1200px) {
     .offer-price-tag .price-value {
@@ -1266,29 +1229,6 @@
     background-color: #e1273d !important;
     border-color: #e1273d !important;
     color: #fff !important;
-}
-
-/* RTL Support for Offers Page */
-[dir="rtl"] .offers-page .offer-price-tag {
-    left: auto;
-    right: 20px;
-}
-
-[dir="rtl"] .offers-page .offer-badges {
-    right: auto;
-    left: 20px;
-    align-items: flex-start;
-}
-
-[dir="rtl"] .offers-page .offer-media-count {
-    right: auto;
-    left: 20px;
-}
-
-[dir="rtl"] .offers-page .btn-primary i {
-    margin-left: 0;
-    margin-right: 8px;
-    transform: scaleX(-1);
 }
 
 /* Responsive for offers page */

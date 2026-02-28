@@ -386,6 +386,12 @@
                             </li>
                             @endpermission
 
+                            @permission('settings-view')
+                            <li>
+                                <a href="{{route('admin.seo-pages.index')}}" class="waves-effect"><i class="fa fa-search"></i><span> SEO Pages </span></a>
+                            </li>
+                            @endpermission
+
                             @permission('activity-logs-view')
                             <li>
                                 <a href="{{route('admin.activity-logs.index')}}" class="waves-effect"><i class="fa fa-history"></i><span> Activity Logs </span></a>

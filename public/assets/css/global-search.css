@@ -275,25 +275,6 @@
     }
 }
 
-/* RTL Support */
-[dir="rtl"] .search-result-image {
-    margin-right: 0;
-    margin-left: 14px;
-}
-
-[dir="rtl"] .search-results-loading i {
-    margin-right: 0;
-    margin-left: 8px;
-}
-
-[dir="rtl"] .search-results-footer a {
-    flex-direction: row-reverse;
-}
-
-[dir="rtl"] .search-result-meta {
-    flex-direction: row-reverse;
-}
-
 /* Scrollbar Styling for Results */
 .live-search-results::-webkit-scrollbar {
     width: 6px;

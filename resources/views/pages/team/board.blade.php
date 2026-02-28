@@ -1,10 +1,11 @@
 @extends('layouts.master')
+@php $seo = \App\Models\SeoPage::getSeo('board'); @endphp
 
-@section('title', __('lang.board_of_directors'))
+@section('title', $seo['title'] ?? __('lang.board_of_directors'))
 
-@section('seo_desc', __('lang.board_seo_desc'))
+@section('seo_desc', $seo['description'] ?? __('lang.board_seo_desc'))
 
-@section('seo_tags', __('lang.board_of_directors'))
+@section('seo_tags', $seo['tags'] ?? __('lang.board_of_directors'))
 
 @section('content')
 

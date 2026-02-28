@@ -255,11 +255,6 @@
     border-radius: 20px;
 }
 
-[dir="rtl"] .partner-badge {
-    right: auto;
-    left: 15px;
-}
-
 .partner-badge i {
     font-size: 10px;
 }
@@ -363,10 +358,6 @@
 
 .btn-view-partner:hover i {
     transform: translateX(4px);
-}
-
-[dir="rtl"] .btn-view-partner:hover i {
-    transform: translateX(-4px);
 }
 
 .btn-website {
@@ -532,10 +523,6 @@
     transform: translateX(5px);
 }
 
-[dir="rtl"] .cta-btn:hover i {
-    transform: translateX(-5px);
-}
-
 /* ===========================================
    Animation Classes
    =========================================== */
@@ -644,14 +631,3 @@
     }
 }
 
-/* ===========================================
-   RTL Support
-   =========================================== */
-[dir="rtl"] .cta-wrapper {
-    direction: rtl;
-}
-
-[dir="rtl"] .contact-row a {
-    direction: ltr;
-    text-align: right;
-}

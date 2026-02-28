@@ -1,0 +1,125 @@
+/**
+ * Arabic Global Styles - Tajawal Font & Arabic Typography
+ * Loaded conditionally when locale is 'ar'
+ */
+
+/* ===========================================
+   Tajawal Font Assignment
+   =========================================== */
+[dir="rtl"] body,
+[dir="rtl"] html {
+    font-family: 'Tajawal', sans-serif !important;
+}
+
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4,
+[dir="rtl"] h5,
+[dir="rtl"] h6 {
+    font-family: 'Tajawal', sans-serif !important;
+}
+
+[dir="rtl"] p,
+[dir="rtl"] span,
+[dir="rtl"] a,
+[dir="rtl"] li,
+[dir="rtl"] td,
+[dir="rtl"] th,
+[dir="rtl"] label,
+[dir="rtl"] div {
+    font-family: 'Tajawal', sans-serif;
+}
+
+[dir="rtl"] input,
+[dir="rtl"] textarea,
+[dir="rtl"] select,
+[dir="rtl"] button,
+[dir="rtl"] .btn,
+[dir="rtl"] .form-control {
+    font-family: 'Tajawal', sans-serif !important;
+}
+
+[dir="rtl"] .navbar,
+[dir="rtl"] .nav-link,
+[dir="rtl"] .dropdown-item,
+[dir="rtl"] .dropdown-menu {
+    font-family: 'Tajawal', sans-serif !important;
+}
+
+[dir="rtl"] .badge,
+[dir="rtl"] .alert,
+[dir="rtl"] .card,
+[dir="rtl"] .modal-content,
+[dir="rtl"] .tooltip,
+[dir="rtl"] .popover {
+    font-family: 'Tajawal', sans-serif;
+}
+
+/* ===========================================
+   Arabic Line Height & Spacing Adjustments
+   =========================================== */
+[dir="rtl"] body {
+    line-height: 1.8;
+}
+
+[dir="rtl"] h1 { line-height: 1.4; }
+[dir="rtl"] h2 { line-height: 1.4; }
+[dir="rtl"] h3 { line-height: 1.5; }
+[dir="rtl"] h4 { line-height: 1.5; }
+[dir="rtl"] h5 { line-height: 1.6; }
+[dir="rtl"] h6 { line-height: 1.6; }
+
+[dir="rtl"] p {
+    line-height: 1.9;
+}
+
+/* ===========================================
+   Arabic Font Weight Adjustments
+   =========================================== */
+[dir="rtl"] .font-weight-500,
+[dir="rtl"] .fw-500 {
+    font-weight: 500;
+}
+
+[dir="rtl"] .font-weight-600,
+[dir="rtl"] .fw-600 {
+    font-weight: 700;
+}
+
+[dir="rtl"] .font-weight-bold {
+    font-weight: 700;
+}
+
+/* ===========================================
+   Arabic Letter Spacing Reset
+   =========================================== */
+[dir="rtl"] .letter-spacing-2,
+[dir="rtl"] .letter-spacing-1,
+[dir="rtl"] [class*="letter-spacing"] {
+    letter-spacing: 0 !important;
+}
+
+/* ===========================================
+   Keep Phone Numbers & Emails LTR
+   =========================================== */
+[dir="rtl"] a[href^="tel:"]:not(.social-share-btn):not(.offer-contact-method):not(.contact-method),
+[dir="rtl"] a[href^="mailto:"]:not(.social-share-btn):not(.offer-contact-method):not(.contact-method),
+[dir="rtl"] .phone-number,
+[dir="rtl"] .email-address {
+    direction: ltr;
+    unicode-bidi: embed;
+    display: inline-block;
+}
+
+/* ===========================================
+   Keep Numbers LTR in Specific Contexts
+   =========================================== */
+[dir="rtl"] .price-value,
+[dir="rtl"] .stat-number,
+[dir="rtl"] .counter,
+[dir="rtl"] .fs-17.font-weight-bold,
+[dir="rtl"] .project-code-badge {
+    direction: ltr;
+    unicode-bidi: embed;
+}

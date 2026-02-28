@@ -109,11 +109,6 @@ body.scrolled .site-topbar {
     margin-left: auto;
 }
 
-[dir="rtl"] .main-header .mobile-toggle {
-    margin-left: 0;
-    margin-right: auto;
-}
-
 .main-header .navbar-toggler span {
     color: #ffffff;
     transition: color 0.3s ease;

@@ -688,41 +688,6 @@
     }
 }
 
-/* ===========================================
-   RTL Support
-   =========================================== */
-[dir="rtl"] .service-number {
-    left: auto;
-    right: 25px;
-}
-
-[dir="rtl"] .sub-service-item:hover {
-    transform: translateX(-5px);
-}
-
-[dir="rtl"] .sub-service-arrow {
-    transform: scaleX(-1);
-}
-
-[dir="rtl"] .sub-service-item:hover .sub-service-arrow {
-    transform: scaleX(-1) translateX(3px);
-}
-
-[dir="rtl"] .service-link-btn i {
-    transform: scaleX(-1);
-}
-
-[dir="rtl"] .service-link-btn:hover i {
-    transform: scaleX(-1) translateX(-4px);
-}
-
-[dir="rtl"] .badge-line:first-child {
-    background: linear-gradient(90deg, #19868b, transparent);
-}
-
-[dir="rtl"] .badge-line:last-child {
-    background: linear-gradient(90deg, transparent, #19868b);
-}
 
 /* Animation */
 [data-animate="fadeInUp"] {
