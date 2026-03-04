@@ -144,7 +144,7 @@
                         <input type="text" class="form-control" name="notes_english" id="add_notes_english" maxlength="255" placeholder="Optional notes in English">
                     </div>
                     <div class="form-group">
-                        <label>Notes (Arabic)</label>
+                        <label>Notes (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="add_notes_english" data-translate-target="add_notes_arabic"><i class="fa fa-language"></i> Auto</button></label>
                         <input type="text" class="form-control" name="notes_arabic" id="add_notes_arabic" maxlength="255" placeholder="Optional notes in Arabic">
                     </div>
                     <div class="form-group">
@@ -191,7 +191,7 @@
                         <input type="text" class="form-control" name="notes_english" id="edit_notes_english" maxlength="255">
                     </div>
                     <div class="form-group">
-                        <label>Notes (Arabic)</label>
+                        <label>Notes (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="edit_notes_english" data-translate-target="edit_notes_arabic"><i class="fa fa-language"></i> Auto</button></label>
                         <input type="text" class="form-control" name="notes_arabic" id="edit_notes_arabic" maxlength="255">
                     </div>
                     <div class="form-group">

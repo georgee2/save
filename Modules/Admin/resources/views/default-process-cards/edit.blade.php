@@ -2,6 +2,7 @@
 @section('title', 'Edit Process Card')
 
 @section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
 <style>
     .word-count { font-size: 12px; color: #6c757d; margin-top: 5px; }
     .word-count.error { color: #dc3545; font-weight: bold; }
@@ -40,6 +41,9 @@
                     <form action="{{ route('admin.default-process-cards.update', ['processId' => $process->id, 'id' => $card->id]) }}" method="POST">
                         @csrf
                         @method('PUT')
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
                         
                         <div class="row">
                             <div class="col-md-6">
@@ -51,7 +55,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Title Arabic <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 5 Words)</small></label>
+                                    <label>Title Arabic <button type="button" class="auto-translate-btn" data-translate-source="title_english" data-translate-target="title_arabic"><i class="fa fa-language"></i> Auto</button> <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 5 Words)</small></label>
                                     <input type="text" class="form-control" name="title_arabic" value="{{ old('title_arabic', $card->title_arabic) }}" required maxlength="150" dir="rtl" id="title_arabic">
                                     <div class="word-count" id="title_arabic_count">0 / 5 words</div>
                                 </div>
@@ -68,7 +72,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Bio Arabic <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 300 Char)</small></label>
+                                    <label>Bio Arabic <button type="button" class="auto-translate-btn" data-translate-source="bio_english" data-translate-target="bio_arabic"><i class="fa fa-language"></i> Auto</button> <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 300 Char)</small></label>
                                     <textarea class="form-control" name="bio_arabic" rows="4" required maxlength="300" dir="rtl" id="bio_arabic">{{ old('bio_arabic', $card->bio_arabic) }}</textarea>
                                     <div class="char-count" id="bio_arabic_count">0 / 300 characters</div>
                                 </div>
@@ -108,6 +112,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script>
     $(document).ready(function() {
         function updateWordCount(selector, countSelector, maxWords) {

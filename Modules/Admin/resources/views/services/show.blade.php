@@ -2,6 +2,7 @@
 @section('title' , 'Service Information')
 
 @section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
 <link rel="stylesheet" href="{{ asset('/css/dropify.min.css') }}">
 <link href="{{ asset('/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
 <style>
@@ -954,6 +955,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script src="{{ asset('/js/dropify.min.js') }}"></script>
 <script src="{{ asset('/js/select2.min.js') }}"></script>
 <script>

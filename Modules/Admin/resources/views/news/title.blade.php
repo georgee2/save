@@ -1,5 +1,8 @@
 @extends('admin::layouts.master')
 @section('title' , 'Blog Title Home')
+@section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
+@endsection
 @section('content')
 <div class="page-content-wrapper">
     <div class="container-fluid">
@@ -25,6 +28,7 @@
                     <hr>
                     <form enctype="multipart/form-data" action="{{ route('newsheader.update' , $Header->id) }}" method="POST">
                         @csrf
+                        <button type="button" class="btn btn-translate-all mb-3" id="translateAllBtn"><i class="fa fa-language"></i> Translate All</button>
                         <div class="row">
                             <div class="form-group col-md-6">
                             <label class="text-capitalize">Header English <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
@@ -34,7 +38,7 @@
                             @enderror
                         </div>
                         <div class="form-group col-md-6">
-                            <label class="text-capitalize">Header Arabic <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                            <label class="text-capitalize">Header Arabic <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <button type="button" class="auto-translate-btn" data-translate-source="header" data-translate-target="header_arabic"><i class="fa fa-language"></i> Auto</button></label>
                             <input value="{{$Header->header_arabic}}" class="form-control" type="text" name="header_arabic">
                             @error('header_arabic')
                             <span class="text-danger mt-1">{{ $message }}</span>
@@ -52,7 +56,7 @@
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label class="text-capitalize">Bio Arabic  <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                            <label class="text-capitalize">Bio Arabic  <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <button type="button" class="auto-translate-btn" data-translate-source="bio_english" data-translate-target="bio_arabic"><i class="fa fa-language"></i> Auto</button></label>
                             <textarea  class="form-control"  rows="3" name="bio_arabic">{{$Header->bio_arabic}} </textarea>
                             @error('bio_arabic')
                             <span class="text-danger mt-1">{{ $message }}</span>
@@ -107,6 +111,7 @@
 </div>
 @endsection
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script src="{{ asset('/js/dropify.min.js') }}"></script>
 <script>
     $('.dropify').dropify();

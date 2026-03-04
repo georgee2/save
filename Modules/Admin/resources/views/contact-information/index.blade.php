@@ -3,6 +3,7 @@
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('/css/tagify.css') }}">
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
 <style>
     :root {
         --main-color: #19868b;
@@ -87,6 +88,7 @@
                     
                     <form action="{{ route('contact-information.update') }}" method="POST">
                         @csrf
+                        <button type="button" class="btn btn-translate-all mb-3" id="translateAllBtn"><i class="fa fa-language"></i> Translate All</button>
                         
                         <!-- Contact Details Section -->
                         <div class="form-section">
@@ -192,7 +194,7 @@
                                 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Location Text (Arabic)</label>
+                                        <label>Location Text (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="location_text_english" data-translate-target="location_text_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                         <input type="text" class="form-control" name="location_text_arabic" value="{{ old('location_text_arabic', $contactInfo->location_text_arabic) }}" placeholder="العنوان بالعربي" dir="rtl">
                                         @error('location_text_arabic')<span class="text-danger">{{ $message }}</span>@enderror
                                     </div>
@@ -226,7 +228,7 @@
                                 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Footer Bio (Arabic) <small>(Max 250 characters)</small></label>
+                                        <label>Footer Bio (Arabic) <small>(Max 250 characters)</small> <button type="button" class="auto-translate-btn" data-translate-source="footer_bio_english" data-translate-target="footer_bio_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                         <textarea class="form-control char-counter" name="footer_bio_arabic" rows="4" maxlength="250" dir="rtl" id="footer_bio_arabic">{{ old('footer_bio_arabic', $contactInfo->footer_bio_arabic) }}</textarea>
                                         <div class="char-count" id="footer_bio_arabic_count">0 / 250 characters</div>
                                         @error('footer_bio_arabic')<span class="text-danger">{{ $message }}</span>@enderror
@@ -265,7 +267,7 @@
                                 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>SEO Description (Arabic) <small>(Max 500 characters)</small></label>
+                                        <label>SEO Description (Arabic) <small>(Max 500 characters)</small> <button type="button" class="auto-translate-btn" data-translate-source="seo_description_english" data-translate-target="seo_description_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                         <textarea class="form-control char-counter" name="seo_description_arabic" rows="4" maxlength="500" dir="rtl" id="seo_description_arabic">{{ old('seo_description_arabic', $contactInfo->seo_description_arabic) }}</textarea>
                                         <div class="char-count" id="seo_description_arabic_count">0 / 500 characters</div>
                                         @error('seo_description_arabic')<span class="text-danger">{{ $message }}</span>@enderror
@@ -290,6 +292,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script src="{{ asset('/js/tagify.min.js') }}"></script>
 
 <script>

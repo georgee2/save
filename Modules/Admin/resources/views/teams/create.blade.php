@@ -1,5 +1,8 @@
 @extends('admin::layouts.master')
 @section('title', 'Add New Team Member')
+@section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
+@endsection
 @section('content')
 <div class="page-content-wrapper">
     <div class="container-fluid">
@@ -44,6 +47,9 @@
                     
                     <form enctype="multipart/form-data" action="{{ route('admin.team.store') }}" method="POST">
                         @csrf
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
                         
                         <!-- Basic Information -->
                         <h5 class="mb-3 text-primary">Basic Information</h5>
@@ -54,7 +60,7 @@
                                 @error('name_english')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize">Arabic Name <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                <label class="text-capitalize">Arabic Name <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <button type="button" class="auto-translate-btn" data-translate-source="name_english" data-translate-target="name_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <input class="form-control" value="{{old('name_arabic')}}" type="text" name="name_arabic" required>
                                 @error('name_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
@@ -143,7 +149,7 @@
                                 @error('work_experience_english')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-12">
-                                <label class="text-capitalize">Work Experience (Arabic)</label>
+                                <label class="text-capitalize">Work Experience (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="work_experience_english" data-translate-target="work_experience_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <textarea id="elm2" class="form-control" name="work_experience_arabic">{!!old('work_experience_arabic')!!}</textarea>
                                 @error('work_experience_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
@@ -169,6 +175,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script src="{{ asset('/js/dropify.min.js') }}"></script>
 
 <script>

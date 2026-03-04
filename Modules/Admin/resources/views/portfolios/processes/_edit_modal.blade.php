@@ -19,7 +19,7 @@
                         </div>
                         
                         <div class="form-group col-md-6">
-                            <label>Arabic Title <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small class="text-muted">(Max 6 words)</small></label>
+                            <label>Arabic Title <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small class="text-muted">(Max 6 words)</small> <button type="button" class="auto-translate-btn" data-translate-source="title_english" data-translate-target="title_arabic"><i class="fa fa-language"></i> Auto</button></label>
                             <input type="text" class="form-control edit-title-arabic" name="title_arabic" value="{{ $process->title_arabic }}" data-process-id="{{ $process->id }}" required>
                             <small class="text-muted"><span id="edit-word-count-ar-{{ $process->id }}">0</span>/6 words</small>
                         </div>
@@ -31,7 +31,7 @@
                         </div>
                         
                         <div class="form-group col-md-12">
-                            <label>Arabic Description <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small class="text-muted">(Max 1500 characters)</small></label>
+                            <label>Arabic Description <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small class="text-muted">(Max 1500 characters)</small> <button type="button" class="auto-translate-btn" data-translate-source="description_english" data-translate-target="description_arabic"><i class="fa fa-language"></i> Auto</button></label>
                             <textarea class="form-control portfolio-process-desc-counter" name="description_arabic" rows="4" maxlength="1500" required>{{ $process->description_arabic }}</textarea>
                             <small class="text-muted"><span class="char-count-ar">{{ strlen($process->description_arabic) }}</span>/1500 characters</small>
                         </div>

@@ -3,6 +3,7 @@
 
 @section('css')
 <link rel="stylesheet" type="text/css" href="{{ asset('/css/dropify.min.css') }}">
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
 <style>
     .char-count {
         font-size: 12px;
@@ -46,6 +47,10 @@
                     
                     <form action="{{ route('about-feature.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
                         
                         <div class="row">
                             <div class="col-md-6">
@@ -58,7 +63,7 @@
                             
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Title (Arabic) <span class="text-danger">*</span></label>
+                                    <label>Title (Arabic) <span class="text-danger">*</span> <button type="button" class="auto-translate-btn" data-translate-source="title_english" data-translate-target="title_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                     <input type="text" class="form-control" name="title_arabic" value="{{ old('title_arabic') }}" required maxlength="255" dir="rtl">
                                     @error('title_arabic')<span class="text-danger">{{ $message }}</span>@enderror
                                 </div>
@@ -77,7 +82,7 @@
                             
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Description (Arabic) <span class="text-danger">*</span> <small>(Max 1500 characters)</small></label>
+                                    <label>Description (Arabic) <span class="text-danger">*</span> <small>(Max 1500 characters)</small> <button type="button" class="auto-translate-btn" data-translate-source="description_english" data-translate-target="description_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                     <textarea class="form-control" name="description_arabic" rows="8" required maxlength="1500" dir="rtl" id="description_arabic">{{ old('description_arabic') }}</textarea>
                                     <div class="char-count" id="description_arabic_count">0 / 1500 characters</div>
                                     @error('description_arabic')<span class="text-danger">{{ $message }}</span>@enderror
@@ -126,6 +131,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script src="{{ asset('/js/dropify.min.js') }}"></script>
 
 <script>

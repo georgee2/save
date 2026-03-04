@@ -1,0 +1,44 @@
+.auto-translate-btn {
+    padding: 2px 8px;
+    font-size: 11px;
+    border-radius: 4px;
+    margin-left: 6px;
+    background: #19868b;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    vertical-align: middle;
+    transition: all 0.2s;
+}
+.auto-translate-btn:hover {
+    background: #0d6b6f;
+    color: #fff;
+}
+.auto-translate-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.auto-translate-btn i {
+    margin-right: 3px;
+}
+.translate-all-btn {
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+    color: #fff;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.translate-all-btn:hover {
+    opacity: 0.9;
+    color: #fff;
+}
+.translate-all-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.translate-all-btn i {
+    margin-right: 5px;
+}

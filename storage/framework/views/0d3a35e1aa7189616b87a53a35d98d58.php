@@ -1,6 +1,7 @@
 <?php $__env->startSection('title', 'Add New Engineering Category'); ?>
 <?php $__env->startSection('css'); ?>
 <link rel="stylesheet" href="<?php echo e(asset('/css/tagify.css')); ?>">
+<link rel="stylesheet" href="<?php echo e(asset('/css/auto-translate.css')); ?>">
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
 <div class="page-content-wrapper">
@@ -32,6 +33,9 @@
                     <hr>
                     <form enctype="multipart/form-data" action="<?php echo e(route('engineeringcategory.store')); ?>" method="POST">
                         <?php echo csrf_field(); ?>
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label class="text-capitalize">English Title <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
@@ -48,7 +52,7 @@ endif;
 unset($__errorArgs, $__bag); ?>
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize">Arabic Title <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                <label class="text-capitalize">Arabic Title <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <button type="button" class="auto-translate-btn" data-translate-source="title_english" data-translate-target="title_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <input class="form-control" value="<?php echo e(old('title_arabic')); ?>" type="text" name="title_arabic">
                                 <?php $__errorArgs = ['title_arabic'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -81,7 +85,7 @@ unset($__errorArgs, $__bag); ?>
                             </div>
 
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize">Bio Arabic (Max 500 characters)</label>
+                                <label class="text-capitalize">Bio Arabic (Max 500 characters) <button type="button" class="auto-translate-btn" data-translate-source="bio_english" data-translate-target="bio_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <textarea class="form-control" id="bio_arabic" name="bio_arabic" rows="3" maxlength="500"><?php echo e(old('bio_arabic')); ?></textarea>
                                 <small class="form-text text-muted">
                                     <span id="bio_arabic_count">0</span> / 500 characters
@@ -117,7 +121,7 @@ unset($__errorArgs, $__bag); ?>
                             </div>
 
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize">Arabic Description (Max 1500 characters)</label>
+                                <label class="text-capitalize">Arabic Description (Max 1500 characters) <button type="button" class="auto-translate-btn" data-translate-source="description_english" data-translate-target="description_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <textarea class="form-control" id="description_arabic" name="description_arabic" rows="5" maxlength="1500"><?php echo e(old('description_arabic')); ?></textarea>
                                 <small class="form-text text-muted">
                                     <span id="description_arabic_count">0</span> / 1500 characters
@@ -187,7 +191,7 @@ unset($__errorArgs, $__bag); ?>
                             </div>
 
                             <div class="form-group col-lg-6 col-md-6 col-sm-12">
-                                <label>SEO Description Arabic</label>
+                                <label>SEO Description Arabic <button type="button" class="auto-translate-btn" data-translate-source="seo_description_english" data-translate-target="seo_description_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <textarea name="seo_description_arabic" class="form-control" maxlength="1000" rows="3" placeholder="This textarea has a limit of 1000 chars."><?php echo e(old('seo_description_arabic')); ?></textarea>
                                 <?php $__errorArgs = ['seo_description_arabic'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -222,6 +226,7 @@ unset($__errorArgs, $__bag); ?>
 </div>
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('js'); ?>
+<script src="<?php echo e(asset('/js/auto-translate.js')); ?>"></script>
 <script src="<?php echo e(asset('/js/tagify.min.js')); ?>"></script>
 <script src="<?php echo e(asset('/js/dropify.min.js')); ?>"></script>
 <script>

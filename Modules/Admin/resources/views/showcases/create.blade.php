@@ -1,6 +1,7 @@
 @extends('admin::layouts.master')
 @section('title', 'Add New Showcase')
 @section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
 <link rel="stylesheet" href="{{ asset('/css/tagify.css') }}">
 @endsection
 @section('content')
@@ -47,6 +48,9 @@
                     
                     <form enctype="multipart/form-data" action="{{ route('showcase.store') }}" method="POST">
                         @csrf
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
                         
                         <!-- Basic Information -->
                         <h5 class="mb-3 text-primary">Basic Information</h5>
@@ -57,7 +61,7 @@
                                 @error('title_english')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize">Arabic Title <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                <label class="text-capitalize">Arabic Title <button type="button" class="auto-translate-btn" data-translate-source="title_english" data-translate-target="title_arabic"><i class="fa fa-language"></i> Auto</button> <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
                                 <input class="form-control" value="{{old('title_arabic')}}" type="text" name="title_arabic" required>
                                 @error('title_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
@@ -97,7 +101,7 @@
                                 @error('description_english')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-12">
-                                <label class="text-capitalize">Description (Arabic) <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                <label class="text-capitalize">Description (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="description_english" data-translate-target="description_arabic"><i class="fa fa-language"></i> Auto</button> <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
                                 <textarea id="elm2" class="form-control" name="description_arabic">{!!old('description_arabic')!!}</textarea>
                                 @error('description_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
@@ -117,7 +121,7 @@
                                 @error('seo_description_english')<span class="text-danger">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label>SEO Description (Arabic)</label>
+                                <label>SEO Description (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="seo_description_english" data-translate-target="seo_description_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <textarea name="seo_description_arabic" class="form-control" maxlength="1000" rows="3">{{old('seo_description_arabic')}}</textarea>
                                 @error('seo_description_arabic')<span class="text-danger">{{ $message }}</span>@enderror
                             </div>
@@ -164,6 +168,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script src="{{ asset('/js/tagify.min.js') }}"></script>
 <script src="{{ asset('/js/dropify.min.js') }}"></script>
 

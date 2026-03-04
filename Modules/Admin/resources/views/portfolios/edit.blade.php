@@ -2,6 +2,7 @@
 @section('title', 'Edit Portfolio')
 @section('css')
 <link rel="stylesheet" href="{{ asset('/css/tagify.css') }}">
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
 @endsection
 @section('content')
 <div class="page-content-wrapper">
@@ -33,6 +34,11 @@
                     <hr>
                     <form enctype="multipart/form-data" action="{{ route('portfolio.update', ['id' => $portfolio->id]) }}" method="POST">
                         @csrf
+
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
+
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label class="text-capitalize">English Title <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
@@ -42,7 +48,7 @@
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize">Arabic Title <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                <label class="text-capitalize">Arabic Title <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <button type="button" class="auto-translate-btn" data-translate-source="title_english" data-translate-target="title_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <input class="form-control" value="{{old('title_arabic', $portfolio->title_arabic)}}" type="text" name="title_arabic">
                                 @error('title_arabic')
                                 <span class="text-danger mt-1">{{ $message }}</span>
@@ -96,7 +102,7 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize">Bio Arabic (Max 500 characters)</label>
+                                <label class="text-capitalize">Bio Arabic (Max 500 characters) <button type="button" class="auto-translate-btn" data-translate-source="bio_english" data-translate-target="bio_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <textarea class="form-control char-counter" id="bio_arabic" name="bio_arabic" rows="3" maxlength="500" data-max="500">{{old('bio_arabic', $portfolio->bio_arabic)}}</textarea>
                                 <small class="form-text text-muted">
                                     <span id="bio_arabic_count">0</span> / 500 characters
@@ -118,7 +124,7 @@
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label class="text-capitalize">Arabic Description (Max 3000 characters) <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                <label class="text-capitalize">Arabic Description (Max 3000 characters) <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <button type="button" class="auto-translate-btn" data-translate-source="description_english" data-translate-target="description_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <textarea class="form-control char-counter" id="description_arabic" name="description_arabic" rows="6" maxlength="3000" data-max="3000">{{old('description_arabic', $portfolio->description_arabic)}}</textarea>
                                 <small class="form-text text-muted">
                                     <span id="description_arabic_count">0</span> / 3000 characters
@@ -211,7 +217,7 @@
                             </div>
 
                             <div class="form-group col-lg-6 col-md-6 col-sm-12">
-                                <label>SEO Description Arabic</label>
+                                <label>SEO Description Arabic <button type="button" class="auto-translate-btn" data-translate-source="seo_description_english" data-translate-target="seo_description_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <textarea name="seo_description_arabic" class="form-control" maxlength="1000" rows="3" placeholder="This textarea has a limit of 1000 chars.">{{old('seo_description_arabic', $portfolio->seo_description_arabic)}}</textarea>
                                 @error('seo_description_arabic')
                                 <span class="text-danger">{{ $message }}</span>
@@ -238,6 +244,7 @@
 </div>
 @endsection
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script src="{{ asset('/js/tagify.min.js') }}"></script>
 <script src="{{ asset('/js/dropify.min.js') }}"></script>
 <script>

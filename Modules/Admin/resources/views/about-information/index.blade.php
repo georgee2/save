@@ -3,6 +3,7 @@
 
 @section('css')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
 <link rel="stylesheet" href="{{ asset('/css/tagify.css') }}">
 <style>
     :root {
@@ -103,6 +104,9 @@
                     
                     <form action="{{ route('about-information.update') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
                         
                         <!-- Page Header Section -->
                         <div class="form-section">
@@ -119,7 +123,7 @@
                                 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Title (Arabic) <small>(Max 4 Words)</small></label>
+                                        <label>Title (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="title_english" data-translate-target="title_arabic"><i class="fa fa-language"></i> Auto</button> <small>(Max 4 Words)</small></label>
                                         <input type="text" class="form-control word-counter" name="title_arabic" value="{{ old('title_arabic', $aboutInfo->title_arabic) }}" id="title_arabic" maxlength="255" dir="rtl">
                                         <div class="word-count" id="title_arabic_count">0 / 4 words</div>
                                         @error('title_arabic')<span class="text-danger">{{ $message }}</span>@enderror
@@ -139,7 +143,7 @@
                                 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Subtitle (Arabic) <small>(Max 8 Words)</small></label>
+                                        <label>Subtitle (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="subtitle_english" data-translate-target="subtitle_arabic"><i class="fa fa-language"></i> Auto</button> <small>(Max 8 Words)</small></label>
                                         <input type="text" class="form-control word-counter" name="subtitle_arabic" value="{{ old('subtitle_arabic', $aboutInfo->subtitle_arabic) }}" id="subtitle_arabic" maxlength="255" dir="rtl">
                                         <div class="word-count" id="subtitle_arabic_count">0 / 8 words</div>
                                         @error('subtitle_arabic')<span class="text-danger">{{ $message }}</span>@enderror
@@ -179,7 +183,7 @@
                                 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>About (Arabic) <small>(Max 2500 characters)</small></label>
+                                        <label>About (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="about_english" data-translate-target="about_arabic"><i class="fa fa-language"></i> Auto</button> <small>(Max 2500 characters)</small></label>
                                         <textarea class="form-control char-counter" name="about_arabic" rows="8" maxlength="2500" dir="rtl" id="about_arabic">{{ old('about_arabic', $aboutInfo->about_arabic) }}</textarea>
                                         <div class="char-count" id="about_arabic_count">0 / 2500 characters</div>
                                         @error('about_arabic')<span class="text-danger">{{ $message }}</span>@enderror
@@ -219,7 +223,7 @@
                                 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Mission (Arabic) <small>(Max 2000 characters)</small></label>
+                                        <label>Mission (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="mission_english" data-translate-target="mission_arabic"><i class="fa fa-language"></i> Auto</button> <small>(Max 2000 characters)</small></label>
                                         <textarea class="form-control char-counter" name="mission_arabic" rows="8" maxlength="2000" dir="rtl" id="mission_arabic">{{ old('mission_arabic', $aboutInfo->mission_arabic) }}</textarea>
                                         <div class="char-count" id="mission_arabic_count">0 / 2000 characters</div>
                                         @error('mission_arabic')<span class="text-danger">{{ $message }}</span>@enderror
@@ -259,7 +263,7 @@
                                 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Vision (Arabic) <small>(Max 2000 characters)</small></label>
+                                        <label>Vision (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="vision_english" data-translate-target="vision_arabic"><i class="fa fa-language"></i> Auto</button> <small>(Max 2000 characters)</small></label>
                                         <textarea class="form-control char-counter" name="vision_arabic" rows="8" maxlength="2000" dir="rtl" id="vision_arabic">{{ old('vision_arabic', $aboutInfo->vision_arabic) }}</textarea>
                                         <div class="char-count" id="vision_arabic_count">0 / 2000 characters</div>
                                         @error('vision_arabic')<span class="text-danger">{{ $message }}</span>@enderror
@@ -299,7 +303,7 @@
                                 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Values (Arabic) <small>(Max 2000 characters)</small></label>
+                                        <label>Values (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="values_english" data-translate-target="values_arabic"><i class="fa fa-language"></i> Auto</button> <small>(Max 2000 characters)</small></label>
                                         <textarea class="form-control char-counter" name="values_arabic" rows="8" maxlength="2000" dir="rtl" id="values_arabic">{{ old('values_arabic', $aboutInfo->values_arabic) }}</textarea>
                                         <div class="char-count" id="values_arabic_count">0 / 2000 characters</div>
                                         @error('values_arabic')<span class="text-danger">{{ $message }}</span>@enderror
@@ -398,6 +402,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script src="{{ asset('/js/dropify.min.js') }}"></script>
 <script src="{{ asset('/js/tagify.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

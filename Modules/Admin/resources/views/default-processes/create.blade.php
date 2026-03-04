@@ -2,6 +2,7 @@
 @section('title', 'Create Default Process')
 
 @section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
 <style>
     .word-count { font-size: 12px; color: #6c757d; margin-top: 5px; }
     .word-count.error { color: #dc3545; font-weight: bold; }
@@ -38,6 +39,9 @@
                     
                     <form action="{{ route('admin.default-processes.store') }}" method="POST">
                         @csrf
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
                         
                         <div class="row">
                             <div class="col-md-6">
@@ -49,7 +53,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Title Arabic <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 5 Words)</small></label>
+                                    <label>Title Arabic <button type="button" class="auto-translate-btn" data-translate-source="title_english" data-translate-target="title_arabic"><i class="fa fa-language"></i> Auto</button> <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 5 Words)</small></label>
                                     <input type="text" class="form-control" name="title_arabic" value="{{ old('title_arabic') }}" required maxlength="150" dir="rtl" id="title_arabic">
                                     <div class="word-count" id="title_arabic_count">0 / 5 words</div>
                                 </div>
@@ -66,7 +70,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Sub Title Arabic <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 3 Words)</small></label>
+                                    <label>Sub Title Arabic <button type="button" class="auto-translate-btn" data-translate-source="sub_title_english" data-translate-target="sub_title_arabic"><i class="fa fa-language"></i> Auto</button> <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 3 Words)</small></label>
                                     <input type="text" class="form-control" name="sub_title_arabic" value="{{ old('sub_title_arabic') }}" required maxlength="100" dir="rtl" id="sub_title_arabic">
                                     <div class="word-count" id="sub_title_arabic_count">0 / 3 words</div>
                                 </div>
@@ -83,7 +87,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Bio Arabic <small>(Optional, Max 150 Char)</small></label>
+                                    <label>Bio Arabic <button type="button" class="auto-translate-btn" data-translate-source="bio_english" data-translate-target="bio_arabic"><i class="fa fa-language"></i> Auto</button> <small>(Optional, Max 150 Char)</small></label>
                                     <textarea class="form-control" name="bio_arabic" rows="3" maxlength="150" dir="rtl" id="bio_arabic">{{ old('bio_arabic') }}</textarea>
                                     <div class="char-count" id="bio_arabic_count">0 / 150 characters</div>
                                 </div>
@@ -100,7 +104,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Button Text Arabic <small>(Optional, Max 2 Words)</small></label>
+                                    <label>Button Text Arabic <button type="button" class="auto-translate-btn" data-translate-source="button_text_english" data-translate-target="button_text_arabic"><i class="fa fa-language"></i> Auto</button> <small>(Optional, Max 2 Words)</small></label>
                                     <input type="text" class="form-control" name="button_text_arabic" value="{{ old('button_text_arabic') }}" maxlength="50" dir="rtl" id="button_text_arabic">
                                     <div class="word-count" id="button_text_arabic_count">0 / 2 words</div>
                                 </div>
@@ -148,6 +152,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script>
     $(document).ready(function() {
         function updateWordCount(selector, countSelector, maxWords) {

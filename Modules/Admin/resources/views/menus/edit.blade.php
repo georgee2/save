@@ -1,6 +1,8 @@
 @extends('admin::layouts.master')
 @section('title', 'Edit Menu')
-
+@section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
+@endsection
 @section('content')
 <div class="page-content-wrapper">
     <div class="container-fluid">
@@ -24,6 +26,9 @@
                     
                     <form action="{{ route('admin.menu.update', $menu->id) }}" method="POST">
                         @csrf
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
                         
                         <div class="row">
                             <div class="form-group col-md-6">
@@ -35,7 +40,7 @@
                             </div>
                             
                             <div class="form-group col-md-6">
-                                <label>Title (Arabic)</label>
+                                <label>Title (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="title_english" data-translate-target="title_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <input class="form-control" value="{{ old('title_arabic', $menu->title_arabic) }}" type="text" name="title_arabic" placeholder="أدخل عنوان القائمة بالعربية" dir="rtl">
                                 @error('title_arabic')
                                 <span class="text-danger mt-1">{{ $message }}</span>
@@ -86,7 +91,7 @@
                             </div>
                             
                             <div class="form-group col-md-6">
-                                <label>Description (Arabic)</label>
+                                <label>Description (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="description_english" data-translate-target="description_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <textarea class="form-control" name="description_arabic" rows="3" placeholder="أدخل وصف القائمة" dir="rtl">{{ old('description_arabic', $menu->description_arabic) }}</textarea>
                                 @error('description_arabic')
                                 <span class="text-danger mt-1">{{ $message }}</span>
@@ -127,4 +132,8 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 @endsection

@@ -1,5 +1,8 @@
 @extends('admin::layouts.master')
 @section('title', 'Edit Home Section')
+@section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
+@endsection
 
 @section('content')
 <div class="page-content-wrapper">
@@ -32,6 +35,10 @@
                     
                     <form action="{{ route('home-sections.update', $section->id) }}" method="POST">
                         @csrf
+
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
                         
                         <div class="row">
                             <div class="col-md-6">
@@ -60,7 +67,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="text-capitalize">Title Arabic <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                    <label class="text-capitalize">Title Arabic <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <button type="button" class="auto-translate-btn" data-translate-source="title_english" data-translate-target="title_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                     <input class="form-control" type="text" name="title_arabic" value="{{ old('title_arabic', $section->title_arabic) }}" required>
                                     @error('title_arabic')
                                     <span class="text-danger mt-1">{{ $message }}</span>
@@ -151,6 +158,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script>
     // Live icon preview
     document.getElementById('icon-input').addEventListener('input', function() {

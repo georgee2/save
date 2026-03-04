@@ -1,5 +1,8 @@
 @extends('admin::layouts.master')
 @section('title', 'Edit Service Title')
+@section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
+@endsection
 @section('content')
 <div class="page-content-wrapper">
     <div class="container-fluid">
@@ -34,6 +37,9 @@
                     
                     <form action="{{ route('service-title.update', ['id' => $ServiceTitle->id]) }}" method="POST">
                         @csrf
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
                         
                         <div class="row">
                             <!-- Title English -->
@@ -44,7 +50,7 @@
                             
                             <!-- Title Arabic -->
                             <div class="form-group col-md-6">
-                                <label>Title (Arabic) <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                <label>Title (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="title_english" data-translate-target="title_arabic"><i class="fa fa-language"></i> Auto</button> <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
                                 <input type="text" class="form-control" name="title_arabic" value="{{ old('title_arabic', $ServiceTitle->title_arabic) }}" required>
                             </div>
                             
@@ -56,7 +62,7 @@
                             
                             <!-- Subtitle Arabic -->
                             <div class="form-group col-md-6">
-                                <label>Subtitle (Arabic)</label>
+                                <label>Subtitle (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="subtitle_english" data-translate-target="subtitle_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <input type="text" class="form-control" name="subtitle_arabic" value="{{ old('subtitle_arabic', $ServiceTitle->subtitle_arabic) }}">
                             </div>
                             
@@ -91,5 +97,9 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 @endsection
 

@@ -2,6 +2,7 @@
 @section('title', 'Create Fact')
 
 @section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
 <style>
     .word-count {
         font-size: 12px;
@@ -54,6 +55,10 @@
                     <form action="{{ route('admin.facts.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
+                        
                         <div class="row">
                             <!-- English Title -->
                             <div class="col-md-6">
@@ -67,7 +72,7 @@
                             <!-- Arabic Title -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Arabic Title <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 3 Words)</small></label>
+                                    <label>Arabic Title <button type="button" class="auto-translate-btn" data-translate-source="title_english" data-translate-target="title_arabic"><i class="fa fa-language"></i> Auto</button> <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 3 Words)</small></label>
                                     <input type="text" class="form-control" name="title_arabic" value="{{ old('title_arabic') }}" required maxlength="100" dir="rtl" id="title_arabic">
                                     <div class="word-count" id="title_arabic_count">0 / 3 words</div>
                                 </div>
@@ -137,6 +142,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script>
     $(document).ready(function() {
         // Word count for English Title (Max 3 words)

@@ -3,6 +3,7 @@
 
 @section('css')
 <link rel="stylesheet" href="{{asset('/css/dropify.min.css')}}">
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
 <style>
     .form-section {
         background: #fff;
@@ -47,6 +48,7 @@
                         
                         <form enctype="multipart/form-data" action="{{ route('project.floor.update', ['projectId' => $project->id, 'id' => $floor->id]) }}" method="POST">
                             @csrf
+                            <button type="button" class="btn btn-translate-all mb-3" id="translateAllBtn"><i class="fa fa-language"></i> Translate All</button>
                             
                             <!-- Component Selection -->
                             <div class="form-section">
@@ -158,6 +160,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script src="{{asset('/js/dropify.min.js')}}"></script>
 <script>
     $(document).ready(function() {

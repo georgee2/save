@@ -2,6 +2,7 @@
 @section('title', 'Create Default Banner')
 
 @section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
 <link rel="stylesheet" href="{{asset('/css/dropify.min.css')}}">
 <style>
     .word-count { font-size: 12px; color: #6c757d; margin-top: 5px; }
@@ -37,6 +38,9 @@
                     
                     <form action="{{ route('admin.default-banners.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
                         
                         <div class="row">
                             <div class="col-md-6">
@@ -48,7 +52,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Title Arabic <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 5 Words)</small></label>
+                                    <label>Title Arabic <button type="button" class="auto-translate-btn" data-translate-source="title_english" data-translate-target="title_arabic"><i class="fa fa-language"></i> Auto</button> <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 5 Words)</small></label>
                                     <input type="text" class="form-control" name="title_arabic" value="{{ old('title_arabic') }}" required maxlength="150" dir="rtl" id="title_arabic">
                                     <div class="word-count" id="title_arabic_count">0 / 5 words</div>
                                 </div>
@@ -90,6 +94,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script src="{{asset('/js/dropify.min.js')}}"></script>
 <script>
     $(document).ready(function() {

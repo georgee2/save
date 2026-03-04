@@ -1,5 +1,8 @@
 @extends('admin::layouts.master')
 @section('title', 'Add New FAQ')
+@section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
+@endsection
 @section('content')
 <div class="page-content-wrapper">
     <div class="container-fluid">
@@ -30,6 +33,9 @@
                     <hr>
                     <form action="{{ route('homefaq.store') }}" method="POST">
                         @csrf
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label class="text-capitalize">Question English <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
@@ -39,7 +45,7 @@
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize">Question Arabic <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                <label class="text-capitalize">Question Arabic <button type="button" class="auto-translate-btn" data-translate-source="question_english" data-translate-target="question_arabic"><i class="fa fa-language"></i> Auto</button> <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
                                 <input class="form-control" value="{{old('question_arabic')}}" type="text" name="question_arabic">
                                 @error('question_arabic')
                                 <span class="text-danger mt-1">{{ $message }}</span>
@@ -55,7 +61,7 @@
                             </div>
 
                             <div class="form-group col-md-12">
-                                <label class="text-capitalize">Answer Arabic <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                <label class="text-capitalize">Answer Arabic <button type="button" class="auto-translate-btn" data-translate-source="answer_english" data-translate-target="answer_arabic"><i class="fa fa-language"></i> Auto</button> <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
                                 <textarea class="form-control" name="answer_arabic" rows="4">{{old('answer_arabic')}}</textarea>
                                 @error('answer_arabic')
                                 <span class="text-danger mt-1">{{ $message }}</span>
@@ -96,5 +102,9 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 @endsection
 
