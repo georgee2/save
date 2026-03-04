@@ -1,5 +1,8 @@
 @extends('admin::layouts.master')
 @section('title', 'Edit FAQ')
+@section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
+@endsection
 @section('content')
 <div class="page-content-wrapper">
     <div class="container-fluid">
@@ -34,6 +37,10 @@
                     
                     <form action="{{ route('faq.update', ['id' => $FAQ->id]) }}" method="POST">
                         @csrf
+
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
                         
                         <div class="row">
                             <!-- Question English -->
@@ -44,7 +51,7 @@
                             
                             <!-- Question Arabic -->
                             <div class="form-group col-md-12">
-                                <label>Question (Arabic) <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                <label>Question (Arabic) <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <button type="button" class="auto-translate-btn" data-translate-source="question_english" data-translate-target="question_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <textarea class="form-control" name="question_arabic" rows="2" required>{{ old('question_arabic', $FAQ->question_arabic) }}</textarea>
                             </div>
                             
@@ -56,7 +63,7 @@
                             
                             <!-- Answer Arabic -->
                             <div class="form-group col-md-12">
-                                <label>Answer (Arabic) <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                <label>Answer (Arabic) <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <button type="button" class="auto-translate-btn" data-translate-source="answer_english" data-translate-target="answer_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <textarea class="form-control" name="answer_arabic" rows="5" required>{{ old('answer_arabic', $FAQ->answer_arabic) }}</textarea>
                             </div>
                         </div>
@@ -77,5 +84,9 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 @endsection
 

@@ -1,5 +1,8 @@
 @extends('admin::layouts.master')
 @section('title', 'Add New Substation Room')
+@section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
+@endsection
 @section('content')
 <div class="page-content-wrapper">
     <div class="container-fluid">
@@ -22,6 +25,9 @@
                     <hr>
                     <form action="{{ route('substationroom.store') }}" method="POST">
                         @csrf
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
                         <div class="row">
                             <div class="form-group col-md-12">
                                 <label class="text-capitalize">Project Type</label>
@@ -39,7 +45,7 @@
                                 @error('name_english')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize">Arabic Name <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                <label class="text-capitalize">Arabic Name <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <button type="button" class="auto-translate-btn" data-translate-source="name_english" data-translate-target="name_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <input class="form-control" value="{{old('name_arabic')}}" type="text" name="name_arabic" required>
                                 @error('name_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
@@ -64,5 +70,8 @@
         </div>
     </div>
 </div>
+@endsection
+@section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 @endsection
 

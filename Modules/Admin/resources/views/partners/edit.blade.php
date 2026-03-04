@@ -2,6 +2,7 @@
 @section('title', 'Edit Partner')
 @section('css')
 <link rel="stylesheet" href="{{ asset('/css/tagify.css') }}">
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
 @endsection
 @section('content')
 <div class="page-content-wrapper">
@@ -50,6 +51,10 @@
                     
                     <form enctype="multipart/form-data" action="{{ route('partner.update', ['id' => $partner->id]) }}" method="POST">
                         @csrf
+
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
                         
                         <!-- Type Selection -->
                         <h5 class="mb-3 text-primary">Type Selection</h5>
@@ -75,7 +80,7 @@
                                 @error('name_english')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize">Arabic Name <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                <label class="text-capitalize">Arabic Name <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <button type="button" class="auto-translate-btn" data-translate-source="name_english" data-translate-target="name_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <input class="form-control" value="{{old('name_arabic', $partner->name_arabic)}}" type="text" name="name_arabic" required>
                                 @error('name_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
@@ -123,7 +128,7 @@
                                 @error('location_text_english')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize">Location Text (Arabic)</label>
+                                <label class="text-capitalize">Location Text (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="location_text_english" data-translate-target="location_text_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <textarea class="form-control" name="location_text_arabic" rows="3">{{old('location_text_arabic', $partner->location_text_arabic)}}</textarea>
                                 @error('location_text_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
@@ -214,7 +219,7 @@
                                 @error('about_english')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-12">
-                                <label class="text-capitalize">About (Arabic)</label>
+                                <label class="text-capitalize">About (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="about_english" data-translate-target="about_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <textarea id="elm2" class="form-control" name="about_arabic">{!!old('about_arabic', $partner->about_arabic)!!}</textarea>
                                 @error('about_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
@@ -224,7 +229,7 @@
                                 @error('mission_english')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-12">
-                                <label class="text-capitalize">Mission (Arabic)</label>
+                                <label class="text-capitalize">Mission (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="mission_english" data-translate-target="mission_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <textarea id="elm4" class="form-control" name="mission_arabic">{!!old('mission_arabic', $partner->mission_arabic)!!}</textarea>
                                 @error('mission_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
@@ -234,7 +239,7 @@
                                 @error('vision_english')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-12">
-                                <label class="text-capitalize">Vision (Arabic)</label>
+                                <label class="text-capitalize">Vision (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="vision_english" data-translate-target="vision_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <textarea id="elm6" class="form-control" name="vision_arabic">{!!old('vision_arabic', $partner->vision_arabic)!!}</textarea>
                                 @error('vision_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
@@ -256,7 +261,7 @@
                                 @error('seo_description_english')<span class="text-danger">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label>SEO Description (Arabic)</label>
+                                <label>SEO Description (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="seo_description_english" data-translate-target="seo_description_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <textarea name="seo_description_arabic" class="form-control" maxlength="225" rows="3">{{old('seo_description_arabic', $partner->seo_description_arabic)}}</textarea>
                                 @error('seo_description_arabic')<span class="text-danger">{{ $message }}</span>@enderror
                             </div>
@@ -283,6 +288,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script src="{{ asset('/js/tagify.min.js') }}"></script>
 <script src="{{ asset('/js/dropify.min.js') }}"></script>
 

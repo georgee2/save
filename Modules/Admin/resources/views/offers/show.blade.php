@@ -2,6 +2,7 @@
 @section('title', 'Offer Details')
 
 @section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
 <!-- SweetAlert2 CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <!-- Animate.css for SweetAlert2 animations -->
@@ -1493,6 +1494,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <!-- SweetAlert2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- Image Uploader JS -->

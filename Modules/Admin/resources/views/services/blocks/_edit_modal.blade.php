@@ -29,7 +29,7 @@
                         </div>
                         
                         <div class="form-group col-md-6">
-                            <label>Arabic Title <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                            <label>Arabic Title <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <button type="button" class="auto-translate-btn" data-translate-source="title_english" data-translate-target="title_arabic"><i class="fa fa-language"></i> Auto</button></label>
                             <input type="text" class="form-control" name="title_arabic" value="{{ $block->title_arabic }}" required>
                         </div>
                         
@@ -41,7 +41,7 @@
                         </div>
                         
                         <div class="form-group col-md-12 description-field" style="display: {{ $block->block_type === 'image_with_text' ? 'block' : 'none' }};">
-                            <label>Arabic Description <span class="required-indicator" style="display:{{ $block->block_type === 'image_with_text' ? 'inline' : 'none' }};"><i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></span> <small class="text-muted">(Max 1500 characters)</small></label>
+                            <label>Arabic Description <span class="required-indicator" style="display:{{ $block->block_type === 'image_with_text' ? 'inline' : 'none' }};"><i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></span> <small class="text-muted">(Max 1500 characters)</small> <button type="button" class="auto-translate-btn" data-translate-source="description_english" data-translate-target="description_arabic"><i class="fa fa-language"></i> Auto</button></label>
                             <textarea class="form-control block-desc-counter" name="description_arabic" rows="4" maxlength="1500" {{ $block->block_type === 'image_with_text' ? 'required' : '' }}>{{ $block->description_arabic }}</textarea>
                             <small class="text-muted"><span class="char-count-ar">{{ strlen($block->description_arabic ?? '') }}</span>/1500 characters</small>
                         </div>

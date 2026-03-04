@@ -2,6 +2,7 @@
 @section('title', 'Add Specification - ' . $offer->title_english)
 
 @section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
 <style>
     .form-section {
         background: #fff;
@@ -71,6 +72,7 @@
                         @else
                             <form action="{{ route('offer.floor.specification.store', ['offerId' => $offer->id, 'floorId' => $floor->id]) }}" method="POST">
                                 @csrf
+                                <button type="button" class="btn btn-translate-all mb-3" id="translateAllBtn"><i class="fa fa-language"></i> Translate All</button>
                                 
                                 <!-- Specification Selection -->
                                 <div class="form-section">
@@ -118,7 +120,7 @@
                                         </div>
                                         
                                         <div class="form-group col-md-6">
-                                            <label class="text-capitalize">Value (Arabic) <span class="text-danger">*</span></label>
+                                            <label class="text-capitalize">Value (Arabic) <span class="text-danger">*</span> <button type="button" class="auto-translate-btn" data-translate-source="value_english" data-translate-target="value_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                             <input class="form-control" value="{{old('value_arabic')}}" type="text" name="value_arabic" dir="rtl" required>
                                             <small class="form-text text-muted">Enter the specification value in Arabic</small>
                                             @error('value_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror
@@ -150,6 +152,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script>
     $(document).ready(function() {
         // Show specification preview when selected

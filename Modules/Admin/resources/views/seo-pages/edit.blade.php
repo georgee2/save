@@ -2,6 +2,7 @@
 @section('title', 'Edit SEO - ' . $seoPage->page_name)
 
 @section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
 <link rel="stylesheet" href="{{ asset('/css/tagify.css') }}">
 <style>
     :root {
@@ -122,6 +123,9 @@
 
                     <form action="{{ route('admin.seo-pages.update', $seoPage->id) }}" method="POST">
                         @csrf
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
 
                         {{-- SEO Title Section --}}
                         <div class="form-section">
@@ -141,7 +145,7 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>SEO Title (Arabic) <small>(Max 70 characters recommended)</small></label>
+                                        <label>SEO Title (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="seo_title_english" data-translate-target="seo_title_arabic"><i class="fa fa-language"></i> Auto</button> <small>(Max 70 characters recommended)</small></label>
                                         <input type="text" class="form-control char-counter-input" name="seo_title_arabic"
                                                value="{{ old('seo_title_arabic', $seoPage->seo_title_arabic) }}"
                                                maxlength="255" dir="rtl" id="seo_title_arabic"
@@ -170,7 +174,7 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>SEO Description (Arabic) <small>(Max 160 characters recommended)</small></label>
+                                        <label>SEO Description (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="seo_description_english" data-translate-target="seo_description_arabic"><i class="fa fa-language"></i> Auto</button> <small>(Max 160 characters recommended)</small></label>
                                         <textarea class="form-control char-counter-input" name="seo_description_arabic"
                                                   rows="4" maxlength="500" dir="rtl" id="seo_description_arabic"
                                                   placeholder="أدخل وصف الصفحة لمحركات البحث...">{{ old('seo_description_arabic', $seoPage->seo_description_arabic) }}</textarea>
@@ -224,6 +228,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script src="{{ asset('/js/tagify.min.js') }}"></script>
 <script>
 $(document).ready(function() {

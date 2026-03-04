@@ -47,7 +47,7 @@
                         <small class="form-text text-muted">Enter the value in English</small>
                     </div>
                     <div class="form-group">
-                        <label>Value (Arabic) <span class="text-danger">*</span></label>
+                        <label>Value (Arabic) <span class="text-danger">*</span> <button type="button" class="auto-translate-btn" data-translate-source="value_english" data-translate-target="value_arabic"><i class="fa fa-language"></i> Auto</button></label>
                         <input type="text" class="form-control" name="value_arabic" dir="rtl" required>
                         <small class="form-text text-muted">أدخل القيمة بالعربية</small>
                     </div>
@@ -87,7 +87,7 @@
                         <input type="text" class="form-control" name="value_english" id="edit_value_english" required>
                     </div>
                     <div class="form-group">
-                        <label>Value (Arabic) <span class="text-danger">*</span></label>
+                        <label>Value (Arabic) <span class="text-danger">*</span> <button type="button" class="auto-translate-btn" data-translate-source="edit_value_english" data-translate-target="edit_value_arabic"><i class="fa fa-language"></i> Auto</button></label>
                         <input type="text" class="form-control" name="value_arabic" id="edit_value_arabic" dir="rtl" required>
                     </div>
                 </div>

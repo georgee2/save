@@ -1,5 +1,8 @@
 @extends('admin::layouts.master')
 @section('title', 'Add New Card')
+@section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
+@endsection
 @section('content')
 <div class="page-content-wrapper">
     <div class="container-fluid">
@@ -44,6 +47,10 @@
                     
                     <form enctype="multipart/form-data" action="{{ route('card.store') }}" method="POST" id="cardForm">
                         @csrf
+                        
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
                         
                         <!-- Card Type & Home Block -->
                         <h5 class="mb-3 text-primary">Card Settings</h5>
@@ -106,7 +113,7 @@
                                     @error('title_english')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label class="text-capitalize">Arabic Title <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small class="text-muted">(Max 4 words)</small></label>
+                                    <label class="text-capitalize">Arabic Title <button type="button" class="auto-translate-btn" data-translate-source="title_english" data-translate-target="title_arabic"><i class="fa fa-language"></i> Auto</button> <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small class="text-muted">(Max 4 words)</small></label>
                                     <input class="form-control" value="{{old('title_arabic')}}" type="text" name="title_arabic" maxlength="100">
                                     <small class="text-muted">Character count: <span id="title_ar_count">0</span>/100</small>
                                     @error('title_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror
@@ -122,7 +129,7 @@
                                     @error('bio_english')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label class="text-capitalize">Bio (Arabic) <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small class="text-muted">(Max 150 characters)</small></label>
+                                    <label class="text-capitalize">Bio (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="bio_english" data-translate-target="bio_arabic"><i class="fa fa-language"></i> Auto</button> <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small class="text-muted">(Max 150 characters)</small></label>
                                     <textarea class="form-control" name="bio_arabic" rows="3" maxlength="150">{{old('bio_arabic')}}</textarea>
                                     <small class="text-muted">Character count: <span id="bio_ar_count">0</span>/150</small>
                                     @error('bio_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror
@@ -179,6 +186,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script src="{{ asset('/js/dropify.min.js') }}"></script>
 
 <script>

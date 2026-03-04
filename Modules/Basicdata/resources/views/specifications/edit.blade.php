@@ -1,5 +1,8 @@
 @extends('admin::layouts.master')
 @section('title', 'Edit Specification')
+@section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
+@endsection
 @section('content')
 <div class="page-content-wrapper">
     <div class="container-fluid">
@@ -30,6 +33,9 @@
                     <hr>
                     <form enctype="multipart/form-data" action="{{ route('specification.update', ['id' => $specification->id]) }}" method="POST">
                         @csrf
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label class="text-capitalize">English Title <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
@@ -39,7 +45,7 @@
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize">Arabic Title <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
+                                <label class="text-capitalize">Arabic Title <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <button type="button" class="auto-translate-btn" data-translate-source="title_english" data-translate-target="title_arabic"><i class="fa fa-language"></i> Auto</button></label>
                                 <input class="form-control" value="{{old('title_arabic', $specification->title_arabic)}}" type="text" name="title_arabic">
                                 @error('title_arabic')
                                 <span class="text-danger mt-1">{{ $message }}</span>
@@ -108,6 +114,7 @@
 </div>
 @endsection
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script src="{{ asset('/js/dropify.min.js') }}"></script>
 <script>
     $('.dropify').dropify();

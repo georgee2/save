@@ -51,6 +51,10 @@
                     <form action="{{ route('certificate.update', ['id' => $certificate->id]) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
+                        
                         <div class="row">
                             <!-- Name English -->
                             <div class="col-md-6">
@@ -69,7 +73,7 @@
                             <!-- Name Arabic -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="name_arabic">Name (Arabic) <span class="text-danger">*</span></label>
+                                    <label for="name_arabic">Name (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="name_english" data-translate-target="name_arabic"><i class="fa fa-language"></i> Auto</button> <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('name_arabic') is-invalid @enderror" 
                                            id="name_arabic" name="name_arabic" 
                                            value="{{ old('name_arabic', $certificate->name_arabic) }}" 
@@ -99,7 +103,7 @@
                             <!-- Bio Arabic -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="bio_arabic">Bio (Arabic) <small class="text-muted">(Max 300 characters)</small></label>
+                                    <label for="bio_arabic">Bio (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="bio_english" data-translate-target="bio_arabic"><i class="fa fa-language"></i> Auto</button> <small class="text-muted">(Max 300 characters)</small></label>
                                     <textarea class="form-control @error('bio_arabic') is-invalid @enderror" 
                                               id="bio_arabic" name="bio_arabic" rows="3" 
                                               placeholder="أدخل وصفًا قصيرًا بالعربية" dir="rtl" maxlength="300">{{ old('bio_arabic', $certificate->bio_arabic) }}</textarea>
@@ -182,6 +186,7 @@
 @endsection
 
 @section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css">
 <style>
     .dropify-wrapper {
@@ -210,6 +215,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script>
 <script>
 $(document).ready(function() {

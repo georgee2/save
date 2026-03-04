@@ -1,0 +1,58 @@
+<!-- Project Gallery Section -->
+<div class="card mt-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-images"></i> Project Gallery
+            <span class="badge badge-light text-primary ml-2" id="gallery-count">0</span>
+        </h5>
+    </div>
+    <div class="card-body">
+        <?php if(isset($errors) && $errors->any()): ?>
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <li><?php echo e($error); ?></li>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
+        <form action="<?php echo e(route('project-image.store', $project->id)); ?>" enctype="multipart/form-data" method="POST">
+            <?php echo csrf_field(); ?>
+            
+            <div class="form-group">
+                <label class="font-weight-bold">
+                    <i class="fas fa-upload"></i> Upload / Manage Gallery Images 
+                    <small class="text-muted">(1080px x 1080px)</small>
+                </label>
+                <div class="images mb-3"></div>
+                <small class="form-text text-muted">
+                    <i class="fas fa-info-circle"></i> 
+                    You can upload multiple images. Drag and drop to reorder. Click the X to remove an image. Images will be automatically resized to 1080x1080 and converted to WebP format with 80% quality.
+                </small>
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">
+                    <i class="fa fa-save"></i> Save Gallery
+                </button>
+                <button class="btn btn-secondary" type="button" onclick="location.reload()">
+                    <i class="fa fa-history"></i> Reset
+                </button>
+            </div>
+        </form>
+        
+        <!-- Saved Images Preview with Lightbox (Below Uploader) -->
+        <div class="saved-gallery-preview mt-4" id="savedGalleryPreview" style="display: none;">
+            <hr>
+            <label class="font-weight-bold d-block mb-3">
+                <i class="fas fa-eye text-primary"></i> Saved Images Preview 
+                <small class="text-muted">(Click to view full size - Same order as uploader)</small>
+            </label>
+            <div class="gallery-thumbs-grid" id="galleryPreviewRow">
+                <!-- Images will be loaded via JavaScript -->
+            </div>
+        </div>
+    </div>
+</div>
+<?php /**PATH C:\wamp64\www\smartvisionuae\Modules/Admin\resources/views/projects/images/_index.blade.php ENDPATH**/ ?>

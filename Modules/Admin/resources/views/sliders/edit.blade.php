@@ -2,6 +2,7 @@
 @section('title', 'Edit Slider')
 
 @section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
     .word-count {
@@ -90,6 +91,10 @@
                     <form action="{{ route('slider.update', ['id' => $slider->id]) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
+                        
                         {{-- Slider Type Selection --}}
                         <div class="slider-type-section">
                             <label class="mb-3"><strong>Slider Type</strong> <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i></label>
@@ -172,7 +177,7 @@
                                 <!-- Arabic Title -->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Arabic Title <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 4 Words)</small></label>
+                                        <label>Arabic Title <button type="button" class="auto-translate-btn" data-translate-source="title_english" data-translate-target="title_arabic"><i class="fa fa-language"></i> Auto</button> <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 4 Words)</small></label>
                                         <input type="text" class="form-control" name="title_arabic" value="{{ old('title_arabic', $slider->title_arabic) }}" maxlength="255" dir="rtl" id="title_arabic">
                                         <div class="word-count" id="title_arabic_count">0 / 4 words</div>
                                     </div>
@@ -192,7 +197,7 @@
                                 <!-- Arabic Bio -->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Arabic Bio <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 500 characters)</small></label>
+                                        <label>Arabic Bio <button type="button" class="auto-translate-btn" data-translate-source="bio_english" data-translate-target="bio_arabic"><i class="fa fa-language"></i> Auto</button> <i class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small>(Max 500 characters)</small></label>
                                         <textarea class="form-control" name="bio_arabic" rows="5" maxlength="500" dir="rtl" id="bio_arabic">{{ old('bio_arabic', $slider->bio_arabic) }}</textarea>
                                         <div class="word-count" id="bio_arabic_count">0 / 500 characters</div>
                                     </div>
@@ -212,7 +217,7 @@
                                 <!-- Arabic Button Text -->
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Button Text (Arabic) <small>(Optional, Max 2 Words)</small></label>
+                                        <label>Button Text (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="button_text_english" data-translate-target="button_text_arabic"><i class="fa fa-language"></i> Auto</button> <small>(Optional, Max 2 Words)</small></label>
                                         <input type="text" class="form-control" name="button_text_arabic" value="{{ old('button_text_arabic', $slider->button_text_arabic) }}" maxlength="50" dir="rtl" id="button_text_arabic">
                                         <div class="word-count" id="button_text_arabic_count">0 / 2 words</div>
                                     </div>
@@ -296,6 +301,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script src="{{ asset('/js/dropify.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 

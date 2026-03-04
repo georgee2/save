@@ -1,5 +1,8 @@
 @extends('admin::layouts.master')
 @section('title', 'Add New Home Block')
+@section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
+@endsection
 @section('content')
 <div class="page-content-wrapper">
     <div class="container-fluid">
@@ -44,6 +47,9 @@
                     
                     <form action="{{ route('homeblock.store') }}" method="POST">
                         @csrf
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
                         
                         <!-- Title Information -->
                         <h5 class="mb-3 text-primary">Title Information</h5>
@@ -55,7 +61,7 @@
                                 @error('title_english')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize">Arabic Title <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small class="text-muted">(Max 4 words)</small></label>
+                                <label class="text-capitalize">Arabic Title <button type="button" class="auto-translate-btn" data-translate-source="title_english" data-translate-target="title_arabic"><i class="fa fa-language"></i> Auto</button> <i title="Required" class="mdi mdi-18px mdi-alert-octagon text-danger"></i> <small class="text-muted">(Max 4 words)</small></label>
                                 <input class="form-control" value="{{old('title_arabic')}}" type="text" name="title_arabic" maxlength="100" required>
                                 <small class="text-muted">Character count: <span id="title_ar_count">0</span>/100</small>
                                 @error('title_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror
@@ -72,7 +78,7 @@
                                 @error('subtitle_english')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize">Arabic Subtitle <small class="text-muted">(Max 3 words - Optional)</small></label>
+                                <label class="text-capitalize">Arabic Subtitle <button type="button" class="auto-translate-btn" data-translate-source="subtitle_english" data-translate-target="subtitle_arabic"><i class="fa fa-language"></i> Auto</button> <small class="text-muted">(Max 3 words - Optional)</small></label>
                                 <input class="form-control" value="{{old('subtitle_arabic')}}" type="text" name="subtitle_arabic" maxlength="75">
                                 <small class="text-muted">Character count: <span id="subtitle_ar_count">0</span>/75</small>
                                 @error('subtitle_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror
@@ -89,7 +95,7 @@
                                 @error('button_text_english')<span class="text-danger mt-1">{{ $message }}</span>@enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label class="text-capitalize">Button Text (Arabic) <small class="text-muted">(Max 2 words - Optional)</small></label>
+                                <label class="text-capitalize">Button Text (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="button_text_english" data-translate-target="button_text_arabic"><i class="fa fa-language"></i> Auto</button> <small class="text-muted">(Max 2 words - Optional)</small></label>
                                 <input class="form-control" value="{{old('button_text_arabic')}}" type="text" name="button_text_arabic" maxlength="50">
                                 <small class="text-muted">Character count: <span id="btn_ar_count">0</span>/50</small>
                                 @error('button_text_arabic')<span class="text-danger mt-1">{{ $message }}</span>@enderror
@@ -153,6 +159,7 @@
 @endsection
 
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script>
     // Character counters
     document.addEventListener('DOMContentLoaded', function() {

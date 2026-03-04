@@ -78,6 +78,7 @@ use Modules\Admin\App\Http\Controllers\InteriorCategoryOrderController;
 use Modules\Admin\App\Http\Controllers\ContactPageSectionController;
 use Modules\Admin\App\Http\Controllers\AboutPageSectionController;
 use Modules\Admin\App\Http\Controllers\SeoPageController;
+use Modules\Admin\App\Http\Controllers\TranslationController;
 
 
 /*
@@ -100,6 +101,9 @@ Route::group(
 
             // Admin Dashboard Route
             Route::get('/', [AdminController::class, 'index'])->name('Admin');
+
+            // Translation API Route
+            Route::post('/translate', [TranslationController::class, 'translate'])->name('admin.translate');
 
 
 

@@ -1,5 +1,8 @@
 @extends('admin::layouts.master')
 @section('title', 'Edit Language Key')
+@section('css')
+<link rel="stylesheet" href="{{ asset('/css/auto-translate.css') }}">
+@endsection
 @section('content')
 <div class="page-content-wrapper">
     <div class="container-fluid">
@@ -45,6 +48,9 @@
                     
                     <form action="{{ route('language.update', ['key' => $language['key']]) }}" method="POST">
                         @csrf
+                        <div class="mb-3 text-right">
+                            <button type="button" class="translate-all-btn"><i class="fa fa-language"></i> Translate All to Arabic</button>
+                        </div>
                         
                         <!-- Language Key (Read-only) -->
                         <div class="row">
@@ -74,7 +80,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="arabic">Arabic Translation <span class="text-danger">*</span></label>
+                                    <label for="arabic">Arabic Translation <button type="button" class="auto-translate-btn" data-translate-source="english" data-translate-target="arabic"><i class="fa fa-language"></i> Auto</button> <span class="text-danger">*</span></label>
                                     <textarea class="form-control" id="arabic" name="arabic" rows="4" required style="direction: rtl; text-align: right;">{{ old('arabic', $language['arabic']) }}</textarea>
                                     <small class="form-text text-muted">أدخل الترجمة العربية لهذا المفتاح.</small>
                                 </div>
@@ -118,6 +124,7 @@
 </div>
 @endsection
 @section('js')
+<script src="{{ asset('/js/auto-translate.js') }}"></script>
 <script>
     // Live preview
     document.getElementById('english').addEventListener('input', function() {
