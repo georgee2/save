@@ -9,7 +9,26 @@
         return meta ? meta.getAttribute('content') : '';
     }
 
+    function getTinyEditor(el) {
+        if (typeof tinymce === 'undefined') return null;
+        if (!el.id) return null;
+        return tinymce.get(el.id) || null;
+    }
+
+    function getFieldValue(el) {
+        var editor = getTinyEditor(el);
+        if (editor) {
+            return editor.getContent({ format: 'text' }).trim();
+        }
+        return (el.value || '').trim();
+    }
+
     function setFieldValue(el, value) {
+        var editor = getTinyEditor(el);
+        if (editor) {
+            editor.setContent('<p>' + value.replace(/\n/g, '</p><p>') + '</p>');
+            return;
+        }
         if (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') {
             el.value = value;
             el.dispatchEvent(new Event('input', { bubbles: true }));
@@ -24,7 +43,7 @@
 
         if (!sourceEl || !targetEl) return;
 
-        var text = sourceEl.value.trim();
+        var text = getFieldValue(sourceEl);
         if (!text) {
             targetEl.focus();
             return;
@@ -78,7 +97,7 @@
             if (i >= btns.length) return;
             var btn = btns[i];
             var sourceEl = document.querySelector('[name="' + btn.getAttribute('data-translate-source') + '"]');
-            if (sourceEl && sourceEl.value.trim()) {
+            if (sourceEl && getFieldValue(sourceEl)) {
                 translateFieldWithCallback(btn, function() {
                     i++;
                     setTimeout(next, 300);
@@ -99,7 +118,7 @@
 
         if (!sourceEl || !targetEl) { callback(); return; }
 
-        var text = sourceEl.value.trim();
+        var text = getFieldValue(sourceEl);
         if (!text) { callback(); return; }
 
         var icon = btn.querySelector('i');
