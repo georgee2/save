@@ -141,7 +141,7 @@
 
                         <div class="form-group col-md-12">
                             <label class="text-capitalize">Arabic Body <button type="button" class="auto-translate-btn" data-translate-source="body_english" data-translate-target="body_arabic"><i class="fa fa-language"></i> Auto</button></label>
-                           <textarea id="elm1" class="form-control" name="body_arabic">{!!$News->body_arabic!!}</textarea>
+                           <textarea id="elm2" class="form-control" name="body_arabic">{!!$News->body_arabic!!}</textarea>
                             @error('body_arabic')
                             <span class="text-danger mt-1">{{ $message }}</span>
                             @enderror
