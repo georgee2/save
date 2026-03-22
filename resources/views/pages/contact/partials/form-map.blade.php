@@ -38,6 +38,10 @@
                     
                     <form action="{{ route('contact.store') }}" method="POST" class="contact-form" id="contactForm">
                         @csrf
+                        <input type="hidden" name="_form_loaded" value="{{ time() }}">
+                        <div style="position:absolute;left:-9999px;opacity:0;height:0;width:0;overflow:hidden;" aria-hidden="true">
+                            <input type="text" name="website_url" tabindex="-1" autocomplete="off" value="">
+                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -103,6 +107,7 @@
                             @enderror
                         </div>
                         
+                        <input type="hidden" name="g-recaptcha-response" id="contactRecaptchaToken">
                         <button type="submit" class="btn btn-submit">
                             <i class="fas fa-paper-plane mr-2"></i> {{ __('lang.send_message') }}
                         </button>

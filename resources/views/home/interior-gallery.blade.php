@@ -67,6 +67,9 @@
                     $shareUrl = route('interior.index');
                     $shareImage = url('/storage' . $item->image);
                 @endphp
+                <button class="btn-favourite" data-type="interior" data-id="{{ $item->id }}" title="{{ __('lang.add_to_favourites') }}">
+                    <i class="fal fa-heart"></i>
+                </button>
                 <div class="interior-share-badge" onclick="event.stopPropagation();">
                     <div class="share-actions">
                         <div class="share-slide-wrapper">
@@ -144,6 +147,10 @@
                         <div class="view-btn">
                             <i class="fas fa-expand"></i>
                         </div>
+                        
+                        <button class="btn-favourite" data-type="interior" data-id="{{ $item->id }}" title="{{ __('lang.add_to_favourites') }}">
+                            <i class="fal fa-heart"></i>
+                        </button>
                         
                         <div class="card-content">
                             @if($item->category)
@@ -231,7 +238,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Open modal on card click
     galleryCards.forEach(card => {
-        card.addEventListener('click', function() {
+        card.addEventListener('click', function(e) {
+            if (e.target.closest('.btn-favourite') || e.target.closest('.interior-share-badge')) return;
             const image = this.dataset.image;
             const category = this.dataset.category;
             const style = this.dataset.style;

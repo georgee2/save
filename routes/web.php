@@ -20,6 +20,7 @@ use App\Http\Controllers\PartnerPageController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\InteriorGalleryController;
 use App\Http\Controllers\GlobalSearchController;
+use App\Http\Controllers\FavouriteController;
 
 
 
@@ -133,7 +134,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 
 	// Contact Routes
 	Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-	Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+	Route::post('/contact', [ContactController::class, 'store'])->name('contact.store')->middleware('throttle:5,1');
 
 	// Careers Routes Group
 	Route::prefix('careers')->name('careers.')->group(function () {
@@ -151,6 +152,17 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 
 	// HTML Sitemap
 	Route::get('/sitemap', [SitemapController::class, 'html'])->name('sitemap.html');
+
+	// Favourites
+	Route::prefix('favourites')->group(function () {
+		Route::get('/', [FavouriteController::class, 'index'])->name('favourites.index');
+		Route::post('/toggle', [FavouriteController::class, 'toggle'])->name('favourites.toggle');
+		Route::delete('/clear/all', [FavouriteController::class, 'clear'])->name('favourites.clear');
+		Route::get('/count', [FavouriteController::class, 'count'])->name('favourites.count');
+		Route::get('/shared/{token}', [FavouriteController::class, 'shared'])->name('favourites.shared');
+		Route::post('/send-email', [FavouriteController::class, 'sendEmail'])->name('favourites.sendEmail');
+		Route::delete('/{id}', [FavouriteController::class, 'remove'])->name('favourites.remove');
+	});
 
 });
 

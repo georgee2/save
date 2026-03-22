@@ -160,12 +160,17 @@
                             <?php echo e(number_format($project->sqft)); ?> <span class="text-gray-light font-weight-500 fs-14"><?php echo e(__('lang.sqft')); ?></span>
                             <?php endif; ?>
                         </p>
-                        <a href="<?php echo e(route('projects.show', $project->slug)); ?>" 
-                           class="btn btn-primary btn-sm px-4 py-2 rounded-lg">
-                            <?php echo e(__('lang.view_project')); ?>
+                        <div class="d-flex align-items-center">
+                            <button class="btn-favourite" data-type="project" data-id="<?php echo e($project->id); ?>" title="<?php echo e(__('lang.add_to_favourites')); ?>">
+                                <i class="fal fa-heart"></i>
+                            </button>
+                            <a href="<?php echo e(route('projects.show', $project->slug)); ?>" 
+                               class="btn btn-primary btn-sm px-4 py-2 rounded-lg ml-2">
+                                <?php echo e(__('lang.view_project')); ?>
 
-                            <i class="far fa-long-arrow-right ml-1"></i>
-                        </a>
+                                <i class="far fa-long-arrow-right ml-1"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

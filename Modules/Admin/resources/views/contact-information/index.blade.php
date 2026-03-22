@@ -276,6 +276,33 @@
                             </div>
                         </div>
                         
+                        <!-- Contact Form Confirmation Email Section -->
+                        <div class="form-section">
+                            <h5><i class="fa fa-envelope"></i> Contact Form Confirmation Email</h5>
+                            <p class="text-muted mb-3" style="font-size:13px;">
+                                <i class="fa fa-info-circle"></i> This message will be sent to users after they submit the contact form. The email will automatically include WhatsApp, phone, branches, and website links. Leave empty to use the default message.
+                            </p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Confirmation Email Body (English) <small>(Max 2000 characters)</small></label>
+                                        <textarea class="form-control char-counter" name="confirmation_email_body_en" rows="6" maxlength="2000" id="confirmation_email_body_en" placeholder="Thank you for reaching out to us!&#10;&#10;We have received your message and our team will get back to you as soon as possible.&#10;&#10;We appreciate your interest in our services and look forward to working with you.">{{ old('confirmation_email_body_en', $contactInfo->confirmation_email_body_en) }}</textarea>
+                                        <div class="char-count" id="confirmation_email_body_en_count">0 / 2000 characters</div>
+                                        @error('confirmation_email_body_en')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Confirmation Email Body (Arabic) <small>(Max 2000 characters)</small> <button type="button" class="auto-translate-btn" data-translate-source="confirmation_email_body_en" data-translate-target="confirmation_email_body_ar"><i class="fa fa-language"></i> Auto</button></label>
+                                        <textarea class="form-control char-counter" name="confirmation_email_body_ar" rows="6" maxlength="2000" dir="rtl" id="confirmation_email_body_ar" placeholder="شكراً لتواصلك معنا!&#10;&#10;لقد استلمنا رسالتك وسيقوم فريقنا بالرد عليك في أقرب وقت ممكن.&#10;&#10;نقدر اهتمامك بخدماتنا ونتطلع للعمل معك.">{{ old('confirmation_email_body_ar', $contactInfo->confirmation_email_body_ar) }}</textarea>
+                                        <div class="char-count" id="confirmation_email_body_ar_count">0 / 2000 characters</div>
+                                        @error('confirmation_email_body_ar')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <hr>
                         
                         <div class="form-group text-center">
@@ -339,6 +366,8 @@
         updateCharCount('footer_bio_arabic', 'footer_bio_arabic_count', 250);
         updateCharCount('seo_description_english', 'seo_description_english_count', 500);
         updateCharCount('seo_description_arabic', 'seo_description_arabic_count', 500);
+        updateCharCount('confirmation_email_body_en', 'confirmation_email_body_en_count', 2000);
+        updateCharCount('confirmation_email_body_ar', 'confirmation_email_body_ar_count', 2000);
     });
 </script>
 @endsection

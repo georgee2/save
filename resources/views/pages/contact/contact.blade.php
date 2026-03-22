@@ -37,9 +37,11 @@
 @section('js')
 <!-- SweetAlert2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@if(config('services.recaptcha.site_key'))
+<script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
+@endif
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Show success message with SweetAlert
     @if(session('success'))
         Swal.fire({
             icon: 'success',
@@ -52,7 +54,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     @endif
     
-    // Show error message with SweetAlert
     @if($errors->any())
         Swal.fire({
             icon: 'error',
@@ -63,48 +64,46 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     @endif
     
-    // Form submission with loading state
-    const contactForm = document.getElementById('contactForm');
+    var recaptchaSiteKey = '{{ config("services.recaptcha.site_key") }}';
+
+    var contactForm = document.getElementById('contactForm');
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
-            const submitBtn = this.querySelector('.btn-submit');
-            const originalText = submitBtn.innerHTML;
-            
-            // Show loading state
+            var submitBtn = this.querySelector('.btn-submit');
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> {{ __("lang.sending") }}...';
             submitBtn.disabled = true;
             
-            // Show loading SweetAlert
             Swal.fire({
                 title: '{{ __("lang.sending_message") }}',
                 html: '{{ __("lang.please_wait") }}',
                 allowOutsideClick: false,
                 allowEscapeKey: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
+                didOpen: function() { Swal.showLoading(); }
             });
+
+            if (recaptchaSiteKey && typeof grecaptcha !== 'undefined') {
+                e.preventDefault();
+                grecaptcha.ready(function() {
+                    grecaptcha.execute(recaptchaSiteKey, {action: 'contact_form'}).then(function(token) {
+                        document.getElementById('contactRecaptchaToken').value = token;
+                        contactForm.submit();
+                    });
+                });
+            }
         });
     }
     
-    // Animate elements on scroll for branches section
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
+    var observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
             if (entry.isIntersecting) {
-                const delay = entry.target.getAttribute('data-delay') || 0;
-                setTimeout(() => {
-                    entry.target.classList.add('animated');
-                }, delay);
+                var delay = entry.target.getAttribute('data-delay') || 0;
+                setTimeout(function() { entry.target.classList.add('animated'); }, delay);
             }
         });
     }, observerOptions);
     
-    document.querySelectorAll('[data-animate]').forEach(el => {
+    document.querySelectorAll('[data-animate]').forEach(function(el) {
         observer.observe(el);
     });
 });

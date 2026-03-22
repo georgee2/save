@@ -34,7 +34,22 @@
                                 </ul>
                             </li>
 
+                            <li>
+                                <a href="{{route('crm-favourites.index')}}" class="waves-effect"><i class="mdi mdi-18px mdi-heart"></i><span> Favourites</span></a>
+                            </li>
 
+                            <li>
+                                <a href="{{route('crm-contact-us.index')}}" class="waves-effect"><i class="mdi mdi-18px mdi-email"></i><span> Contact Us</span></a>
+                            </li>
+
+                            <li class="has_sub">
+                                <a href="javascript:void(0);" class="waves-effect"><i class="mdi mdi-18px mdi-account-star"></i><span> Agents <span class="float-right"><i class="mdi mdi-chevron-right"></i></span> </span></a>
+                                <ul class="list-unstyled">
+                                    <li><a href="{{route('crm-agents.create')}}">Add New Agent</a></li>
+                                    <li><a href="{{route('crm-agents.index')}}">Agents List</a></li>
+                                    <li><a href="{{route('crm-agents.trashed')}}">Trashed Agents</a></li>
+                                </ul>
+                            </li>
 
 
 

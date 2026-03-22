@@ -468,6 +468,7 @@
                                 <div class="emirate-item {{ $offer->selected_price && $offer->selected_price->emirate_id == $priceItem->emirate_id ? 'active-emirate' : '' }}" 
                                      data-emirate-id="{{ $priceItem->emirate_id }}"
                                      data-price="{{ number_format($priceItem->price) }}"
+                                     data-raw-price="{{ $priceItem->price }}"
                                      data-emirate-name="{{ app()->getLocale() == 'ar' ? $priceItem->emirate->title_arabic : $priceItem->emirate->title_english }}">
                                     <div class="emirate-icon-wrapper">
                                         @if($priceItem->emirate->icon)
@@ -512,6 +513,17 @@
                             @endif
                         </div>
                         
+                        {{-- Favourite Button --}}
+                        <div class="pt-3 border-top mb-3">
+                            <button class="btn-favourite" style="width:auto;border-radius:50px;padding:8px 20px;gap:8px;font-size:14px;"
+                                    data-type="offer" data-id="{{ $offer->id }}"
+                                    data-emirate="{{ $offer->selected_price->emirate_id ?? ($offer->prices->first()->emirate_id ?? '') }}"
+                                    data-price="{{ $offer->selected_price->price ?? ($offer->prices->first()->price ?? '') }}"
+                                    title="{{ __('lang.add_to_favourites') }}">
+                                <i class="fal fa-heart"></i> {{ __('lang.add_to_favourites') }}
+                            </button>
+                        </div>
+
                         {{-- Share Buttons --}}
                         @php
                             $shareTitle = app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english;
@@ -766,6 +778,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 el.classList.remove('active-emirate');
             });
             this.classList.add('active-emirate');
+
+            // Update favourite button with selected emirate and price
+            var favBtn = document.querySelector('.btn-favourite[data-type="offer"]');
+            if (favBtn) {
+                favBtn.setAttribute('data-emirate', emirateId);
+                favBtn.setAttribute('data-price', this.getAttribute('data-raw-price') || '');
+            }
             
             // Update Feasibility Studies section based on selected emirate
             updateFeasibilityStudies(emirateId, emirateName);

@@ -4,6 +4,9 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="favourites-count-url" content="/{{ app()->getLocale() }}/favourites/count">
+        <meta name="favourites-toggle-url" content="/{{ app()->getLocale() }}/favourites/toggle">
         <meta content="@yield('seo_desc')" name="description">
         <meta content="@yield('seo_tags')" name="keywords">
         <title>@yield('title' , env('APP_NAME'))</title>
@@ -123,6 +126,8 @@
           <link rel="stylesheet" href="{{asset('/assets/css/arabic-global.css')}}?v={{ time() }}">
           @endif
           
+          <!-- Favourites CSS -->
+          <link rel="stylesheet" href="{{asset('/assets/css/favourites.css')}}?v=1.1">
           {{-- SweetAlert2 CSS - Global --}}
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
@@ -226,6 +231,9 @@
    
     {{-- SweetAlert2 - Global --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Favourites JS -->
+    <script src="{{ asset('/js/favourites.js') }}?v=1.1" defer></script>
     
     @yield('js')
 

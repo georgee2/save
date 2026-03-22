@@ -37,9 +37,11 @@ class ContactInformationController extends Controller
             'location_map' => 'nullable|string',
             'footer_bio_english' => 'nullable|string|max:250',
             'footer_bio_arabic' => 'nullable|string|max:250',
-            'tags' => 'nullable', // Tagify JSON format
+            'tags' => 'nullable',
             'seo_description_english' => 'nullable|string|max:500',
             'seo_description_arabic' => 'nullable|string|max:500',
+            'confirmation_email_body_en' => 'nullable|string|max:2000',
+            'confirmation_email_body_ar' => 'nullable|string|max:2000',
         ]);
         
         $data = $request->except('tags');

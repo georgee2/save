@@ -107,6 +107,10 @@
                     <form action="{{ route('contact.store') }}" method="POST" class="inline-contact-form" id="inlineContactForm">
                         @csrf
                         <input type="hidden" name="source" value="home_inline">
+                        <input type="hidden" name="_form_loaded" value="{{ time() }}">
+                        <div style="position:absolute;left:-9999px;opacity:0;height:0;width:0;overflow:hidden;" aria-hidden="true">
+                            <input type="text" name="website_url" tabindex="-1" autocomplete="off" value="">
+                        </div>
                         
                         <div class="row">
                             <div class="col-md-6">
@@ -153,6 +157,7 @@
                             </div>
                         </div>
                         
+                        <input type="hidden" name="g-recaptcha-response" id="inlineRecaptchaToken">
                         <div class="form-actions">
                             <button type="button" class="btn-cancel-inline" id="cancelContactForm">
                                 <i class="fas fa-times"></i>
@@ -171,6 +176,9 @@
 </section>
 
 {{-- Inline Contact Form Script --}}
+@if(config('services.recaptcha.site_key'))
+<script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
+@endif
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var toggleBtn = document.getElementById('toggleContactForm');
@@ -179,6 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var popup = document.getElementById('inlineContactPopup');
     var overlay = document.getElementById('inlinePopupOverlay');
     var contactForm = document.getElementById('inlineContactForm');
+    var recaptchaSiteKey = '{{ config("services.recaptcha.site_key") }}';
     
     function openPopup() {
         popup.classList.add('active');
@@ -216,59 +225,73 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    function submitInlineForm(formData) {
+        var submitBtn = contactForm.querySelector('.btn-submit-inline');
+        var originalContent = submitBtn.innerHTML;
+
+        fetch(contactForm.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalContent;
+            
+            if (data.success) {
+                closePopup();
+                contactForm.reset();
+                Swal.fire({
+                    icon: 'success',
+                    title: '{{ __("lang.success") ?? "Success" }}',
+                    text: data.message || '{{ __("lang.message_sent_successfully") ?? "Message sent!" }}',
+                    confirmButtonColor: '#19868b'
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: '{{ __("lang.error") ?? "Error" }}',
+                    text: data.message || '{{ __("lang.something_went_wrong") ?? "Something went wrong" }}',
+                    confirmButtonColor: '#e1273d'
+                });
+            }
+        })
+        .catch(function() {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalContent;
+            Swal.fire({
+                icon: 'error',
+                title: '{{ __("lang.error") ?? "Error" }}',
+                text: '{{ __("lang.something_went_wrong") ?? "Something went wrong" }}',
+                confirmButtonColor: '#e1273d'
+            });
+        });
+    }
+
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
             var submitBtn = contactForm.querySelector('.btn-submit-inline');
-            var originalContent = submitBtn.innerHTML;
-            
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>{{ __("lang.sending") ?? "Sending" }}...</span>';
             
             var formData = new FormData(contactForm);
-            
-            fetch(contactForm.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                }
-            })
-            .then(function(response) { return response.json(); })
-            .then(function(data) {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalContent;
-                
-                if (data.success) {
-                    closePopup();
-                    contactForm.reset();
-                    Swal.fire({
-                        icon: 'success',
-                        title: '{{ __("lang.success") ?? "Success" }}',
-                        text: data.message || '{{ __("lang.message_sent_successfully") ?? "Message sent!" }}',
-                        confirmButtonColor: '#19868b'
+
+            if (recaptchaSiteKey && typeof grecaptcha !== 'undefined') {
+                grecaptcha.ready(function() {
+                    grecaptcha.execute(recaptchaSiteKey, {action: 'home_contact'}).then(function(token) {
+                        formData.set('g-recaptcha-response', token);
+                        submitInlineForm(formData);
                     });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: '{{ __("lang.error") ?? "Error" }}',
-                        text: data.message || '{{ __("lang.something_went_wrong") ?? "Something went wrong" }}',
-                        confirmButtonColor: '#e1273d'
-                    });
-                }
-            })
-            .catch(function(error) {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalContent;
-                Swal.fire({
-                    icon: 'error',
-                    title: '{{ __("lang.error") ?? "Error" }}',
-                    text: '{{ __("lang.something_went_wrong") ?? "Something went wrong" }}',
-                    confirmButtonColor: '#e1273d'
                 });
-            });
+            } else {
+                submitInlineForm(formData);
+            }
         });
     }
 });
