@@ -187,3 +187,11 @@ body.scrolled {
     }
 }
 
+/* Ensure lightbox appears above all fixed headers */
+.mfp-bg {
+    z-index: 99999992 !important;
+}
+.mfp-wrap {
+    z-index: 99999993 !important;
+}
+

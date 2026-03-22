@@ -262,10 +262,15 @@
                         {{ number_format($project->sqft) }} <span class="text-gray-light font-weight-500 fs-14">{{ __('lang.sqft') }}</span>
                         @endif
                       </p>
-                      <a href="{{ route('projects.show', $project->slug) }}" class="btn btn-primary btn-sm px-4 py-2 rounded-lg">
-                        {{ __('lang.view_project') }}
-                        <i class="far fa-long-arrow-right ml-1"></i>
-                      </a>
+                      <div class="d-flex align-items-center">
+                        <button type="button" class="btn-favourite mr-2" data-type="project" data-id="{{ $project->id }}" title="{{ __('lang.add_to_favourites') }}">
+                            <i class="fal fa-heart"></i>
+                        </button>
+                        <a href="{{ route('projects.show', $project->slug) }}" class="btn btn-primary btn-sm px-4 py-2 rounded-lg">
+                          {{ __('lang.view_project') }}
+                          <i class="far fa-long-arrow-right ml-1"></i>
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -362,10 +367,15 @@
                               {{ number_format($project->sqft) }} <span class="text-gray-light font-weight-500 fs-14">{{ __('lang.sqft') }}</span>
                               @endif
                             </p>
-                            <a href="{{ route('projects.show', $project->slug) }}" class="btn btn-primary btn-sm px-4 py-2 rounded-lg">
-                              {{ __('lang.view_details') }}
-                              <i class="far fa-long-arrow-right ml-1"></i>
-                            </a>
+                            <div class="d-flex align-items-center">
+                              <button type="button" class="btn-favourite mr-2" data-type="project" data-id="{{ $project->id }}" title="{{ __('lang.add_to_favourites') }}">
+                                  <i class="fal fa-heart"></i>
+                              </button>
+                              <a href="{{ route('projects.show', $project->slug) }}" class="btn btn-primary btn-sm px-4 py-2 rounded-lg">
+                                {{ __('lang.view_details') }}
+                                <i class="far fa-long-arrow-right ml-1"></i>
+                              </a>
+                            </div>
                           </div>
                         </div>
                       </div>

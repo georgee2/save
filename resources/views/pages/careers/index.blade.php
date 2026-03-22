@@ -34,6 +34,8 @@
     </div>
 </section>
 
+@if($jobs->count() > 0)
+
 {{-- Intro Section --}}
 <section class="careers-intro-section py-12">
     <div class="container">
@@ -101,7 +103,6 @@
             <p class="section-subtitle">{{ __('lang.find_your_role') }}</p>
         </div>
 
-        @if($jobs->count() > 0)
         <div class="jobs-grid">
             @foreach($jobs as $job)
             <div class="job-card" data-animate="fadeInUp">
@@ -160,20 +161,6 @@
         @if($jobs->hasPages())
         <div class="careers-pagination mt-8">
             {{ $jobs->links() }}
-        </div>
-        @endif
-
-        @else
-        <div class="no-jobs-found text-center py-10">
-            <div class="no-jobs-icon">
-                <i class="fal fa-briefcase"></i>
-            </div>
-            <h3>{{ __('lang.no_open_positions') }}</h3>
-            <p class="text-muted">{{ __('lang.no_positions_desc') }}</p>
-            <a href="{{ route('contact') }}" class="btn-submit-resume mt-4">
-                <i class="fal fa-paper-plane mr-2"></i>
-                {{ __('lang.submit_resume') }}
-            </a>
         </div>
         @endif
     </div>
@@ -245,6 +232,27 @@
         </div>
     </div>
 </section>
+
+@else
+
+{{-- No Jobs Available --}}
+<section class="py-12">
+    <div class="container">
+        <div class="text-center py-10">
+            <div style="font-size: 80px; color: #dee2e6; margin-bottom: 30px;">
+                <i class="fal fa-briefcase"></i>
+            </div>
+            <h2 style="color: #2c3e50; font-weight: 600; margin-bottom: 15px;">{{ __('lang.no_open_positions') }}</h2>
+            <p style="color: #6c757d; font-size: 18px; max-width: 500px; margin: 0 auto 30px;">{{ __('lang.no_positions_desc') }}</p>
+            <a href="{{ route('contact') }}" class="btn" style="background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%); color: white; padding: 12px 30px; border-radius: 8px; font-weight: 500; font-size: 16px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                <i class="fal fa-envelope"></i>
+                {{ __('lang.contact_us') }}
+            </a>
+        </div>
+    </div>
+</section>
+
+@endif
 
 @endsection
 

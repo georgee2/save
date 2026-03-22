@@ -303,10 +303,18 @@
                                     {{ number_format($offer->sqft) }} <span class="text-gray-light font-weight-500 fs-14">{{ __('lang.sqft') }}</span>
                                     @endif
                                 </p>
-                                <a href="{{ $offerUrl($offer->slug) }}" class="btn btn-primary btn-sm px-4 py-2 rounded-lg">
-                                    {{ __('lang.view_offer') }}
-                                    <i class="far fa-long-arrow-right ml-1"></i>
-                                </a>
+                                <div class="d-flex align-items-center">
+                                    <button class="btn-favourite mr-2" type="button" data-type="offer" data-id="{{ $offer->id }}"
+                                            data-emirate="{{ optional($offer->default_price)->emirate_id ?? '' }}"
+                                            data-price="{{ optional($offer->default_price)->price ?? '' }}"
+                                            title="{{ __('lang.add_to_favourites') }}">
+                                        <i class="fal fa-heart"></i>
+                                    </button>
+                                    <a href="{{ $offerUrl($offer->slug) }}" class="btn btn-primary btn-sm px-4 py-2 rounded-lg">
+                                        {{ __('lang.view_offer') }}
+                                        <i class="far fa-long-arrow-right ml-1"></i>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -415,10 +423,18 @@
                                                 {{ number_format($offer->sqft) }} <span class="text-gray-light font-weight-500 fs-14">{{ __('lang.sqft') }}</span>
                                                 @endif
                                             </p>
-                                            <a href="{{ $offerUrl($offer->slug) }}" class="btn btn-primary btn-sm px-4 py-2 rounded-lg">
-                                                {{ __('lang.view_offer') }}
-                                                <i class="far fa-long-arrow-right ml-1"></i>
-                                            </a>
+                                            <div class="d-flex align-items-center">
+                                                <button class="btn-favourite mr-2" type="button" data-type="offer" data-id="{{ $offer->id }}"
+                                                        data-emirate="{{ optional($offer->default_price)->emirate_id ?? '' }}"
+                                                        data-price="{{ optional($offer->default_price)->price ?? '' }}"
+                                                        title="{{ __('lang.add_to_favourites') }}">
+                                                    <i class="fal fa-heart"></i>
+                                                </button>
+                                                <a href="{{ $offerUrl($offer->slug) }}" class="btn btn-primary btn-sm px-4 py-2 rounded-lg">
+                                                    {{ __('lang.view_offer') }}
+                                                    <i class="far fa-long-arrow-right ml-1"></i>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

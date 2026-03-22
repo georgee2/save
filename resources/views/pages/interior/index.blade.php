@@ -157,6 +157,9 @@
                             $shareUrl = route('interior.index');
                             $shareImage = url('/storage' . $item->image);
                         @endphp
+                        <button class="btn-favourite" data-type="interior" data-id="{{ $item->id }}" title="{{ __('lang.add_to_favourites') }}">
+                            <i class="fal fa-heart"></i>
+                        </button>
                         <div class="interior-share-badge" onclick="event.stopPropagation();">
                             <div class="share-actions">
                                 <div class="share-slide-wrapper">
@@ -426,7 +429,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const relatedProjectContainer = document.getElementById('relatedProjectContainer');
     
     galleryCards.forEach(card => {
-        card.addEventListener('click', function() {
+        card.addEventListener('click', function(e) {
+            if (e.target.closest('.btn-favourite') || e.target.closest('.interior-share-badge')) return;
             const image = this.dataset.image;
             const category = this.dataset.category;
             const style = this.dataset.style;

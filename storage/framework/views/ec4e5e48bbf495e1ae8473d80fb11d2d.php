@@ -28,14 +28,14 @@
         </button>
         
         
-        <div class="mobile-bottom-nav-item wishlist-item">
+        <a href="<?php echo e(route('favourites.index')); ?>" class="mobile-bottom-nav-item <?php echo e(Route::currentRouteName() == 'favourites.index' ? 'active' : ''); ?>">
             <div class="nav-icon">
                 <i class="fal fa-heart"></i>
                 <i class="fas fa-heart active-icon"></i>
             </div>
-            <span class="nav-label"><?php echo e(__('lang.wishlist') ?? 'Wishlist'); ?></span>
-            <span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
-        </div>
+            <span class="nav-label"><?php echo e(__('lang.favourites')); ?></span>
+            <span class="favourite-badge" style="display: none;">0</span>
+        </a>
         
         
         <div class="mobile-bottom-nav-item login-item">

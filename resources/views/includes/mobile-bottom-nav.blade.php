@@ -27,15 +27,15 @@
             <span class="nav-label">{{ __('lang.contact') }}</span>
         </button>
         
-        {{-- Wishlist (No Link) --}}
-        <div class="mobile-bottom-nav-item wishlist-item">
+        {{-- Favourites --}}
+        <a href="{{ route('favourites.index') }}" class="mobile-bottom-nav-item {{ Route::currentRouteName() == 'favourites.index' ? 'active' : '' }}">
             <div class="nav-icon">
                 <i class="fal fa-heart"></i>
                 <i class="fas fa-heart active-icon"></i>
             </div>
-            <span class="nav-label">{{ __('lang.wishlist') ?? 'Wishlist' }}</span>
-            <span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
-        </div>
+            <span class="nav-label">{{ __('lang.favourites') }}</span>
+            <span class="favourite-badge" style="display: none;">0</span>
+        </a>
         
         {{-- Login/Register (No Link) --}}
         <div class="mobile-bottom-nav-item login-item">

@@ -4,6 +4,9 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+        <meta name="favourites-count-url" content="/<?php echo e(app()->getLocale()); ?>/favourites/count">
+        <meta name="favourites-toggle-url" content="/<?php echo e(app()->getLocale()); ?>/favourites/toggle">
         <meta content="<?php echo $__env->yieldContent('seo_desc'); ?>" name="description">
         <meta content="<?php echo $__env->yieldContent('seo_tags'); ?>" name="keywords">
         <title><?php echo $__env->yieldContent('title' , env('APP_NAME')); ?></title>
@@ -123,6 +126,8 @@
           <link rel="stylesheet" href="<?php echo e(asset('/assets/css/arabic-global.css')); ?>?v=<?php echo e(time()); ?>">
           <?php endif; ?>
           
+          <!-- Favourites CSS -->
+          <link rel="stylesheet" href="<?php echo e(asset('/assets/css/favourites.css')); ?>?v=1.1">
           
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
@@ -226,6 +231,9 @@
    
     
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Favourites JS -->
+    <script src="<?php echo e(asset('/js/favourites.js')); ?>?v=1.1" defer></script>
     
     <?php echo $__env->yieldContent('js'); ?>
 

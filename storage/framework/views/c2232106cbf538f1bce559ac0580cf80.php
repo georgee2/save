@@ -1,0 +1,1287 @@
+<?php
+    $projectTitle = app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english;
+    $projectDesc = $project->seo_desc ?? (app()->getLocale() == 'ar' ? $project->bio_arabic : $project->bio_english);
+    $projectImage = url('/storage' . $project->main_image);
+    $projectCategory = $project->category ? (app()->getLocale() == 'ar' ? $project->category->title_arabic : $project->category->title_english) : '';
+    $projectSubcategory = $project->subcategory ? (app()->getLocale() == 'ar' ? $project->subcategory->title_arabic : $project->subcategory->title_english) : '';
+    $projectSqft = $project->sqft ? number_format($project->sqft) . ' ' . __('lang.sqft') : '';
+    $ogDescription = $projectDesc;
+    if($projectSqft || $projectCategory) {
+        $ogDescription = ($projectSqft ? $projectSqft . ' | ' : '') . ($projectCategory ? $projectCategory . ' | ' : '') . $projectDesc;
+    }
+?>
+
+<?php $__env->startSection('title', $projectTitle); ?>
+<?php $__env->startSection('seo_desc', $projectDesc); ?>
+<?php $__env->startSection('seo_tags', $project->seo_tags ?? $projectTitle); ?>
+
+
+<?php $__env->startSection('og_title', $projectTitle . ($projectCategory ? ' - ' . $projectCategory : '')); ?>
+<?php $__env->startSection('og_description', $ogDescription); ?>
+<?php $__env->startSection('og_image', $projectImage); ?>
+<?php $__env->startSection('og_type', 'article'); ?>
+
+<?php $__env->startSection('meta_tags'); ?>
+
+<?php if($project->project_code): ?>
+<meta property="product:retailer_item_id" content="<?php echo e($project->project_code); ?>">
+<?php endif; ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+
+	
+
+      <section class="pb-7 shadow-5">
+        <div class="container">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb py-3">
+              <li class="breadcrumb-item letter-spacing-1">
+                <a href="<?php echo e(route('index')); ?>"><?php echo e(__('lang.home')); ?></a>
+              </li>
+              <li class="breadcrumb-item letter-spacing-1">
+                <a href="<?php echo e(route('projects.index')); ?>"><?php echo e(__('lang.projects')); ?></a>
+              </li>
+              <?php if($project->category): ?>
+              <li class="breadcrumb-item letter-spacing-1">
+                <a href="<?php echo e(route('category.show', $project->category->slug)); ?>"><?php echo e(app()->getLocale() == 'ar' ? $project->category->title_arabic : $project->category->title_english); ?></a>
+              </li>
+              <?php endif; ?>
+              <li class="breadcrumb-item letter-spacing-1 active"><?php echo e(app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english); ?></li>
+            </ol>
+          </nav>
+          <div class="d-md-flex justify-content-md-between mb-1">
+            <ul class="list-inline d-sm-flex align-items-sm-center mb-0">
+              <?php if($project->home_status == 0): ?>
+              <li class="list-inline-item badge badge-danger mr-2"><?php echo e(__('lang.featured')); ?></li>
+              <?php endif; ?>
+              <?php if($project->category): ?>
+              <li class="list-inline-item badge badge-primary mr-3"><?php echo e(app()->getLocale() == 'ar' ? $project->category->title_arabic : $project->category->title_english); ?></li>
+              <?php endif; ?>
+            </ul>
+<?php
+                $shareTitle = app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english;
+                $shareSqft = $project->sqft ? number_format($project->sqft) . ' ' . __('lang.sqft') : '';
+                $shareCategory = $project->category ? (app()->getLocale() == 'ar' ? $project->category->title_arabic : $project->category->title_english) : '';
+                $shareSubcategory = $project->subcategory ? (app()->getLocale() == 'ar' ? $project->subcategory->title_arabic : $project->subcategory->title_english) : '';
+                $shareLocation = '';
+                if($project->location_english || $project->location_arabic) {
+                    $shareLocation = app()->getLocale() == 'ar' ? ($project->location_arabic ?? $project->location_english) : ($project->location_english ?? $project->location_arabic);
+                } elseif($project->emirate) {
+                    $shareLocation = app()->getLocale() == 'ar' ? $project->emirate->title_arabic : $project->emirate->title_english;
+                }
+                $shareText = $shareTitle;
+                if($shareSqft) {
+                    $shareText .= ' - ' . $shareSqft;
+                }
+                if($shareCategory) {
+                    $shareText .= ' | ' . $shareCategory;
+                    if($shareSubcategory) {
+                        $shareText .= ' / ' . $shareSubcategory;
+                    }
+                }
+                if($shareLocation) {
+                    $shareText .= ' | ' . $shareLocation;
+                }
+                $shareUrl = request()->url();
+                $shareImage = url('/storage' . $project->main_image);
+            ?>
+            <div class="social-share-buttons d-flex flex-wrap my-4 my-md-0 align-items-center">
+              <button class="btn-favourite mr-2" data-type="project" data-id="<?php echo e($project->id); ?>" title="<?php echo e(__('lang.add_to_favourites')); ?>">
+                  <i class="fal fa-heart"></i>
+              </button>
+              <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo e(urlencode($shareUrl)); ?>&quote=<?php echo e(urlencode($shareText)); ?>" 
+                 target="_blank" 
+                 class="social-share-btn facebook"
+                 data-toggle="tooltip" title="Facebook">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a href="https://twitter.com/intent/tweet?url=<?php echo e(urlencode($shareUrl)); ?>&text=<?php echo e(urlencode($shareText)); ?>" 
+                 target="_blank" 
+                 class="social-share-btn twitter"
+                 data-toggle="tooltip" title="X">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </a>
+              <a href="https://wa.me/?text=<?php echo e(urlencode($shareText . "\n" . $shareUrl)); ?>" 
+                 target="_blank" 
+                 class="social-share-btn whatsapp"
+                 data-toggle="tooltip" title="WhatsApp">
+                <i class="fab fa-whatsapp"></i>
+              </a>
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo e(urlencode($shareUrl)); ?>&title=<?php echo e(urlencode($shareTitle)); ?>&summary=<?php echo e(urlencode($shareText)); ?>" 
+                 target="_blank" 
+                 class="social-share-btn linkedin"
+                 data-toggle="tooltip" title="LinkedIn">
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+              <a href="https://pinterest.com/pin/create/button/?url=<?php echo e(urlencode($shareUrl)); ?>&media=<?php echo e(urlencode($shareImage)); ?>&description=<?php echo e(urlencode($shareText)); ?>" 
+                 target="_blank" 
+                 class="social-share-btn pinterest"
+                 data-toggle="tooltip" title="Pinterest">
+                <i class="fab fa-pinterest-p"></i>
+              </a>
+              <a href="mailto:?subject=<?php echo e(rawurlencode($shareTitle)); ?>&body=<?php echo e(urlencode($shareText . "\n\n" . $shareUrl)); ?>" 
+                 class="social-share-btn email"
+                 data-toggle="tooltip" title="Email">
+                <i class="fas fa-envelope"></i>
+              </a>
+              <button type="button" 
+                 class="social-share-btn copy-link copy-link-btn"
+                 data-url="<?php echo e($shareUrl); ?>"
+                 data-toggle="tooltip" title="<?php echo e(__('lang.copy_link')); ?>">
+                <i class="fas fa-link"></i>
+              </button>
+            </div>
+          </div>
+          <div class="d-md-flex justify-content-md-between mb-6">
+            <div>
+              <h2 class="fs-35 font-weight-600 lh-15 text-heading"><?php echo e(app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english); ?></h2>
+              <?php if($project->location_english || $project->location_arabic): ?>
+              <p class="mb-1"><i class="fal fa-map-marker-alt mr-2 text-primary"></i><?php echo e(app()->getLocale() == 'ar' ? ($project->location_arabic ?? $project->location_english) : ($project->location_english ?? $project->location_arabic)); ?></p>
+              <?php elseif($project->emirate): ?>
+              <p class="mb-1"><i class="fal fa-map-marker-alt mr-2 text-primary"></i><?php echo e(app()->getLocale() == 'ar' ? $project->emirate->title_arabic : $project->emirate->title_english); ?></p>
+              <?php endif; ?>
+              <?php if($project->project_code): ?>
+              <p class="mb-0"><span class="badge badge-secondary px-3 py-2" style="font-family: 'Courier New', monospace; font-size: 12px; background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%); border: none;"><i class="fal fa-barcode mr-1"></i><?php echo e($project->project_code); ?></span></p>
+              <?php endif; ?>
+            </div>
+            <div class="mt-2 text-md-right">
+              <?php if($project->project_cost): ?>
+              <p class="fs-28 font-weight-bold mb-1" style="color: #e1273d;">
+                <?php echo e($project->currency ? $project->currency->abbreviation : 'AED'); ?> <?php echo e(number_format($project->project_cost, 0)); ?>
+
+              </p>
+              <p class="fs-14 mb-2" style="color: #19868b; font-weight: 500;"><?php echo e(__('lang.project_cost')); ?></p>
+              <?php endif; ?>
+              <?php if($project->sqft): ?>
+              <p class="fs-20 text-heading font-weight-bold mb-0"><?php echo e(number_format($project->sqft)); ?> <?php echo e(__('lang.sqft')); ?></p>
+              <?php endif; ?>
+              <?php if($project->sqm): ?>
+              <p class="mb-0 text-muted"><?php echo e(number_format($project->sqm)); ?> <?php echo e(__('lang.sqm')); ?></p>
+              <?php endif; ?>
+            </div>
+          </div>
+          <?php
+              $galleryImagesCount = $project->images->count();
+              // Total with main image
+              $totalWithMain = $galleryImagesCount + 1;
+              // We need minimum 5 items (1 main + 4 thumbnails)
+              $maxThumbnails = 4;
+              // Get actual gallery images (max 4)
+              $galleryImages = $project->images->take($maxThumbnails);
+              $actualThumbnails = $galleryImages->count();
+              // Remaining for +X overlay
+              $remainingImages = $galleryImagesCount > $maxThumbnails ? $galleryImagesCount - $maxThumbnails : 0;
+              // How many placeholders needed to fill 4 thumbnail slots
+              $placeholdersNeeded = $maxThumbnails - $actualThumbnails;
+          ?>
+          <div class="row galleries">
+            
+            <div class="col-lg-6 mb-3 mb-lg-0">
+              <a href="<?php echo e(url('/storage' . $project->main_image)); ?>" 
+                 data-gtf-mfp="true"
+                 data-gallery-id="project-gallery"
+                 class="d-block rounded-lg overflow-hidden position-relative gallery-hover main-image-container">
+                <img src="<?php echo e(url('/storage' . $project->main_image)); ?>" 
+                     alt="<?php echo e(app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english); ?>"
+                     class="w-100 rounded-lg"
+                     style="object-fit: contain;">
+                <div class="gallery-hover-overlay position-absolute w-100 h-100 d-flex align-items-center justify-content-center rounded-lg" 
+                     style="top: 0; left: 0; background: rgba(0,0,0,0.3); opacity: 0; transition: opacity 0.3s;">
+                  <i class="fal fa-search-plus text-white fs-40"></i>
+                </div>
+              </a>
+            </div>
+            
+            
+            <div class="col-lg-6">
+              <div class="row no-gutters">
+                
+                <?php $__currentLoopData = $galleryImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <div class="col-6 p-1">
+                  <a href="<?php echo e(url('/storage' . $image->image)); ?>" 
+                     data-gtf-mfp="true"
+                     data-gallery-id="project-gallery"
+                     class="d-block position-relative rounded-lg overflow-hidden gallery-hover gallery-thumb">
+                    <img src="<?php echo e(url('/storage' . $image->image)); ?>" 
+                         alt=""
+                         class="w-100 rounded-lg gallery-thumb-img">
+                    <?php if($index == 3 && $remainingImages > 0): ?>
+                    <div class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center rounded-lg" 
+                         style="top: 0; left: 0; background: rgba(0,0,0,0.5);">
+                      <p class="fs-24 font-weight-600 text-white lh-1 mb-0">+<?php echo e($remainingImages); ?></p>
+                    </div>
+                    <?php else: ?>
+                    <div class="gallery-hover-overlay position-absolute w-100 h-100 d-flex align-items-center justify-content-center rounded-lg" 
+                         style="top: 0; left: 0; background: rgba(0,0,0,0.3); opacity: 0; transition: opacity 0.3s;">
+                      <i class="fal fa-search-plus text-white fs-24"></i>
+                    </div>
+                    <?php endif; ?>
+                  </a>
+                </div>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                
+                
+                <?php for($p = 0; $p < $placeholdersNeeded; $p++): ?>
+                <div class="col-6 p-1">
+                  <div class="gallery-placeholder rounded-lg">
+                    <?php if($p % 2 == 0): ?>
+                    
+                    <img src="<?php echo e(asset('pic/holder/icon.webp')); ?>" alt="" class="gallery-placeholder-icon">
+                    <?php else: ?>
+                    
+                    <img src="<?php echo e(asset('pic/holder/name.webp')); ?>" alt="" class="gallery-placeholder-name">
+                    <?php endif; ?>
+                  </div>
+                </div>
+                <?php endfor; ?>
+              </div>
+              
+              
+              <?php $__currentLoopData = $project->images->skip(4); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $hiddenImage): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+              <a href="<?php echo e(url('/storage' . $hiddenImage->image)); ?>" 
+                 data-gtf-mfp="true"
+                 data-gallery-id="project-gallery"
+                 style="display: none;">
+              </a>
+              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </div>
+          </div>
+          
+          <style>
+            .gallery-hover:hover .gallery-hover-overlay {
+              opacity: 1 !important;
+            }
+            
+            /* Gallery Thumbnails */
+            .gallery-thumb {
+              aspect-ratio: 1 / 1;
+            }
+            .gallery-thumb-img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+            
+            /* Placeholder Shapes - Not clickable */
+            .gallery-placeholder {
+              aspect-ratio: 1 / 1;
+              background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              pointer-events: none;
+              cursor: default;
+              position: relative;
+              overflow: hidden;
+            }
+            
+            /* Subtle pattern overlay */
+            .gallery-placeholder::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background-image: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.02) 10px,
+                rgba(255,255,255,0.02) 20px
+              );
+            }
+            
+            /* Icon image */
+            .gallery-placeholder-icon {
+              width: 40%;
+              height: auto;
+              opacity: 0.5;
+              position: relative;
+              z-index: 1;
+            }
+            
+            /* Name image */
+            .gallery-placeholder-name {
+              width: 70%;
+              height: auto;
+              opacity: 0.5;
+              position: relative;
+              z-index: 1;
+            }
+          </style>
+        </div>
+      </section>
+
+
+      <div class="primary-content bg-gray-01 pt-7 pb-13">
+        <div class="container">
+          <div class="row">
+            <article class="col-lg-8">
+              <?php echo $__env->make('pages.projects.singleproject.description', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+              <?php echo $__env->make('pages.projects.singleproject.specs', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+              <?php echo $__env->make('pages.projects.singleproject.information', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+              <?php echo $__env->make('pages.projects.singleproject.siteplan', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+              <?php echo $__env->make('pages.projects.singleproject.floors', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+              <?php echo $__env->make('pages.projects.singleproject.feasibility', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+              <?php echo $__env->make('pages.projects.singleproject.location', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+
+            </article>
+            <aside class="col-lg-4 pl-xl-4 primary-sidebar sidebar-sticky" id="sidebar">
+              <div class="primary-sidebar-inner">
+              <?php
+                  $showProjectScheduleTour = env('PROJECTS_SCHEDULE_TOUR', false);
+                  $showProjectRequestInfo = env('PROJECTS_REQUEST_INFO', false);
+                  $showProjectForms = $showProjectScheduleTour || $showProjectRequestInfo;
+              ?>
+              <?php if($showProjectForms): ?>
+              <div class="card border-0 widget-request-tour">
+                <?php if($showProjectScheduleTour && $showProjectRequestInfo): ?>
+                
+                <ul class="nav nav-tabs d-flex" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active px-3" data-toggle="tab" href="#schedule" role="tab"
+                                   aria-selected="true">Schedule
+                      A Tour</a>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link px-3" data-toggle="tab" href="#request-info" role="tab"
+                                   aria-selected="false">Request
+                      Info</a>
+                  </li>
+                </ul>
+                <?php elseif($showProjectScheduleTour): ?>
+                
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <i class="fas fa-calendar-alt mr-2"></i>Schedule A Tour
+                </div>
+                <?php else: ?>
+                
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <i class="fas fa-info-circle mr-2"></i>Request Info
+                </div>
+                <?php endif; ?>
+                <div class="card-body px-sm-6 shadow-xxs-2 pb-5 pt-0">
+                  <form>
+                    <div class="tab-content pt-1 pb-0 px-0 shadow-none">
+                      <?php if($showProjectScheduleTour): ?>
+                      <div class="tab-pane fade <?php echo e($showProjectScheduleTour ? 'show active' : ''); ?>" id="schedule" role="tabpanel">
+                        <div class="slick-slider calendar arrow-hide-disable mx-n1"
+                                             data-slick-options='{"slidesToShow": 5, "autoplay":false,"dots":false}'>
+                          <div class="box px-1 py-4">
+                            <div class="card pointer active border-0 shadow-xxs-1"
+                                                     data-date="March 17, 2020">
+                              <div class="card-body p-1 text-center">
+                                <p class="day fs-12 text-muted lh-2 mb-0">Tue</p>
+                                <p class="date fs-18 text-heading lh-173 mb-0 font-weight-bold">
+                                  17</p>
+                                <p class="month fs-13 letter-spacing-087 mb-0">Mar</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="box px-1 py-4">
+                            <div class="card pointer border-0 shadow-xxs-1"
+                                                     data-date="March 18, 2020">
+                              <div class="card-body p-1 text-center">
+                                <p class="day fs-12 text-muted lh-2 mb-0">Wed</p>
+                                <p class="date fs-18 text-heading lh-173 mb-0 font-weight-bold">
+                                  18</p>
+                                <p class="month fs-13 letter-spacing-087 mb-0">Mar</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="box px-1 py-4">
+                            <div class="card pointer border-0 shadow-xxs-1"
+                                                     data-date="March 19, 2020">
+                              <div class="card-body p-1 text-center">
+                                <p class="day fs-12 text-muted lh-2 mb-0">Thur</p>
+                                <p class="date fs-18 text-heading lh-173 mb-0 font-weight-bold">
+                                  19</p>
+                                <p class="month fs-13 letter-spacing-087 mb-0">Mar</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="box px-1 py-4">
+                            <div class="card pointer border-0 shadow-xxs-1"
+                                                     data-date="March 20, 2020">
+                              <div class="card-body p-1 text-center">
+                                <p class="day fs-12 text-muted lh-2 mb-0">Fri</p>
+                                <p class="date fs-18 text-heading lh-173 mb-0 font-weight-bold">
+                                  20</p>
+                                <p class="month fs-13 letter-spacing-087 mb-0">Mar</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="box px-1 py-4">
+                            <div class="card pointer border-0 shadow-xxs-1"
+                                                     data-date="March 21, 2020">
+                              <div class="card-body p-1 text-center">
+                                <p class="day fs-12 text-muted lh-2 mb-0">Sat</p>
+                                <p class="date fs-18 text-heading lh-173 mb-0 font-weight-bold">
+                                  21</p>
+                                <p class="month fs-13 letter-spacing-087 mb-0">Mar</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="box px-1 py-4">
+                            <div class="card pointer border-0 shadow-xxs-1"
+                                                     data-date="March 22, 2020">
+                              <div class="card-body p-1 text-center">
+                                <p class="day fs-12 text-muted lh-2 mb-0">Sun</p>
+                                <p class="date fs-18 text-heading lh-173 mb-0 font-weight-bold">
+                                  22</p>
+                                <p class="month fs-13 letter-spacing-087 mb-0">Mar</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="box px-1 py-4">
+                            <div class="card pointer border-0 shadow-xxs-1"
+                                                     data-date="March 23, 2020">
+                              <div class="card-body p-1 text-center">
+                                <p class="day fs-12 text-muted lh-2 mb-0">Mon</p>
+                                <p class="date fs-18 text-heading lh-173 mb-0 font-weight-bold">
+                                  23</p>
+                                <p class="month fs-13 letter-spacing-087 mb-0">Mar</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <input type="hidden" class="date" name="date" value="March 17, 2020">
+                        <div class="form-group mb-2">
+                          <div class="input-group input-group-lg bootstrap-timepicker timepicker">
+                            <input type="text" class="form-control border-0 text-body shadow-none"
+                                                       placeholder="Choose a time">
+                            <div class="input-group-append input-group-addon">
+                              <button class="btn bg-input shadow-none fs-18 lh-1" type="button"><i
+                                                            class="fal fa-angle-down"></i></button>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group mb-2">
+                          <input type="text" class="form-control form-control-lg border-0"
+                                                   placeholder="First Name, Last Name">
+                        </div>
+                        <div class="form-group mb-2">
+                          <input type="email" class="form-control form-control-lg border-0"
+                                                   placeholder="Your Email">
+                        </div>
+                        <div class="form-group mb-4">
+                          <input type="tel" class="form-control form-control-lg border-0"
+                                                   placeholder="Your phone">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block rounded">Schedule
+                          A Tour
+                        </button>
+                        <div class="form-group form-check mt-2 mb-0">
+                          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                          <label class="form-check-label fs-13" for="exampleCheck1">Egestas fringilla
+                            phasellus
+                            faucibus
+                            scelerisque
+                            eleifend donec.</label>
+                        </div>
+                      </div>
+                      <?php endif; ?>
+                      <?php if($showProjectRequestInfo): ?>
+                      <div class="tab-pane fade <?php echo e(!$showProjectScheduleTour ? 'show active' : ''); ?> pt-5" id="request-info" role="tabpanel">
+                        <div class="form-check d-flex align-items-center border-bottom pb-3 mb-3">
+                          <input class="form-check-input" type="radio" name="agent" value="option1">
+                          <div class="form-check-label ml-2">
+                            <div class="d-flex align-items-center">
+                              <a href="agent-details-1.html"
+                                                       class="d-block w-60px h-60 mr-3">
+                                <img src="images/agent-2.jpg"
+                                                             class="rounded-circle" alt="agent-2">
+                              </a>
+                              <div>
+                                <a href="agent-details-1.html"
+                                                           class="d-block text-dark font-weight-500 lh-15 hover-primary">Oliver
+                                  Beddows</a>
+                                <p class="mb-0 fs-13 mb-0 lh-17">Sales Excutive</p>
+                                <p class="mb-0 fs-13 mb-0 lh-17"><span>(+123)</span><span
+                                                                class="text-heading d-inline-block ml-2">1900 68668</span>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-check d-flex align-items-center mb-6">
+                          <input class="form-check-input" type="radio" name="agent" id="inlineRadio2"
+                                                   value="option2">
+                          <div class="form-check-label ml-2">
+                            <div class="d-flex align-items-center">
+                              <a href="agent-details-1.html"
+                                                       class="d-block w-60px h-60 mr-3">
+                                <img src="images/agent-1.jpg"
+                                                             class="rounded-circle" alt="agent-1">
+                              </a>
+                              <div>
+                                <a href="agent-details-1.html"
+                                                           class="d-block text-dark font-weight-500 lh-15 hover-primary">Max
+                                  Kordex</a>
+                                <p class="mb-0 fs-13 mb-0 lh-17">Real estate broker</p>
+                                <p class="mb-0 fs-13 mb-0 lh-17"><span>(+123)</span><span
+                                                                class="text-heading d-inline-block ml-2">1900 68668</span>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group mb-2">
+                          <input type="text" class="form-control form-control-lg border-0"
+                                                   placeholder="First Name, Last Name">
+                        </div>
+                        <div class="form-group mb-2">
+                          <input type="email" class="form-control form-control-lg border-0"
+                                                   placeholder="Your Email">
+                        </div>
+                        <div class="form-group mb-2">
+                          <input type="tel" class="form-control form-control-lg border-0"
+                                                   placeholder="Your phone">
+                        </div>
+                        <div class="form-group mb-4">
+                          <textarea class="form-control border-0" rows="4">Hello, I'm interested in Villa Called Archangel</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block rounded">Request
+                          Info
+                        </button>
+                        <div class="form-group form-check mt-2 mb-0">
+                          <input type="checkbox" class="form-check-input" id="exampleCheck2">
+                          <label class="form-check-label fs-13" for="exampleCheck2">Egestas fringilla
+                            phasellus
+                            faucibus
+                            scelerisque
+                            eleifend donec.</label>
+                        </div>
+                      </div>
+                      <?php endif; ?>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <?php else: ?>
+              
+              <?php echo $__env->make('pages.projects.singleproject.contact-card', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+              <?php endif; ?>
+            </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('css'); ?>
+<style>
+/* Contact Info Card Styles */
+.contact-info-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.contact-card-header {
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+    padding: 25px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-card-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.contact-card-header .header-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    backdrop-filter: blur(10px);
+}
+
+.contact-card-header .header-icon i {
+    font-size: 26px;
+    color: #fff;
+}
+
+.contact-card-header .header-title {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.contact-card-header .header-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    margin: 0;
+}
+
+.contact-card-body {
+    padding: 20px;
+}
+
+.contact-method {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    background: #fff;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.contact-method:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    text-decoration: none;
+}
+
+.contact-method .method-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 14px;
+    flex-shrink: 0;
+}
+
+.contact-method .method-icon i {
+    font-size: 18px;
+    color: #fff;
+}
+
+.contact-method.phone-method .method-icon {
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+}
+
+.contact-method.whatsapp-method .method-icon {
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+}
+
+.contact-method.email-method .method-icon {
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+}
+
+.contact-method .method-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.contact-method .method-label {
+    display: block;
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.contact-method .method-value {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.contact-method .method-arrow {
+    color: #ccc;
+    font-size: 12px;
+    transition: all 0.3s ease;
+}
+
+.contact-method:hover .method-arrow {
+    color: #19868b;
+    transform: translateX(3px);
+}
+
+.btn-contact-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #19868b 0%, #0d6b6f 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-top: 5px;
+    box-shadow: 0 4px 15px rgba(25, 134, 139, 0.3);
+}
+
+.btn-contact-page:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(25, 134, 139, 0.4);
+    color: #fff;
+    text-decoration: none;
+}
+
+.btn-contact-page i {
+    font-size: 16px;
+}
+
+.btn-company-profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #0d6b6f 0%, #095456 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-top: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-company-profile::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-company-profile:hover::before {
+    left: 100%;
+}
+
+.btn-company-profile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(13, 107, 111, 0.4);
+    color: #fff;
+    text-decoration: none;
+}
+
+.btn-company-profile .fa-file-pdf {
+    font-size: 18px;
+    color: #ff6b6b;
+}
+
+.btn-company-profile .download-icon {
+    margin-left: auto;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.contact-card-footer {
+    padding: 20px;
+    background: linear-gradient(135deg, #f0f9f9 0%, #e8f4f4 100%);
+    border-top: 1px solid rgba(25, 134, 139, 0.1);
+    text-align: center;
+}
+
+.contact-card-footer .social-label {
+    display: block;
+    font-size: 12px;
+    color: #19868b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.contact-card-footer .social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.contact-card-footer .social-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 16px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+.contact-card-footer .social-icon:hover {
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+.contact-card-footer .social-icon.facebook {
+    background: linear-gradient(135deg, #1877f2 0%, #0d65d9 100%);
+}
+
+.contact-card-footer .social-icon.instagram {
+    background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.contact-card-footer .social-icon.twitter {
+    background: linear-gradient(135deg, #1da1f2 0%, #0d8ecf 100%);
+}
+
+.contact-card-footer .social-icon.linkedin {
+    background: linear-gradient(135deg, #0077b5 0%, #005885 100%);
+}
+
+.contact-card-footer .social-icon.pinterest {
+    background: linear-gradient(135deg, #e60023 0%, #c8001e 100%);
+}
+
+.contact-card-footer .social-icon.whatsapp {
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+}
+
+/* Contact Card Responsive Styles */
+@media (max-width: 1199px) {
+    .contact-info-card {
+        margin-bottom: 30px;
+    }
+    
+    .contact-card-header {
+        padding: 22px 18px;
+    }
+    
+    .contact-card-header .header-icon {
+        width: 55px;
+        height: 55px;
+    }
+    
+    .contact-card-header .header-icon i {
+        font-size: 24px;
+    }
+    
+    .contact-card-header .header-title {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 991px) {
+    .contact-info-card {
+        max-width: 500px;
+        margin: 0 auto 30px;
+    }
+    
+    .contact-card-header {
+        padding: 25px 20px;
+    }
+    
+    .contact-card-header .header-icon {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .contact-card-header .header-icon i {
+        font-size: 26px;
+    }
+    
+    .contact-card-header .header-title {
+        font-size: 20px;
+    }
+    
+    .contact-card-body {
+        padding: 25px;
+    }
+    
+    .contact-method {
+        padding: 16px 18px;
+    }
+    
+    .contact-method .method-icon {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .contact-method .method-icon i {
+        font-size: 20px;
+    }
+    
+    .contact-method .method-value {
+        font-size: 15px;
+    }
+    
+    .btn-contact-page,
+    .btn-company-profile {
+        padding: 16px 24px;
+        font-size: 16px;
+    }
+    
+    .contact-card-footer {
+        padding: 25px;
+    }
+    
+    .contact-card-footer .social-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 767px) {
+    .contact-info-card {
+        max-width: 100%;
+        border-radius: 12px;
+    }
+    
+    .contact-card-header {
+        padding: 20px 15px;
+    }
+    
+    .contact-card-header .header-icon {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 12px;
+    }
+    
+    .contact-card-header .header-icon i {
+        font-size: 22px;
+    }
+    
+    .contact-card-header .header-title {
+        font-size: 18px;
+    }
+    
+    .contact-card-header .header-subtitle {
+        font-size: 12px;
+    }
+    
+    .contact-card-body {
+        padding: 15px;
+    }
+    
+    .contact-method {
+        padding: 12px 14px;
+        margin-bottom: 10px;
+        border-radius: 10px;
+    }
+    
+    .contact-method .method-icon {
+        width: 40px;
+        height: 40px;
+        margin-right: 12px;
+        border-radius: 8px;
+    }
+    
+    .contact-method .method-icon i {
+        font-size: 16px;
+    }
+    
+    .contact-method .method-label {
+        font-size: 10px;
+    }
+    
+    .contact-method .method-value {
+        font-size: 13px;
+    }
+    
+    .contact-method .method-arrow {
+        font-size: 11px;
+    }
+    
+    .btn-contact-page {
+        padding: 12px 18px;
+        font-size: 14px;
+        border-radius: 10px;
+        gap: 8px;
+    }
+    
+    .btn-contact-page i {
+        font-size: 14px;
+    }
+    
+    .btn-company-profile {
+        padding: 12px 18px;
+        font-size: 13px;
+        border-radius: 10px;
+        gap: 8px;
+        margin-top: 10px;
+    }
+    
+    .btn-company-profile .fa-file-pdf {
+        font-size: 16px;
+    }
+    
+    .btn-company-profile .download-icon {
+        font-size: 12px;
+    }
+    
+    .contact-card-footer {
+        padding: 15px;
+    }
+    
+    .contact-card-footer .social-label {
+        font-size: 11px;
+        margin-bottom: 12px;
+    }
+    
+    .contact-card-footer .social-icons {
+        gap: 8px;
+    }
+    
+    .contact-card-footer .social-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+    
+    /* RTL adjustments for mobile */
+    html[dir="rtl"] .contact-method .method-icon {
+        margin-left: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-info-card {
+        border-radius: 10px;
+    }
+    
+    .contact-card-header {
+        padding: 18px 12px;
+    }
+    
+    .contact-card-header .header-icon {
+        width: 45px;
+        height: 45px;
+        margin-bottom: 10px;
+    }
+    
+    .contact-card-header .header-icon i {
+        font-size: 20px;
+    }
+    
+    .contact-card-header .header-title {
+        font-size: 16px;
+    }
+    
+    .contact-card-header .header-subtitle {
+        font-size: 11px;
+    }
+    
+    .contact-card-body {
+        padding: 12px;
+    }
+    
+    .contact-method {
+        padding: 10px 12px;
+        margin-bottom: 8px;
+    }
+    
+    .contact-method .method-icon {
+        width: 36px;
+        height: 36px;
+        margin-right: 10px;
+    }
+    
+    .contact-method .method-icon i {
+        font-size: 14px;
+    }
+    
+    .contact-method .method-value {
+        font-size: 12px;
+    }
+    
+    .btn-contact-page,
+    .btn-company-profile {
+        padding: 11px 15px;
+        font-size: 13px;
+    }
+    
+    .contact-card-footer {
+        padding: 12px;
+    }
+    
+    .contact-card-footer .social-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+    }
+    
+    /* RTL adjustments for small mobile */
+    html[dir="rtl"] .contact-method .method-icon {
+        margin-left: 10px;
+    }
+}
+
+/* Social Share Buttons */
+.social-share-buttons {
+    gap: 8px;
+}
+
+.social-share-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 15px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.social-share-btn.facebook {
+    background: #1877f2;
+    color: #fff;
+}
+.social-share-btn.facebook:hover {
+    background: #0d65d9;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(24, 119, 242, 0.4);
+}
+
+.social-share-btn.twitter {
+    background: #000000;
+    color: #fff;
+}
+.social-share-btn.twitter:hover {
+    background: #333333;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+.social-share-btn.twitter svg {
+    width: 14px;
+    height: 14px;
+}
+
+.social-share-btn.whatsapp {
+    background: #25d366;
+    color: #fff;
+}
+.social-share-btn.whatsapp:hover {
+    background: #1da851;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+}
+
+.social-share-btn.linkedin {
+    background: #0077b5;
+    color: #fff;
+}
+.social-share-btn.linkedin:hover {
+    background: #005e93;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 119, 181, 0.4);
+}
+
+.social-share-btn.pinterest {
+    background: #bd081c;
+    color: #fff;
+}
+.social-share-btn.pinterest:hover {
+    background: #a00718;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(189, 8, 28, 0.4);
+}
+
+.social-share-btn.email {
+    background: #ea4335;
+    color: #fff;
+}
+.social-share-btn.email:hover {
+    background: #d33426;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(234, 67, 53, 0.4);
+}
+
+.social-share-btn.copy-link {
+    background: #19868b;
+    color: #fff;
+}
+.social-share-btn.copy-link:hover {
+    background: #0d6d71;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(25, 134, 139, 0.4);
+}
+
+.social-share-btn.copy-link.copied {
+    background: #28a745;
+}
+
+/* RTL Support */
+[dir="rtl"] .social-share-buttons {
+    flex-direction: row-reverse;
+}
+</style>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('js'); ?>
+<script>
+$(document).ready(function() {
+    // Copy link functionality
+    $('.copy-link-btn').on('click', function() {
+        var url = $(this).data('url');
+        var $btn = $(this);
+        
+        // Copy to clipboard
+        navigator.clipboard.writeText(url).then(function() {
+            // Show success feedback
+            var originalTitle = $btn.attr('data-original-title') || $btn.attr('title');
+            $btn.attr('data-original-title', '<?php echo e(__("lang.link_copied")); ?>').tooltip('show');
+            
+            // Change icon and add copied class
+            $btn.find('i').removeClass('fa-link').addClass('fa-check');
+            $btn.addClass('copied');
+            
+            // Reset after 2 seconds
+            setTimeout(function() {
+                $btn.attr('data-original-title', originalTitle).tooltip('hide');
+                $btn.find('i').removeClass('fa-check').addClass('fa-link');
+                $btn.removeClass('copied');
+            }, 2000);
+        }).catch(function(err) {
+            console.error('Failed to copy: ', err);
+        });
+    });
+});
+</script>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\wamp64\www\smartvisionuae\resources\views/pages/projects/project.blade.php ENDPATH**/ ?>

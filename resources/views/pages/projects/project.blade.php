@@ -88,7 +88,10 @@
                 $shareUrl = request()->url();
                 $shareImage = url('/storage' . $project->main_image);
             @endphp
-            <div class="social-share-buttons d-flex flex-wrap my-4 my-md-0">
+            <div class="social-share-buttons d-flex flex-wrap my-4 my-md-0 align-items-center">
+              <button class="btn-favourite mr-2" data-type="project" data-id="{{ $project->id }}" title="{{ __('lang.add_to_favourites') }}">
+                  <i class="fal fa-heart"></i>
+              </button>
               <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode($shareUrl) }}&quote={{ urlencode($shareText) }}" 
                  target="_blank" 
                  class="social-share-btn facebook"

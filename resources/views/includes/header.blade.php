@@ -268,6 +268,10 @@
                 @endif
               </ul>
             </div>
+            <a href="{{ route('favourites.index') }}" class="header-favourite-icon ml-3" title="{{ __('lang.favourites') }}">
+                <i class="fal fa-heart"></i>
+                <span class="favourite-badge" style="display:none;">0</span>
+            </a>
           </nav>
         </div>
       </div>
@@ -296,6 +300,10 @@
         
         {{-- Icons (Right) --}}
         <div class="mobile-header-icons">
+            <a href="{{ route('favourites.index') }}" class="mobile-header-icon header-favourite-icon" title="{{ __('lang.favourites') }}">
+                <i class="fal fa-heart"></i>
+                <span class="favourite-badge" style="display:none;">0</span>
+            </a>
             <a href="{{ route('contact') }}" class="mobile-header-icon" title="{{ __('lang.contact_us') }}">
                 <i class="fal fa-envelope"></i>
             </a>
