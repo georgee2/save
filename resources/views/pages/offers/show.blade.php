@@ -517,8 +517,8 @@
                         <div class="pt-3 border-top mb-3">
                             <button class="btn-favourite" style="width:auto;border-radius:50px;padding:8px 20px;gap:8px;font-size:14px;"
                                     data-type="offer" data-id="{{ $offer->id }}"
-                                    data-emirate="{{ $offer->selected_price->emirate_id ?? ($offer->prices->first()->emirate_id ?? '') }}"
-                                    data-price="{{ $offer->selected_price->price ?? ($offer->prices->first()->price ?? '') }}"
+                                    data-emirate="{{ $offer->selected_price->emirate_id ?? ($offer->all_prices->first()->emirate_id ?? '') }}"
+                                    data-price="{{ $offer->selected_price->price ?? ($offer->all_prices->first()->price ?? '') }}"
                                     title="{{ __('lang.add_to_favourites') }}">
                                 <i class="fal fa-heart"></i> {{ __('lang.add_to_favourites') }}
                             </button>

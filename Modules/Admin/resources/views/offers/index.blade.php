@@ -817,6 +817,30 @@
                                     </button>
                                 </div>
                             </div>
+                            
+                            <!-- Price Status Dropdown -->
+                            <div class="bulk-action-dropdown">
+                                <button type="button" class="bulk-action-dropdown-btn" id="priceDropdownBtn" style="background: #e83e8c;">
+                                    <i class="fa fa-money"></i> Price Status <i class="fa fa-caret-down"></i>
+                                </button>
+                                <div class="bulk-action-dropdown-menu" id="priceDropdownMenu">
+                                    <div class="dropdown-header">Apply to Selected Offers' Prices</div>
+                                    <button type="button" class="dropdown-item" onclick="bulkPriceAction('activate', 'selected')">
+                                        <i class="fa fa-check-circle text-success"></i> Activate Selected Prices
+                                    </button>
+                                    <button type="button" class="dropdown-item" onclick="bulkPriceAction('deactivate', 'selected')">
+                                        <i class="fa fa-ban text-secondary"></i> Deactivate Selected Prices
+                                    </button>
+                                    <div class="dropdown-divider"></div>
+                                    <div class="dropdown-header">Apply to ALL Offers' Prices</div>
+                                    <button type="button" class="dropdown-item" onclick="bulkPriceAction('activate', 'all')">
+                                        <i class="fa fa-check-circle text-success"></i> Activate All Prices
+                                    </button>
+                                    <button type="button" class="dropdown-item" onclick="bulkPriceAction('deactivate', 'all')">
+                                        <i class="fa fa-ban text-secondary"></i> Deactivate All Prices
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
@@ -833,6 +857,13 @@
                         <input type="hidden" name="action" id="bulkHomeAction">
                         <input type="hidden" name="scope" id="bulkHomeScope">
                         <input type="hidden" name="ids" id="bulkHomeIds">
+                    </form>
+                    
+                    <form id="bulkPriceStatusForm" action="{{ route('offer.bulk-price-status') }}" method="POST" style="display: none;">
+                        @csrf
+                        <input type="hidden" name="action" id="bulkPriceStatusAction">
+                        <input type="hidden" name="scope" id="bulkPriceStatusScope">
+                        <input type="hidden" name="ids" id="bulkPriceStatusIds">
                     </form>
                     
                     @if($offers->count() > 0)
@@ -1276,12 +1307,21 @@
         e.stopPropagation();
         document.getElementById('publishDropdownMenu').classList.toggle('show');
         document.getElementById('homeDropdownMenu').classList.remove('show');
+        document.getElementById('priceDropdownMenu').classList.remove('show');
     });
     
     document.getElementById('homeDropdownBtn').addEventListener('click', function(e) {
         e.stopPropagation();
         document.getElementById('homeDropdownMenu').classList.toggle('show');
         document.getElementById('publishDropdownMenu').classList.remove('show');
+        document.getElementById('priceDropdownMenu').classList.remove('show');
+    });
+    
+    document.getElementById('priceDropdownBtn').addEventListener('click', function(e) {
+        e.stopPropagation();
+        document.getElementById('priceDropdownMenu').classList.toggle('show');
+        document.getElementById('publishDropdownMenu').classList.remove('show');
+        document.getElementById('homeDropdownMenu').classList.remove('show');
     });
     
     // Close dropdowns when clicking outside
@@ -1492,6 +1532,67 @@
                 document.getElementById('bulkHomeScope').value = scope;
                 document.getElementById('bulkHomeIds').value = JSON.stringify(ids);
                 document.getElementById('bulkHomeStatusForm').submit();
+            }
+        });
+    }
+    
+    // Bulk price status action with SweetAlert
+    function bulkPriceAction(action, scope) {
+        const ids = getSelectedIds();
+        
+        // Close dropdown
+        document.querySelectorAll('.bulk-action-dropdown-menu').forEach(menu => {
+            menu.classList.remove('show');
+        });
+        
+        if (scope === 'selected' && ids.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'No Selection',
+                text: 'Please select at least one offer.',
+                confirmButtonColor: '#19868b'
+            });
+            return;
+        }
+        
+        const actionText = action === 'activate' ? 'activate' : 'deactivate';
+        const actionIcon = action === 'activate' ? 'check-circle' : 'ban';
+        const actionColor = action === 'activate' ? '#28a745' : '#6c757d';
+        const scopeText = scope === 'all' ? 'ALL offers' : `${ids.length} selected offer(s)`;
+        
+        Swal.fire({
+            title: `${action === 'activate' ? 'Activate' : 'Deactivate'} Prices?`,
+            html: `
+                <div style="text-align: center;">
+                    <i class="fa fa-${actionIcon}" style="font-size: 60px; color: ${actionColor}; margin-bottom: 15px;"></i>
+                    <p style="font-size: 16px; margin-bottom: 10px;">You are about to <strong>${actionText}</strong> all prices for</p>
+                    <p style="font-size: 18px; font-weight: 600; color: ${actionColor};">${scopeText}</p>
+                    ${scope === 'all' ? '<p style="font-size: 13px; color: #6c757d; margin-top: 10px;"><i class="fa fa-exclamation-triangle"></i> This will affect all offer prices in the database</p>' : ''}
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonColor: actionColor,
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: `<i class="fa fa-${actionIcon}"></i> Yes, ${actionText}!`,
+            cancelButtonText: '<i class="fa fa-arrow-left"></i> Cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Processing...',
+                    html: `<p>Updating price status...</p>`,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                document.getElementById('bulkPriceStatusAction').value = action;
+                document.getElementById('bulkPriceStatusScope').value = scope;
+                document.getElementById('bulkPriceStatusIds').value = JSON.stringify(ids);
+                document.getElementById('bulkPriceStatusForm').submit();
             }
         });
     }

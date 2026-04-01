@@ -625,7 +625,7 @@ class FavouritesController extends Controller
             ->get()->keyBy('id');
 
         $offers = Offer::whereIn('id', $offerIds)
-            ->with(['category', 'subcategory', 'prices.emirate', 'currency', 'specifications'])
+            ->with(['category', 'subcategory', 'prices' => function($q) { $q->where('status', 0); }, 'prices.emirate', 'currency', 'specifications'])
             ->get()->keyBy('id');
 
         $interiors = InteriorDesignGallery::whereIn('id', $interiorIds)

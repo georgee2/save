@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use App\Models\Offer;
 use App\Models\OfferCategory;
 use App\Models\OfferSubCategory;
+use App\Models\OffersPrices\OfferPrice;
 use App\Models\Currency;
 use App\Models\ProjectStyle;
 use App\Models\ProjectType;
@@ -527,6 +528,31 @@ class OfferController extends Controller
         
         $statusText = $action === 'show' ? 'shown on home' : 'hidden from home';
         return redirect()->back()->with('success', "{$count} offer(s) {$statusText} successfully!");
+    }
+    
+    /**
+     * Bulk update price status across all or selected offers
+     */
+    public function bulkPriceStatus(Request $request)
+    {
+        $action = $request->input('action'); // 'activate' or 'deactivate'
+        $scope = $request->input('scope'); // 'all' or 'selected'
+        $ids = $request->input('ids', '[]');
+        
+        $idsArray = json_decode($ids, true) ?? [];
+        
+        $query = OfferPrice::whereNull('deleted_at');
+        
+        if ($scope === 'selected' && !empty($idsArray)) {
+            $query->whereIn('offer_id', $idsArray);
+        }
+        
+        $newStatus = $action === 'activate' ? 0 : 1;
+        $count = $query->count();
+        $query->update(['status' => $newStatus]);
+        
+        $statusText = $action === 'activate' ? 'activated' : 'deactivated';
+        return redirect()->back()->with('success', "{$count} price(s) {$statusText} successfully!");
     }
 }
 

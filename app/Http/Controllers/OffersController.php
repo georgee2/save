@@ -250,7 +250,8 @@ class OffersController extends Controller
         // Build query - publish_status = 0 means published
         $query = Offer::where('publish_status', 0)
                       ->whereNull('deleted_at')
-                      ->with(['category', 'subcategory', 'style', 'type', 'currency', 'specifications.specification', 'prices.emirate'])
+                      ->with(['category', 'subcategory', 'style', 'type', 'currency', 'specifications.specification',
+                          'prices' => function($q) { $q->where('status', 0); }, 'prices.emirate'])
                       ->withCount('images');
         
         // Apply filters
@@ -292,7 +293,8 @@ class OffersController extends Controller
         $query = Offer::where('publish_status', 0)
                       ->where('category_id', $currentCategory->id)
                       ->whereNull('deleted_at')
-                      ->with(['category', 'subcategory', 'style', 'type', 'currency', 'specifications.specification', 'prices.emirate'])
+                      ->with(['category', 'subcategory', 'style', 'type', 'currency', 'specifications.specification',
+                          'prices' => function($q) { $q->where('status', 0); }, 'prices.emirate'])
                       ->withCount('images');
         
         // Apply additional filters (except category since we're filtering by it)
@@ -337,7 +339,8 @@ class OffersController extends Controller
         $query = Offer::where('publish_status', 0)
                       ->where('subcategory_id', $currentSubcategory->id)
                       ->whereNull('deleted_at')
-                      ->with(['category', 'subcategory', 'style', 'type', 'currency', 'specifications.specification', 'prices.emirate'])
+                      ->with(['category', 'subcategory', 'style', 'type', 'currency', 'specifications.specification',
+                          'prices' => function($q) { $q->where('status', 0); }, 'prices.emirate'])
                       ->withCount('images');
         
         // Apply additional filters (except subcategory since we're filtering by it)
@@ -378,6 +381,7 @@ class OffersController extends Controller
                          'type',
                          'images',
                          'specifications.specification',
+                         'prices' => function($q) { $q->where('status', 0); },
                          'prices.emirate',
                          'floors' => function($query) {
                              $query->whereNull('deleted_at')

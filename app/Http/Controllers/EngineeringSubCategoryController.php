@@ -103,7 +103,7 @@ class EngineeringSubCategoryController extends Controller
      * Get filter data for views
      * Only returns categories and subcategories that have at least one published project
      */
-    private function getFilterData()
+    private function getFilterData($categoryId = null)
     {
         // Get categories that have at least one published project
         $categories = EngineeringCategory::whereNull('deleted_at')
@@ -114,29 +114,35 @@ class EngineeringSubCategoryController extends Controller
             ->get();
         
         // Get subcategories that have at least one published project
-        $subcategories = EngineeringSubCategory::whereNull('deleted_at')
+        $subcategoriesQuery = EngineeringSubCategory::whereNull('deleted_at')
             ->whereHas('projects', function($query) {
                 $query->where('publish_status', 0)->whereNull('deleted_at');
             })
-            ->orderBy('title_english')
-            ->get();
+            ->orderBy('title_english');
+        
+        if ($categoryId) {
+            $subcategoriesQuery->where('category_id', $categoryId);
+        }
         
         // Subcategories with project counts for slider filter (only those with projects)
-        $subcategoriesWithCount = EngineeringSubCategory::withCount(['projects' => function($query) {
+        $subcategoriesWithCountQuery = EngineeringSubCategory::withCount(['projects' => function($query) {
                 $query->where('publish_status', 0)->whereNull('deleted_at');
             }])
             ->whereNull('deleted_at')
             ->having('projects_count', '>', 0)
-            ->orderBy('title_english')
-            ->get();
+            ->orderBy('title_english');
+        
+        if ($categoryId) {
+            $subcategoriesWithCountQuery->where('category_id', $categoryId);
+        }
         
         return [
             'categories' => $categories,
-            'subcategories' => $subcategories,
+            'subcategories' => $subcategoriesQuery->get(),
             'styles' => ProjectStyle::whereNull('deleted_at')->orderBy('title_english')->get(),
             'types' => ProjectType::whereNull('deleted_at')->where('status', 0)->orderBy('name_english')->get(),
             'specifications' => Specification::whereNull('deleted_at')->orderBy('title_english')->get(),
-            'subcategoriesWithCount' => $subcategoriesWithCount,
+            'subcategoriesWithCount' => $subcategoriesWithCountQuery->get(),
         ];
     }
     
@@ -151,8 +157,8 @@ class EngineeringSubCategoryController extends Controller
             ->whereNull('deleted_at')
             ->firstOrFail();
         
-        // Get filter data
-        $filterData = $this->getFilterData();
+        // Get filter data scoped to the same parent category
+        $filterData = $this->getFilterData($subcategory->category_id);
         $categories = $filterData['categories'];
         $subcategories = $filterData['subcategories'];
         $subcategoriesWithCount = $filterData['subcategoriesWithCount'];

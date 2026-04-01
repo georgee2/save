@@ -56,7 +56,8 @@ class GlobalSearchController extends Controller
             // Filter by emirate if provided (through prices)
             if ($emirateId) {
                 $offersQuery->whereHas('prices', function($q) use ($emirateId) {
-                    $q->where('emirate_id', $emirateId);
+                    $q->where('emirate_id', $emirateId)
+                      ->where('status', 0);
                 });
             }
             

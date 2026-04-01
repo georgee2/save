@@ -644,6 +644,7 @@ Route::group(
                 Route::get('/live-search', [OfferController::class, 'liveSearch'])->name('offer.live-search');
                 Route::post('/bulk-publish', [OfferController::class, 'bulkPublish'])->name('offer.bulk-publish');
                 Route::post('/bulk-home-status', [OfferController::class, 'bulkHomeStatus'])->name('offer.bulk-home-status');
+                Route::post('/bulk-price-status', [OfferController::class, 'bulkPriceStatus'])->name('offer.bulk-price-status');
                 
                 // Offer Prices Sub-Routes (AJAX)
                 Route::prefix('{offerId}/prices')->group(function () {

@@ -800,7 +800,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if($fav->price)
+                                        @if($fav->price && $item->prices && $item->prices->count() > 0)
                                             <strong>{{ number_format($fav->price) }} {{ $item->currency ? $item->currency->code : 'AED' }}</strong>
                                         @else
                                             ---

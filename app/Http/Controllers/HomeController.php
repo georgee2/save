@@ -260,7 +260,8 @@ class HomeController extends Controller
         
         // Fetch featured offers (home_status = 0) with category, specifications, prices and images count
         // Limited to last 15 featured offers
-        $featuredOffers = Offer::with(['category', 'subcategory', 'currency', 'specifications.specification', 'prices.emirate'])
+        $featuredOffers = Offer::with(['category', 'subcategory', 'currency', 'specifications.specification',
+                'prices' => function($q) { $q->where('status', 0); }, 'prices.emirate'])
             ->withCount('images')
             ->where('publish_status', 0) // Published
             ->where('home_status', 0)    // Shown on home (featured)
