@@ -102,11 +102,11 @@
                                 @if($offer->category)
                                 <span><i class="fal fa-folder"></i> {{ app()->getLocale() == 'ar' ? $offer->category->title_arabic : $offer->category->title_english }}</span>
                                 @endif
-                                @if(isset($fav->selectedPrice) && $fav->selectedPrice)
+                                @if(isset($fav->selectedPrice) && $fav->selectedPrice && $fav->selectedPrice->emirate)
                                 <span><i class="fal fa-map-marker-alt"></i> {{ app()->getLocale() == 'ar' ? $fav->selectedPrice->emirate->title_arabic : $fav->selectedPrice->emirate->title_english }}</span>
                                 @endif
                             </div>
-                            @if($fav->price)
+                            @if($fav->price && $offer->prices && $offer->prices->count() > 0)
                             <div class="fav-item-price">
                                 {{ number_format($fav->price) }} {{ $offer->currency ? $offer->currency->code : 'AED' }}
                             </div>

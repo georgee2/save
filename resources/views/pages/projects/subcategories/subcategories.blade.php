@@ -28,14 +28,15 @@
           <div class="subcategory-filter-slider slick-slider" 
                data-slick-options='{"slidesToShow": 6, "slidesToScroll": 2, "autoplay": false, "dots": false, "arrows": true, "infinite": false, "responsive":[{"breakpoint": 1400,"settings": {"slidesToShow": 5, "arrows": true}},{"breakpoint": 1200,"settings": {"slidesToShow": 4, "arrows": true}},{"breakpoint": 992,"settings": {"slidesToShow": 4, "arrows": true}},{"breakpoint": 768,"settings": {"slidesToShow": 3, "arrows": true}},{"breakpoint": 576,"settings": {"slidesToShow": 2, "arrows": false}}]}'>
             
-            {{-- All Subcategories Option --}}
+            {{-- All in Category Option --}}
             <div class="box">
-              <a href="{{ route('projects.index') }}" 
+              <a href="{{ $subcategory->category ? route('category.show', $subcategory->category->slug) : route('projects.index') }}" 
                  class="subcategory-filter-item all-item">
                 <div class="subcategory-filter-icon">
                   <i class="fas fa-th-large"></i>
                 </div>
                 <p class="subcategory-filter-title">{{ __('lang.all') }}</p>
+                <span class="subcategory-filter-count">{{ $projects->total() }} {{ __('lang.projects') }}</span>
               </a>
             </div>
             
