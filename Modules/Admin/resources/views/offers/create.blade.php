@@ -165,6 +165,10 @@
                                 <input accept="image/*" class="form-control dropify" type="file" name="main_image" required>
                                 <small class="form-text text-muted">Recommended: 903x1146 pixels. Will be converted to WebP with 80% quality.</small>
                                 @error('main_image')<span class="text-danger mt-1">{{ $message }}</span>@enderror
+                                <label class="mt-2">Image Alt Text (English)</label>
+                                <input type="text" name="alt_text_english" value="{{old('alt_text_english')}}" class="form-control" maxlength="200" placeholder="Describe the image for SEO & accessibility">
+                                <label class="mt-2">Image Alt Text (Arabic)</label>
+                                <input type="text" name="alt_text_arabic" value="{{old('alt_text_arabic')}}" class="form-control" maxlength="200" placeholder="وصف الصورة" dir="rtl">
                             </div>
                             <div class="form-group col-md-6">
                                 <label class="text-capitalize">Offer File (PDF)</label>
@@ -219,6 +223,16 @@
                         <!-- SEO -->
                         <h5 class="mb-3 mt-4 text-primary">SEO Information</h5>
                         <div class="row">
+                            <div class="form-group col-md-6">
+                                <label>SEO Title (English) <small class="text-muted">Max 200 chars</small></label>
+                                <input type="text" name="seo_title_english" value="{{old('seo_title_english')}}" class="form-control" maxlength="200" placeholder="Custom SEO title for search engines">
+                                @error('seo_title_english')<span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>SEO Title (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="seo_title_english" data-translate-target="seo_title_arabic"><i class="fa fa-language"></i> Auto</button></label>
+                                <input type="text" name="seo_title_arabic" value="{{old('seo_title_arabic')}}" class="form-control" maxlength="200" placeholder="عنوان SEO مخصص" dir="rtl">
+                                @error('seo_title_arabic')<span class="text-danger">{{ $message }}</span>@enderror
+                            </div>
                             <div class="form-group col-md-12">
                                 <label>SEO Tags <span class="text-muted">Press Enter After You Type</span></label>
                                 <input name="seo_tags" value="{{old('seo_tags')}}" class="tagify form-control">

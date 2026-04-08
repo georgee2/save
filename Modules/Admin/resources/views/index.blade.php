@@ -640,6 +640,150 @@
         color: var(--danger-color);
     }
 
+    /* Integrations Panel */
+    .integrations-panel {
+        background: white;
+        border-radius: 16px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: var(--card-shadow);
+    }
+
+    .intg-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px 18px;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        transition: all .3s ease;
+        position: relative;
+    }
+
+    .intg-card.connected {
+        border-color: rgba(16, 185, 129, .3);
+        background: linear-gradient(135deg, rgba(16,185,129,.03) 0%, #fff 100%);
+    }
+
+    .intg-card.disconnected {
+        opacity: .7;
+    }
+
+    .intg-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,.08);
+    }
+
+    .intg-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+
+    .intg-body {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .intg-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--secondary-color);
+    }
+
+    .intg-status {
+        font-size: 12px;
+        font-weight: 500;
+        margin-top: 2px;
+    }
+
+    .intg-status.connected { color: var(--success-color); }
+    .intg-status.disconnected { color: #9ca3af; }
+
+    .intg-value {
+        font-size: 11px;
+        color: #9ca3af;
+        margin-top: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .intg-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        position: absolute;
+        top: 12px;
+        right: 12px;
+    }
+
+    .intg-dot.on {
+        background: var(--success-color);
+        box-shadow: 0 0 0 3px rgba(16,185,129,.2);
+        animation: intgPulse 2s infinite;
+    }
+
+    .intg-dot.off {
+        background: #d1d5db;
+    }
+
+    @keyframes intgPulse {
+        0%, 100% { box-shadow: 0 0 0 3px rgba(16,185,129,.2); }
+        50% { box-shadow: 0 0 0 6px rgba(16,185,129,.1); }
+    }
+
+    .intg-message {
+        font-size: 11px;
+        font-weight: 500;
+        margin-top: 3px;
+        padding: 3px 8px;
+        border-radius: 4px;
+        display: inline-block;
+    }
+
+    .intg-message.success {
+        background: rgba(16,185,129,.1);
+        color: var(--success-color);
+    }
+
+    .intg-message.warning {
+        background: rgba(246,181,0,.1);
+        color: #b45309;
+    }
+
+    .intg-message.error {
+        background: rgba(239,68,68,.1);
+        color: var(--danger-color);
+    }
+
+    .intg-message.checking {
+        background: rgba(59,130,246,.1);
+        color: var(--info-color);
+    }
+
+    .intg-card.checking {
+        border-color: var(--info-color);
+        opacity: .85;
+    }
+
+    .intg-card.checking .intg-icon {
+        animation: intgIconPulse 1s infinite alternate;
+    }
+
+    @keyframes intgIconPulse {
+        from { opacity: .6; }
+        to { opacity: 1; }
+    }
+
     canvas {
         max-height: 350px;
     }
@@ -876,6 +1020,50 @@
                     <span>Settings</span>
                 </a>
                 @endpermission
+            </div>
+        </div>
+
+        <!-- Integrations Status -->
+        <div class="integrations-panel animate__animated animate__fadeInUp">
+            <div class="panel-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:15px;border-bottom:2px solid #f3f4f6;">
+                <div class="panel-title" style="font-size:18px;font-weight:700;color:var(--secondary-color);display:flex;align-items:center;gap:10px;">
+                    <i class="fa fa-plug" style="color:var(--primary-color);"></i> Integrations Status
+                </div>
+                <div style="display:flex;align-items:center;gap:15px;">
+                    <button type="button" class="btn btn-sm" id="btnCheckIntegrations" style="background:linear-gradient(135deg,var(--primary-color),var(--primary-dark));color:#fff;border:none;border-radius:20px;padding:6px 18px;font-size:12px;font-weight:600;">
+                        <i class="fa fa-refresh" id="checkSpinner"></i> Check Connection
+                    </button>
+                    @permission('contact-information-view')
+                    <a href="{{ route('contact-information.index') }}" style="font-size:13px;color:var(--primary-color);text-decoration:none;font-weight:600;">
+                        Manage <i class="fa fa-arrow-right"></i>
+                    </a>
+                    @endpermission
+                </div>
+            </div>
+            <div class="row">
+                @foreach($integrations as $idx => $integration)
+                @php
+                    $keys = ['google_search_console', 'google_analytics', 'facebook_pixel'];
+                    $key = $keys[$idx];
+                @endphp
+                <div class="col-md-4">
+                    <div class="intg-card {{ $integration['connected'] ? 'connected' : 'disconnected' }}" id="intg-card-{{ $key }}">
+                        <div class="intg-icon" id="intg-icon-{{ $key }}" style="background: {{ $integration['connected'] ? $integration['color'] : '#cbd5e1' }};">
+                            <i class="fa {{ $integration['icon'] }}"></i>
+                        </div>
+                        <div class="intg-body">
+                            <div class="intg-name">{{ $integration['name'] }}</div>
+                            <div class="intg-status {{ $integration['connected'] ? 'connected' : 'disconnected' }}" id="intg-status-{{ $key }}">
+                                <i class="fa {{ $integration['connected'] ? 'fa-check-circle' : 'fa-times-circle' }}"></i>
+                                {{ $integration['connected'] ? 'Configured' : 'Not Configured' }}
+                            </div>
+                            <div class="intg-value" id="intg-value-{{ $key }}">{{ $integration['value'] ?? '' }}</div>
+                            <div class="intg-message" id="intg-msg-{{ $key }}" style="display:none;"></div>
+                        </div>
+                        <div class="intg-dot {{ $integration['connected'] ? 'on' : 'off' }}" id="intg-dot-{{ $key }}"></div>
+                    </div>
+                </div>
+                @endforeach
             </div>
         </div>
 
@@ -1812,6 +2000,92 @@
                 }
             });
         }
+    });
+
+    // --- Integration Connection Check ---
+    $('#btnCheckIntegrations').on('click', function() {
+        var $btn = $(this);
+        var $spinner = $('#checkSpinner');
+        var keys = ['google_search_console', 'google_analytics', 'facebook_pixel'];
+        var colorMap = {
+            google_search_console: '#4285F4',
+            google_analytics: '#E37400',
+            facebook_pixel: '#1877F2'
+        };
+
+        $btn.prop('disabled', true);
+        $spinner.addClass('fa-spin');
+
+        keys.forEach(function(key) {
+            var $card = $('#intg-card-' + key);
+            var $msg = $('#intg-msg-' + key);
+            $card.removeClass('connected disconnected').addClass('checking');
+            $msg.show().removeClass('success warning error').addClass('checking').html('<i class="fa fa-spinner fa-spin"></i> Checking...');
+        });
+
+        $.ajax({
+            url: '{{ route("admin.check-integrations") }}',
+            type: 'GET',
+            dataType: 'json',
+            timeout: 30000,
+            success: function(data) {
+                keys.forEach(function(key) {
+                    var r = data[key];
+                    var $card = $('#intg-card-' + key);
+                    var $icon = $('#intg-icon-' + key);
+                    var $status = $('#intg-status-' + key);
+                    var $msg = $('#intg-msg-' + key);
+                    var $dot = $('#intg-dot-' + key);
+
+                    $card.removeClass('checking disconnected connected');
+                    $msg.removeClass('checking');
+
+                    if (!r.configured) {
+                        $card.addClass('disconnected');
+                        $icon.css('background', '#cbd5e1');
+                        $status.removeClass('connected').addClass('disconnected')
+                            .html('<i class="fa fa-times-circle"></i> Not Configured');
+                        $dot.removeClass('on').addClass('off');
+                        $msg.addClass('error').html('<i class="fa fa-minus-circle"></i> ' + r.message);
+                    } else if (r.active) {
+                        $card.addClass('connected');
+                        $icon.css('background', colorMap[key]);
+                        $status.removeClass('disconnected').addClass('connected')
+                            .html('<i class="fa fa-check-circle"></i> Active');
+                        $dot.removeClass('off').addClass('on');
+                        $msg.addClass('success').html('<i class="fa fa-check"></i> ' + r.message);
+                    } else {
+                        $card.addClass('disconnected');
+                        $icon.css('background', colorMap[key]);
+                        $status.removeClass('connected').addClass('disconnected');
+
+                        if (r.valid_id === false) {
+                            $status.html('<i class="fa fa-exclamation-triangle"></i> Invalid ID');
+                            $msg.addClass('error').html('<i class="fa fa-times"></i> ' + r.message);
+                        } else if (r.on_site === false) {
+                            $status.html('<i class="fa fa-exclamation-circle"></i> Not Deployed');
+                            $msg.addClass('warning').html('<i class="fa fa-warning"></i> ' + r.message);
+                        } else {
+                            $status.html('<i class="fa fa-exclamation-circle"></i> Issue Found');
+                            $msg.addClass('warning').html('<i class="fa fa-warning"></i> ' + r.message);
+                        }
+                        $dot.removeClass('on').addClass('off');
+                    }
+                });
+            },
+            error: function() {
+                keys.forEach(function(key) {
+                    var $card = $('#intg-card-' + key);
+                    var $msg = $('#intg-msg-' + key);
+                    $card.removeClass('checking').addClass('disconnected');
+                    $msg.removeClass('checking').addClass('error').html('<i class="fa fa-times"></i> Network error — could not check');
+                });
+            },
+            complete: function() {
+                $btn.prop('disabled', false);
+                $spinner.removeClass('fa-spin');
+            }
+        });
     });
 </script>
 @endsection

@@ -1,10 +1,8 @@
 @extends('layouts.master')
-
-@section('title', app()->getLocale() == 'ar' ? ($aboutInfo->title_arabic ?? __('lang.about_us')) : ($aboutInfo->title_english ?? __('lang.about_us')))
-
-@section('seo_desc', app()->getLocale() == 'ar' ? ($contactInfo->seo_description_arabic ?? '') : ($contactInfo->seo_description_english ?? ''))
-
-@section('seo_tags', app()->getLocale() == 'ar' ? ($aboutInfo->title_arabic ?? __('lang.about_us')) : ($aboutInfo->title_english ?? __('lang.about_us')))
+@php $seo = \App\Models\SeoPage::getSeo('about'); @endphp
+@section('title', $seo['title'] ?? (app()->getLocale() == 'ar' ? ($aboutInfo->title_arabic ?? __('lang.about_us')) : ($aboutInfo->title_english ?? __('lang.about_us'))))
+@section('seo_desc', $seo['description'] ?? '')
+@section('seo_tags', $seo['tags'] ?? (app()->getLocale() == 'ar' ? ($aboutInfo->title_arabic ?? __('lang.about_us')) : ($aboutInfo->title_english ?? __('lang.about_us'))))
 
 @section('content')
 

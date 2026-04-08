@@ -1,16 +1,25 @@
 <?php echo '<?xml version="1.0" encoding="UTF-8"?>'; ?>
 
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
 @foreach($urls as $url)
     <url>
-        <loc>{{ $url['loc'] }}</loc>
+        <loc>{{ $url['loc_en'] }}</loc>
+        <xhtml:link rel="alternate" hreflang="en-ae" href="{{ $url['loc_en'] }}"/>
+        <xhtml:link rel="alternate" hreflang="ar-ae" href="{{ $url['loc_ar'] }}"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="{{ $url['loc_en'] }}"/>
+        <lastmod>{{ $url['lastmod'] }}</lastmod>
+        <changefreq>{{ $url['changefreq'] }}</changefreq>
+        <priority>{{ $url['priority'] }}</priority>
+    </url>
+    <url>
+        <loc>{{ $url['loc_ar'] }}</loc>
+        <xhtml:link rel="alternate" hreflang="en-ae" href="{{ $url['loc_en'] }}"/>
+        <xhtml:link rel="alternate" hreflang="ar-ae" href="{{ $url['loc_ar'] }}"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="{{ $url['loc_en'] }}"/>
         <lastmod>{{ $url['lastmod'] }}</lastmod>
         <changefreq>{{ $url['changefreq'] }}</changefreq>
         <priority>{{ $url['priority'] }}</priority>
     </url>
 @endforeach
 </urlset>
-

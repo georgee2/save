@@ -169,6 +169,26 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 // Sitemap Route (outside localization group for clean URL)
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
+// Analytics heartbeat (CSRF-exempt, outside localization)
+Route::post('/analytics/heartbeat', function (\Illuminate\Http\Request $request) {
+    $visitorId = $request->cookie('svec_vid');
+    if (!$visitorId) return response()->json(['ok' => false], 200);
+
+    $pageView = \App\Models\Analytics\AnalyticsPageView::where('visitor_id', $visitorId)
+        ->orderBy('viewed_at', 'desc')
+        ->first();
+
+    if ($pageView && $request->input('time_on_page')) {
+        $pageView->update(['time_on_page' => (int) $request->input('time_on_page')]);
+    }
+
+    if ($request->input('title') && $pageView && !$pageView->page_title) {
+        $pageView->update(['page_title' => substr($request->input('title'), 0, 500)]);
+    }
+
+    return response()->json(['ok' => true], 200);
+})->name('analytics.heartbeat');
+
 // ============================================
 // FALLBACK: Catch all undefined routes - return 404
 // This must be at the end of the routes file

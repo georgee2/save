@@ -1,9 +1,13 @@
 @extends('layouts.master')
 
-@section('title', app()->getLocale() == 'ar' ? $service->title_arabic : $service->title_english)
+@php
+    $locale = app()->getLocale();
+    $serviceTitle = $service->{"seo_title_{$locale}"} ?: ($locale == 'ar' ? $service->title_arabic : $service->title_english);
+    $serviceDesc = $locale == 'ar' ? $service->seo_des_ar : $service->seo_des_en;
+@endphp
 
-@section('seo_desc', app()->getLocale() == 'ar' ? $service->seo_des_ar : $service->seo_des_en)
-
+@section('title', $serviceTitle)
+@section('seo_desc', $serviceDesc)
 @section('seo_tags', $service->seo_tags)
 
 @section('css')

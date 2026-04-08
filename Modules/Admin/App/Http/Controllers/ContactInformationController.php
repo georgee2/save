@@ -42,6 +42,9 @@ class ContactInformationController extends Controller
             'seo_description_arabic' => 'nullable|string|max:500',
             'confirmation_email_body_en' => 'nullable|string|max:2000',
             'confirmation_email_body_ar' => 'nullable|string|max:2000',
+            'google_search_console' => 'nullable|string|max:500',
+            'google_analytics' => 'nullable|string|max:500',
+            'facebook_pixel' => 'nullable|string|max:500',
         ]);
         
         $data = $request->except('tags');

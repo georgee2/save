@@ -1,7 +1,8 @@
 @extends('layouts.master')
-
-@section('title', __('lang.my_favourites'))
-@section('seo_desc', __('lang.my_favourites'))
+@php $seo = \App\Models\SeoPage::getSeo('favourites'); @endphp
+@section('title', $seo['title'] ?? __('lang.my_favourites'))
+@section('seo_desc', $seo['description'] ?? __('lang.my_favourites'))
+@section('seo_tags', $seo['tags'] ?? __('lang.my_favourites'))
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('/assets/css/favourites-page.css') }}?v=1.9">

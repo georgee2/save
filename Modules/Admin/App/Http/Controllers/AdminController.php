@@ -7,6 +7,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 // Import all models
 use App\Models\Service;
@@ -41,6 +43,7 @@ use App\Models\EngineeringSubCategory;
 use App\Models\OfferCategory;
 use App\Models\OfferSubCategory;
 use App\Models\InteriorCategory;
+use App\Models\ContactInformation;
 
 class AdminController extends Controller
 {
@@ -187,7 +190,32 @@ class AdminController extends Controller
         
         // Get top content creators
         $topCreators = $this->getTopContentCreators();
-        
+
+        $contactInfo = ContactInformation::getContactInfo();
+        $integrations = [
+            [
+                'name' => 'Google Search Console',
+                'icon' => 'fa-google',
+                'color' => '#4285F4',
+                'connected' => !empty($contactInfo->google_search_console),
+                'value' => $contactInfo->google_search_console ? Str::limit($contactInfo->google_search_console, 20) : null,
+            ],
+            [
+                'name' => 'Google Analytics',
+                'icon' => 'fa-bar-chart',
+                'color' => '#E37400',
+                'connected' => !empty($contactInfo->google_analytics),
+                'value' => $contactInfo->google_analytics ?? null,
+            ],
+            [
+                'name' => 'Facebook Pixel',
+                'icon' => 'fa-facebook',
+                'color' => '#1877F2',
+                'connected' => !empty($contactInfo->facebook_pixel),
+                'value' => $contactInfo->facebook_pixel ? Str::limit($contactInfo->facebook_pixel, 20) : null,
+            ],
+        ];
+
         return view('admin::index', compact(
             'stats', 
             'recentActivity', 
@@ -197,7 +225,8 @@ class AdminController extends Controller
             'statusDistribution',
             'offersCategoryDistribution',
             'recentLogs',
-            'topCreators'
+            'topCreators',
+            'integrations'
         ));
     }
     
@@ -375,5 +404,126 @@ class AdminController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Check real connection status for integrations (Google Analytics, Facebook Pixel, Search Console).
+     * Pings external services + verifies tags are rendered on the live site.
+     */
+    public function checkIntegrations()
+    {
+        $contactInfo = ContactInformation::getContactInfo();
+        $siteUrl = config('app.url');
+        $results = [];
+
+        // Fetch our own site HTML once (reused for all checks)
+        $siteHtml = null;
+        try {
+            $siteResponse = Http::timeout(15)->withOptions(['verify' => false])->get($siteUrl);
+            if ($siteResponse->successful()) {
+                $siteHtml = $siteResponse->body();
+            }
+        } catch (\Exception $e) {
+            // Site fetch failed — we'll note it per integration
+        }
+
+        // --- Google Search Console ---
+        if (!empty($contactInfo->google_search_console)) {
+            $onSite = $siteHtml && str_contains($siteHtml, $contactInfo->google_search_console);
+            $results['google_search_console'] = [
+                'configured' => true,
+                'on_site' => $onSite,
+                'active' => $onSite,
+                'message' => $onSite
+                    ? 'Verified — meta tag found on site'
+                    : ($siteHtml === null ? 'Could not fetch site to verify' : 'Meta tag NOT found on site'),
+            ];
+        } else {
+            $results['google_search_console'] = [
+                'configured' => false,
+                'active' => false,
+                'message' => 'Not configured',
+            ];
+        }
+
+        // --- Google Analytics ---
+        if (!empty($contactInfo->google_analytics)) {
+            $gaId = trim($contactInfo->google_analytics);
+            $validId = false;
+            $onSite = $siteHtml && str_contains($siteHtml, $gaId);
+
+            try {
+                $gaResponse = Http::timeout(10)->get("https://www.googletagmanager.com/gtag/js?id={$gaId}");
+                // Valid IDs return a large JS file (>500 bytes); invalid ones return a tiny stub
+                $validId = $gaResponse->successful() && strlen($gaResponse->body()) > 500;
+            } catch (\Exception $e) {
+                // Could not reach Google
+            }
+
+            if ($validId && $onSite) {
+                $msg = 'Active — valid ID & deployed on site';
+            } elseif ($validId && !$onSite) {
+                $msg = 'Valid ID but tag not found on site';
+            } elseif (!$validId && $onSite) {
+                $msg = 'Tag on site but ID appears invalid';
+            } else {
+                $msg = $siteHtml === null ? 'Could not verify — site unreachable' : 'Invalid measurement ID';
+            }
+
+            $results['google_analytics'] = [
+                'configured' => true,
+                'valid_id' => $validId,
+                'on_site' => $onSite,
+                'active' => $validId && $onSite,
+                'message' => $msg,
+            ];
+        } else {
+            $results['google_analytics'] = [
+                'configured' => false,
+                'active' => false,
+                'message' => 'Not configured',
+            ];
+        }
+
+        // --- Facebook Pixel ---
+        if (!empty($contactInfo->facebook_pixel)) {
+            $pixelId = trim($contactInfo->facebook_pixel);
+            $validPixel = false;
+            $onSite = $siteHtml && str_contains($siteHtml, $pixelId);
+
+            try {
+                // Facebook returns a 1x1 tracking pixel image for valid IDs
+                $fbResponse = Http::timeout(10)->get("https://www.facebook.com/tr?id={$pixelId}&ev=PageView&noscript=1");
+                $validPixel = $fbResponse->successful();
+            } catch (\Exception $e) {
+                // Could not reach Facebook
+            }
+
+            if ($validPixel && $onSite) {
+                $msg = 'Active — valid Pixel & deployed on site';
+            } elseif ($validPixel && !$onSite) {
+                $msg = 'Valid Pixel but tag not found on site';
+            } elseif (!$validPixel && $onSite) {
+                $msg = 'Tag on site but Pixel ID may be invalid';
+            } else {
+                $msg = $siteHtml === null ? 'Could not verify — site unreachable' : 'Invalid Pixel ID';
+            }
+
+            $results['facebook_pixel'] = [
+                'configured' => true,
+                'valid_id' => $validPixel,
+                'on_site' => $onSite,
+                'active' => $validPixel && $onSite,
+                'message' => $msg,
+            ];
+        } else {
+            $results['facebook_pixel'] = [
+                'configured' => false,
+                'active' => false,
+                'message' => 'Not configured',
+            ];
+        }
+
+        return response()->json($results);
     }
 }

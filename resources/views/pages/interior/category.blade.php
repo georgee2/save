@@ -129,8 +129,8 @@
                     >
                         {{-- Card Image --}}
                         <div class="card-image">
-                            <img src="{{ url('/storage' . $item->image) }}" 
-                                 alt="{{ app()->getLocale() == 'ar' ? $item->title_arabic : $item->title_english }}"
+                            <img src="{{ url('/storage' . $item->image) }}"
+                                 alt="{{ $item->{'alt_text_' . app()->getLocale()} ?? (app()->getLocale() == 'ar' ? $item->title_arabic : $item->title_english) }}"
                                  loading="lazy">
                             <div class="card-overlay"></div>
                         </div>
