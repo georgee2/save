@@ -97,6 +97,70 @@
     .device-mobile { background:#d1fae5; color:#065f46; }
     .device-tablet { background:#fef3c7; color:#92400e; }
 
+    /* Cleanup Panel */
+    .cleanup-toggle-btn {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color:#fff; border:none; padding:12px 24px; border-radius:12px; font-size:.9rem; font-weight:600;
+        cursor:pointer; transition:.3s; display:inline-flex; align-items:center; gap:8px;
+    }
+    .cleanup-toggle-btn:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(239,68,68,.4); }
+    .cleanup-toggle-btn i { font-size:1rem; }
+
+    .cleanup-panel {
+        background:#fff; border-radius:14px; box-shadow:var(--card-shadow); margin-bottom:25px;
+        border:2px solid #fecaca; overflow:hidden;
+    }
+    .cleanup-panel-header {
+        background:linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        padding:18px 24px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+        border-bottom:1px solid #fecaca;
+    }
+    .cleanup-panel-header h5 { margin:0; color:#991b1b; font-weight:700; font-size:1.05rem; }
+    .cleanup-panel-body { padding:20px 24px; }
+
+    .cleanup-section { margin-bottom:24px; padding-bottom:20px; border-bottom:1px solid #f1f5f9; }
+    .cleanup-section:last-child { margin-bottom:0; border-bottom:none; padding-bottom:0; }
+    .cleanup-section h6 { font-weight:700; color:var(--secondary); margin-bottom:12px; font-size:.95rem; display:flex; align-items:center; gap:8px; }
+    .cleanup-section h6 i { color:var(--primary); }
+
+    .cleanup-table { width:100%; font-size:.82rem; border-collapse:collapse; }
+    .cleanup-table th { background:#f8fafc; color:#64748b; font-weight:600; padding:8px 12px; border-bottom:2px solid #e2e8f0; text-align:left; }
+    .cleanup-table td { padding:8px 12px; border-bottom:1px solid #f1f5f9; color:#334155; vertical-align:middle; }
+    .cleanup-table tr:hover td { background:#f8fafc; }
+    .cleanup-table .cb-cell { width:36px; text-align:center; }
+    .cleanup-table input[type=checkbox] { width:16px; height:16px; cursor:pointer; accent-color:var(--accent); }
+
+    .cleanup-btn { padding:8px 18px; border-radius:8px; border:none; font-size:.82rem; font-weight:600; cursor:pointer; transition:.2s; display:inline-flex; align-items:center; gap:6px; }
+    .cleanup-btn:disabled { opacity:.5; cursor:not-allowed; }
+    .cleanup-btn-danger { background:#ef4444; color:#fff; }
+    .cleanup-btn-danger:hover:not(:disabled) { background:#dc2626; }
+    .cleanup-btn-warning { background:#f59e0b; color:#fff; }
+    .cleanup-btn-warning:hover:not(:disabled) { background:#d97706; }
+    .cleanup-btn-secondary { background:#6b7280; color:#fff; }
+    .cleanup-btn-secondary:hover:not(:disabled) { background:#4b5563; }
+
+    .cleanup-actions { display:flex; align-items:center; gap:10px; margin-top:12px; flex-wrap:wrap; }
+
+    .cleanup-stat-card {
+        background:#f8fafc; border-radius:10px; padding:14px 18px; text-align:center;
+        border:1px solid #e2e8f0; flex:1; min-width:120px;
+    }
+    .cleanup-stat-card .stat-val { font-size:1.4rem; font-weight:800; color:var(--secondary); }
+    .cleanup-stat-card .stat-lbl { font-size:.75rem; color:#64748b; margin-top:2px; }
+
+    .cleanup-alert {
+        padding:10px 16px; border-radius:8px; font-size:.82rem; margin-bottom:12px;
+        display:none; align-items:center; gap:8px;
+    }
+    .cleanup-alert-success { background:#d1fae5; color:#065f46; border:1px solid #6ee7b7; }
+    .cleanup-alert-error { background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; }
+
+    .cleanup-loading { display:none; text-align:center; padding:30px; color:#64748b; }
+    .cleanup-loaded { display:none; }
+
+    .select-all-wrap { display:flex; align-items:center; gap:6px; font-size:.82rem; color:#64748b; cursor:pointer; }
+    .select-all-wrap input { cursor:pointer; }
+
     @media(max-width:768px) {
         .analytics-header { padding:20px; }
         .analytics-header h2 { font-size:1.3rem; }
@@ -344,6 +408,101 @@
         </div>
     </div>
 
+    {{-- Data Cleanup --}}
+    <div style="text-align:right; margin-bottom:15px;">
+        <button class="cleanup-toggle-btn" id="btnToggleCleanup">
+            <i class="fa fa-trash-o"></i> Data Cleanup Tools
+        </button>
+    </div>
+
+    <div class="cleanup-panel" id="cleanupPanel" style="display:none;">
+        <div class="cleanup-panel-header">
+            <h5><i class="fa fa-trash-o"></i> Analytics Data Cleanup</h5>
+            <span style="font-size:.8rem; color:#991b1b;">Deleting data is permanent and cannot be undone</span>
+        </div>
+        <div class="cleanup-panel-body">
+
+            <div class="cleanup-alert cleanup-alert-success" id="cleanupSuccess"><i class="fa fa-check-circle"></i> <span></span></div>
+            <div class="cleanup-alert cleanup-alert-error" id="cleanupError"><i class="fa fa-exclamation-circle"></i> <span></span></div>
+
+            <div class="cleanup-loading" id="cleanupLoading">
+                <i class="fa fa-spinner fa-spin fa-2x"></i>
+                <p style="margin-top:10px;">Loading analytics data...</p>
+            </div>
+
+            <div class="cleanup-loaded" id="cleanupLoaded">
+
+                {{-- Database Totals --}}
+                <div class="cleanup-section">
+                    <h6><i class="fa fa-database"></i> Database Totals</h6>
+                    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                        <div class="cleanup-stat-card"><div class="stat-val" id="totalVisitors">-</div><div class="stat-lbl">Visitors</div></div>
+                        <div class="cleanup-stat-card"><div class="stat-val" id="totalSessions">-</div><div class="stat-lbl">Sessions</div></div>
+                        <div class="cleanup-stat-card"><div class="stat-val" id="totalPageViews">-</div><div class="stat-lbl">Page Views</div></div>
+                        <div class="cleanup-stat-card"><div class="stat-val" id="totalOrphanedSessions">-</div><div class="stat-lbl">Orphaned Sessions</div></div>
+                        <div class="cleanup-stat-card"><div class="stat-val" id="totalOrphanedVisitors">-</div><div class="stat-lbl">Orphaned Visitors</div></div>
+                    </div>
+                    <div class="cleanup-actions" style="margin-top:14px;">
+                        <button class="cleanup-btn cleanup-btn-warning" id="btnCleanOrphaned"><i class="fa fa-unlink"></i> Clean Orphaned Records</button>
+                    </div>
+                </div>
+
+                {{-- Clean by Country --}}
+                <div class="cleanup-section">
+                    <h6><i class="fa fa-globe"></i> Clean by Country</h6>
+                    <p style="font-size:.8rem; color:#64748b; margin-bottom:10px;">Select countries to remove all their visitors, sessions, and page views from the database.</p>
+                    <div style="overflow-x:auto; max-height:350px; overflow-y:auto;">
+                        <table class="cleanup-table">
+                            <thead>
+                                <tr>
+                                    <th class="cb-cell"><label class="select-all-wrap"><input type="checkbox" id="selectAllCountries"> All</label></th>
+                                    <th>Country</th>
+                                    <th>Code</th>
+                                    <th>Visitors</th>
+                                    <th>Total Hits</th>
+                                </tr>
+                            </thead>
+                            <tbody id="countryTableBody">
+                                <tr><td colspan="5" class="text-center text-muted">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="cleanup-actions">
+                        <button class="cleanup-btn cleanup-btn-danger" id="btnDeleteCountries" disabled><i class="fa fa-trash"></i> Delete Selected Countries</button>
+                        <button class="cleanup-btn cleanup-btn-secondary" id="btnDeleteNullCountry" style="display:none;"><i class="fa fa-question-circle"></i> Delete Unknown Location (<span id="nullCountryCount">0</span>)</button>
+                        <span style="font-size:.78rem; color:#94a3b8;" id="countrySelectionInfo">0 selected</span>
+                    </div>
+                </div>
+
+                {{-- Clean Internal URLs --}}
+                <div class="cleanup-section">
+                    <h6><i class="fa fa-link"></i> Internal / Backend Page Views</h6>
+                    <p style="font-size:.8rem; color:#64748b; margin-bottom:10px;">Page views for login, admin, search API, and other internal URLs that should not be tracked.</p>
+                    <div style="overflow-x:auto; max-height:300px; overflow-y:auto;">
+                        <table class="cleanup-table">
+                            <thead>
+                                <tr>
+                                    <th class="cb-cell"><label class="select-all-wrap"><input type="checkbox" id="selectAllUrls"> All</label></th>
+                                    <th>URL</th>
+                                    <th>Views</th>
+                                </tr>
+                            </thead>
+                            <tbody id="urlTableBody">
+                                <tr><td colspan="3" class="text-center text-muted">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="cleanup-actions">
+                        <button class="cleanup-btn cleanup-btn-danger" id="btnDeleteUrls" disabled><i class="fa fa-trash"></i> Delete Selected URLs</button>
+                        <button class="cleanup-btn cleanup-btn-warning" id="btnDeleteAllInternal"><i class="fa fa-broom"></i> Delete All Internal Page Views</button>
+                        <span style="font-size:.78rem; color:#94a3b8;" id="urlSelectionInfo">0 selected</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 </div>
 @endsection
 
@@ -472,6 +631,166 @@ $(document).ready(function() {
     }
     fetchRealtime();
     setInterval(fetchRealtime, 10000);
+
+    // ─── Cleanup Tools ──────────────────────────────────────────────
+
+    var cleanupLoaded = false;
+
+    $('#btnToggleCleanup').on('click', function() {
+        var panel = $('#cleanupPanel');
+        panel.slideToggle(300);
+        if (!cleanupLoaded) {
+            loadCleanupData();
+            cleanupLoaded = true;
+        }
+    });
+
+    function showCleanupMsg(type, msg) {
+        var el = type === 'success' ? $('#cleanupSuccess') : $('#cleanupError');
+        el.find('span').text(msg);
+        el.css('display', 'flex').delay(5000).fadeOut(300);
+    }
+
+    function fmt(n) { return n.toLocaleString(); }
+
+    function loadCleanupData() {
+        $('#cleanupLoading').show();
+        $('#cleanupLoaded').hide();
+
+        $.getJSON('{{ route("admin.analytics.cleanup-data") }}', function(data) {
+            $('#cleanupLoading').hide();
+            $('#cleanupLoaded').show();
+
+            $('#totalVisitors').text(fmt(data.totals.visitors));
+            $('#totalSessions').text(fmt(data.totals.sessions));
+            $('#totalPageViews').text(fmt(data.totals.page_views));
+            $('#totalOrphanedSessions').text(fmt(data.orphaned_sessions));
+            $('#totalOrphanedVisitors').text(fmt(data.orphaned_visitors));
+
+            if (data.orphaned_sessions === 0 && data.orphaned_visitors === 0) {
+                $('#btnCleanOrphaned').prop('disabled', true).html('<i class="fa fa-check"></i> No orphans');
+            }
+
+            // Countries table
+            var cHtml = '';
+            if (data.countries.length === 0) {
+                cHtml = '<tr><td colspan="5" class="text-center text-muted">No country data found</td></tr>';
+            } else {
+                data.countries.forEach(function(c) {
+                    cHtml += '<tr>' +
+                        '<td class="cb-cell"><input type="checkbox" class="country-cb" value="' + (c.country || '') + '"></td>' +
+                        '<td>' + (c.country || '<em>Unknown</em>') + '</td>' +
+                        '<td>' + (c.country_code || '-') + '</td>' +
+                        '<td><strong>' + fmt(c.visitors_count) + '</strong></td>' +
+                        '<td>' + fmt(c.total_hits) + '</td>' +
+                        '</tr>';
+                });
+            }
+            $('#countryTableBody').html(cHtml);
+
+            // Null country
+            if (data.null_country_visitors > 0) {
+                $('#btnDeleteNullCountry').show();
+                $('#nullCountryCount').text(fmt(data.null_country_visitors));
+            }
+
+            // URL table
+            var uHtml = '';
+            if (data.internal_urls.length === 0) {
+                uHtml = '<tr><td colspan="3" class="text-center text-muted">No internal URLs found</td></tr>';
+                $('#btnDeleteAllInternal').prop('disabled', true);
+            } else {
+                data.internal_urls.forEach(function(u) {
+                    var shortUrl = u.url.length > 80 ? u.url.substring(0, 80) + '...' : u.url;
+                    uHtml += '<tr>' +
+                        '<td class="cb-cell"><input type="checkbox" class="url-cb" value="' + u.url.replace(/"/g, '&quot;') + '"></td>' +
+                        '<td class="url-cell" title="' + u.url.replace(/"/g, '&quot;') + '">' + shortUrl + '</td>' +
+                        '<td><strong>' + fmt(u.views_count) + '</strong></td>' +
+                        '</tr>';
+                });
+            }
+            $('#urlTableBody').html(uHtml);
+            updateSelectionCounts();
+        }).fail(function() {
+            $('#cleanupLoading').hide();
+            showCleanupMsg('error', 'Failed to load cleanup data.');
+        });
+    }
+
+    function updateSelectionCounts() {
+        var cc = $('.country-cb:checked').length;
+        $('#countrySelectionInfo').text(cc + ' selected');
+        $('#btnDeleteCountries').prop('disabled', cc === 0);
+
+        var uc = $('.url-cb:checked').length;
+        $('#urlSelectionInfo').text(uc + ' selected');
+        $('#btnDeleteUrls').prop('disabled', uc === 0);
+    }
+
+    $(document).on('change', '.country-cb, .url-cb', updateSelectionCounts);
+
+    $('#selectAllCountries').on('change', function() {
+        $('.country-cb').prop('checked', this.checked);
+        updateSelectionCounts();
+    });
+    $('#selectAllUrls').on('change', function() {
+        $('.url-cb').prop('checked', this.checked);
+        updateSelectionCounts();
+    });
+
+    function cleanupAjax(url, data, btn) {
+        var origHtml = btn.html();
+        btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Processing...');
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+            success: function(res) {
+                showCleanupMsg('success', res.message);
+                cleanupLoaded = false;
+                loadCleanupData();
+            },
+            error: function(xhr) {
+                var msg = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred.';
+                showCleanupMsg('error', msg);
+                btn.prop('disabled', false).html(origHtml);
+            }
+        });
+    }
+
+    $('#btnDeleteCountries').on('click', function() {
+        var selected = [];
+        $('.country-cb:checked').each(function() { selected.push($(this).val()); });
+        if (selected.length === 0) return;
+        if (!confirm('Delete ALL data for ' + selected.length + ' country(ies)?\n\n' + selected.join(', ') + '\n\nThis removes their visitors, sessions, and page views permanently.')) return;
+        cleanupAjax('{{ route("admin.analytics.destroy-by-country") }}', { countries: selected }, $(this));
+    });
+
+    $('#btnDeleteNullCountry').on('click', function() {
+        if (!confirm('Delete ALL visitors with unknown location and their sessions/page views?')) return;
+        cleanupAjax('{{ route("admin.analytics.destroy-null-country") }}', {}, $(this));
+    });
+
+    $('#btnDeleteUrls').on('click', function() {
+        var selected = [];
+        $('.url-cb:checked').each(function() { selected.push($(this).val()); });
+        if (selected.length === 0) return;
+        if (!confirm('Delete ' + selected.length + ' URL(s) page views?')) return;
+        cleanupAjax('{{ route("admin.analytics.destroy-by-urls") }}', { urls: selected }, $(this));
+    });
+
+    $('#btnDeleteAllInternal').on('click', function() {
+        if (!confirm('Delete ALL internal/backend page views at once?\nThis includes login, admin, search API, and other internal URLs.')) return;
+        cleanupAjax('{{ route("admin.analytics.destroy-by-urls") }}', { clean_internal: true }, $(this));
+    });
+
+    $('#btnCleanOrphaned').on('click', function() {
+        if (!confirm('Delete all orphaned sessions and visitors that have no remaining page views?')) return;
+        cleanupAjax('{{ route("admin.analytics.destroy-orphaned") }}', {}, $(this));
+    });
 });
 </script>
 @endsection

@@ -90,9 +90,9 @@ class TrackPageView
         $statusCode = method_exists($response, 'getStatusCode') ? $response->getStatusCode() : 200;
         if ($statusCode !== 200) return true;
 
-        // Skip backend/admin paths
-        if ($request->is('admin/*', 'basicdata/*', 'crm/*', 'api/*', 'analytics/*', 'sitemap*', 'storage/*')) return true;
-        if ($request->is('*/admin/*', '*/basicdata/*', '*/crm/*')) return true;
+        // Skip backend/admin paths (with and without trailing content)
+        if ($request->is('admin', 'admin/*', 'basicdata', 'basicdata/*', 'crm', 'crm/*', 'api/*', 'analytics/*', 'sitemap*', 'storage/*')) return true;
+        if ($request->is('*/admin', '*/admin/*', '*/basicdata', '*/basicdata/*', '*/crm', '*/crm/*')) return true;
 
         // Skip internal/auth pages
         if ($request->is(...self::INTERNAL_PATHS)) return true;
