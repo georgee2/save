@@ -109,6 +109,11 @@ Route::group(
                 Route::get('/realtime', [\Modules\Admin\App\Http\Controllers\AnalyticsController::class, 'realtime'])->name('realtime');
                 Route::get('/visitors', [\Modules\Admin\App\Http\Controllers\AnalyticsController::class, 'visitors'])->name('visitors');
                 Route::get('/export', [\Modules\Admin\App\Http\Controllers\AnalyticsController::class, 'export'])->name('export');
+                Route::get('/cleanup-data', [\Modules\Admin\App\Http\Controllers\AnalyticsController::class, 'cleanupData'])->name('cleanup-data');
+                Route::post('/destroy-by-country', [\Modules\Admin\App\Http\Controllers\AnalyticsController::class, 'destroyByCountry'])->name('destroy-by-country');
+                Route::post('/destroy-by-urls', [\Modules\Admin\App\Http\Controllers\AnalyticsController::class, 'destroyByUrls'])->name('destroy-by-urls');
+                Route::post('/destroy-orphaned', [\Modules\Admin\App\Http\Controllers\AnalyticsController::class, 'destroyOrphaned'])->name('destroy-orphaned');
+                Route::post('/destroy-null-country', [\Modules\Admin\App\Http\Controllers\AnalyticsController::class, 'destroyNullCountry'])->name('destroy-null-country');
             });
 
             // Translation API Route

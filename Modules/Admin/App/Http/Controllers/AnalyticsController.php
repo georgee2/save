@@ -18,8 +18,11 @@ class AnalyticsController extends Controller
         '%/checkuser%',
         '%/register%',
         '%/password/%',
+        '%/admin',
         '%/admin/%',
+        '%/basicdata',
         '%/basicdata/%',
+        '%/crm',
         '%/crm/%',
         '%/search/live%',
         '%/search/emirates%',
@@ -298,5 +301,147 @@ class AnalyticsController extends Controller
             ->orderByDesc('started_at')
             ->limit(20)
             ->get();
+    }
+
+    // ─── Data Cleanup ───────────────────────────────────────────────
+
+    public function cleanupData()
+    {
+        $countries = AnalyticsVisitor::whereNotNull('country')
+            ->select(
+                'country',
+                'country_code',
+                DB::raw('COUNT(*) as visitors_count'),
+                DB::raw('SUM(total_visits) as total_hits')
+            )
+            ->groupBy('country', 'country_code')
+            ->orderByDesc('visitors_count')
+            ->get();
+
+        $internalUrls = AnalyticsPageView::where(function ($q) {
+                foreach (self::EXCLUDED_URL_PATTERNS as $pattern) {
+                    $q->orWhere('url', 'LIKE', $pattern);
+                }
+            })
+            ->select('url', DB::raw('COUNT(*) as views_count'))
+            ->groupBy('url')
+            ->orderByDesc('views_count')
+            ->get();
+
+        $nullCountryVisitors = AnalyticsVisitor::whereNull('country')->count();
+
+        $orphanedSessions = AnalyticsSession::whereNotIn(
+            'visitor_id', AnalyticsPageView::select('visitor_id')->distinct()
+        )->count();
+
+        $orphanedVisitors = AnalyticsVisitor::whereNotIn(
+            'visitor_id', AnalyticsPageView::select('visitor_id')->distinct()
+        )->count();
+
+        $totals = [
+            'visitors' => AnalyticsVisitor::count(),
+            'sessions' => AnalyticsSession::count(),
+            'page_views' => AnalyticsPageView::count(),
+        ];
+
+        return response()->json([
+            'countries' => $countries,
+            'internal_urls' => $internalUrls,
+            'null_country_visitors' => $nullCountryVisitors,
+            'orphaned_sessions' => $orphanedSessions,
+            'orphaned_visitors' => $orphanedVisitors,
+            'totals' => $totals,
+        ]);
+    }
+
+    public function destroyByCountry(Request $request)
+    {
+        $countries = $request->input('countries', []);
+        if (empty($countries)) {
+            return response()->json(['success' => false, 'message' => 'No countries selected.'], 422);
+        }
+
+        $visitorIds = AnalyticsVisitor::whereIn('country', $countries)->pluck('visitor_id');
+
+        $deletedViews = AnalyticsPageView::whereIn('visitor_id', $visitorIds)->delete();
+        $deletedSessions = AnalyticsSession::whereIn('visitor_id', $visitorIds)->delete();
+        $deletedVisitors = AnalyticsVisitor::whereIn('country', $countries)->delete();
+
+        return response()->json([
+            'success' => true,
+            'deleted' => [
+                'visitors' => $deletedVisitors,
+                'sessions' => $deletedSessions,
+                'page_views' => $deletedViews,
+            ],
+            'message' => "Deleted {$deletedVisitors} visitors, {$deletedSessions} sessions, {$deletedViews} page views.",
+        ]);
+    }
+
+    public function destroyByUrls(Request $request)
+    {
+        $urls = $request->input('urls', []);
+        $cleanInternal = $request->boolean('clean_internal', false);
+
+        $query = AnalyticsPageView::query();
+
+        if ($cleanInternal) {
+            $query->where(function ($q) {
+                foreach (self::EXCLUDED_URL_PATTERNS as $pattern) {
+                    $q->orWhere('url', 'LIKE', $pattern);
+                }
+            });
+        } elseif (!empty($urls)) {
+            $query->whereIn('url', $urls);
+        } else {
+            return response()->json(['success' => false, 'message' => 'No URLs selected.'], 422);
+        }
+
+        $deletedViews = $query->delete();
+
+        return response()->json([
+            'success' => true,
+            'deleted' => ['page_views' => $deletedViews],
+            'message' => "Deleted {$deletedViews} page views.",
+        ]);
+    }
+
+    public function destroyOrphaned()
+    {
+        $deletedSessions = AnalyticsSession::whereNotIn(
+            'visitor_id', AnalyticsPageView::select('visitor_id')->distinct()
+        )->delete();
+
+        $deletedVisitors = AnalyticsVisitor::whereNotIn(
+            'visitor_id', AnalyticsPageView::select('visitor_id')->distinct()
+        )->delete();
+
+        return response()->json([
+            'success' => true,
+            'deleted' => [
+                'sessions' => $deletedSessions,
+                'visitors' => $deletedVisitors,
+            ],
+            'message' => "Deleted {$deletedSessions} orphaned sessions, {$deletedVisitors} orphaned visitors.",
+        ]);
+    }
+
+    public function destroyNullCountry()
+    {
+        $visitorIds = AnalyticsVisitor::whereNull('country')->pluck('visitor_id');
+
+        $deletedViews = AnalyticsPageView::whereIn('visitor_id', $visitorIds)->delete();
+        $deletedSessions = AnalyticsSession::whereIn('visitor_id', $visitorIds)->delete();
+        $deletedVisitors = AnalyticsVisitor::whereNull('country')->delete();
+
+        return response()->json([
+            'success' => true,
+            'deleted' => [
+                'visitors' => $deletedVisitors,
+                'sessions' => $deletedSessions,
+                'page_views' => $deletedViews,
+            ],
+            'message' => "Deleted {$deletedVisitors} visitors, {$deletedSessions} sessions, {$deletedViews} page views with unknown location.",
+        ]);
     }
 }
