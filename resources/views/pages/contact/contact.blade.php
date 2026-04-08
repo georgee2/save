@@ -1,10 +1,8 @@
 @extends('layouts.master')
-
-@section('title', __('lang.contact_us_title'))
-
-@section('seo_desc', $contactInfo->seo_description_english ?? __('lang.contact_us_seo_desc'))
-
-@section('seo_tags', $contactInfo->tags ?? __('lang.contact_us'))
+@php $seo = \App\Models\SeoPage::getSeo('contact'); @endphp
+@section('title', $seo['title'] ?? __('lang.contact_us_title'))
+@section('seo_desc', $seo['description'] ?? __('lang.contact_us_seo_desc'))
+@section('seo_tags', $seo['tags'] ?? __('lang.contact_us'))
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('/assets/css/contact-page.css') }}?v={{ time() }}">

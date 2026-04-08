@@ -1,12 +1,28 @@
 @extends('layouts.master')
 
 @php
-    $projectTitle = app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english;
-    $projectDesc = $project->seo_desc ?? (app()->getLocale() == 'ar' ? $project->bio_arabic : $project->bio_english);
-    $projectImage = url('/storage' . $project->main_image);
-    $projectCategory = $project->category ? (app()->getLocale() == 'ar' ? $project->category->title_arabic : $project->category->title_english) : '';
-    $projectSubcategory = $project->subcategory ? (app()->getLocale() == 'ar' ? $project->subcategory->title_arabic : $project->subcategory->title_english) : '';
+    $locale = app()->getLocale();
+    $projectCategory = $project->category ? ($locale == 'ar' ? $project->category->title_arabic : $project->category->title_english) : '';
+    $projectSubcategory = $project->subcategory ? ($locale == 'ar' ? $project->subcategory->title_arabic : $project->subcategory->title_english) : '';
     $projectSqft = $project->sqft ? number_format($project->sqft) . ' ' . __('lang.sqft') : '';
+
+    // Smart SEO title: custom > auto-generated > plain title
+    if ($project->{"seo_title_{$locale}"}) {
+        $projectTitle = $project->{"seo_title_{$locale}"};
+    } elseif ($locale === 'en') {
+        $projectTitle = ($projectSubcategory ?: $projectCategory ?: $project->title_english) . ' Design'
+            . ($project->sqft ? ' – ' . number_format($project->sqft) . ' Sq.Ft' : '')
+            . ' | SVEC';
+    } else {
+        $projectTitle = 'تصميم ' . ($projectSubcategory ?: $projectCategory ?: $project->title_arabic)
+            . ($project->sqft ? ' – ' . number_format($project->sqft) . ' قدم مربع' : '')
+            . ' | SVEC';
+    }
+
+    $projectDesc = $project->{"seo_description_{$locale}"} ?: ($locale == 'ar' ? $project->bio_arabic : $project->bio_english);
+    $projectImage = url('/storage' . $project->main_image);
+    $projectAlt = $project->{"alt_text_{$locale}"} ?? ($locale == 'ar' ? $project->title_arabic : $project->title_english);
+
     $ogDescription = $projectDesc;
     if($projectSqft || $projectCategory) {
         $ogDescription = ($projectSqft ? $projectSqft . ' | ' : '') . ($projectCategory ? $projectCategory . ' | ' : '') . $projectDesc;
@@ -24,10 +40,26 @@
 @section('og_type', 'article')
 
 @section('meta_tags')
-{{-- Additional Project Meta Tags --}}
 @if($project->project_code)
 <meta property="product:retailer_item_id" content="{{ $project->project_code }}">
 @endif
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "name": "{{ e($projectTitle) }}",
+    "description": "{{ e(Str::limit(strip_tags($projectDesc), 300)) }}",
+    "image": "{{ $projectImage }}",
+    "creator": {
+        "@type": "Organization",
+        "name": "Smart Vision Engineering Consultants"
+    }@if($project->emirate),
+    "spatialCoverage": {
+        "@type": "Place",
+        "name": "{{ $project->emirate->{'name_' . $locale} ?? 'UAE' }}"
+    }@endif
+}
+</script>
 @endsection
 
 @section('content')
@@ -185,8 +217,8 @@
                  data-gtf-mfp="true"
                  data-gallery-id="project-gallery"
                  class="d-block rounded-lg overflow-hidden position-relative gallery-hover main-image-container">
-                <img src="{{ url('/storage' . $project->main_image) }}" 
-                     alt="{{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}"
+                <img src="{{ url('/storage' . $project->main_image) }}"
+                     alt="{{ $projectAlt }}"
                      class="w-100 rounded-lg"
                      style="object-fit: contain;">
                 <div class="gallery-hover-overlay position-absolute w-100 h-100 d-flex align-items-center justify-content-center rounded-lg" 

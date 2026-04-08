@@ -7,6 +7,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="favourites-count-url" content="/{{ app()->getLocale() }}/favourites/count">
         <meta name="favourites-toggle-url" content="/{{ app()->getLocale() }}/favourites/toggle">
+        <meta name="analytics-heartbeat-url" content="{{ url('/analytics/heartbeat') }}">
         <meta content="@yield('seo_desc')" name="description">
         <meta content="@yield('seo_tags')" name="keywords">
         <title>@yield('title' , env('APP_NAME'))</title>
@@ -56,6 +57,40 @@
         @endif
         
         @yield('meta_tags')
+
+        {{-- Hreflang alternate tags for multilingual SEO --}}
+        <link rel="alternate" hreflang="en-ae" href="{{ LaravelLocalization::getLocalizedURL('en') }}" />
+        <link rel="alternate" hreflang="ar-ae" href="{{ LaravelLocalization::getLocalizedURL('ar') }}" />
+        <link rel="alternate" hreflang="x-default" href="{{ LaravelLocalization::getLocalizedURL('en') }}" />
+
+        {{-- Self-referencing canonical --}}
+        <link rel="canonical" href="{{ url()->current() }}" />
+
+        {{-- Organization / LocalBusiness JSON-LD --}}
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": ["Organization", "LocalBusiness"],
+            "name": "Smart Vision Engineering Consultants (SVEC)",
+            "url": "https://svec.ae",
+            "logo": "{{ asset('pic/logos/logoen.png') }}",
+            "telephone": "{{ $footerContactInfo->mobile ?? '' }}",
+            "email": "{{ $footerContactInfo->email ?? '' }}",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Al Batha Tower, 20th Floor, Office 2002, Corniche Al Buhaira, Al Majaz 1",
+                "addressLocality": "Sharjah",
+                "addressCountry": "AE"
+            },
+            "sameAs": [
+                @if($footerContactInfo->facebook)"{{ $footerContactInfo->facebook }}",@endif
+                @if($footerContactInfo->instagram)"{{ $footerContactInfo->instagram }}",@endif
+                @if($footerContactInfo->linkedin)"{{ $footerContactInfo->linkedin }}",@endif
+                @if($footerContactInfo->twitter)"{{ $footerContactInfo->twitter }}"@endif
+            ]
+        }
+        </script>
+
         <!--==============================
             All CSS File
         ============================== -->
@@ -132,6 +167,39 @@
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
         @yield('css')
+
+        {{-- Google Search Console Verification --}}
+        @if(!empty($footerContactInfo->google_search_console))
+        <meta name="google-site-verification" content="{{ $footerContactInfo->google_search_console }}">
+        @endif
+
+        {{-- Google Analytics (GA4) --}}
+        @if(!empty($footerContactInfo->google_analytics))
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ $footerContactInfo->google_analytics }}"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '{{ $footerContactInfo->google_analytics }}');
+        </script>
+        @endif
+
+        {{-- Facebook Pixel --}}
+        @if(!empty($footerContactInfo->facebook_pixel))
+        <script>
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '{{ $footerContactInfo->facebook_pixel }}');
+            fbq('track', 'PageView');
+        </script>
+        <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id={{ $footerContactInfo->facebook_pixel }}&ev=PageView&noscript=1"/></noscript>
+        @endif
 
     </head>
 
@@ -234,6 +302,9 @@
     
     <!-- Favourites JS -->
     <script src="{{ asset('/js/favourites.js') }}?v=1.1" defer></script>
+
+    <!-- Analytics Beacon -->
+    <script src="{{ asset('/js/analytics.js') }}?v=1.0" defer></script>
     
     @yield('js')
 

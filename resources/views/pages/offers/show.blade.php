@@ -1,14 +1,23 @@
 @extends('layouts.master')
 
 @php
-    $offerTitle = app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english;
-    $offerDesc = app()->getLocale() == 'ar' ? ($offer->seo_description_ar ?? $offer->title_arabic) : ($offer->seo_description ?? $offer->title_english);
+    $locale = app()->getLocale();
+
+    // Smart SEO title for offers
+    if ($offer->{"seo_title_{$locale}"}) {
+        $offerTitle = $offer->{"seo_title_{$locale}"};
+    } else {
+        $offerTitle = $locale == 'ar' ? $offer->title_arabic : $offer->title_english;
+    }
+
+    $offerDesc = $offer->{"seo_description_{$locale}"} ?: ($locale == 'ar' ? $offer->title_arabic : $offer->title_english);
     $offerImage = url('/storage' . $offer->main_image);
+    $offerAlt = $offer->{"alt_text_{$locale}"} ?? ($locale == 'ar' ? $offer->title_arabic : $offer->title_english);
     $offerPrice = ($offer->default_price && $offer->currency) 
         ? ($offer->currency->abbreviation ?? 'AED') . ' ' . number_format($offer->default_price->price)
         : '';
     $offerEmirate = ($offer->default_price && $offer->default_price->emirate)
-        ? (app()->getLocale() == 'ar' ? $offer->default_price->emirate->title_arabic : $offer->default_price->emirate->title_english)
+        ? ($locale == 'ar' ? $offer->default_price->emirate->title_arabic : $offer->default_price->emirate->title_english)
         : '';
     $ogDescription = $offerDesc;
     if($offerPrice) {
@@ -27,7 +36,6 @@
 @section('og_type', 'product')
 
 @section('meta_tags')
-{{-- Additional Product Meta Tags --}}
 @if($offerPrice)
 <meta property="product:price:amount" content="{{ $offer->default_price->price ?? '' }}">
 <meta property="product:price:currency" content="{{ $offer->currency->abbreviation ?? 'AED' }}">
@@ -35,6 +43,25 @@
 @if($offer->offer_code)
 <meta property="product:retailer_item_id" content="{{ $offer->offer_code }}">
 @endif
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "{{ e($offerTitle) }}",
+    "description": "{{ e(Str::limit(strip_tags($offerDesc), 300)) }}",
+    "image": "{{ $offerImage }}",
+    "brand": {
+        "@type": "Organization",
+        "name": "Smart Vision Engineering Consultants"
+    }@if($offerPrice && $offer->default_price),
+    "offers": {
+        "@type": "Offer",
+        "price": "{{ $offer->default_price->price }}",
+        "priceCurrency": "{{ $offer->currency->abbreviation ?? 'AED' }}",
+        "availability": "https://schema.org/InStock"
+    }@endif
+}
+</script>
 @endsection
 
 @section('content')
@@ -74,8 +101,8 @@
                                 <div class="offer-thumbnails-slider" id="offerThumbnails">
                                     {{-- Main Image Thumbnail --}}
                                     <div class="thumbnail-item active" data-index="0">
-                                        <img src="{{ url('/storage' . $offer->main_image) }}" 
-                                             alt="{{ app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english }}"
+                                        <img src="{{ url('/storage' . $offer->main_image) }}"
+                                             alt="{{ $offerAlt }}"
                                              class="thumbnail-img">
                                     </div>
                                     {{-- Gallery Images Thumbnails --}}
@@ -113,8 +140,8 @@
                                            class="offer-gallery-item"
                                            data-gtf-mfp="true" 
                                            data-gallery-id="offer-gallery">
-                                            <img src="{{ url('/storage' . $offer->main_image) }}" 
-                                                 alt="{{ app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english }}"
+                                            <img src="{{ url('/storage' . $offer->main_image) }}"
+                                                 alt="{{ $offerAlt }}"
                                                  class="main-slide-img">
                                         </a>
                                     </div>

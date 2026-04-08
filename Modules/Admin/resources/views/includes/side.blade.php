@@ -392,6 +392,10 @@
                             </li>
                             @endpermission
 
+                            <li>
+                                <a href="{{route('admin.analytics.index')}}" class="waves-effect"><i class="fa fa-line-chart"></i><span> Analytics </span></a>
+                            </li>
+
                             @permission('activity-logs-view')
                             <li>
                                 <a href="{{route('admin.activity-logs.index')}}" class="waves-effect"><i class="fa fa-history"></i><span> Activity Logs </span></a>

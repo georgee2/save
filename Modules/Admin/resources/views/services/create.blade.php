@@ -194,6 +194,21 @@
 
                                     <div class="row mt-4">
 
+                                            <div class="form-group col-lg-6 col-md-6 col-sm-12">
+                                                <label>SEO Title (English) <small class="text-muted">Max 200 chars</small></label>
+                                                <input type="text" name="seo_title_english" value="{{old('seo_title_english')}}" class="form-control" maxlength="200" placeholder="Custom SEO title for search engines">
+                                                @error('seo_title_english')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="form-group col-lg-6 col-md-6 col-sm-12">
+                                                <label>SEO Title (Arabic) <button type="button" class="auto-translate-btn" data-translate-source="seo_title_english" data-translate-target="seo_title_arabic"><i class="fa fa-language"></i> Auto</button></label>
+                                                <input type="text" name="seo_title_arabic" value="{{old('seo_title_arabic')}}" class="form-control" maxlength="200" placeholder="عنوان SEO مخصص" dir="rtl">
+                                                @error('seo_title_arabic')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
                                             <div class="form-group col-md-12">
                                                 <label>SEO Tags <span class="text-danger">Press Enter After You Type</span></label>
                                                 <input name="seo_tags"  value="{{old('seo_tags')}}" class=" tagify form-control" >

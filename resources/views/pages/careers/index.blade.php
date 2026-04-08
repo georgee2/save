@@ -1,10 +1,8 @@
 @extends('layouts.master')
-
-@section('title', __('lang.careers'))
-
-@section('seo_desc', __('lang.careers_seo_desc'))
-
-@section('seo_tags', __('lang.careers'))
+@php $seo = \App\Models\SeoPage::getSeo('careers'); @endphp
+@section('title', $seo['title'] ?? __('lang.careers'))
+@section('seo_desc', $seo['description'] ?? __('lang.careers_seo_desc'))
+@section('seo_tags', $seo['tags'] ?? __('lang.careers'))
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('/assets/css/careers-page.css') }}?v={{ time() }}">

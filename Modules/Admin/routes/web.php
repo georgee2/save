@@ -101,6 +101,15 @@ Route::group(
 
             // Admin Dashboard Route
             Route::get('/', [AdminController::class, 'index'])->name('Admin');
+            Route::get('/check-integrations', [AdminController::class, 'checkIntegrations'])->name('admin.check-integrations');
+
+            // Analytics Routes
+            Route::prefix('analytics')->name('admin.analytics.')->group(function () {
+                Route::get('/', [\Modules\Admin\App\Http\Controllers\AnalyticsController::class, 'index'])->name('index');
+                Route::get('/realtime', [\Modules\Admin\App\Http\Controllers\AnalyticsController::class, 'realtime'])->name('realtime');
+                Route::get('/visitors', [\Modules\Admin\App\Http\Controllers\AnalyticsController::class, 'visitors'])->name('visitors');
+                Route::get('/export', [\Modules\Admin\App\Http\Controllers\AnalyticsController::class, 'export'])->name('export');
+            });
 
             // Translation API Route
             Route::post('/translate', [TranslationController::class, 'translate'])->name('admin.translate');

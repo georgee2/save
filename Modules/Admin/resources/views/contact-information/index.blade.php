@@ -47,6 +47,49 @@
         background-color: var(--secondary-color) !important;
         border-color: var(--secondary-color) !important;
     }
+    .integration-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 16px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        background: #fff;
+        transition: all .3s ease;
+    }
+    .integration-card.active {
+        border-color: #28a745;
+        box-shadow: 0 0 0 1px rgba(40,167,69,.15);
+    }
+    .integration-card.inactive {
+        border-color: #dee2e6;
+        opacity: .75;
+    }
+    .integration-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 18px;
+        flex-shrink: 0;
+        transition: background .3s ease;
+    }
+    .integration-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    .integration-info strong {
+        font-size: 13px;
+        color: #333;
+    }
+    .integration-status {
+        font-size: 12px;
+        font-weight: 500;
+    }
 </style>
 @endsection
 
@@ -304,6 +347,88 @@
                         </div>
                         
                         <hr>
+
+                        {{-- Tracking & Verification Codes --}}
+                        <div class="form-section">
+                            <h5><i class="fa fa-code"></i> Tracking & Verification Codes</h5>
+                            <p class="text-muted small mb-3">Paste only the verification/tracking ID or content value. These will be injected into the website &lt;head&gt; section automatically.</p>
+
+                            {{-- Integration Status Overview --}}
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <div class="integration-card {{ !empty($contactInfo->google_search_console) ? 'active' : 'inactive' }}">
+                                        <div class="integration-icon" style="background: {{ !empty($contactInfo->google_search_console) ? '#4285F4' : '#ccc' }};">
+                                            <i class="fa fa-google"></i>
+                                        </div>
+                                        <div class="integration-info">
+                                            <strong>Search Console</strong>
+                                            <span class="integration-status {{ !empty($contactInfo->google_search_console) ? 'text-success' : 'text-muted' }}">
+                                                <i class="fa {{ !empty($contactInfo->google_search_console) ? 'fa-check-circle' : 'fa-times-circle' }}"></i>
+                                                {{ !empty($contactInfo->google_search_console) ? 'Connected' : 'Not Connected' }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="integration-card {{ !empty($contactInfo->google_analytics) ? 'active' : 'inactive' }}">
+                                        <div class="integration-icon" style="background: {{ !empty($contactInfo->google_analytics) ? '#E37400' : '#ccc' }};">
+                                            <i class="fa fa-bar-chart"></i>
+                                        </div>
+                                        <div class="integration-info">
+                                            <strong>Google Analytics</strong>
+                                            <span class="integration-status {{ !empty($contactInfo->google_analytics) ? 'text-success' : 'text-muted' }}">
+                                                <i class="fa {{ !empty($contactInfo->google_analytics) ? 'fa-check-circle' : 'fa-times-circle' }}"></i>
+                                                {{ !empty($contactInfo->google_analytics) ? 'Connected' : 'Not Connected' }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="integration-card {{ !empty($contactInfo->facebook_pixel) ? 'active' : 'inactive' }}">
+                                        <div class="integration-icon" style="background: {{ !empty($contactInfo->facebook_pixel) ? '#1877F2' : '#ccc' }};">
+                                            <i class="fa fa-facebook"></i>
+                                        </div>
+                                        <div class="integration-info">
+                                            <strong>Facebook Pixel</strong>
+                                            <span class="integration-status {{ !empty($contactInfo->facebook_pixel) ? 'text-success' : 'text-muted' }}">
+                                                <i class="fa {{ !empty($contactInfo->facebook_pixel) ? 'fa-check-circle' : 'fa-times-circle' }}"></i>
+                                                {{ !empty($contactInfo->facebook_pixel) ? 'Connected' : 'Not Connected' }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Input Fields --}}
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><i class="fa fa-google" style="color:#4285F4;"></i> Google Search Console</label>
+                                        <input type="text" class="form-control integration-input" id="input_gsc" name="google_search_console" value="{{ old('google_search_console', $contactInfo->google_search_console) }}" placeholder="e.g. FWrELBc9hH9bHv1lXwu...">
+                                        <small class="text-muted">The <code>content</code> value from the verification meta tag</small>
+                                        @error('google_search_console')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><i class="fa fa-bar-chart" style="color:#E37400;"></i> Google Analytics</label>
+                                        <input type="text" class="form-control integration-input" id="input_ga" name="google_analytics" value="{{ old('google_analytics', $contactInfo->google_analytics) }}" placeholder="e.g. G-XXXXXXXXXX">
+                                        <small class="text-muted">Your GA4 Measurement ID (starts with <code>G-</code>)</small>
+                                        @error('google_analytics')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><i class="fa fa-facebook-square" style="color:#1877F2;"></i> Facebook Pixel</label>
+                                        <input type="text" class="form-control integration-input" id="input_fbp" name="facebook_pixel" value="{{ old('facebook_pixel', $contactInfo->facebook_pixel) }}" placeholder="e.g. 123456789012345">
+                                        <small class="text-muted">Your Facebook Pixel ID (numeric)</small>
+                                        @error('facebook_pixel')<span class="text-danger">{{ $message }}</span>@enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
                         
                         <div class="form-group text-center">
                             <button type="submit" class="btn btn-primary btn-lg">
@@ -368,6 +493,32 @@
         updateCharCount('seo_description_arabic', 'seo_description_arabic_count', 500);
         updateCharCount('confirmation_email_body_en', 'confirmation_email_body_en_count', 2000);
         updateCharCount('confirmation_email_body_ar', 'confirmation_email_body_ar_count', 2000);
+
+        // Live integration status
+        var integrationMap = [
+            { input: '#input_gsc',  card: 0, color: '#4285F4' },
+            { input: '#input_ga',   card: 1, color: '#E37400' },
+            { input: '#input_fbp',  card: 2, color: '#1877F2' }
+        ];
+        var $cards = $('.integration-card');
+
+        function refreshStatus(idx) {
+            var cfg = integrationMap[idx];
+            var hasVal = $.trim($(cfg.input).val()).length > 0;
+            var $card = $cards.eq(idx);
+            var $icon = $card.find('.integration-icon');
+            var $status = $card.find('.integration-status');
+
+            $card.toggleClass('active', hasVal).toggleClass('inactive', !hasVal);
+            $icon.css('background', hasVal ? cfg.color : '#ccc');
+            $status
+                .toggleClass('text-success', hasVal).toggleClass('text-muted', !hasVal)
+                .html('<i class="fa ' + (hasVal ? 'fa-check-circle' : 'fa-times-circle') + '"></i> ' + (hasVal ? 'Connected' : 'Not Connected'));
+        }
+
+        integrationMap.forEach(function(cfg, idx) {
+            $(cfg.input).on('input', function() { refreshStatus(idx); });
+        });
     });
 </script>
 @endsection

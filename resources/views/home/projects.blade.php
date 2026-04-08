@@ -92,7 +92,7 @@
                     <div class="col-xxl-3 col-lg-4 col-md-6 mb-6 project-grid-item" data-index="{{ $index }}" data-animate="zoomIn">
                         <a href="{{ route('projects.show', $project->slug) }}" class="card border-0 bg-overlay-gradient-light rounded-lg hover-change-image project-card-square d-block">
                             <img src="{{ url('/storage' . $project->main_image) }}" class="card-img"
-                                 alt="{{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}">
+                                 alt="{{ $project->{'alt_text_' . app()->getLocale()} ?? (app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english) }}">
                             <div class="card-img-overlay d-flex flex-column position-relative-sm pointer-events-none">
                                 <div class="d-flex justify-content-between">
                                     <ul class="list-inline mb-0 d-flex justify-content-center align-items-center h-100 hover-image project-media-count">
@@ -177,7 +177,7 @@
                     <div class="col-xxl-3 col-lg-4 col-md-6 mb-6 project-grid-item" data-index="{{ $index }}" data-animate="zoomIn">
                         <a href="{{ route('projects.show', $project->slug) }}" class="card border-0 bg-overlay-gradient-light rounded-lg hover-change-image project-card-square d-block">
                             <img src="{{ url('/storage' . $project->main_image) }}" class="card-img"
-                                 alt="{{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}">
+                                 alt="{{ $project->{'alt_text_' . app()->getLocale()} ?? (app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english) }}">
                             <div class="card-img-overlay d-flex flex-column position-relative-sm pointer-events-none">
                                 <div class="d-flex justify-content-between">
                                     <ul class="list-inline mb-0 d-flex justify-content-center align-items-center h-100 hover-image project-media-count">

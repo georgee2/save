@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\DB;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Models\Service;
 use App\Models\Project;
 use App\Models\Offer;
@@ -16,6 +17,7 @@ use App\Models\Team;
 use App\Models\Partner;
 use App\Models\JobsPosting;
 use App\Models\InteriorCategory;
+use App\Models\InteriorDesignGallery;
 
 class SitemapController extends Controller
 {
@@ -59,254 +61,117 @@ class SitemapController extends Controller
     }
 
     /**
-     * Generate the sitemap XML
+     * Generate the sitemap XML with dual-language (EN/AR) hreflang annotations
      */
     public function index()
     {
         $urls = [];
-        
+
+        $addUrl = function ($routeName, $params, $lastmod, $changefreq, $priority) use (&$urls) {
+            $baseUrl = route($routeName, $params);
+            $urls[] = [
+                'loc_en' => LaravelLocalization::getLocalizedURL('en', $baseUrl),
+                'loc_ar' => LaravelLocalization::getLocalizedURL('ar', $baseUrl),
+                'lastmod' => $lastmod,
+                'changefreq' => $changefreq,
+                'priority' => $priority,
+            ];
+        };
+
         // Static Pages
-        $urls[] = [
-            'loc' => route('index'),
-            'lastmod' => now()->toAtomString(),
-            'changefreq' => 'daily',
-            'priority' => '1.0'
-        ];
-        
-        $urls[] = [
-            'loc' => route('about'),
-            'lastmod' => now()->toAtomString(),
-            'changefreq' => 'monthly',
-            'priority' => '0.8'
-        ];
-        
-        $urls[] = [
-            'loc' => route('contact'),
-            'lastmod' => now()->toAtomString(),
-            'changefreq' => 'monthly',
-            'priority' => '0.8'
-        ];
-        
+        $addUrl('index', [], now()->toAtomString(), 'daily', '1.0');
+        $addUrl('about', [], now()->toAtomString(), 'monthly', '0.8');
+        $addUrl('contact', [], now()->toAtomString(), 'monthly', '0.8');
+
         // Services
-        $urls[] = [
-            'loc' => route('services.index'),
-            'lastmod' => now()->toAtomString(),
-            'changefreq' => 'weekly',
-            'priority' => '0.9'
-        ];
-        
-        $services = Service::where('publish_status', 0)
-            ->whereNull('deleted_at')
-            ->get();
-            
+        $addUrl('services.index', [], now()->toAtomString(), 'weekly', '0.9');
+        $services = Service::where('publish_status', 0)->whereNull('deleted_at')->get();
         foreach ($services as $service) {
-            $urls[] = [
-                'loc' => route('services.show', $service->slug),
-                'lastmod' => $service->updated_at ? $service->updated_at->toAtomString() : now()->toAtomString(),
-                'changefreq' => 'weekly',
-                'priority' => '0.7'
-            ];
+            $addUrl('services.show', $service->slug, $service->updated_at ? $service->updated_at->toAtomString() : now()->toAtomString(), 'weekly', '0.7');
         }
-        
+
         // Projects
-        $urls[] = [
-            'loc' => route('projects.index'),
-            'lastmod' => now()->toAtomString(),
-            'changefreq' => 'weekly',
-            'priority' => '0.9'
-        ];
-        
-        $projects = Project::where('publish_status', 0)
-            ->whereNull('deleted_at')
-            ->get();
-            
+        $addUrl('projects.index', [], now()->toAtomString(), 'weekly', '0.9');
+        $projects = Project::where('publish_status', 0)->whereNull('deleted_at')->get();
         foreach ($projects as $project) {
-            $urls[] = [
-                'loc' => route('projects.show', $project->slug),
-                'lastmod' => $project->updated_at ? $project->updated_at->toAtomString() : now()->toAtomString(),
-                'changefreq' => 'weekly',
-                'priority' => '0.7'
-            ];
+            $addUrl('projects.show', $project->slug, $project->updated_at ? $project->updated_at->toAtomString() : now()->toAtomString(), 'weekly', '0.7');
         }
-        
+
         // Project Categories
-        $projectCategories = EngineeringCategory::whereNull('deleted_at')->get();
-        foreach ($projectCategories as $category) {
-            $urls[] = [
-                'loc' => route('category.show', $category->slug),
-                'lastmod' => $category->updated_at ? $category->updated_at->toAtomString() : now()->toAtomString(),
-                'changefreq' => 'weekly',
-                'priority' => '0.6'
-            ];
+        foreach (EngineeringCategory::whereNull('deleted_at')->get() as $category) {
+            $addUrl('category.show', $category->slug, $category->updated_at ? $category->updated_at->toAtomString() : now()->toAtomString(), 'weekly', '0.6');
         }
-        
+
         // Project Subcategories
-        $projectSubcategories = EngineeringSubCategory::whereNull('deleted_at')->get();
-        foreach ($projectSubcategories as $subcategory) {
-            $urls[] = [
-                'loc' => route('subcategory.show', $subcategory->slug),
-                'lastmod' => $subcategory->updated_at ? $subcategory->updated_at->toAtomString() : now()->toAtomString(),
-                'changefreq' => 'weekly',
-                'priority' => '0.6'
-            ];
+        foreach (EngineeringSubCategory::whereNull('deleted_at')->get() as $subcategory) {
+            $addUrl('subcategory.show', $subcategory->slug, $subcategory->updated_at ? $subcategory->updated_at->toAtomString() : now()->toAtomString(), 'weekly', '0.6');
         }
-        
+
         // Offers
-        $urls[] = [
-            'loc' => route('offers.index'),
-            'lastmod' => now()->toAtomString(),
-            'changefreq' => 'weekly',
-            'priority' => '0.9'
-        ];
-        
-        $offers = Offer::where('publish_status', 0)
-            ->whereNull('deleted_at')
-            ->get();
-            
+        $addUrl('offers.index', [], now()->toAtomString(), 'weekly', '0.9');
+        $offers = Offer::where('publish_status', 0)->whereNull('deleted_at')->get();
         foreach ($offers as $offer) {
-            $urls[] = [
-                'loc' => route('offers.show', $offer->slug),
-                'lastmod' => $offer->updated_at ? $offer->updated_at->toAtomString() : now()->toAtomString(),
-                'changefreq' => 'weekly',
-                'priority' => '0.7'
-            ];
+            $addUrl('offers.show', $offer->slug, $offer->updated_at ? $offer->updated_at->toAtomString() : now()->toAtomString(), 'weekly', '0.7');
         }
-        
+
         // Offer Categories
-        $offerCategories = OfferCategory::whereNull('deleted_at')->get();
-        foreach ($offerCategories as $category) {
-            $urls[] = [
-                'loc' => route('offers.category', $category->slug),
-                'lastmod' => $category->updated_at ? $category->updated_at->toAtomString() : now()->toAtomString(),
-                'changefreq' => 'weekly',
-                'priority' => '0.6'
-            ];
+        foreach (OfferCategory::whereNull('deleted_at')->get() as $category) {
+            $addUrl('offers.category', $category->slug, $category->updated_at ? $category->updated_at->toAtomString() : now()->toAtomString(), 'weekly', '0.6');
         }
-        
+
         // Offer Subcategories
-        $offerSubcategories = OfferSubCategory::whereNull('deleted_at')->get();
-        foreach ($offerSubcategories as $subcategory) {
-            $urls[] = [
-                'loc' => route('offers.subcategory', $subcategory->slug),
-                'lastmod' => $subcategory->updated_at ? $subcategory->updated_at->toAtomString() : now()->toAtomString(),
-                'changefreq' => 'weekly',
-                'priority' => '0.6'
-            ];
+        foreach (OfferSubCategory::whereNull('deleted_at')->get() as $subcategory) {
+            $addUrl('offers.subcategory', $subcategory->slug, $subcategory->updated_at ? $subcategory->updated_at->toAtomString() : now()->toAtomString(), 'weekly', '0.6');
         }
-        
-        // News/Blogs - No publish_status or deleted_at in news table
-        $urls[] = [
-            'loc' => route('blogs.index'),
-            'lastmod' => now()->toAtomString(),
-            'changefreq' => 'daily',
-            'priority' => '0.9'
-        ];
-        
+
+        // Interior Design
+        $addUrl('interior.index', [], now()->toAtomString(), 'weekly', '0.8');
+        foreach (InteriorCategory::whereNull('deleted_at')->get() as $cat) {
+            $addUrl('interior.category', $cat->slug, $cat->updated_at ? $cat->updated_at->toAtomString() : now()->toAtomString(), 'weekly', '0.6');
+        }
+
+        // News/Blogs
+        $addUrl('blogs.index', [], now()->toAtomString(), 'daily', '0.9');
         $news = DB::table('news')->get();
-            
         foreach ($news as $article) {
             if (!empty($article->slug)) {
-                $urls[] = [
-                    'loc' => route('blogs.show', $article->slug),
-                    'lastmod' => $article->updated_at ? \Carbon\Carbon::parse($article->updated_at)->toAtomString() : now()->toAtomString(),
-                    'changefreq' => 'monthly',
-                    'priority' => '0.6'
-                ];
+                $addUrl('blogs.show', $article->slug, $article->updated_at ? \Carbon\Carbon::parse($article->updated_at)->toAtomString() : now()->toAtomString(), 'monthly', '0.6');
             }
         }
-        
+
         // Team Pages
-        $urls[] = [
-            'loc' => route('team.index'),
-            'lastmod' => now()->toAtomString(),
-            'changefreq' => 'monthly',
-            'priority' => '0.7'
-        ];
-        
-        $urls[] = [
-            'loc' => route('team.board'),
-            'lastmod' => now()->toAtomString(),
-            'changefreq' => 'monthly',
-            'priority' => '0.7'
-        ];
-        
-        $teamMembers = Team::whereNull('deleted_at')->get();
-        foreach ($teamMembers as $member) {
-            $urls[] = [
-                'loc' => route('team.member', $member->id),
-                'lastmod' => $member->updated_at ? $member->updated_at->toAtomString() : now()->toAtomString(),
-                'changefreq' => 'monthly',
-                'priority' => '0.5'
-            ];
+        $addUrl('team.index', [], now()->toAtomString(), 'monthly', '0.7');
+        $addUrl('team.board', [], now()->toAtomString(), 'monthly', '0.7');
+        foreach (Team::whereNull('deleted_at')->get() as $member) {
+            $addUrl('team.member', $member->id, $member->updated_at ? $member->updated_at->toAtomString() : now()->toAtomString(), 'monthly', '0.5');
         }
-        
+
         // Partners
-        $urls[] = [
-            'loc' => route('partners.index'),
-            'lastmod' => now()->toAtomString(),
-            'changefreq' => 'monthly',
-            'priority' => '0.7'
-        ];
-        
-        $partners = Partner::where('partner_type', 'partner')
-            ->whereNull('deleted_at')
-            ->get();
-            
-        foreach ($partners as $partner) {
-            $urls[] = [
-                'loc' => route('partners.show', $partner->id),
-                'lastmod' => $partner->updated_at ? $partner->updated_at->toAtomString() : now()->toAtomString(),
-                'changefreq' => 'monthly',
-                'priority' => '0.5'
-            ];
+        $addUrl('partners.index', [], now()->toAtomString(), 'monthly', '0.7');
+        foreach (Partner::where('partner_type', 'partner')->whereNull('deleted_at')->get() as $partner) {
+            $addUrl('partners.show', $partner->id, $partner->updated_at ? $partner->updated_at->toAtomString() : now()->toAtomString(), 'monthly', '0.5');
         }
-        
+
         // Branches
-        $urls[] = [
-            'loc' => route('branches.index'),
-            'lastmod' => now()->toAtomString(),
-            'changefreq' => 'monthly',
-            'priority' => '0.7'
-        ];
-        
-        $branches = Partner::where('partner_type', 'branch')
-            ->whereNull('deleted_at')
-            ->get();
-            
-        foreach ($branches as $branch) {
-            $urls[] = [
-                'loc' => route('branches.show', $branch->id),
-                'lastmod' => $branch->updated_at ? $branch->updated_at->toAtomString() : now()->toAtomString(),
-                'changefreq' => 'monthly',
-                'priority' => '0.5'
-            ];
+        $addUrl('branches.index', [], now()->toAtomString(), 'monthly', '0.7');
+        foreach (Partner::where('partner_type', 'branch')->whereNull('deleted_at')->get() as $branch) {
+            $addUrl('branches.show', $branch->id, $branch->updated_at ? $branch->updated_at->toAtomString() : now()->toAtomString(), 'monthly', '0.5');
         }
-        
-        // Careers - uses 'status' enum ('Publish', 'Not Publish')
+
+        // Careers
         $activeJobs = JobsPosting::where('status', 'Publish')
             ->where('registration_start_date', '<=', now())
             ->where('registration_end_date', '>=', now())
             ->whereNull('deleted_at')
             ->get();
-            
+
         if ($activeJobs->count() > 0) {
-            $urls[] = [
-                'loc' => route('careers.index'),
-                'lastmod' => now()->toAtomString(),
-                'changefreq' => 'weekly',
-                'priority' => '0.8'
-            ];
-            
+            $addUrl('careers.index', [], now()->toAtomString(), 'weekly', '0.8');
             foreach ($activeJobs as $job) {
-                $urls[] = [
-                    'loc' => route('careers.show', $job->id),
-                    'lastmod' => $job->updated_at ? $job->updated_at->toAtomString() : now()->toAtomString(),
-                    'changefreq' => 'weekly',
-                    'priority' => '0.6'
-                ];
+                $addUrl('careers.show', $job->id, $job->updated_at ? $job->updated_at->toAtomString() : now()->toAtomString(), 'weekly', '0.6');
             }
         }
-        
+
         return response()->view('sitemap.index', compact('urls'))
             ->header('Content-Type', 'application/xml');
     }
