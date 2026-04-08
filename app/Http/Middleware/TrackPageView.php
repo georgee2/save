@@ -18,6 +18,35 @@ class TrackPageView
     private const COOKIE_NAME = 'svec_vid';
     private const COOKIE_LIFETIME = 1051200; // 2 years in minutes
 
+    private const BOT_PATTERNS = [
+        'bot', 'crawl', 'spider', 'slurp', 'mediapartners', 'Googlebot',
+        'Bingbot', 'BingPreview', 'Yahoo', 'Baidu', 'YandexBot', 'DuckDuckBot',
+        'Sogou', 'Exabot', 'facebot', 'ia_archiver', 'MJ12bot', 'AhrefsBot',
+        'SemrushBot', 'DotBot', 'rogerbot', 'Screaming Frog', 'GTmetrix',
+        'Pingdom', 'UptimeRobot', 'curl', 'wget', 'python-requests',
+        'Go-http-client', 'Apache-HttpClient', 'Java/', 'libwww-perl',
+        'Scrapy', 'PhantomJS', 'HeadlessChrome', 'Lighthouse',
+        'PageSpeed', 'Google-Read-Aloud', 'APIs-Google', 'Mediapartners-Google',
+        'AdsBot-Google', 'Googlebot-Image', 'Googlebot-Video', 'Googlebot-News',
+        'Chrome-Lighthouse', 'PTST', 'Bytespider', 'PetalBot', 'CCBot',
+        'DataForSeoBot', 'GPTBot', 'ClaudeBot', 'anthropic-ai',
+    ];
+
+    private const INTERNAL_PATHS = [
+        'login', 'logout', 'checkuser', 'register', 'password/*',
+        '*/login', '*/logout', '*/checkuser', '*/register', '*/password/*',
+        'search/live', 'search/emirates', 'search/categories',
+        'search/subcategories', 'search/types', 'search/styles',
+        '*/search/live', '*/search/emirates', '*/search/categories',
+        '*/search/subcategories', '*/search/types', '*/search/styles',
+        'favourites/toggle', 'favourites/count', 'favourites/clear/*',
+        'favourites/send-email',
+        '*/favourites/toggle', '*/favourites/count', '*/favourites/clear/*',
+        '*/favourites/send-email',
+        'home',
+        '*/home',
+    ];
+
     private const EMIRATE_MAP = [
         'dubai' => 'Dubai',
         'abu dhabi' => 'Abu Dhabi',
@@ -36,7 +65,7 @@ class TrackPageView
     {
         $response = $next($request);
 
-        if ($this->shouldSkip($request)) {
+        if ($this->shouldSkip($request, $response)) {
             return $response;
         }
 
@@ -52,14 +81,42 @@ class TrackPageView
         return $response;
     }
 
-    private function shouldSkip(Request $request): bool
+    private function shouldSkip(Request $request, $response): bool
     {
         if (!$request->isMethod('GET')) return true;
         if ($request->ajax() || $request->wantsJson()) return true;
+
+        // Only track successful HTML page responses (not 404, 500, redirects)
+        $statusCode = method_exists($response, 'getStatusCode') ? $response->getStatusCode() : 200;
+        if ($statusCode !== 200) return true;
+
+        // Skip backend/admin paths
         if ($request->is('admin/*', 'basicdata/*', 'crm/*', 'api/*', 'analytics/*', 'sitemap*', 'storage/*')) return true;
         if ($request->is('*/admin/*', '*/basicdata/*', '*/crm/*')) return true;
+
+        // Skip internal/auth pages
+        if ($request->is(...self::INTERNAL_PATHS)) return true;
+
+        // Skip static assets
         if ($request->is('*.js', '*.css', '*.png', '*.jpg', '*.svg', '*.ico', '*.webp', '*.woff*', '*.ttf')) return true;
         if (str_contains($request->header('Content-Type', ''), 'application/json')) return true;
+
+        // Skip bots and crawlers
+        if ($this->isBot($request->userAgent() ?? '')) return true;
+
+        return false;
+    }
+
+    private function isBot(string $ua): bool
+    {
+        if (empty($ua) || strlen($ua) < 10) return true;
+
+        $uaLower = strtolower($ua);
+        foreach (self::BOT_PATTERNS as $pattern) {
+            if (str_contains($uaLower, strtolower($pattern))) {
+                return true;
+            }
+        }
 
         return false;
     }

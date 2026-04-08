@@ -12,6 +12,36 @@ use Carbon\Carbon;
 
 class AnalyticsController extends Controller
 {
+    private const EXCLUDED_URL_PATTERNS = [
+        '%/login%',
+        '%/logout%',
+        '%/checkuser%',
+        '%/register%',
+        '%/password/%',
+        '%/admin/%',
+        '%/basicdata/%',
+        '%/crm/%',
+        '%/search/live%',
+        '%/search/emirates%',
+        '%/search/categories%',
+        '%/search/subcategories%',
+        '%/search/types%',
+        '%/search/styles%',
+        '%/favourites/toggle%',
+        '%/favourites/count%',
+        '%/favourites/clear%',
+        '%/favourites/send-email%',
+        '%/home%',
+    ];
+
+    private function applyUrlFilter($query, string $urlColumn = 'url')
+    {
+        foreach (self::EXCLUDED_URL_PATTERNS as $pattern) {
+            $query->where($urlColumn, 'NOT LIKE', $pattern);
+        }
+        return $query;
+    }
+
     public function index(Request $request)
     {
         $range = $request->get('range', '30');
@@ -49,11 +79,12 @@ class AnalyticsController extends Controller
     {
         $fiveMinAgo = now()->subMinutes(5);
 
-        $activeVisitors = AnalyticsPageView::where('viewed_at', '>=', $fiveMinAgo)
-            ->distinct('visitor_id')
-            ->count('visitor_id');
+        $baseQuery = AnalyticsPageView::where('viewed_at', '>=', $fiveMinAgo);
+        $this->applyUrlFilter($baseQuery);
 
-        $activePages = AnalyticsPageView::where('viewed_at', '>=', $fiveMinAgo)
+        $activeVisitors = (clone $baseQuery)->distinct('visitor_id')->count('visitor_id');
+
+        $activePages = (clone $baseQuery)
             ->select('url', 'page_title', DB::raw('COUNT(*) as views'))
             ->groupBy('url', 'page_title')
             ->orderByDesc('views')
@@ -67,14 +98,15 @@ class AnalyticsController extends Controller
                 ];
             });
 
-        $activeCountries = AnalyticsPageView::where('analytics_page_views.viewed_at', '>=', $fiveMinAgo)
+        $countryQuery = AnalyticsPageView::where('analytics_page_views.viewed_at', '>=', $fiveMinAgo)
             ->join('analytics_visitors', 'analytics_visitors.visitor_id', '=', 'analytics_page_views.visitor_id')
             ->whereNotNull('analytics_visitors.country')
             ->select('analytics_visitors.country', DB::raw('COUNT(DISTINCT analytics_page_views.visitor_id) as cnt'))
             ->groupBy('analytics_visitors.country')
             ->orderByDesc('cnt')
-            ->limit(5)
-            ->pluck('cnt', 'country');
+            ->limit(5);
+        $this->applyUrlFilter($countryQuery, 'analytics_page_views.url');
+        $activeCountries = $countryQuery->pluck('cnt', 'country');
 
         return response()->json([
             'active_visitors' => $activeVisitors,
@@ -96,9 +128,10 @@ class AnalyticsController extends Controller
         $from = $request->get('from', now()->subDays(30)->toDateString());
         $to = $request->get('to', now()->toDateString());
 
-        $views = AnalyticsPageView::whereBetween('viewed_at', [$from, Carbon::parse($to)->endOfDay()])
-            ->orderBy('viewed_at', 'desc')
-            ->get();
+        $query = AnalyticsPageView::whereBetween('viewed_at', [$from, Carbon::parse($to)->endOfDay()])
+            ->orderBy('viewed_at', 'desc');
+        $this->applyUrlFilter($query);
+        $views = $query->get();
 
         $csv = "ID,Visitor ID,Session ID,URL,Page Title,Route,Referrer,Time On Page,Viewed At\n";
         foreach ($views as $v) {
@@ -123,12 +156,20 @@ class AnalyticsController extends Controller
 
     private function getKPIs(Carbon $start, Carbon $end): array
     {
-        $totalViews = AnalyticsPageView::whereBetween('viewed_at', [$start, $end])->count();
-        $uniqueVisitors = AnalyticsPageView::whereBetween('viewed_at', [$start, $end])->distinct('visitor_id')->count('visitor_id');
-        $totalSessions = AnalyticsSession::whereBetween('started_at', [$start, $end])->count();
-        $avgDuration = AnalyticsSession::whereBetween('started_at', [$start, $end])->avg('duration_seconds') ?? 0;
+        $viewsQuery = AnalyticsPageView::whereBetween('viewed_at', [$start, $end]);
+        $this->applyUrlFilter($viewsQuery);
+
+        $totalViews = (clone $viewsQuery)->count();
+        $uniqueVisitors = (clone $viewsQuery)->distinct('visitor_id')->count('visitor_id');
+
+        $validVisitorIds = (clone $viewsQuery)->distinct()->pluck('visitor_id');
+        $sessionsQuery = AnalyticsSession::whereBetween('started_at', [$start, $end])
+            ->whereIn('visitor_id', $validVisitorIds);
+
+        $totalSessions = (clone $sessionsQuery)->count();
+        $avgDuration = (clone $sessionsQuery)->avg('duration_seconds') ?? 0;
         $bounceRate = $totalSessions > 0
-            ? round(AnalyticsSession::whereBetween('started_at', [$start, $end])->where('is_bounce', true)->count() / $totalSessions * 100, 1)
+            ? round((clone $sessionsQuery)->where('is_bounce', true)->count() / $totalSessions * 100, 1)
             : 0;
         $pagesPerSession = $totalSessions > 0 ? round($totalViews / $totalSessions, 1) : 0;
 
@@ -144,8 +185,9 @@ class AnalyticsController extends Controller
 
     private function getDailyChart(Carbon $start, Carbon $end): array
     {
-        $views = AnalyticsPageView::whereBetween('viewed_at', [$start, $end])
-            ->select(DB::raw('DATE(viewed_at) as date'), DB::raw('COUNT(*) as views'), DB::raw('COUNT(DISTINCT visitor_id) as visitors'))
+        $query = AnalyticsPageView::whereBetween('viewed_at', [$start, $end]);
+        $this->applyUrlFilter($query);
+        $views = $query->select(DB::raw('DATE(viewed_at) as date'), DB::raw('COUNT(*) as views'), DB::raw('COUNT(DISTINCT visitor_id) as visitors'))
             ->groupBy('date')
             ->orderBy('date')
             ->get()
@@ -169,18 +211,19 @@ class AnalyticsController extends Controller
 
     private function getDeviceData(Carbon $start, Carbon $end): array
     {
-        return AnalyticsPageView::whereBetween('analytics_page_views.viewed_at', [$start, $end])
+        $query = AnalyticsPageView::whereBetween('analytics_page_views.viewed_at', [$start, $end])
             ->join('analytics_visitors', 'analytics_visitors.visitor_id', '=', 'analytics_page_views.visitor_id')
             ->select('analytics_visitors.device_type', DB::raw('COUNT(DISTINCT analytics_page_views.visitor_id) as cnt'))
-            ->groupBy('analytics_visitors.device_type')
-            ->pluck('cnt', 'device_type')
-            ->toArray();
+            ->groupBy('analytics_visitors.device_type');
+        $this->applyUrlFilter($query, 'analytics_page_views.url');
+        return $query->pluck('cnt', 'device_type')->toArray();
     }
 
     private function getTopPages(Carbon $start, Carbon $end)
     {
-        return AnalyticsPageView::whereBetween('viewed_at', [$start, $end])
-            ->select('url', 'page_title', DB::raw('COUNT(*) as views'), DB::raw('COUNT(DISTINCT visitor_id) as unique_views'))
+        $query = AnalyticsPageView::whereBetween('viewed_at', [$start, $end]);
+        $this->applyUrlFilter($query);
+        return $query->select('url', 'page_title', DB::raw('COUNT(*) as views'), DB::raw('COUNT(DISTINCT visitor_id) as unique_views'))
             ->groupBy('url', 'page_title')
             ->orderByDesc('views')
             ->limit(15)
@@ -189,10 +232,11 @@ class AnalyticsController extends Controller
 
     private function getTopReferrers(Carbon $start, Carbon $end)
     {
-        return AnalyticsPageView::whereBetween('viewed_at', [$start, $end])
+        $query = AnalyticsPageView::whereBetween('viewed_at', [$start, $end])
             ->whereNotNull('referrer')
-            ->where('referrer', 'NOT LIKE', '%' . request()->getHost() . '%')
-            ->select(DB::raw("SUBSTRING_INDEX(SUBSTRING_INDEX(referrer, '/', 3), '/', -1) as domain"), DB::raw('COUNT(*) as visits'))
+            ->where('referrer', 'NOT LIKE', '%' . request()->getHost() . '%');
+        $this->applyUrlFilter($query);
+        return $query->select(DB::raw("SUBSTRING_INDEX(SUBSTRING_INDEX(referrer, '/', 3), '/', -1) as domain"), DB::raw('COUNT(*) as visits'))
             ->groupBy('domain')
             ->orderByDesc('visits')
             ->limit(10)
@@ -201,49 +245,49 @@ class AnalyticsController extends Controller
 
     private function getCountryData(Carbon $start, Carbon $end): array
     {
-        return AnalyticsPageView::whereBetween('analytics_page_views.viewed_at', [$start, $end])
+        $query = AnalyticsPageView::whereBetween('analytics_page_views.viewed_at', [$start, $end])
             ->join('analytics_visitors', 'analytics_visitors.visitor_id', '=', 'analytics_page_views.visitor_id')
             ->whereNotNull('analytics_visitors.country')
             ->select('analytics_visitors.country', DB::raw('COUNT(DISTINCT analytics_page_views.visitor_id) as cnt'))
             ->groupBy('analytics_visitors.country')
             ->orderByDesc('cnt')
-            ->limit(10)
-            ->pluck('cnt', 'country')
-            ->toArray();
+            ->limit(10);
+        $this->applyUrlFilter($query, 'analytics_page_views.url');
+        return $query->pluck('cnt', 'country')->toArray();
     }
 
     private function getEmirateData(Carbon $start, Carbon $end): array
     {
-        return AnalyticsPageView::whereBetween('analytics_page_views.viewed_at', [$start, $end])
+        $query = AnalyticsPageView::whereBetween('analytics_page_views.viewed_at', [$start, $end])
             ->join('analytics_visitors', 'analytics_visitors.visitor_id', '=', 'analytics_page_views.visitor_id')
             ->whereNotNull('analytics_visitors.emirate')
             ->select('analytics_visitors.emirate', DB::raw('COUNT(DISTINCT analytics_page_views.visitor_id) as cnt'))
             ->groupBy('analytics_visitors.emirate')
-            ->orderByDesc('cnt')
-            ->pluck('cnt', 'emirate')
-            ->toArray();
+            ->orderByDesc('cnt');
+        $this->applyUrlFilter($query, 'analytics_page_views.url');
+        return $query->pluck('cnt', 'emirate')->toArray();
     }
 
     private function getBrowserData(Carbon $start, Carbon $end): array
     {
-        return AnalyticsPageView::whereBetween('analytics_page_views.viewed_at', [$start, $end])
+        $query = AnalyticsPageView::whereBetween('analytics_page_views.viewed_at', [$start, $end])
             ->join('analytics_visitors', 'analytics_visitors.visitor_id', '=', 'analytics_page_views.visitor_id')
             ->select('analytics_visitors.browser', DB::raw('COUNT(DISTINCT analytics_page_views.visitor_id) as cnt'))
             ->groupBy('analytics_visitors.browser')
-            ->orderByDesc('cnt')
-            ->pluck('cnt', 'browser')
-            ->toArray();
+            ->orderByDesc('cnt');
+        $this->applyUrlFilter($query, 'analytics_page_views.url');
+        return $query->pluck('cnt', 'browser')->toArray();
     }
 
     private function getOSData(Carbon $start, Carbon $end): array
     {
-        return AnalyticsPageView::whereBetween('analytics_page_views.viewed_at', [$start, $end])
+        $query = AnalyticsPageView::whereBetween('analytics_page_views.viewed_at', [$start, $end])
             ->join('analytics_visitors', 'analytics_visitors.visitor_id', '=', 'analytics_page_views.visitor_id')
             ->select('analytics_visitors.os', DB::raw('COUNT(DISTINCT analytics_page_views.visitor_id) as cnt'))
             ->groupBy('analytics_visitors.os')
-            ->orderByDesc('cnt')
-            ->pluck('cnt', 'os')
-            ->toArray();
+            ->orderByDesc('cnt');
+        $this->applyUrlFilter($query, 'analytics_page_views.url');
+        return $query->pluck('cnt', 'os')->toArray();
     }
 
     private function getRecentSessions()
