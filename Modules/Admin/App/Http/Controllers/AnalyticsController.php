@@ -45,6 +45,22 @@ class AnalyticsController extends Controller
         return $query;
     }
 
+    private function applyCountryFilter($query, array $countries, string $visitorIdColumn = 'visitor_id')
+    {
+        if (empty($countries)) return $query;
+        $query->whereIn($visitorIdColumn, function ($sq) use ($countries) {
+            $sq->select('visitor_id')->from('analytics_visitors')->whereIn('country', $countries);
+        });
+        return $query;
+    }
+
+    private function applyCountryFilterDirect($query, array $countries, string $countryColumn = 'analytics_visitors.country')
+    {
+        if (empty($countries)) return $query;
+        $query->whereIn($countryColumn, $countries);
+        return $query;
+    }
+
     public function index(Request $request)
     {
         $range = $request->get('range', '30');
@@ -59,21 +75,31 @@ class AnalyticsController extends Controller
             $startDate = now()->subDays((int) $range)->startOfDay();
         }
 
-        $kpis = $this->getKPIs($startDate, $endDate);
-        $dailyChart = $this->getDailyChart($startDate, $endDate);
-        $deviceData = $this->getDeviceData($startDate, $endDate);
-        $topPages = $this->getTopPages($startDate, $endDate);
-        $topReferrers = $this->getTopReferrers($startDate, $endDate);
-        $countryData = $this->getCountryData($startDate, $endDate);
-        $emirateData = $this->getEmirateData($startDate, $endDate);
-        $browserData = $this->getBrowserData($startDate, $endDate);
-        $osData = $this->getOSData($startDate, $endDate);
-        $recentSessions = $this->getRecentSessions();
+        $selectedCountries = array_filter((array) $request->get('countries', []));
+
+        $allCountries = AnalyticsVisitor::whereNotNull('country')
+            ->distinct()->orderBy('country')->pluck('country')->toArray();
+
+        $kpis = $this->getKPIs($startDate, $endDate, $selectedCountries);
+        $dailyChart = $this->getDailyChart($startDate, $endDate, $selectedCountries);
+        $deviceData = $this->getDeviceData($startDate, $endDate, $selectedCountries);
+        $topPages = $this->getTopPages($startDate, $endDate, $selectedCountries);
+        $topReferrers = $this->getTopReferrers($startDate, $endDate, $selectedCountries);
+        $countryData = $this->getCountryData($startDate, $endDate, $selectedCountries);
+        $emirateData = $this->getEmirateData($startDate, $endDate, $selectedCountries);
+        $browserData = $this->getBrowserData($startDate, $endDate, $selectedCountries);
+        $osData = $this->getOSData($startDate, $endDate, $selectedCountries);
+        $newVsReturning = $this->getNewVsReturning($startDate, $endDate, $selectedCountries);
+        $entryExitPages = $this->getEntryExitPages($startDate, $endDate, $selectedCountries);
+        $peakHours = $this->getPeakHours($startDate, $endDate, $selectedCountries);
+        $journeyStats = $this->getJourneyStats($startDate, $endDate, $selectedCountries);
 
         return view('admin::analytics.index', compact(
             'kpis', 'dailyChart', 'deviceData', 'topPages',
             'topReferrers', 'countryData', 'emirateData',
-            'browserData', 'osData', 'recentSessions',
+            'browserData', 'osData', 'newVsReturning',
+            'entryExitPages', 'peakHours', 'journeyStats',
+            'allCountries', 'selectedCountries',
             'startDate', 'endDate', 'range'
         ));
     }
@@ -157,10 +183,11 @@ class AnalyticsController extends Controller
         ]);
     }
 
-    private function getKPIs(Carbon $start, Carbon $end): array
+    private function getKPIs(Carbon $start, Carbon $end, array $countries = []): array
     {
         $viewsQuery = AnalyticsPageView::whereBetween('viewed_at', [$start, $end]);
         $this->applyUrlFilter($viewsQuery);
+        $this->applyCountryFilter($viewsQuery, $countries);
 
         $totalViews = (clone $viewsQuery)->count();
         $uniqueVisitors = (clone $viewsQuery)->distinct('visitor_id')->count('visitor_id');
@@ -186,10 +213,11 @@ class AnalyticsController extends Controller
         ];
     }
 
-    private function getDailyChart(Carbon $start, Carbon $end): array
+    private function getDailyChart(Carbon $start, Carbon $end, array $countries = []): array
     {
         $query = AnalyticsPageView::whereBetween('viewed_at', [$start, $end]);
         $this->applyUrlFilter($query);
+        $this->applyCountryFilter($query, $countries);
         $views = $query->select(DB::raw('DATE(viewed_at) as date'), DB::raw('COUNT(*) as views'), DB::raw('COUNT(DISTINCT visitor_id) as visitors'))
             ->groupBy('date')
             ->orderBy('date')
@@ -212,20 +240,22 @@ class AnalyticsController extends Controller
         return ['labels' => $labels, 'views' => $viewsData, 'visitors' => $visitorsData];
     }
 
-    private function getDeviceData(Carbon $start, Carbon $end): array
+    private function getDeviceData(Carbon $start, Carbon $end, array $countries = []): array
     {
         $query = AnalyticsPageView::whereBetween('analytics_page_views.viewed_at', [$start, $end])
             ->join('analytics_visitors', 'analytics_visitors.visitor_id', '=', 'analytics_page_views.visitor_id')
             ->select('analytics_visitors.device_type', DB::raw('COUNT(DISTINCT analytics_page_views.visitor_id) as cnt'))
             ->groupBy('analytics_visitors.device_type');
         $this->applyUrlFilter($query, 'analytics_page_views.url');
+        $this->applyCountryFilterDirect($query, $countries);
         return $query->pluck('cnt', 'device_type')->toArray();
     }
 
-    private function getTopPages(Carbon $start, Carbon $end)
+    private function getTopPages(Carbon $start, Carbon $end, array $countries = [])
     {
         $query = AnalyticsPageView::whereBetween('viewed_at', [$start, $end]);
         $this->applyUrlFilter($query);
+        $this->applyCountryFilter($query, $countries);
         return $query->select('url', 'page_title', DB::raw('COUNT(*) as views'), DB::raw('COUNT(DISTINCT visitor_id) as unique_views'))
             ->groupBy('url', 'page_title')
             ->orderByDesc('views')
@@ -233,12 +263,13 @@ class AnalyticsController extends Controller
             ->get();
     }
 
-    private function getTopReferrers(Carbon $start, Carbon $end)
+    private function getTopReferrers(Carbon $start, Carbon $end, array $countries = [])
     {
         $query = AnalyticsPageView::whereBetween('viewed_at', [$start, $end])
             ->whereNotNull('referrer')
             ->where('referrer', 'NOT LIKE', '%' . request()->getHost() . '%');
         $this->applyUrlFilter($query);
+        $this->applyCountryFilter($query, $countries);
         return $query->select(DB::raw("SUBSTRING_INDEX(SUBSTRING_INDEX(referrer, '/', 3), '/', -1) as domain"), DB::raw('COUNT(*) as visits'))
             ->groupBy('domain')
             ->orderByDesc('visits')
@@ -246,7 +277,7 @@ class AnalyticsController extends Controller
             ->get();
     }
 
-    private function getCountryData(Carbon $start, Carbon $end): array
+    private function getCountryData(Carbon $start, Carbon $end, array $countries = []): array
     {
         $query = AnalyticsPageView::whereBetween('analytics_page_views.viewed_at', [$start, $end])
             ->join('analytics_visitors', 'analytics_visitors.visitor_id', '=', 'analytics_page_views.visitor_id')
@@ -256,10 +287,11 @@ class AnalyticsController extends Controller
             ->orderByDesc('cnt')
             ->limit(10);
         $this->applyUrlFilter($query, 'analytics_page_views.url');
+        $this->applyCountryFilterDirect($query, $countries);
         return $query->pluck('cnt', 'country')->toArray();
     }
 
-    private function getEmirateData(Carbon $start, Carbon $end): array
+    private function getEmirateData(Carbon $start, Carbon $end, array $countries = []): array
     {
         $query = AnalyticsPageView::whereBetween('analytics_page_views.viewed_at', [$start, $end])
             ->join('analytics_visitors', 'analytics_visitors.visitor_id', '=', 'analytics_page_views.visitor_id')
@@ -268,10 +300,11 @@ class AnalyticsController extends Controller
             ->groupBy('analytics_visitors.emirate')
             ->orderByDesc('cnt');
         $this->applyUrlFilter($query, 'analytics_page_views.url');
+        $this->applyCountryFilterDirect($query, $countries);
         return $query->pluck('cnt', 'emirate')->toArray();
     }
 
-    private function getBrowserData(Carbon $start, Carbon $end): array
+    private function getBrowserData(Carbon $start, Carbon $end, array $countries = []): array
     {
         $query = AnalyticsPageView::whereBetween('analytics_page_views.viewed_at', [$start, $end])
             ->join('analytics_visitors', 'analytics_visitors.visitor_id', '=', 'analytics_page_views.visitor_id')
@@ -279,10 +312,11 @@ class AnalyticsController extends Controller
             ->groupBy('analytics_visitors.browser')
             ->orderByDesc('cnt');
         $this->applyUrlFilter($query, 'analytics_page_views.url');
+        $this->applyCountryFilterDirect($query, $countries);
         return $query->pluck('cnt', 'browser')->toArray();
     }
 
-    private function getOSData(Carbon $start, Carbon $end): array
+    private function getOSData(Carbon $start, Carbon $end, array $countries = []): array
     {
         $query = AnalyticsPageView::whereBetween('analytics_page_views.viewed_at', [$start, $end])
             ->join('analytics_visitors', 'analytics_visitors.visitor_id', '=', 'analytics_page_views.visitor_id')
@@ -290,17 +324,190 @@ class AnalyticsController extends Controller
             ->groupBy('analytics_visitors.os')
             ->orderByDesc('cnt');
         $this->applyUrlFilter($query, 'analytics_page_views.url');
+        $this->applyCountryFilterDirect($query, $countries);
         return $query->pluck('cnt', 'os')->toArray();
     }
 
-    private function getRecentSessions()
+    private function getNewVsReturning(Carbon $start, Carbon $end, array $countries = []): array
     {
-        return AnalyticsSession::with(['visitor', 'pageViews' => function ($q) {
+        $viewsQuery = AnalyticsPageView::whereBetween('viewed_at', [$start, $end]);
+        $this->applyUrlFilter($viewsQuery);
+        $this->applyCountryFilter($viewsQuery, $countries);
+        $activeVisitorIds = (clone $viewsQuery)->distinct()->pluck('visitor_id');
+
+        if ($activeVisitorIds->isEmpty()) {
+            return ['new' => 0, 'returning' => 0];
+        }
+
+        $newCount = AnalyticsVisitor::whereIn('visitor_id', $activeVisitorIds)
+            ->whereBetween('first_visit_at', [$start, $end])
+            ->count();
+
+        $returningCount = AnalyticsVisitor::whereIn('visitor_id', $activeVisitorIds)
+            ->where('first_visit_at', '<', $start)
+            ->count();
+
+        return ['new' => $newCount, 'returning' => $returningCount];
+    }
+
+    private function getEntryExitPages(Carbon $start, Carbon $end, array $countries = []): array
+    {
+        $viewsQuery = AnalyticsPageView::whereBetween('viewed_at', [$start, $end]);
+        $this->applyUrlFilter($viewsQuery);
+        $this->applyCountryFilter($viewsQuery, $countries);
+        $validVisitorIds = (clone $viewsQuery)->distinct()->pluck('visitor_id');
+
+        $sessionsBase = AnalyticsSession::whereBetween('started_at', [$start, $end])
+            ->whereIn('visitor_id', $validVisitorIds);
+
+        $entryPages = (clone $sessionsBase)
+            ->select('entry_page', DB::raw('COUNT(*) as cnt'))
+            ->groupBy('entry_page')
+            ->orderByDesc('cnt')
+            ->limit(10)
+            ->get();
+
+        $exitPages = (clone $sessionsBase)
+            ->select('exit_page', DB::raw('COUNT(*) as cnt'))
+            ->groupBy('exit_page')
+            ->orderByDesc('cnt')
+            ->limit(10)
+            ->get();
+
+        return ['entry' => $entryPages, 'exit' => $exitPages];
+    }
+
+    private function getPeakHours(Carbon $start, Carbon $end, array $countries = []): array
+    {
+        $query = AnalyticsPageView::whereBetween('viewed_at', [$start, $end]);
+        $this->applyUrlFilter($query);
+        $this->applyCountryFilter($query, $countries);
+
+        $rows = $query->select(
+                DB::raw('DAYOFWEEK(viewed_at) as dow'),
+                DB::raw('HOUR(viewed_at) as hour'),
+                DB::raw('COUNT(*) as views')
+            )
+            ->groupBy('dow', 'hour')
+            ->get();
+
+        $grid = [];
+        $maxVal = 0;
+        foreach ($rows as $r) {
+            $grid[$r->dow][$r->hour] = $r->views;
+            if ($r->views > $maxVal) $maxVal = $r->views;
+        }
+
+        return ['grid' => $grid, 'max' => $maxVal];
+    }
+
+    private function getJourneyStats(Carbon $start, Carbon $end, array $countries = []): array
+    {
+        $viewsQuery = AnalyticsPageView::whereBetween('viewed_at', [$start, $end]);
+        $this->applyUrlFilter($viewsQuery);
+        $this->applyCountryFilter($viewsQuery, $countries);
+        $validVisitorIds = (clone $viewsQuery)->distinct()->pluck('visitor_id');
+
+        $sessionsBase = AnalyticsSession::whereBetween('started_at', [$start, $end])
+            ->whereIn('visitor_id', $validVisitorIds);
+
+        $totalSessions = (clone $sessionsBase)->count();
+        $avgPages = (clone $sessionsBase)->avg('page_count') ?? 0;
+        $avgDuration = (clone $sessionsBase)->avg('duration_seconds') ?? 0;
+        $bounces = $totalSessions > 0
+            ? round((clone $sessionsBase)->where('is_bounce', true)->count() / $totalSessions * 100, 1)
+            : 0;
+
+        $topEntry = (clone $sessionsBase)
+            ->select('entry_page', DB::raw('COUNT(*) as cnt'))
+            ->groupBy('entry_page')
+            ->orderByDesc('cnt')
+            ->first();
+
+        $topExit = (clone $sessionsBase)
+            ->select('exit_page', DB::raw('COUNT(*) as cnt'))
+            ->groupBy('exit_page')
+            ->orderByDesc('cnt')
+            ->first();
+
+        return [
+            'avg_pages' => round($avgPages, 1),
+            'avg_duration' => (int) $avgDuration,
+            'bounce_rate' => $bounces,
+            'top_entry' => $topEntry ? parse_url($topEntry->entry_page, PHP_URL_PATH) ?: '/' : '-',
+            'top_exit' => $topExit ? parse_url($topExit->exit_page, PHP_URL_PATH) ?: '/' : '-',
+        ];
+    }
+
+    // ─── Journey AJAX endpoint ──────────────────────────────────────
+
+    public function getFilteredJourneys(Request $request)
+    {
+        $from = $request->get('from');
+        $to = $request->get('to');
+        $countries = array_filter((array) $request->get('countries', []));
+        $device = $request->get('device');
+        $search = $request->get('search');
+        $perPage = (int) $request->get('per_page', 15);
+
+        $start = $from ? Carbon::parse($from)->startOfDay() : now()->subDays(30)->startOfDay();
+        $end = $to ? Carbon::parse($to)->endOfDay() : now()->endOfDay();
+
+        $query = AnalyticsSession::with(['visitor', 'pageViews' => function ($q) {
                 $q->orderBy('viewed_at');
             }])
-            ->orderByDesc('started_at')
-            ->limit(20)
-            ->get();
+            ->whereBetween('started_at', [$start, $end])
+            ->orderByDesc('started_at');
+
+        if (!empty($countries)) {
+            $query->whereHas('visitor', fn($q) => $q->whereIn('country', $countries));
+        }
+        if ($device) {
+            $query->whereHas('visitor', fn($q) => $q->where('device_type', $device));
+        }
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('entry_page', 'LIKE', "%{$search}%")
+                  ->orWhere('exit_page', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $paginated = $query->paginate($perPage);
+
+        $items = $paginated->getCollection()->map(function ($sess) {
+            return [
+                'id' => $sess->id,
+                'visitor_id' => $sess->visitor_id,
+                'country' => $sess->visitor->country ?? null,
+                'device' => $sess->visitor->device_type ?? 'desktop',
+                'browser' => $sess->visitor->browser ?? null,
+                'ip' => $sess->visitor->ip_address ?? null,
+                'entry_page' => $sess->entry_page,
+                'exit_page' => $sess->exit_page,
+                'page_count' => $sess->page_count,
+                'duration' => $sess->duration_seconds,
+                'is_bounce' => $sess->is_bounce,
+                'started_at' => $sess->started_at ? $sess->started_at->format('M d, H:i') : '-',
+                'pages' => $sess->pageViews->map(function ($pv) {
+                    return [
+                        'url' => $pv->url,
+                        'path' => parse_url($pv->url, PHP_URL_PATH) ?: '/',
+                        'title' => $pv->page_title,
+                        'time_on_page' => $pv->time_on_page,
+                        'referrer' => $pv->referrer,
+                        'viewed_at' => $pv->viewed_at ? $pv->viewed_at->format('H:i:s') : null,
+                    ];
+                }),
+            ];
+        });
+
+        return response()->json([
+            'data' => $items,
+            'current_page' => $paginated->currentPage(),
+            'last_page' => $paginated->lastPage(),
+            'total' => $paginated->total(),
+            'per_page' => $paginated->perPage(),
+        ]);
     }
 
     // ─── Data Cleanup ───────────────────────────────────────────────

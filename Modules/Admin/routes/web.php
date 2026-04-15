@@ -109,6 +109,7 @@ Route::group(
                 Route::get('/realtime', [\Modules\Admin\App\Http\Controllers\AnalyticsController::class, 'realtime'])->name('realtime');
                 Route::get('/visitors', [\Modules\Admin\App\Http\Controllers\AnalyticsController::class, 'visitors'])->name('visitors');
                 Route::get('/export', [\Modules\Admin\App\Http\Controllers\AnalyticsController::class, 'export'])->name('export');
+                Route::get('/journeys', [\Modules\Admin\App\Http\Controllers\AnalyticsController::class, 'getFilteredJourneys'])->name('journeys');
                 Route::get('/cleanup-data', [\Modules\Admin\App\Http\Controllers\AnalyticsController::class, 'cleanupData'])->name('cleanup-data');
                 Route::post('/destroy-by-country', [\Modules\Admin\App\Http\Controllers\AnalyticsController::class, 'destroyByCountry'])->name('destroy-by-country');
                 Route::post('/destroy-by-urls', [\Modules\Admin\App\Http\Controllers\AnalyticsController::class, 'destroyByUrls'])->name('destroy-by-urls');
