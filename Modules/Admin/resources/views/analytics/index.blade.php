@@ -52,6 +52,41 @@
     .date-filter .btn-apply { padding:6px 18px; border-radius:20px; background:var(--primary); color:#fff; border:none; font-size:.82rem; cursor:pointer; }
     .date-filter .btn-export { padding:6px 18px; border-radius:20px; background:var(--success); color:#fff; border:none; font-size:.82rem; cursor:pointer; text-decoration:none; }
 
+    /* Country multi-select dropdown */
+    .country-dropdown { position:relative; display:inline-block; }
+    .country-dropdown-btn {
+        padding:6px 14px; border-radius:20px; border:1px solid #d1d5db; background:#fff; color:#374151;
+        font-size:.82rem; cursor:pointer; transition:.2s; display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+    }
+    .country-dropdown-btn:hover { border-color:var(--primary); }
+    .country-dropdown-btn.has-selection { background:var(--primary); color:#fff; border-color:var(--primary); }
+    .country-dropdown-btn .caret { font-size:.6rem; transition:transform .2s; }
+    .country-dropdown-btn.open .caret { transform:rotate(180deg); }
+    .country-dropdown-menu {
+        display:none; position:absolute; top:calc(100% + 6px); left:0; z-index:100;
+        background:#fff; border-radius:12px; box-shadow:0 10px 40px rgba(0,0,0,.15); border:1px solid #e2e8f0;
+        min-width:260px; max-height:350px; overflow:hidden;
+    }
+    .country-dropdown-menu.show { display:block; }
+    .country-dropdown-search { padding:10px 12px; border-bottom:1px solid #e2e8f0; }
+    .country-dropdown-search input { width:100%; padding:6px 10px; border-radius:6px; border:1px solid #d1d5db; font-size:.8rem; outline:none; }
+    .country-dropdown-search input:focus { border-color:var(--primary); }
+    .country-dropdown-list { max-height:240px; overflow-y:auto; padding:6px 0; }
+    .country-dropdown-item { display:flex; align-items:center; gap:8px; padding:6px 14px; font-size:.82rem; cursor:pointer; transition:.1s; }
+    .country-dropdown-item:hover { background:#f1f5f9; }
+    .country-dropdown-item input[type=checkbox] { width:15px; height:15px; accent-color:var(--primary); cursor:pointer; flex-shrink:0; }
+    .country-dropdown-item label { cursor:pointer; flex:1; color:#334155; }
+    .country-dropdown-footer { padding:8px 12px; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; }
+    .country-dropdown-footer button { padding:4px 12px; border-radius:6px; font-size:.78rem; cursor:pointer; border:none; }
+    .country-dropdown-footer .btn-cd-clear { background:#f1f5f9; color:#64748b; }
+    .country-dropdown-footer .btn-cd-clear:hover { background:#e2e8f0; }
+    .country-dropdown-footer .btn-cd-apply { background:var(--primary); color:#fff; }
+    .country-dropdown-footer .btn-cd-apply:hover { background:var(--primary-dark); }
+    .country-active-tags { display:inline-flex; gap:5px; flex-wrap:wrap; align-items:center; }
+    .country-tag { display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:14px; background:rgba(25,134,139,.1); color:var(--primary); font-size:.75rem; font-weight:600; }
+    .country-tag .remove-tag { cursor:pointer; font-size:.85rem; color:var(--accent); line-height:1; }
+    .country-tag .remove-tag:hover { color:#b91c1c; }
+
     /* KPI cards */
     .kpi-card {
         background:#fff; border-radius:14px; padding:22px; box-shadow:var(--card-shadow);
@@ -96,6 +131,67 @@
     .device-desktop { background:#dbeafe; color:#1d4ed8; }
     .device-mobile { background:#d1fae5; color:#065f46; }
     .device-tablet { background:#fef3c7; color:#92400e; }
+
+    /* New vs Returning */
+    .nvr-summary { display:flex; gap:15px; align-items:center; flex-wrap:wrap; margin-top:12px; }
+    .nvr-stat { text-align:center; flex:1; min-width:90px; }
+    .nvr-stat .nvr-val { font-size:1.6rem; font-weight:800; }
+    .nvr-stat .nvr-lbl { font-size:.78rem; color:#64748b; }
+    .nvr-new { color:var(--success); }
+    .nvr-ret { color:var(--info); }
+
+    /* Entry/Exit pages */
+    .entry-exit-table { width:100%; font-size:.83rem; }
+    .entry-exit-table th { background:#f8fafc; color:#64748b; font-weight:600; padding:10px 12px; border-bottom:2px solid #e2e8f0; }
+    .entry-exit-table td { padding:10px 12px; border-bottom:1px solid #f1f5f9; color:#334155; }
+    .entry-exit-table tr:hover td { background:#f8fafc; }
+
+    /* Peak Hours Heatmap */
+    .heatmap-grid { display:grid; grid-template-columns:60px repeat(24, 1fr); gap:2px; font-size:.7rem; }
+    .heatmap-cell { aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:4px; color:#fff; font-weight:600; min-width:0; transition:transform .15s; cursor:default; }
+    .heatmap-cell:hover { transform:scale(1.2); z-index:2; }
+    .heatmap-header { display:flex; align-items:center; justify-content:center; font-weight:700; color:#64748b; font-size:.7rem; }
+    .heatmap-row-label { display:flex; align-items:center; font-weight:600; color:#64748b; font-size:.72rem; padding-right:4px; }
+    .heatmap-legend { display:flex; align-items:center; gap:6px; margin-top:10px; font-size:.72rem; color:#64748b; }
+    .heatmap-legend-bar { display:flex; height:12px; border-radius:3px; overflow:hidden; }
+    .heatmap-legend-bar span { width:24px; }
+
+    /* Journey section redesign */
+    .journey-stats-row { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px; }
+    .journey-stat-card { background:linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius:12px; padding:16px 20px; flex:1; min-width:140px; border:1px solid #e2e8f0; text-align:center; }
+    .journey-stat-card .js-val { font-size:1.3rem; font-weight:800; color:var(--secondary); }
+    .journey-stat-card .js-lbl { font-size:.75rem; color:#64748b; margin-top:2px; }
+
+    .journey-filters { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:20px; padding:14px 18px; background:#f8fafc; border-radius:10px; border:1px solid #e2e8f0; }
+    .journey-filters select, .journey-filters input[type=text] { padding:6px 12px; border-radius:8px; border:1px solid #d1d5db; font-size:.82rem; min-width:120px; }
+    .journey-filters .btn-filter { padding:6px 16px; border-radius:20px; background:var(--primary); color:#fff; border:none; font-size:.82rem; cursor:pointer; }
+    .journey-filters .btn-reset { padding:6px 16px; border-radius:20px; background:#6b7280; color:#fff; border:none; font-size:.82rem; cursor:pointer; }
+
+    .journey-timeline { border-left:3px solid var(--primary); margin-left:16px; padding-left:0; }
+    .timeline-step { position:relative; padding:10px 0 10px 28px; }
+    .timeline-step:last-child { padding-bottom:0; }
+    .timeline-dot { position:absolute; left:-12px; top:12px; width:22px; height:22px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.65rem; font-weight:700; }
+    .timeline-dot.exit-dot { background:var(--accent); }
+    .timeline-content { background:#fff; border-radius:8px; padding:10px 14px; border:1px solid #e2e8f0; }
+    .timeline-title { font-weight:600; color:var(--secondary); font-size:.85rem; }
+    .timeline-path { font-size:.75rem; color:#94a3b8; font-family:monospace; }
+    .timeline-meta { display:flex; gap:12px; margin-top:4px; font-size:.73rem; color:#64748b; }
+    .timeline-meta span { display:inline-flex; align-items:center; gap:3px; }
+
+    .journey-pagination { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:18px; }
+    .journey-pagination button { padding:5px 12px; border-radius:6px; border:1px solid #d1d5db; background:#fff; font-size:.82rem; cursor:pointer; transition:.2s; }
+    .journey-pagination button:hover:not(:disabled) { background:var(--primary); color:#fff; border-color:var(--primary); }
+    .journey-pagination button:disabled { opacity:.4; cursor:not-allowed; }
+    .journey-pagination .page-info { font-size:.82rem; color:#64748b; }
+
+    .journey-session-card { background:#fff; border-radius:12px; border:1px solid #e2e8f0; margin-bottom:16px; overflow:hidden; transition:.2s; }
+    .journey-session-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.08); }
+    .journey-session-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:14px 18px; background:#f8fafc; cursor:pointer; border-bottom:1px solid #e2e8f0; }
+    .journey-session-header:hover { background:#f1f5f9; }
+    .journey-session-info { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    .journey-session-meta { display:flex; gap:16px; font-size:.78rem; color:#64748b; flex-wrap:wrap; }
+    .journey-session-body { display:none; padding:18px; background:#fafbfc; }
+    .journey-loading { text-align:center; padding:30px; color:#64748b; }
 
     /* Cleanup Panel */
     .cleanup-toggle-btn {
@@ -202,6 +298,39 @@
         <input type="date" id="dateFrom" value="{{ $startDate->toDateString() }}">
         <span style="color:#94a3b8;">to</span>
         <input type="date" id="dateTo" value="{{ $endDate->toDateString() }}">
+        <span style="color:#94a3b8;">|</span>
+        {{-- Country Multi-Select --}}
+        <div class="country-dropdown" id="countryDropdown">
+            <button type="button" class="country-dropdown-btn {{ count($selectedCountries) > 0 ? 'has-selection' : '' }}" id="btnCountryDropdown">
+                <i class="fa fa-globe"></i>
+                <span id="countryBtnLabel">{{ count($selectedCountries) > 0 ? count($selectedCountries) . ' Countries' : 'All Countries' }}</span>
+                <i class="fa fa-caret-down caret"></i>
+            </button>
+            <div class="country-dropdown-menu" id="countryDropdownMenu">
+                <div class="country-dropdown-search">
+                    <input type="text" id="countrySearchInput" placeholder="Search countries...">
+                </div>
+                <div class="country-dropdown-list" id="countryDropdownList">
+                    @foreach($allCountries as $country)
+                    <div class="country-dropdown-item" data-country="{{ $country }}">
+                        <input type="checkbox" id="cf_{{ md5($country) }}" value="{{ $country }}" {{ in_array($country, $selectedCountries) ? 'checked' : '' }}>
+                        <label for="cf_{{ md5($country) }}">{{ $country }}</label>
+                    </div>
+                    @endforeach
+                </div>
+                <div class="country-dropdown-footer">
+                    <button type="button" class="btn-cd-clear" id="btnClearCountries">Clear All</button>
+                    <button type="button" class="btn-cd-apply" id="btnApplyCountries"><i class="fa fa-check"></i> Apply Filter</button>
+                </div>
+            </div>
+        </div>
+        @if(count($selectedCountries) > 0)
+        <div class="country-active-tags" id="countryActiveTags">
+            @foreach($selectedCountries as $sc)
+            <span class="country-tag">{{ $sc }} <span class="remove-tag" data-country="{{ $sc }}">&times;</span></span>
+            @endforeach
+        </div>
+        @endif
         <button class="btn-apply" id="btnApply"><i class="fa fa-filter"></i> Apply</button>
         <a href="{{ route('admin.analytics.export', ['from' => $startDate->toDateString(), 'to' => $endDate->toDateString()]) }}" class="btn-export"><i class="fa fa-download"></i> Export CSV</a>
     </div>
@@ -264,6 +393,66 @@
             <div class="chart-panel">
                 <h5><i class="fa fa-desktop"></i> Device Types</h5>
                 <canvas id="deviceChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    {{-- Row: New vs Returning --}}
+    <div class="row">
+        <div class="col-lg-5 mb-4">
+            <div class="chart-panel">
+                <h5><i class="fa fa-user-plus"></i> New vs Returning Visitors</h5>
+                @php $nvrTotal = $newVsReturning['new'] + $newVsReturning['returning']; @endphp
+                @if($nvrTotal > 0)
+                <canvas id="nvrChart" style="max-height:220px;"></canvas>
+                <div class="nvr-summary">
+                    <div class="nvr-stat"><div class="nvr-val nvr-new">{{ number_format($newVsReturning['new']) }}</div><div class="nvr-lbl">New ({{ round($newVsReturning['new'] / $nvrTotal * 100, 1) }}%)</div></div>
+                    <div class="nvr-stat"><div class="nvr-val nvr-ret">{{ number_format($newVsReturning['returning']) }}</div><div class="nvr-lbl">Returning ({{ round($newVsReturning['returning'] / $nvrTotal * 100, 1) }}%)</div></div>
+                </div>
+                @else
+                <p class="text-muted text-center py-4">No visitor data yet</p>
+                @endif
+            </div>
+        </div>
+        <div class="col-lg-7 mb-4">
+            <div class="chart-panel" style="height:100%;">
+                <h5><i class="fa fa-clock-o"></i> Peak Hours Heatmap</h5>
+                @php
+                    $dayNames = [1 => 'Sun', 2 => 'Mon', 3 => 'Tue', 4 => 'Wed', 5 => 'Thu', 6 => 'Fri', 7 => 'Sat'];
+                    $heatGrid = $peakHours['grid'];
+                    $heatMax = max($peakHours['max'], 1);
+                @endphp
+                <div class="heatmap-grid">
+                    <div class="heatmap-header"></div>
+                    @for($h = 0; $h < 24; $h++)
+                    <div class="heatmap-header">{{ sprintf('%02d', $h) }}</div>
+                    @endfor
+
+                    @foreach($dayNames as $dow => $dayName)
+                    <div class="heatmap-row-label">{{ $dayName }}</div>
+                    @for($h = 0; $h < 24; $h++)
+                        @php
+                            $val = $heatGrid[$dow][$h] ?? 0;
+                            $intensity = $heatMax > 0 ? $val / $heatMax : 0;
+                            $bg = $val > 0 ? 'rgba(25,134,139,' . (0.15 + $intensity * 0.85) . ')' : '#f1f5f9';
+                            $textColor = $intensity > 0.4 ? '#fff' : '#64748b';
+                        @endphp
+                        <div class="heatmap-cell" style="background:{{ $bg }};color:{{ $textColor }};" title="{{ $dayName }} {{ sprintf('%02d:00', $h) }}: {{ $val }} views">{{ $val > 0 ? $val : '' }}</div>
+                    @endfor
+                    @endforeach
+                </div>
+                <div class="heatmap-legend">
+                    <span>Less</span>
+                    <div class="heatmap-legend-bar">
+                        <span style="background:#f1f5f9;"></span>
+                        <span style="background:rgba(25,134,139,.2);"></span>
+                        <span style="background:rgba(25,134,139,.4);"></span>
+                        <span style="background:rgba(25,134,139,.6);"></span>
+                        <span style="background:rgba(25,134,139,.8);"></span>
+                        <span style="background:rgba(25,134,139,1);"></span>
+                    </div>
+                    <span>More</span>
+                </div>
             </div>
         </div>
     </div>
@@ -337,6 +526,52 @@
         </div>
     </div>
 
+    {{-- Row: Entry/Exit Pages --}}
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="table-panel">
+                <h5><i class="fa fa-sign-in"></i> Top Entry Pages</h5>
+                <div style="overflow-x:auto;">
+                <table class="entry-exit-table">
+                    <thead><tr><th>#</th><th>Page</th><th>Sessions</th></tr></thead>
+                    <tbody>
+                    @forelse($entryExitPages['entry'] as $i => $ep)
+                    <tr>
+                        <td>{{ $i + 1 }}</td>
+                        <td class="url-cell" title="{{ $ep->entry_page }}">{{ Str::limit(parse_url($ep->entry_page ?? '', PHP_URL_PATH) ?: '/', 50) }}</td>
+                        <td><strong>{{ number_format($ep->cnt) }}</strong></td>
+                    </tr>
+                    @empty
+                    <tr><td colspan="3" class="text-center text-muted">No data yet</td></tr>
+                    @endforelse
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="table-panel">
+                <h5><i class="fa fa-sign-out"></i> Top Exit Pages</h5>
+                <div style="overflow-x:auto;">
+                <table class="entry-exit-table">
+                    <thead><tr><th>#</th><th>Page</th><th>Sessions</th></tr></thead>
+                    <tbody>
+                    @forelse($entryExitPages['exit'] as $i => $xp)
+                    <tr>
+                        <td>{{ $i + 1 }}</td>
+                        <td class="url-cell" title="{{ $xp->exit_page }}">{{ Str::limit(parse_url($xp->exit_page ?? '', PHP_URL_PATH) ?: '/', 50) }}</td>
+                        <td><strong>{{ number_format($xp->cnt) }}</strong></td>
+                    </tr>
+                    @empty
+                    <tr><td colspan="3" class="text-center text-muted">No data yet</td></tr>
+                    @endforelse
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- Row: Browser + OS --}}
     <div class="row">
         <div class="col-lg-6 mb-4">
@@ -361,51 +596,59 @@
         </div>
     </div>
 
-    {{-- User Journeys --}}
+    {{-- User Journeys (Redesigned) --}}
     <div class="table-panel">
-        <h5><i class="fa fa-road"></i> Recent User Journeys</h5>
-        <div style="overflow-x:auto;">
-        <table>
-            <thead><tr><th>Visitor</th><th>Device</th><th>Entry</th><th>Exit</th><th>Pages</th><th>Duration</th><th>Bounce</th><th>Started</th></tr></thead>
-            <tbody>
-            @forelse($recentSessions as $sess)
-            <tr class="journey-toggle" data-id="{{ $sess->id }}">
-                <td>
-                    <span title="{{ $sess->visitor->ip_address ?? '' }}">
-                        {{ Str::limit($sess->visitor_id, 8, '...') }}
-                        @if($sess->visitor && $sess->visitor->country)
-                        <small class="text-muted">({{ $sess->visitor->country }})</small>
-                        @endif
-                    </span>
-                </td>
-                <td>
-                    @php $dt = $sess->visitor->device_type ?? 'desktop'; @endphp
-                    <span class="device-badge device-{{ $dt }}">{{ ucfirst($dt) }}</span>
-                </td>
-                <td class="url-cell" title="{{ $sess->entry_page }}">{{ Str::limit(parse_url($sess->entry_page ?? '', PHP_URL_PATH) ?: '/', 40) }}</td>
-                <td class="url-cell" title="{{ $sess->exit_page }}">{{ Str::limit(parse_url($sess->exit_page ?? '', PHP_URL_PATH) ?: '/', 40) }}</td>
-                <td><strong>{{ $sess->page_count }}</strong></td>
-                <td>{{ gmdate('i:s', $sess->duration_seconds) }}</td>
-                <td>{!! $sess->is_bounce ? '<span class="text-danger">Yes</span>' : '<span class="text-success">No</span>' !!}</td>
-                <td>{{ $sess->started_at ? $sess->started_at->format('M d, H:i') : '-' }}</td>
-            </tr>
-            <tr class="journey-detail" id="journey-{{ $sess->id }}">
-                <td colspan="8">
-                    @foreach($sess->pageViews as $k => $pv)
-                    <span class="journey-step">
-                        @if($k > 0)<span class="journey-arrow"><i class="fa fa-long-arrow-right"></i></span>@endif
-                        <span title="{{ $pv->url }}">{{ Str::limit(parse_url($pv->url, PHP_URL_PATH) ?: '/', 30) }}</span>
-                        @if($pv->time_on_page)<small class="text-muted">({{ $pv->time_on_page }}s)</small>@endif
-                    </span>
-                    @endforeach
-                </td>
-            </tr>
-            @empty
-            <tr><td colspan="8" class="text-center text-muted">No sessions recorded yet</td></tr>
-            @endforelse
-            </tbody>
-        </table>
+        <h5><i class="fa fa-road"></i> User Journeys</h5>
+
+        {{-- Journey Stats Cards --}}
+        <div class="journey-stats-row">
+            <div class="journey-stat-card">
+                <div class="js-val">{{ $journeyStats['avg_pages'] }}</div>
+                <div class="js-lbl">Avg Pages / Session</div>
+            </div>
+            <div class="journey-stat-card">
+                <div class="js-val">{{ gmdate('i:s', $journeyStats['avg_duration']) }}</div>
+                <div class="js-lbl">Avg Session Duration</div>
+            </div>
+            <div class="journey-stat-card">
+                <div class="js-val">{{ $journeyStats['bounce_rate'] }}%</div>
+                <div class="js-lbl">Drop-off Rate</div>
+            </div>
+            <div class="journey-stat-card">
+                <div class="js-val" style="font-size:.95rem;">{{ Str::limit($journeyStats['top_entry'], 25) }}</div>
+                <div class="js-lbl">Top Entry Page</div>
+            </div>
+            <div class="journey-stat-card">
+                <div class="js-val" style="font-size:.95rem;">{{ Str::limit($journeyStats['top_exit'], 25) }}</div>
+                <div class="js-lbl">Top Exit Page</div>
+            </div>
         </div>
+
+        {{-- Journey Filters --}}
+        <div class="journey-filters">
+            <select id="jrnCountry" multiple style="min-width:160px;max-height:34px;" title="Hold Ctrl to select multiple">
+                @foreach($allCountries as $c)
+                <option value="{{ $c }}" {{ in_array($c, $selectedCountries) ? 'selected' : '' }}>{{ $c }}</option>
+                @endforeach
+            </select>
+            <select id="jrnDevice">
+                <option value="">All Devices</option>
+                <option value="desktop">Desktop</option>
+                <option value="mobile">Mobile</option>
+                <option value="tablet">Tablet</option>
+            </select>
+            <input type="text" id="jrnSearch" placeholder="Search URL path..." style="flex:1;min-width:150px;">
+            <button class="btn-filter" id="btnJrnFilter"><i class="fa fa-search"></i> Filter</button>
+            <button class="btn-reset" id="btnJrnReset"><i class="fa fa-refresh"></i> Reset</button>
+        </div>
+
+        {{-- Journey Sessions (AJAX loaded) --}}
+        <div class="journey-loading" id="jrnLoading">
+            <i class="fa fa-spinner fa-spin fa-2x"></i>
+            <p style="margin-top:10px;">Loading sessions...</p>
+        </div>
+        <div id="jrnContainer"></div>
+        <div class="journey-pagination" id="jrnPagination"></div>
     </div>
 
     {{-- Data Cleanup --}}
@@ -597,22 +840,229 @@ $(document).ready(function() {
     }
     @endif
 
-    // Date range buttons
+    // New vs Returning doughnut
+    @if(($newVsReturning['new'] + $newVsReturning['returning']) > 0)
+    var nvrCtx = document.getElementById('nvrChart');
+    if (nvrCtx) {
+        new Chart(nvrCtx.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['New Visitors', 'Returning Visitors'],
+                datasets: [{ data: [{{ $newVsReturning['new'] }}, {{ $newVsReturning['returning'] }}], backgroundColor: [colors.success, colors.info] }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+    }
+    @endif
+
+    // ─── Global Country Filter ─────────────────────────────────────
+    var globalSelectedCountries = @json($selectedCountries);
+
+    function getSelectedCountries() {
+        var sel = [];
+        $('#countryDropdownList input[type=checkbox]:checked').each(function() {
+            sel.push($(this).val());
+        });
+        return sel;
+    }
+
+    // Toggle dropdown
+    $('#btnCountryDropdown').on('click', function(e) {
+        e.stopPropagation();
+        $(this).toggleClass('open');
+        $('#countryDropdownMenu').toggleClass('show');
+    });
+
+    // Close on outside click
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('#countryDropdown').length) {
+            $('#btnCountryDropdown').removeClass('open');
+            $('#countryDropdownMenu').removeClass('show');
+        }
+    });
+
+    // Search filter in dropdown
+    $('#countrySearchInput').on('input', function() {
+        var term = $(this).val().toLowerCase();
+        $('#countryDropdownList .country-dropdown-item').each(function() {
+            var name = $(this).data('country').toLowerCase();
+            $(this).toggle(name.indexOf(term) !== -1);
+        });
+    });
+
+    // Clear all checkboxes
+    $('#btnClearCountries').on('click', function() {
+        $('#countryDropdownList input[type=checkbox]').prop('checked', false);
+    });
+
+    // Apply country filter (rebuilds URL and reloads)
+    $('#btnApplyCountries').on('click', function() {
+        globalSelectedCountries = getSelectedCountries();
+        applyAllFilters();
+    });
+
+    // Remove a single country tag
+    $(document).on('click', '.remove-tag', function() {
+        var c = $(this).data('country');
+        globalSelectedCountries = globalSelectedCountries.filter(function(v) { return v !== c; });
+        applyAllFilters();
+    });
+
+    function applyAllFilters() {
+        var params = new URLSearchParams();
+        var f = $('#dateFrom').val(), t = $('#dateTo').val();
+        if (f && t) {
+            params.set('from', f);
+            params.set('to', t);
+        } else {
+            params.set('range', '{{ $range }}');
+        }
+        globalSelectedCountries.forEach(function(c) { params.append('countries[]', c); });
+        window.location.href = '{{ route("admin.analytics.index") }}?' + params.toString();
+    }
+
+    // Date range buttons (include country filter)
     $('.btn-range').on('click', function() {
         var r = $(this).data('range');
-        window.location.href = '{{ route("admin.analytics.index") }}?range=' + r;
+        var params = new URLSearchParams();
+        params.set('range', r);
+        globalSelectedCountries.forEach(function(c) { params.append('countries[]', c); });
+        window.location.href = '{{ route("admin.analytics.index") }}?' + params.toString();
     });
 
+    // Apply date + country
     $('#btnApply').on('click', function() {
-        var f = $('#dateFrom').val(), t = $('#dateTo').val();
-        if (f && t) window.location.href = '{{ route("admin.analytics.index") }}?from=' + f + '&to=' + t;
+        globalSelectedCountries = getSelectedCountries();
+        applyAllFilters();
     });
 
-    // Journey toggle
-    $('.journey-toggle').on('click', function() {
-        var id = $(this).data('id');
-        $('#journey-' + id).slideToggle(200);
+    // ─── Journey AJAX System ──────────────────────────────────────
+    var jrnPage = 1;
+
+    function formatDuration(sec) {
+        if (!sec || sec <= 0) return '0s';
+        if (sec < 60) return sec + 's';
+        var m = Math.floor(sec / 60), s = sec % 60;
+        return m + 'm ' + (s > 0 ? s + 's' : '');
+    }
+
+    function loadJourneys(page) {
+        page = page || 1;
+        jrnPage = page;
+
+        var jrnCountryVal = $('#jrnCountry').val();
+        var countriesForJourney = (jrnCountryVal && jrnCountryVal.length > 0) ? jrnCountryVal : globalSelectedCountries;
+
+        var qp = new URLSearchParams();
+        qp.set('page', page);
+        qp.set('per_page', 15);
+        qp.set('from', '{{ $startDate->toDateString() }}');
+        qp.set('to', '{{ $endDate->toDateString() }}');
+        if (Array.isArray(countriesForJourney)) {
+            countriesForJourney.forEach(function(c) { qp.append('countries[]', c); });
+        } else if (countriesForJourney) {
+            qp.append('countries[]', countriesForJourney);
+        }
+        if ($('#jrnDevice').val()) qp.set('device', $('#jrnDevice').val());
+        if ($('#jrnSearch').val()) qp.set('search', $('#jrnSearch').val());
+
+        $('#jrnLoading').show();
+        $('#jrnContainer').hide();
+        $('#jrnPagination').hide();
+
+        $.getJSON('{{ route("admin.analytics.journeys") }}?' + qp.toString(), function(res) {
+            $('#jrnLoading').hide();
+            $('#jrnContainer').show();
+            $('#jrnPagination').show();
+
+            var html = '';
+            if (!res.data || res.data.length === 0) {
+                html = '<div class="text-center text-muted py-4">No sessions found matching filters.</div>';
+            } else {
+                res.data.forEach(function(sess) {
+                    var deviceClass = 'device-' + (sess.device || 'desktop');
+                    html += '<div class="journey-session-card">';
+                    html += '<div class="journey-session-header" data-sess="' + sess.id + '">';
+                    html += '<div class="journey-session-info">';
+                    html += '<span class="device-badge ' + deviceClass + '">' + (sess.device ? sess.device.charAt(0).toUpperCase() + sess.device.slice(1) : 'Desktop') + '</span>';
+                    html += '<strong>' + (sess.country || 'Unknown') + '</strong>';
+                    html += '<span style="color:#94a3b8;font-size:.78rem;">' + sess.visitor_id.substring(0, 10) + '...</span>';
+                    html += '</div>';
+                    html += '<div class="journey-session-meta">';
+                    html += '<span><i class="fa fa-file-o"></i> ' + sess.page_count + ' pages</span>';
+                    html += '<span><i class="fa fa-clock-o"></i> ' + formatDuration(sess.duration) + '</span>';
+                    html += '<span>' + (sess.is_bounce ? '<span class="text-danger"><i class="fa fa-times-circle"></i> Bounce</span>' : '<span class="text-success"><i class="fa fa-check-circle"></i> Engaged</span>') + '</span>';
+                    html += '<span><i class="fa fa-calendar"></i> ' + sess.started_at + '</span>';
+                    html += '<i class="fa fa-chevron-down" style="color:#94a3b8;"></i>';
+                    html += '</div></div>';
+
+                    // Timeline body
+                    html += '<div class="journey-session-body" id="jrnBody-' + sess.id + '">';
+                    if (sess.pages && sess.pages.length > 0) {
+                        html += '<div class="journey-timeline">';
+                        sess.pages.forEach(function(pg, idx) {
+                            var isLast = idx === sess.pages.length - 1;
+                            var dotClass = isLast ? 'timeline-dot exit-dot' : 'timeline-dot';
+                            html += '<div class="timeline-step">';
+                            html += '<div class="' + dotClass + '">' + (idx + 1) + '</div>';
+                            html += '<div class="timeline-content">';
+                            html += '<div class="timeline-title">' + (pg.title || pg.path) + '</div>';
+                            html += '<div class="timeline-path">' + pg.path + '</div>';
+                            html += '<div class="timeline-meta">';
+                            if (pg.time_on_page) html += '<span><i class="fa fa-clock-o"></i> ' + formatDuration(pg.time_on_page) + '</span>';
+                            if (pg.viewed_at) html += '<span><i class="fa fa-eye"></i> ' + pg.viewed_at + '</span>';
+                            if (idx === 0 && pg.referrer) {
+                                var refDomain = pg.referrer;
+                                try { refDomain = new URL(pg.referrer).hostname; } catch(e) {}
+                                html += '<span><i class="fa fa-external-link"></i> via ' + refDomain + '</span>';
+                            }
+                            if (isLast) html += '<span style="color:var(--accent);font-weight:600;"><i class="fa fa-sign-out"></i> EXIT</span>';
+                            html += '</div></div></div>';
+                        });
+                        html += '</div>';
+                    }
+                    html += '</div></div>';
+                });
+            }
+            $('#jrnContainer').html(html);
+
+            // Pagination
+            var pHtml = '';
+            pHtml += '<button id="jrnPrev" ' + (res.current_page <= 1 ? 'disabled' : '') + '><i class="fa fa-chevron-left"></i> Prev</button>';
+            pHtml += '<span class="page-info">Page ' + res.current_page + ' of ' + res.last_page + ' (' + res.total + ' sessions)</span>';
+            pHtml += '<button id="jrnNext" ' + (res.current_page >= res.last_page ? 'disabled' : '') + '>Next <i class="fa fa-chevron-right"></i></button>';
+            $('#jrnPagination').html(pHtml);
+        }).fail(function() {
+            $('#jrnLoading').hide();
+            $('#jrnContainer').html('<div class="text-center text-danger py-4">Failed to load sessions.</div>').show();
+        });
+    }
+
+    // Toggle session timeline
+    $(document).on('click', '.journey-session-header', function() {
+        var id = $(this).data('sess');
+        var body = $('#jrnBody-' + id);
+        var icon = $(this).find('.fa-chevron-down, .fa-chevron-up');
+        body.slideToggle(200);
+        icon.toggleClass('fa-chevron-down fa-chevron-up');
     });
+
+    // Journey pagination
+    $(document).on('click', '#jrnPrev', function() { if (jrnPage > 1) loadJourneys(jrnPage - 1); });
+    $(document).on('click', '#jrnNext', function() { loadJourneys(jrnPage + 1); });
+
+    // Journey filters
+    $('#btnJrnFilter').on('click', function() { loadJourneys(1); });
+    $('#btnJrnReset').on('click', function() {
+        $('#jrnCountry').val('');
+        $('#jrnDevice').val('');
+        $('#jrnSearch').val('');
+        loadJourneys(1);
+    });
+    $('#jrnSearch').on('keypress', function(e) { if (e.which === 13) loadJourneys(1); });
+
+    // Initial load
+    loadJourneys(1);
 
     // Real-time polling
     function fetchRealtime() {

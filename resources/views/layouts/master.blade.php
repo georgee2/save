@@ -4,6 +4,9 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        @if(!empty($footerContactInfo->google_search_console))
+        <meta name="google-site-verification" content="{{ $footerContactInfo->google_search_console }}">
+        @endif
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="favourites-count-url" content="/{{ app()->getLocale() }}/favourites/count">
         <meta name="favourites-toggle-url" content="/{{ app()->getLocale() }}/favourites/toggle">
@@ -167,11 +170,6 @@
           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
         @yield('css')
-
-        {{-- Google Search Console Verification --}}
-        @if(!empty($footerContactInfo->google_search_console))
-        <meta name="google-site-verification" content="{{ $footerContactInfo->google_search_console }}">
-        @endif
 
         {{-- Google Analytics (GA4) --}}
         @if(!empty($footerContactInfo->google_analytics))
