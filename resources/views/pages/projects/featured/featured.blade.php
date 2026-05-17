@@ -130,7 +130,7 @@
                   <div class="card border-0 shadow-hover-2" data-animate="fadeInUp">
                     <a href="{{ route('projects.show', $project->slug) }}" class="hover-change-image bg-hover-overlay rounded-lg card-img-top d-block">
                       <img src="{{ url('/storage' . $project->main_image) }}"
-								     alt="{{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}">
+								     alt="{{ $project->{'alt_text_' . app()->getLocale()} ?? (app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english) }}">
                       <div class="card-img-overlay p-2 d-flex flex-column pointer-events-none">
                         <div>
                           <span class="badge badge-primary">{{ __('lang.featured') }}</span>
@@ -289,7 +289,7 @@
                       <div class="col-md-5">
                         <a href="{{ route('projects.show', $project->slug) }}" class="hover-change-image bg-hover-overlay rounded-lg card-img h-100 d-block">
                           <img src="{{ url('/storage' . $project->main_image) }}" class="h-100 object-fit-cover"
-                               alt="{{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}">
+                               alt="{{ $project->{'alt_text_' . app()->getLocale()} ?? (app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english) }}">
                           <div class="card-img-overlay p-2 d-flex flex-column pointer-events-none">
                             <div>
                               <span class="badge badge-primary">{{ __('lang.featured') }}</span>

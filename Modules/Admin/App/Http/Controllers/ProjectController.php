@@ -164,6 +164,8 @@ class ProjectController extends Controller
             'site_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'plan_2d_image' => 'nullable|file|mimes:pdf|max:10240',
             'plan_3d_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'alt_text_english' => 'nullable|string|max:200',
+            'alt_text_arabic' => 'nullable|string|max:200',
             'description_english' => 'nullable|string|max:3000',
             'description_arabic' => 'nullable|string|max:3000',
             'bio_english' => 'nullable|string|max:500',
@@ -276,6 +278,8 @@ class ProjectController extends Controller
             'site_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'plan_2d_image' => 'nullable|file|mimes:pdf|max:10240',
             'plan_3d_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'alt_text_english' => 'nullable|string|max:200',
+            'alt_text_arabic' => 'nullable|string|max:200',
             'description_english' => 'nullable|string|max:3000',
             'description_arabic' => 'nullable|string|max:3000',
             'bio_english' => 'nullable|string|max:500',
@@ -289,7 +293,7 @@ class ProjectController extends Controller
             'home_status' => 'required|in:0,1',
             'publish_status' => 'required|in:0,1',
         ]);
-        
+
         // Check if category, subcategory, or project_number changed - need to regenerate project code
         // Also generate if project_code doesn't exist yet (for existing projects)
         $regenerateCode = (

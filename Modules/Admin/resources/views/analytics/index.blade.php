@@ -626,12 +626,33 @@
 
         {{-- Journey Filters --}}
         <div class="journey-filters">
-            <select id="jrnCountry" multiple style="min-width:160px;max-height:34px;" title="Hold Ctrl to select multiple">
-                @foreach($allCountries as $c)
-                <option value="{{ $c }}" {{ in_array($c, $selectedCountries) ? 'selected' : '' }}>{{ $c }}</option>
-                @endforeach
-            </select>
-            <select id="jrnDevice">
+            {{-- Country Multi-Select (matches top filter style) --}}
+            <div class="country-dropdown" id="jrnCountryDropdown">
+                <button type="button" class="country-dropdown-btn" id="btnJrnCountryDropdown">
+                    <i class="fa fa-globe"></i>
+                    <span id="jrnCountryBtnLabel">All Countries</span>
+                    <i class="fa fa-caret-down caret"></i>
+                </button>
+                <div class="country-dropdown-menu" id="jrnCountryDropdownMenu">
+                    <div class="country-dropdown-search">
+                        <input type="text" id="jrnCountrySearchInput" placeholder="Search countries...">
+                    </div>
+                    <div class="country-dropdown-list" id="jrnCountryDropdownList">
+                        @foreach($allCountries as $country)
+                        <div class="country-dropdown-item" data-country="{{ $country }}">
+                            <input type="checkbox" id="jcf_{{ md5($country) }}" value="{{ $country }}">
+                            <label for="jcf_{{ md5($country) }}">{{ $country }}</label>
+                        </div>
+                        @endforeach
+                    </div>
+                    <div class="country-dropdown-footer">
+                        <button type="button" class="btn-cd-clear" id="btnJrnClearCountries">Clear All</button>
+                        <button type="button" class="btn-cd-apply" id="btnJrnApplyCountries"><i class="fa fa-check"></i> Apply Filter</button>
+                    </div>
+                </div>
+            </div>
+            <div class="country-active-tags" id="jrnCountryActiveTags" style="display:none;"></div>
+            <select id="jrnDevice" class="select2" style="min-width:160px;">
                 <option value="">All Devices</option>
                 <option value="desktop">Desktop</option>
                 <option value="mobile">Mobile</option>
@@ -901,8 +922,8 @@ $(document).ready(function() {
         applyAllFilters();
     });
 
-    // Remove a single country tag
-    $(document).on('click', '.remove-tag', function() {
+    // Remove a single country tag (global filter only)
+    $(document).on('click', '#countryActiveTags .remove-tag', function() {
         var c = $(this).data('country');
         globalSelectedCountries = globalSelectedCountries.filter(function(v) { return v !== c; });
         applyAllFilters();
@@ -938,6 +959,77 @@ $(document).ready(function() {
 
     // ─── Journey AJAX System ──────────────────────────────────────
     var jrnPage = 1;
+    var jrnSelectedCountries = [];
+
+    function getJrnSelectedCountries() {
+        var sel = [];
+        $('#jrnCountryDropdownList input[type=checkbox]:checked').each(function() {
+            sel.push($(this).val());
+        });
+        return sel;
+    }
+
+    function updateJrnCountryUI() {
+        var n = jrnSelectedCountries.length;
+        $('#jrnCountryBtnLabel').text(n > 0 ? n + ' Countries' : 'All Countries');
+        $('#btnJrnCountryDropdown').toggleClass('has-selection', n > 0);
+        // Sync checkboxes to state
+        $('#jrnCountryDropdownList input[type=checkbox]').each(function() {
+            $(this).prop('checked', jrnSelectedCountries.indexOf($(this).val()) !== -1);
+        });
+        // Rebuild active tags
+        var tagsHtml = '';
+        jrnSelectedCountries.forEach(function(c) {
+            tagsHtml += '<span class="country-tag">' + c + ' <span class="remove-tag" data-country="' + c + '">&times;</span></span>';
+        });
+        $('#jrnCountryActiveTags').html(tagsHtml).toggle(n > 0);
+    }
+
+    // Toggle dropdown
+    $('#btnJrnCountryDropdown').on('click', function(e) {
+        e.stopPropagation();
+        $(this).toggleClass('open');
+        $('#jrnCountryDropdownMenu').toggleClass('show');
+    });
+
+    // Close on outside click
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('#jrnCountryDropdown').length) {
+            $('#btnJrnCountryDropdown').removeClass('open');
+            $('#jrnCountryDropdownMenu').removeClass('show');
+        }
+    });
+
+    // Search filter inside dropdown
+    $('#jrnCountrySearchInput').on('input', function() {
+        var term = $(this).val().toLowerCase();
+        $('#jrnCountryDropdownList .country-dropdown-item').each(function() {
+            var name = $(this).data('country').toLowerCase();
+            $(this).toggle(name.indexOf(term) !== -1);
+        });
+    });
+
+    // Clear all checkboxes (does not apply until "Apply Filter" is clicked)
+    $('#btnJrnClearCountries').on('click', function() {
+        $('#jrnCountryDropdownList input[type=checkbox]').prop('checked', false);
+    });
+
+    // Apply: commit the checkbox state and reload journeys
+    $('#btnJrnApplyCountries').on('click', function() {
+        jrnSelectedCountries = getJrnSelectedCountries();
+        updateJrnCountryUI();
+        $('#btnJrnCountryDropdown').removeClass('open');
+        $('#jrnCountryDropdownMenu').removeClass('show');
+        loadJourneys(1);
+    });
+
+    // Remove a single journey-country tag
+    $(document).on('click', '#jrnCountryActiveTags .remove-tag', function() {
+        var c = $(this).data('country');
+        jrnSelectedCountries = jrnSelectedCountries.filter(function(v) { return v !== c; });
+        updateJrnCountryUI();
+        loadJourneys(1);
+    });
 
     function formatDuration(sec) {
         if (!sec || sec <= 0) return '0s';
@@ -950,8 +1042,7 @@ $(document).ready(function() {
         page = page || 1;
         jrnPage = page;
 
-        var jrnCountryVal = $('#jrnCountry').val();
-        var countriesForJourney = (jrnCountryVal && jrnCountryVal.length > 0) ? jrnCountryVal : globalSelectedCountries;
+        var countriesForJourney = (jrnSelectedCountries.length > 0) ? jrnSelectedCountries : globalSelectedCountries;
 
         var qp = new URLSearchParams();
         qp.set('page', page);
@@ -1054,8 +1145,9 @@ $(document).ready(function() {
     // Journey filters
     $('#btnJrnFilter').on('click', function() { loadJourneys(1); });
     $('#btnJrnReset').on('click', function() {
-        $('#jrnCountry').val('');
-        $('#jrnDevice').val('');
+        jrnSelectedCountries = [];
+        updateJrnCountryUI();
+        $('#jrnDevice').val('').trigger('change');
         $('#jrnSearch').val('');
         loadJourneys(1);
     });
