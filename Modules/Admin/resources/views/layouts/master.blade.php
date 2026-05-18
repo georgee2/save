@@ -41,6 +41,13 @@
             margin-bottom: 10px;
         }
 
+        /* Tagify mirrors form-control onto its <tags> wrapper, inheriting Bootstrap's fixed 38px height.
+           Override so the wrapper grows with wrapped chips instead of overflowing the next field. */
+        tags.tagify.form-control {
+            height: auto;
+            min-height: calc(1.5em + .75rem + 2px);
+        }
+
     </style>
     @yield('css')
 </head>
