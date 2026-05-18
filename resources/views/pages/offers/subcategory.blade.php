@@ -154,8 +154,8 @@
                             {{-- Offer Image with Gradient Overlay --}}
                             <div class="offer-card-image position-relative">
                                 <a href="{{ $offerUrl($offer->slug) }}">
-                                    <img src="{{ url('/storage' . $offer->main_image) }}" 
-                                         alt="{{ app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english }}"
+                                    <img src="{{ url('/storage' . $offer->main_image) }}"
+                                         alt="{{ $offer->{'alt_text_' . app()->getLocale()} ?? (app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english) }}"
                                          class="w-100">
                                 </a>
                                 
@@ -338,9 +338,9 @@
                                 <div class="col-md-5">
                                     <div class="offer-card-image-list position-relative h-100">
                                         <a href="{{ $offerUrl($offer->slug) }}">
-                                            <img src="{{ url('/storage' . $offer->main_image) }}" 
+                                            <img src="{{ url('/storage' . $offer->main_image) }}"
                                                  class="h-100 w-100 object-fit-cover"
-                                                 alt="{{ app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english }}">
+                                                 alt="{{ $offer->{'alt_text_' . app()->getLocale()} ?? (app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english) }}">
                                         </a>
                                         
                                         {{-- Gradient Overlay --}}

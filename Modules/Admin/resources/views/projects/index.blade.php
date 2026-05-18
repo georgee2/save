@@ -960,7 +960,7 @@
                                         <a href="{{ route('project.show', ['id' => $project->id]) }}" class="btn btn-info btn-sm" title="View">
                                             <i class="fa fa-eye"></i>
                                         </a>
-                                        <a href="{{ route('project.edit', ['id' => $project->id]) }}" class="btn btn-warning btn-sm" title="Edit">
+                                        <a href="{{ route('project.edit', ['id' => $project->id]) }}" target="_blank" rel="noopener noreferrer" class="btn btn-warning btn-sm" title="Edit (opens in new tab)">
                                             <i class="fa fa-pencil"></i>
                                         </a>
                                         

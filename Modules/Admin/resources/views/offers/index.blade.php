@@ -953,7 +953,7 @@
                                         <a href="{{ route('offer.show', ['id' => $offer->id]) }}" class="btn btn-info btn-sm mr-1" title="View">
                                             <i class="fa fa-eye"></i>
                                         </a>
-                                        <a href="{{ route('offer.edit', ['id' => $offer->id]) }}" class="btn btn-warning btn-sm mr-1" title="Edit">
+                                        <a href="{{ route('offer.edit', ['id' => $offer->id]) }}" target="_blank" rel="noopener noreferrer" class="btn btn-warning btn-sm mr-1" title="Edit (opens in new tab)">
                                             <i class="fa fa-pencil"></i>
                                         </a>
                                         
