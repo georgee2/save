@@ -23,8 +23,8 @@
             <div class="box box pb-7 pt-2" data-animate="fadeInUp">
                 <div class="card shadow-hover-2">
                     <a href="{{ route('projects.show', $project->slug) }}" class="hover-change-image bg-hover-overlay rounded-lg card-img-top d-block">
-                        <img src="{{ url('/storage' . $project->main_image) }}" 
-                             alt="{{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}">
+                        <img src="{{ url('/storage' . $project->main_image) }}"
+                             alt="{{ $project->{'alt_text_' . app()->getLocale()} ?? (app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english) }}">
                         <div class="card-img-overlay p-2 d-flex flex-column pointer-events-none">
                             <div class="d-flex justify-content-end">
                                 <span class="badge badge-primary">{{ __('lang.featured') }}</span>

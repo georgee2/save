@@ -63,7 +63,7 @@
                     @php $project = $fav->itemData; @endphp
                     <div class="fav-item">
                         <a href="{{ route('projects.show', $project->slug) }}" class="fav-item-image">
-                            <img src="{{ url('/storage' . $project->main_image) }}" alt="{{ app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english }}">
+                            <img src="{{ url('/storage' . $project->main_image) }}" alt="{{ $project->{'alt_text_' . app()->getLocale()} ?? (app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english) }}">
                         </a>
                         <div class="fav-item-body">
                             <span class="fav-type-badge project">{{ __('lang.projects') }}</span>
@@ -91,7 +91,7 @@
                     @php $offer = $fav->itemData; @endphp
                     <div class="fav-item">
                         <a href="{{ route('offers.show', $offer->slug) }}" class="fav-item-image">
-                            <img src="{{ url('/storage' . $offer->main_image) }}" alt="{{ app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english }}">
+                            <img src="{{ url('/storage' . $offer->main_image) }}" alt="{{ $offer->{'alt_text_' . app()->getLocale()} ?? (app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english) }}">
                         </a>
                         <div class="fav-item-body">
                             <span class="fav-type-badge offer">{{ __('lang.offers') }}</span>

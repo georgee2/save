@@ -26,8 +26,8 @@
                     {{-- Offer Image with Gradient Overlay --}}
                     <div class="offer-card-image position-relative">
                         <a href="{{ route('offers.show', $offer->slug) }}">
-                            <img src="{{ url('/storage' . $offer->main_image) }}" 
-                                 alt="{{ app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english }}"
+                            <img src="{{ url('/storage' . $offer->main_image) }}"
+                                 alt="{{ $offer->{'alt_text_' . app()->getLocale()} ?? (app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english) }}"
                                  class="w-100">
                         </a>
                         
