@@ -174,10 +174,10 @@
                                     {{ app()->getLocale() == 'ar' ? ($offer->location_arabic ?? $offer->location_english) : ($offer->location_english ?? $offer->location_arabic) }}
                                 </p>
                                 @endif
-                                @if($defaultPrice || $offer->project_cost)
+                                @if($defaultPrice)
                                 <p class="text-white fs-18 font-weight-bold mb-3">
                                     {{ $offer->currency ? $offer->currency->abbreviation : 'AED' }}
-                                    {{ number_format($defaultPrice ? $defaultPrice->price : $offer->project_cost) }}
+                                    {{ number_format($defaultPrice->price) }}
                                 </p>
                                 @endif
                                 <a href="{{ route('offers.show', $offer->slug) }}" class="btn btn-secondary btn-sm px-4">
@@ -215,10 +215,10 @@
                                 <p class="fs-14 font-weight-500 letter-spacing-087 text-secondary text-uppercase lh-15 mb-1">
                                     {{ __('lang.for_sale') }}
                                 </p>
-                                @if($defaultPrice || $offer->project_cost)
+                                @if($defaultPrice)
                                 <p class="fs-22 font-weight-bold text-heading mb-3">
                                     {{ $offer->currency ? $offer->currency->abbreviation : 'AED' }}
-                                    {{ number_format($defaultPrice ? $defaultPrice->price : $offer->project_cost) }}
+                                    {{ number_format($defaultPrice->price) }}
                                 </p>
                                 @endif
                                 

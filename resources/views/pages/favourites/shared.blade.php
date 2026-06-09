@@ -106,7 +106,7 @@
                                 <span><i class="fal fa-map-marker-alt"></i> {{ app()->getLocale() == 'ar' ? $fav->selectedPrice->emirate->title_arabic : $fav->selectedPrice->emirate->title_english }}</span>
                                 @endif
                             </div>
-                            @if($fav->price && $offer->prices && $offer->prices->count() > 0)
+                            @if($fav->selectedPrice && $fav->price)
                             <div class="fav-item-price">
                                 {{ number_format($fav->price) }} {{ $offer->currency ? $offer->currency->code : 'AED' }}
                             </div>
