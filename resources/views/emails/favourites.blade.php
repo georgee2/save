@@ -89,7 +89,7 @@
             @if($offer->category)
             <span style="font-size:11px;color:#888;">{{ $offer->category->title_english }}</span>
             @endif
-            @if($fav->price && $offer->prices && $offer->prices->count() > 0)
+            @if($fav->selectedPrice && $fav->price)
             <span style="display:block;font-size:14px;font-weight:700;color:#19868b;margin-top:2px;">
                 {{ number_format($fav->price) }} {{ $offer->currency ? $offer->currency->code : 'AED' }}
             </span>
