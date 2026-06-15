@@ -73,10 +73,10 @@ class AdminController extends Controller
             'offers_featured' => Offer::whereNull('deleted_at')->where('home_status', 0)->count(),
             'offers_trashed' => Offer::onlyTrashed()->count(),
             
-            // Interior Design Galleries
+            // Interior Design Galleries (publish_status: 0=published, 1=not published; home_status: 0=shown on home, 1=not shown)
             'interior_galleries' => InteriorDesignGallery::whereNull('deleted_at')->count(),
-            'interior_galleries_published' => InteriorDesignGallery::whereNull('deleted_at')->where('publish_status', 1)->count(),
-            'interior_galleries_featured' => InteriorDesignGallery::whereNull('deleted_at')->where('home_status', 1)->count(),
+            'interior_galleries_published' => InteriorDesignGallery::whereNull('deleted_at')->where('publish_status', 0)->count(),
+            'interior_galleries_featured' => InteriorDesignGallery::whereNull('deleted_at')->where('home_status', 0)->count(),
             'interior_galleries_trashed' => InteriorDesignGallery::onlyTrashed()->count(),
             
             // News
@@ -338,8 +338,8 @@ class AdminController extends Controller
                 'unpublished' => Offer::whereNull('deleted_at')->where('publish_status', 1)->count(),
             ],
             'interior_galleries' => [
-                'published' => InteriorDesignGallery::whereNull('deleted_at')->where('publish_status', 1)->count(),
-                'unpublished' => InteriorDesignGallery::whereNull('deleted_at')->where('publish_status', 0)->count(),
+                'published' => InteriorDesignGallery::whereNull('deleted_at')->where('publish_status', 0)->count(),
+                'unpublished' => InteriorDesignGallery::whereNull('deleted_at')->where('publish_status', 1)->count(),
             ],
         ];
     }
