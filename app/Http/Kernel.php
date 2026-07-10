@@ -37,6 +37,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\LegacyRedirect::class, // 301 legacy/old-site URLs before locale middleware
             \App\Http\Middleware\CheckUnderConstruction::class,
             \App\Http\Middleware\TrackPageView::class,
         ],

@@ -8,10 +8,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Traits\LogsActivity;
+use App\Traits\RecordsSlugRedirects;
+use App\Traits\HasUniqueSlug;
 
 class EngineeringSubCategory extends Model
 {
-    use HasFactory, SoftDeletes, LogsActivity;
+    use HasFactory, SoftDeletes, LogsActivity, RecordsSlugRedirects, HasUniqueSlug;
+
+    /** Served under two public prefixes: /subcategory/{slug} and /engineering/{slug}. */
+    protected array $slugRedirectPrefix = ['subcategory', 'engineering'];
     
     protected $logTitleField = 'title_english';
     

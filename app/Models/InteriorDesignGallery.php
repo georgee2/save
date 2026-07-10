@@ -8,10 +8,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Traits\LogsActivity;
+use App\Traits\RecordsSlugRedirects;
+use App\Traits\HasUniqueSlug;
 
 class InteriorDesignGallery extends Model
 {
-    use HasFactory, SoftDeletes, LogsActivity;
+    use HasFactory, SoftDeletes, LogsActivity, RecordsSlugRedirects, HasUniqueSlug;
+
+    /** Public route prefix for auto slug-change redirects (see RecordsSlugRedirects). */
+    protected string $slugRedirectPrefix = 'interior-design';
     
     protected $logTitleField = 'title_english';
     

@@ -1,2 +1,11 @@
 User-agent: *
-Disallow:
+Disallow: /admin
+Disallow: /basicdata
+Disallow: /crm
+Disallow: /login
+Disallow: /logout
+Disallow: /checkuser
+Disallow: /*/favourites
+Disallow: /*/search
+
+Sitemap: https://svec.ae/sitemap.xml

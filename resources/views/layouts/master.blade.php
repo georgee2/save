@@ -4,6 +4,27 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        {{-- SEO: clean canonical. Strip any leaked /public/ segment; query string already excluded by url()->current().
+             A controller may pass $seoCanonical to override (e.g. HomeController folds /home into /). --}}
+        @php
+            $canonicalUrl = preg_replace('#/+public/#', '/', $seoCanonical ?? url()->current());
+
+            // Thin/duplicate URLs: noindex (but follow) paginated pages (page>=2) and filtered listing variants.
+            $q = request()->query();
+            $filterKeys = ['emirate_id','category_id','subcategory_id','style_id','type_id',
+                           'sqft_min','sqft_max','sqm_min','sqm_max','price_min','price_max','keyword','sortby'];
+            $isNoindex = (isset($q['page']) && (int) $q['page'] > 1)
+                      || count(array_intersect(array_keys($q), $filterKeys)) > 0;
+        @endphp
+
+        {{-- Robots directive: explicit @section('robots') wins, otherwise auto-noindex thin pages --}}
+        @hasSection('robots')
+        <meta name="robots" content="@yield('robots')">
+        @elseif($isNoindex)
+        <meta name="robots" content="noindex, follow">
+        @endif
+
         @if(!empty($footerContactInfo->google_search_console))
         <meta name="google-site-verification" content="{{ $footerContactInfo->google_search_console }}">
         @endif
@@ -31,10 +52,10 @@
         @hasSection('og_image')
         <meta property="og:image" content="@yield('og_image')">
         @else
-        <meta property="og:image" content="{{ asset('assets/images/og-default.jpg') }}">
+        <meta property="og:image" content="{{ asset('pic/logos/logoen.png') }}">
         @endif
         
-        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:url" content="{{ $canonicalUrl }}">
         <meta property="og:type" content="@yield('og_type', 'website')">
         <meta property="og:site_name" content="{{ env('APP_NAME') }}">
         <meta property="og:locale" content="{{ app()->getLocale() == 'ar' ? 'ar_AE' : 'en_US' }}">
@@ -56,43 +77,51 @@
         @hasSection('og_image')
         <meta name="twitter:image" content="@yield('og_image')">
         @else
-        <meta name="twitter:image" content="{{ asset('assets/images/og-default.jpg') }}">
+        <meta name="twitter:image" content="{{ asset('pic/logos/logoen.png') }}">
         @endif
         
         @yield('meta_tags')
 
-        {{-- Hreflang alternate tags for multilingual SEO --}}
-        <link rel="alternate" hreflang="en-ae" href="{{ LaravelLocalization::getLocalizedURL('en') }}" />
-        <link rel="alternate" hreflang="ar-ae" href="{{ LaravelLocalization::getLocalizedURL('ar') }}" />
-        <link rel="alternate" hreflang="x-default" href="{{ LaravelLocalization::getLocalizedURL('en') }}" />
+        {{-- Hreflang alternate tags for multilingual SEO.
+             Built from the clean $canonicalUrl so they never leak /public/ or a query string
+             and always stay byte-consistent with the canonical. --}}
+        <link rel="alternate" hreflang="en-ae" href="{{ LaravelLocalization::getLocalizedURL('en', $canonicalUrl) }}" />
+        <link rel="alternate" hreflang="ar-ae" href="{{ LaravelLocalization::getLocalizedURL('ar', $canonicalUrl) }}" />
+        <link rel="alternate" hreflang="x-default" href="{{ LaravelLocalization::getLocalizedURL('en', $canonicalUrl) }}" />
 
-        {{-- Self-referencing canonical --}}
-        <link rel="canonical" href="{{ url()->current() }}" />
+        {{-- Self-referencing canonical (clean, /public/ stripped) --}}
+        <link rel="canonical" href="{{ $canonicalUrl }}" />
 
-        {{-- Organization / LocalBusiness JSON-LD --}}
-        <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": ["Organization", "LocalBusiness"],
-            "name": "Smart Vision Engineering Consultants (SVEC)",
-            "url": "https://svec.ae",
-            "logo": "{{ asset('pic/logos/logoen.png') }}",
-            "telephone": "{{ $footerContactInfo->mobile ?? '' }}",
-            "email": "{{ $footerContactInfo->email ?? '' }}",
-            "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Al Batha Tower, 20th Floor, Office 2002, Corniche Al Buhaira, Al Majaz 1",
-                "addressLocality": "Sharjah",
-                "addressCountry": "AE"
-            },
-            "sameAs": [
-                @if($footerContactInfo->facebook)"{{ $footerContactInfo->facebook }}",@endif
-                @if($footerContactInfo->instagram)"{{ $footerContactInfo->instagram }}",@endif
-                @if($footerContactInfo->linkedin)"{{ $footerContactInfo->linkedin }}",@endif
-                @if($footerContactInfo->twitter)"{{ $footerContactInfo->twitter }}"@endif
-            ]
-        }
-        </script>
+        {{-- Organization / LocalBusiness JSON-LD (built in PHP + json_encode so it is always valid JSON).
+             Dynamic from contact_information: url, telephone, email, address (location_text), social links.
+             Static (no DB column): company name, city, country. --}}
+        @php
+            $ldJson = [
+                '@context' => 'https://schema.org',
+                '@type' => ['Organization', 'LocalBusiness'],
+                'name' => 'Smart Vision Engineering Consultants (SVEC)',
+                'url' => config('app.url'),
+                'logo' => asset('pic/logos/logoen.png'),
+                'telephone' => $footerContactInfo->mobile ?? '',
+                'email' => $footerContactInfo->email ?? '',
+                'address' => [
+                    '@type' => 'PostalAddress',
+                    'streetAddress' => app()->getLocale() === 'ar'
+                        ? ($footerContactInfo->location_text_arabic ?: ($footerContactInfo->location_text_english ?? ''))
+                        : ($footerContactInfo->location_text_english ?? ''),
+                    'addressLocality' => 'Sharjah',
+                    'addressCountry' => 'AE',
+                ],
+                'sameAs' => array_values(array_filter([
+                    $footerContactInfo->facebook ?? null,
+                    $footerContactInfo->instagram ?? null,
+                    $footerContactInfo->linkedin ?? null,
+                    $footerContactInfo->twitter ?? null,
+                    $footerContactInfo->pinterest ?? null,
+                ])),
+            ];
+        @endphp
+        <script type="application/ld+json">{!! json_encode($ldJson, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
 
         <!--==============================
             All CSS File

@@ -215,7 +215,12 @@ class EngineeringSubCategoryController extends Controller
                 
                 return $project;
             });
-        
+
+        // Soft-404 guard: a subcategory with zero published projects (and no user filter) is a 404, not a thin 200.
+        if ($projects->total() === 0 && !$this->listingHasActiveFilters($request)) {
+            abort(404);
+        }
+
         // Get page banner for subcategory page
         $pageBanner = PageBanner::getByTarget('subcategory');
         

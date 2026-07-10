@@ -309,10 +309,15 @@ class OffersController extends Controller
             $query->paginate(9)->withQueryString(),
             $selectedEmirateId
         );
-        
+
+        // Soft-404 guard: a category with zero published offers (and no user filter) is a 404, not a thin 200.
+        if ($offers->total() === 0 && !$this->listingHasActiveFilters($request)) {
+            abort(404);
+        }
+
         // Get page banner for offers page
         $pageBanner = PageBanner::getByTarget('offers');
-        
+
         return view('pages.offers.category', array_merge(
             ['offers' => $offers, 'currentCategory' => $currentCategory, 'pageBanner' => $pageBanner],
             $filterData
@@ -355,10 +360,15 @@ class OffersController extends Controller
             $query->paginate(9)->withQueryString(),
             $selectedEmirateId
         );
-        
+
+        // Soft-404 guard: a subcategory with zero published offers (and no user filter) is a 404, not a thin 200.
+        if ($offers->total() === 0 && !$this->listingHasActiveFilters($request)) {
+            abort(404);
+        }
+
         // Get page banner for offers page
         $pageBanner = PageBanner::getByTarget('offers');
-        
+
         return view('pages.offers.subcategory', array_merge(
             ['offers' => $offers, 'currentCategory' => $currentCategory, 'currentSubcategory' => $currentSubcategory, 'pageBanner' => $pageBanner],
             $filterData

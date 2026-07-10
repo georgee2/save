@@ -27,7 +27,7 @@
 
 @section('title', $offerTitle . ' - ' . __('lang.offers'))
 @section('seo_desc', $offerDesc)
-@section('seo_tags', $offer->seo_tags ?? $offerTitle)
+@section('seo_tags', $offer->seo_tags ?: $offerTitle)
 
 {{-- Open Graph Meta Tags --}}
 @section('og_title', $offerTitle . ($offerPrice ? ' - ' . $offerPrice : ''))

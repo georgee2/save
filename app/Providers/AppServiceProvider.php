@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\URL;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -58,6 +59,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Force absolute URLs (sitemap, mails, CLI-generated links) to HTTPS when the
+        // canonical app URL is HTTPS, so they never emit http:// regardless of request context.
+        if (str_starts_with((string) config('app.url'), 'https://')) {
+            URL::forceScheme('https');
+        }
+
         // Register Header Composer for all views
         view()->composer('*', \App\Http\View\Composers\HeaderComposer::class);
     }

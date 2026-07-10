@@ -173,6 +173,11 @@ class InteriorGalleryController extends Controller
             return $category->galleries_count > 0;
         });
 
+        // Soft-404 guard: a category with zero published galleries (and no user filter) is a 404, not a thin 200.
+        if ($galleries->total() === 0 && !$this->listingHasActiveFilters($request)) {
+            abort(404);
+        }
+
         return view('pages.interior.category', compact(
             'galleries',
             'currentCategory',
@@ -188,6 +193,10 @@ class InteriorGalleryController extends Controller
      */
     public function show($slug)
     {
+        // The dedicated interior detail view (pages/interior/show) was never built; 404
+        // gracefully until it exists. The gallery is shown via modal on the listing pages.
+        abort_unless(view()->exists('pages.interior.show'), 404);
+
         $gallery = InteriorDesignGallery::where('slug', $slug)
             ->where('publish_status', 0)
             ->whereNull('deleted_at')

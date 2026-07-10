@@ -6,13 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\LogsActivity;
+use App\Traits\RecordsSlugRedirects;
+use App\Traits\HasUniqueSlug;
 
 class Service extends Model
 {
-    use SoftDeletes, LogsActivity;
-    
+    use SoftDeletes, LogsActivity, RecordsSlugRedirects, HasUniqueSlug;
+
     protected $logTitleField = 'title_english';
     protected $guarded = [];
+
+    /** Public route prefix for auto slug-change redirects (see RecordsSlugRedirects). */
+    protected string $slugRedirectPrefix = 'services';
 
     public function NewRecord(array $data){
         $this->create($data);

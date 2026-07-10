@@ -31,7 +31,7 @@
 
 @section('title', $projectTitle)
 @section('seo_desc', $projectDesc)
-@section('seo_tags', $project->seo_tags ?? $projectTitle)
+@section('seo_tags', $project->seo_tags ?: $projectTitle)
 
 {{-- Open Graph Meta Tags --}}
 @section('og_title', $projectTitle . ($projectCategory ? ' - ' . $projectCategory : ''))

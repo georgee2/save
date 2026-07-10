@@ -6,14 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Traits\LogsActivity;
+use App\Traits\RecordsSlugRedirects;
+use App\Traits\HasUniqueSlug;
 
 class News extends Model
 {
-    use HasFactory, LogsActivity;
-    
+    use HasFactory, LogsActivity, RecordsSlugRedirects, HasUniqueSlug;
+
     protected $logTitleField = 'title_english';
 
     protected $guarded = [];
+
+    /** Public route prefix for auto slug-change redirects (see RecordsSlugRedirects). */
+    protected string $slugRedirectPrefix = 'blogs';
 
     public function NewRecord(array $data){
         $this->create($data);

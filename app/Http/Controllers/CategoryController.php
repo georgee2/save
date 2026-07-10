@@ -219,7 +219,12 @@ class CategoryController extends Controller
                 
                 return $project;
             });
-        
+
+        // Soft-404 guard: a category with zero published projects (and no user filter) is a 404, not a thin 200.
+        if ($projects->total() === 0 && !$this->listingHasActiveFilters($request)) {
+            abort(404);
+        }
+
         // Get page banner for category page
         $pageBanner = PageBanner::getByTarget('category');
         
