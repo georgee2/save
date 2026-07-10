@@ -4,13 +4,13 @@
         <i class="fas fa-globe"></i>
     </div>
     <div class="switcher-options">
-        <a href="{{ LaravelLocalization::getLocalizedURL('en') }}" 
+        <a href="{{ preg_replace('#/+public/#', '/', LaravelLocalization::getLocalizedURL('en')) }}"
            class="lang-option {{ app()->getLocale() == 'en' ? 'active' : '' }}"
            title="English">
             <span class="lang-flag">EN</span>
             <span class="lang-name">English</span>
         </a>
-        <a href="{{ LaravelLocalization::getLocalizedURL('ar') }}" 
+        <a href="{{ preg_replace('#/+public/#', '/', LaravelLocalization::getLocalizedURL('ar')) }}"
            class="lang-option {{ app()->getLocale() == 'ar' ? 'active' : '' }}"
            title="العربية">
             <span class="lang-flag">ع</span>

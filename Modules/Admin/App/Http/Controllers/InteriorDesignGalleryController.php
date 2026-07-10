@@ -150,8 +150,12 @@ class InteriorDesignGalleryController extends Controller
             'project_type_id' => 'required|exists:project_types,id',
             'emirate_id' => 'nullable|exists:emirates,id',
             'seo_tags' => 'nullable|string',
+            'seo_title_english' => 'nullable|string|max:200',
+            'seo_title_arabic' => 'nullable|string|max:200',
             'seo_description_english' => 'nullable|string',
             'seo_description_arabic' => 'nullable|string',
+            'alt_text_english' => 'nullable|string|max:255',
+            'alt_text_arabic' => 'nullable|string|max:255',
         ]);
 
         // Auto-generate unique slug from English title
@@ -264,8 +268,12 @@ class InteriorDesignGalleryController extends Controller
             'project_type_id' => 'required|exists:project_types,id',
             'emirate_id' => 'nullable|exists:emirates,id',
             'seo_tags' => 'nullable|string',
+            'seo_title_english' => 'nullable|string|max:200',
+            'seo_title_arabic' => 'nullable|string|max:200',
             'seo_description_english' => 'nullable|string',
             'seo_description_arabic' => 'nullable|string',
+            'alt_text_english' => 'nullable|string|max:255',
+            'alt_text_arabic' => 'nullable|string|max:255',
         ]);
 
         // Auto-generate unique slug from English title

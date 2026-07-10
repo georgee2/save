@@ -9,15 +9,20 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Models\OffersPrices\OfferPrice;
 use App\Traits\LogsActivity;
+use App\Traits\RecordsSlugRedirects;
+use App\Traits\HasUniqueSlug;
 
 class Offer extends Model
 {
-    use HasFactory, SoftDeletes, LogsActivity;
-    
+    use HasFactory, SoftDeletes, LogsActivity, RecordsSlugRedirects, HasUniqueSlug;
+
     protected $logTitleField = 'title_english';
-    
+
     protected $table = 'offers';
     protected $guarded = [];
+
+    /** Public route prefix for auto slug-change redirects (see RecordsSlugRedirects). */
+    protected string $slugRedirectPrefix = 'offers';
     
     /**
      * Relationship: Offer belongs to Offer Category

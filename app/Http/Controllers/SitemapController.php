@@ -129,6 +129,9 @@ class SitemapController extends Controller
         foreach (InteriorCategory::whereNull('deleted_at')->get() as $cat) {
             $addUrl('interior.category', $cat->slug, $cat->updated_at ? $cat->updated_at->toAtomString() : now()->toAtomString(), 'weekly', '0.6');
         }
+        // NOTE: interior.show, portfolios.*, showcases.* are intentionally NOT in the sitemap.
+        // Their controllers render views that do not exist (pages/interior/show, pages/portfolios/*,
+        // pages/showcases/*) and currently return HTTP 500. Add them here only once those views exist.
 
         // News/Blogs
         $addUrl('blogs.index', [], now()->toAtomString(), 'daily', '0.9');

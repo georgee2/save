@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('title' , app()->getLocale() == 'ar' ? $category->title_arabic : $category->title_english)
-@section('seo_desc', app()->getLocale() == 'ar' ? ($category->seo_description_arabic ?? $category->bio_arabic) : ($category->seo_description_english ?? $category->bio_english))
-@section('seo_tags', $category->seo_tags ?? (app()->getLocale() == 'ar' ? $category->title_arabic : $category->title_english))
+@section('seo_desc', app()->getLocale() == 'ar' ? ($category->seo_description_arabic ?: $category->bio_arabic ?: $category->title_arabic) : ($category->seo_description_english ?: $category->bio_english ?: $category->title_english))
+@section('seo_tags', $category->seo_tags ?: (app()->getLocale() == 'ar' ? $category->title_arabic : $category->title_english))
 @section('content')
 
 

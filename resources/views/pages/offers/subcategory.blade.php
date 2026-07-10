@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('title' , (app()->getLocale() == 'ar' ? $currentSubcategory->title_arabic : $currentSubcategory->title_english) . ' - ' . __('lang.offers'))
-@section('seo_desc', app()->getLocale() == 'ar' ? ($currentSubcategory->seo_description_arabic ?? $currentSubcategory->bio_arabic ?? $currentSubcategory->title_arabic) : ($currentSubcategory->seo_description_english ?? $currentSubcategory->bio_english ?? $currentSubcategory->title_english))
-@section('seo_tags', $currentSubcategory->seo_tags ?? ((app()->getLocale() == 'ar' ? $currentSubcategory->title_arabic : $currentSubcategory->title_english) . ', ' . __('lang.offers')))
+@section('seo_desc', app()->getLocale() == 'ar' ? ($currentSubcategory->seo_description_arabic ?: $currentSubcategory->bio_arabic ?: $currentSubcategory->title_arabic) : ($currentSubcategory->seo_description_english ?: $currentSubcategory->bio_english ?: $currentSubcategory->title_english))
+@section('seo_tags', $currentSubcategory->seo_tags ?: ((app()->getLocale() == 'ar' ? $currentSubcategory->title_arabic : $currentSubcategory->title_english) . ', ' . __('lang.offers')))
 
 @php
     // Helper function to build offer URL with emirate_id if filtered

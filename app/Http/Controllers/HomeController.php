@@ -308,7 +308,11 @@ class HomeController extends Controller
         
         // Fetch active home sections ordered by ordering field
         $homeSections = HomeSection::getActiveSections();
-        
-        return view('index', compact('sliders', 'aboutBlock', 'aboutCards', 'services', 'showcases', 'facts', 'defaultProcess', 'processCards', 'whyChooseUsBlock', 'whyChooseUsCards', 'engineeringProjects', 'teamMembers', 'boardMembers', 'allTeamMembers', 'portfolioTypes', 'portfolios', 'homeContact', 'contactInfo', 'homeFaqs', 'blogs', 'defaultBanner', 'engineeringSubCategories', 'featuredProjects', 'featuredOffers', 'projectCategories', 'governmentPartners', 'interiorGallery', 'homeSections'));
+
+        // Canonical always points to the real homepage, so /home (the private
+        // data-entry route) is folded into / rather than indexed as a duplicate.
+        $seoCanonical = route('index');
+
+        return view('index', compact('sliders', 'aboutBlock', 'aboutCards', 'services', 'showcases', 'facts', 'defaultProcess', 'processCards', 'whyChooseUsBlock', 'whyChooseUsCards', 'engineeringProjects', 'teamMembers', 'boardMembers', 'allTeamMembers', 'portfolioTypes', 'portfolios', 'homeContact', 'contactInfo', 'homeFaqs', 'blogs', 'defaultBanner', 'engineeringSubCategories', 'featuredProjects', 'featuredOffers', 'projectCategories', 'governmentPartners', 'interiorGallery', 'homeSections', 'seoCanonical'));
     }
 }

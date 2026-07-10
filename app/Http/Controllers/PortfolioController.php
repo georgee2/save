@@ -14,6 +14,9 @@ class PortfolioController extends Controller
      */
     public function index(Request $request)
     {
+        // The public portfolio views were never built; 404 gracefully until they exist.
+        abort_unless(view()->exists('pages.portfolios.index'), 404);
+
         // Get all portfolio types for filter
         $portfolioTypes = PortfolioType::where('status', 0)
             ->whereNull('deleted_at')
@@ -44,6 +47,9 @@ class PortfolioController extends Controller
      */
     public function show($slug)
     {
+        // The public portfolio views were never built; 404 gracefully until they exist.
+        abort_unless(view()->exists('pages.portfolios.portfolio'), 404);
+
         $portfolio = Portfolio::where('slug', $slug)
             ->where('status', 0)
             ->whereNull('deleted_at')

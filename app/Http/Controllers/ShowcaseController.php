@@ -13,6 +13,9 @@ class ShowcaseController extends Controller
      */
     public function index()
     {
+        // The public showcase views were never built; 404 gracefully until they exist.
+        abort_unless(view()->exists('pages.showcases.index'), 404);
+
         $showcases = Showcase::where('status', 'active') // Only active showcases
             ->whereNull('deleted_at')
             ->orderBy('created_at', 'DESC')
@@ -29,6 +32,9 @@ class ShowcaseController extends Controller
      */
     public function show($id)
     {
+        // The public showcase views were never built; 404 gracefully until they exist.
+        abort_unless(view()->exists('pages.showcases.showcase'), 404);
+
         $showcase = Showcase::where('id', $id)
             ->where('status', 'active')
             ->whereNull('deleted_at')

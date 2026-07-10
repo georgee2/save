@@ -7,15 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use App\Traits\LogsActivity;
+use App\Traits\RecordsSlugRedirects;
+use App\Traits\HasUniqueSlug;
 
 class Project extends Model
 {
-    use HasFactory, SoftDeletes, LogsActivity;
-    
+    use HasFactory, SoftDeletes, LogsActivity, RecordsSlugRedirects, HasUniqueSlug;
+
     protected $logTitleField = 'title_english';
-    
+
     protected $table = 'projects';
     protected $guarded = [];
+
+    /** Public route prefix for auto slug-change redirects (see RecordsSlugRedirects). */
+    protected string $slugRedirectPrefix = 'projects';
     
     /**
      * Relationship: Project belongs to Engineering Category

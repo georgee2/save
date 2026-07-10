@@ -2,9 +2,9 @@
 
 @section('title', app()->getLocale() == 'ar' ? $branch->name_arabic : $branch->name_english)
 
-@section('seo_desc', app()->getLocale() == 'ar' ? ($branch->seo_description_arabic ?? $branch->location_text_arabic) : ($branch->seo_description_english ?? $branch->location_text_english))
+@section('seo_desc', app()->getLocale() == 'ar' ? ($branch->seo_description_arabic ?: $branch->location_text_arabic) : ($branch->seo_description_english ?: $branch->location_text_english))
 
-@section('seo_tags', $branch->seo_tags ?? (app()->getLocale() == 'ar' ? $branch->name_arabic : $branch->name_english))
+@section('seo_tags', $branch->seo_tags ?: (app()->getLocale() == 'ar' ? $branch->name_arabic : $branch->name_english))
 
 @section('content')
 

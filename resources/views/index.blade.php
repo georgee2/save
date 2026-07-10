@@ -1,8 +1,8 @@
 @extends('layouts.master')
 @php $seo = \App\Models\SeoPage::getSeo('home'); @endphp
 @section('title', $seo['title'] ?? 'SVEC')
-@section('seo_desc', $seo['description'] ?? '')
-@section('seo_tags', $seo['tags'] ?? '')
+@section('seo_desc', $seo['description'] ?: (app()->getLocale() == 'ar' ? ($footerContactInfo->seo_description_arabic ?: $footerContactInfo->seo_description_english) : $footerContactInfo->seo_description_english))
+@section('seo_tags', $seo['tags'] ?: ($footerContactInfo->tags ?? ''))
 @section('content')
 
 {{-- Dynamic Home Sections --}}

@@ -11,7 +11,34 @@
     # Block access to common cPanel paths
     RewriteCond %{REQUEST_URI} ^/(webmail|whm|2082|2083|2086|2087) [NC]
     RewriteRule ^.*$ / [R=301,L]
-    
+
+    # ============================================
+    # SEO: Canonical host + scheme (non-www, HTTPS)
+    # ============================================
+    # Force www -> non-www (target is https, so http://www and https://www both
+    # collapse to https://svec.ae in a single 301).
+    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+    # Force http -> https (proxy-safe: skip when an upstream proxy already served https).
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteCond %{HTTPS} off
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+    # ============================================
+    # SEO: Collapse /index.php (and /public/index.php) to the clean root
+    # ============================================
+    RewriteCond %{THE_REQUEST} \s/+(?:public/)?index\.php[\s?] [NC]
+    RewriteRule ^ / [R=301,L]
+
+    # ============================================
+    # SEO: Redirect the exposed /public/ path to the clean URL
+    # ============================================
+    # Both /en/... and /public/en/... served identical content (duplicate content).
+    # 301 the /public/ variant to the canonical clean URL so Google folds them.
+    RewriteCond %{THE_REQUEST} \s/+public/(\S*) [NC]
+    RewriteRule ^ /%1 [R=301,L]
+
     # Route to public folder
     RewriteCond %{REQUEST_URI} !^/public/
     RewriteCond %{REQUEST_FILENAME} !-d

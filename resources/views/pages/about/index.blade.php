@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @php $seo = \App\Models\SeoPage::getSeo('about'); @endphp
 @section('title', $seo['title'] ?? (app()->getLocale() == 'ar' ? ($aboutInfo->title_arabic ?? __('lang.about_us')) : ($aboutInfo->title_english ?? __('lang.about_us'))))
-@section('seo_desc', $seo['description'] ?? '')
+@section('seo_desc', $seo['description'] ?: (app()->getLocale() == 'ar' ? ($footerContactInfo->seo_description_arabic ?: $footerContactInfo->seo_description_english) : $footerContactInfo->seo_description_english))
 @section('seo_tags', $seo['tags'] ?? (app()->getLocale() == 'ar' ? ($aboutInfo->title_arabic ?? __('lang.about_us')) : ($aboutInfo->title_english ?? __('lang.about_us'))))
 
 @section('content')
