@@ -32,7 +32,7 @@ The application is organized as a **Laravel core (`app/`) + three feature module
 | Translation API | stichoza/google-translate-php |
 | HTTP client | guzzlehttp/guzzle |
 
-Module status is controlled by [modules_statuses.json](modules_statuses.json) — all three modules are currently enabled.
+Module status is controlled by [modules_statuses.json](../modules_statuses.json) — all three modules are currently enabled.
 
 ---
 
@@ -175,7 +175,7 @@ These are the areas where care matters most, based on how the codebase is struct
 ### 5.5 Module boundaries
 - `app/Models/` is shared. Modules **consume** these models; they do not redeclare them. Keep this convention — moving a model into a module breaks other modules and the public site.
 - Each module has its own `routes/web.php`, `Providers/`, and `App/Http/Controllers/`. Don't reach across modules; if two modules need the same logic, lift it into `app/Services/`.
-- Module status is in [modules_statuses.json](modules_statuses.json). When disabling a module for testing, also confirm no public-site code path depends on it.
+- Module status is in [modules_statuses.json](../modules_statuses.json). When disabling a module for testing, also confirm no public-site code path depends on it.
 
 ### 5.6 Validation, throttling, and request safety
 - Public form endpoints must be rate-limited (`/contact` is `throttle:5,1` — replicate this on any new public POST).
@@ -237,13 +237,13 @@ npm install && npm run build
 php artisan serve
 ```
 
-To enable / disable a module without editing code, edit [modules_statuses.json](modules_statuses.json).
+To enable / disable a module without editing code, edit [modules_statuses.json](../modules_statuses.json).
 
 ---
 
 ## 7. Related Documentation
 
-- [README.md](README.md) — Laravel boilerplate readme
+- [README.md](../README.md) — project readme (setup, architecture, deployment)
 - [MEMORY_OPTIMIZATION_GUIDE.md](MEMORY_OPTIMIZATION_GUIDE.md) — memory tuning notes
 - [FEASIBILITY_STUDY_QUICK_START_GUIDE.md](FEASIBILITY_STUDY_QUICK_START_GUIDE.md) — feasibility module entry point
 - [FEASIBILITY_STUDY_DEVELOPMENT_PLAN.md](FEASIBILITY_STUDY_DEVELOPMENT_PLAN.md)
