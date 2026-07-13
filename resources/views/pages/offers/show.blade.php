@@ -43,6 +43,11 @@
 @if($offer->offer_code)
 <meta property="product:retailer_item_id" content="{{ $offer->offer_code }}">
 @endif
+@if($offer->default_price)
+{{-- Product structured data is emitted ONLY when the offer has an active price,
+     so it always includes the required "offers" node. Google rejects a Product
+     that has none of offers / review / aggregateRating. Quote-based offers
+     (no price) get no Product markup, which is valid. --}}
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
@@ -53,15 +58,16 @@
     "brand": {
         "@type": "Organization",
         "name": "Smart Vision Engineering Consultants"
-    }@if($offerPrice && $offer->default_price),
+    },
     "offers": {
         "@type": "Offer",
         "price": "{{ $offer->default_price->price }}",
         "priceCurrency": "{{ $offer->currency->abbreviation ?? 'AED' }}",
         "availability": "https://schema.org/InStock"
-    }@endif
+    }
 }
 </script>
+@endif
 @endsection
 
 @section('content')
