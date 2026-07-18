@@ -27,11 +27,16 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
-        // Deferred-ERP seam: bind the no-op sync service. Swap to the ERPNext
-        // implementation when the integration sub-plan is executed.
+        // ERP seam: bind the real ERPNext implementation only when the integration
+        // is explicitly enabled AND a base URL is configured; otherwise stay on the
+        // no-op service. This keeps the site fully functional (and free of ERP
+        // errors) until the ERP team has delivered and the flag is flipped.
+        $erpReady = config('services.erpnext.enabled') && config('services.erpnext.base_url');
         $this->app->bind(
             \App\Services\CustomerSync\CustomerSyncService::class,
-            \App\Services\CustomerSync\NullCustomerSyncService::class
+            $erpReady
+                ? \App\Services\CustomerSync\ErpNextCustomerSyncService::class
+                : \App\Services\CustomerSync\NullCustomerSyncService::class
         );
 
         //Get Service

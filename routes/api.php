@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CustomerAuthController;
 use App\Http\Controllers\Api\CustomerProfileController;
+use App\Http\Controllers\Api\ErpWebhookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,4 +36,10 @@ Route::prefix('customer')->group(function () {
         Route::put('/profile', [CustomerProfileController::class, 'update']);
         Route::put('/password', [CustomerProfileController::class, 'updatePassword']);
     });
+});
+
+// ERPNext inbound webhook (HMAC-verified). Returns 404 while the integration is
+// disabled; guarded by an HMAC signature check inside the controller (no session).
+Route::prefix('erp')->group(function () {
+    Route::post('/webhook/customer', [ErpWebhookController::class, 'customer'])->middleware('throttle:60,1');
 });

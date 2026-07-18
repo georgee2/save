@@ -5,11 +5,12 @@ namespace App\Services\CustomerSync;
 use App\Models\User;
 
 /**
- * Seam for the (deferred) ERPNext integration.
+ * Seam for the ERPNext integration.
  *
- * Registration and profile code depend only on this interface. Today it is bound to
- * NullCustomerSyncService (a no-op). When the ERP sub-plan lands, bind an
- * ErpNextCustomerSyncService instead - no controller changes required.
+ * Registration and profile code depend only on this interface. Bound to
+ * NullCustomerSyncService while ERPNEXT_ENABLED is false; when the flag and
+ * base URL are set, AppServiceProvider binds ErpNextCustomerSyncService
+ * instead - no controller changes required.
  */
 interface CustomerSyncService
 {
