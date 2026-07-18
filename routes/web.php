@@ -57,7 +57,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 
 
 	Route::get('/login', [LoginController::class, 'login'])->name('login')->middleware('cache.headers:no_store,no_cache,must_revalidate,max_age=0');
-	Route::post('/checkuser', [LoginController::class, 'checkuser'])->name('checkuser');
+	Route::post('/checkuser', [LoginController::class, 'checkuser'])->name('checkuser')->middleware('throttle:30,1');
 	Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
 	// Customer registration + account activation (front-end portal)

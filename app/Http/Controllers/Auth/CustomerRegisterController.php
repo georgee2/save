@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Rules\DisposableEmail;
 use App\Services\CustomerRegistrationService;
 use App\Services\RecaptchaService;
 use Illuminate\Http\Request;
@@ -64,7 +65,7 @@ class CustomerRegisterController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'email' => ['required', 'email:rfc,dns', 'max:255', new DisposableEmail()],
             'phone' => 'nullable|string|max:30',
             'consent' => 'accepted',
         ]);
@@ -97,7 +98,19 @@ class CustomerRegisterController extends Controller
      */
     public function resendActivation(Request $request)
     {
-        $request->validate(['email' => 'required|email']);
+        // Honeypot + time-trap (mirrors registration): short-circuit bots to the
+        // uniform response without revealing anything or sending mail.
+        if ($request->filled('website_url')) {
+            return back()->with('success', __('lang.account_activation_resent'));
+        }
+        $formLoaded = (int) $request->input('_form_loaded', 0);
+        if ($formLoaded > 0 && (time() - $formLoaded) < 3) {
+            return back()->with('success', __('lang.account_activation_resent'));
+        }
+
+        $request->validate([
+            'email' => ['required', 'email:rfc,dns', new DisposableEmail()],
+        ]);
 
         $email = Str::lower(trim($request->email));
         $user = User::where('email', $email)->first();

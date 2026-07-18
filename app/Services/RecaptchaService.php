@@ -31,7 +31,7 @@ class RecaptchaService
      * Fails open on network/exception errors (so a Google outage never blocks
      * legitimate signups), but returns false on a genuine failed verification.
      */
-    public function verify(?string $token, ?string $remoteIp = null): bool
+    public function verify(?string $token, ?string $remoteIp = null, ?float $minScore = null): bool
     {
         $secret = config('services.recaptcha.secret_key');
 
@@ -52,7 +52,7 @@ class RecaptchaService
             ]);
 
             $data = $response->json();
-            $minScore = (float) config('services.recaptcha.min_score', 0.5);
+            $minScore = $minScore ?? (float) config('services.recaptcha.min_score', 0.5);
 
             return ($data['success'] ?? false) && ($data['score'] ?? 0) >= $minScore;
         } catch (\Throwable $e) {

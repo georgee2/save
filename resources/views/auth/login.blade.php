@@ -653,6 +653,9 @@
 
                 <form action="{{ route('checkuser') }}" method="POST" id="loginForm">
                     @csrf
+                    @if(!empty($recaptchaEnabled))
+                        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+                    @endif
                     
                     <div class="form-group">
                         <label for="email">Email Address</label>
@@ -823,6 +826,28 @@
             // Show loading state
             btn.classList.add('loading');
             btn.disabled = true;
+
+            @if(!empty($recaptchaEnabled))
+            // Fetch a fresh reCAPTCHA v3 token before submitting. Always fall
+            // through to submit so a script failure never blocks a real user;
+            // the server only enforces the token on repeated failed attempts.
+            if (!this.dataset.captchaDone) {
+                e.preventDefault();
+                var form = this;
+                var field = document.getElementById('g-recaptcha-response');
+                var proceed = function () { form.dataset.captchaDone = '1'; form.submit(); };
+                try {
+                    if (typeof grecaptcha === 'undefined') { return proceed(); }
+                    grecaptcha.ready(function () {
+                        grecaptcha.execute('{{ config('services.recaptcha.site_key') }}', { action: 'login' })
+                            .then(function (token) { if (field) { field.value = token; } proceed(); })
+                            .catch(function () { proceed(); });
+                    });
+                } catch (err) {
+                    proceed();
+                }
+            }
+            @endif
         });
 
         function isValidEmail(email) {
@@ -863,6 +888,9 @@
             });
         });
     </script>
+    @if(!empty($recaptchaEnabled))
+    <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
+    @endif
 </body>
 
 </html>

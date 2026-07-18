@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Services\CustomerSync\CustomerSyncService;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
@@ -127,6 +128,15 @@ class CustomerRegistrationService
      */
     public function sendInvite(User $user): void
     {
+        // Per-email cooldown (anti email-bomb): at most one invite per address
+        // every 10 minutes, layered over the broker's built-in throttle. Skip
+        // silently if we sent one recently.
+        $cooldownKey = 'invite-cooldown:' . Str::lower($user->email);
+        if (Cache::has($cooldownKey)) {
+            return;
+        }
+        Cache::put($cooldownKey, true, now()->addMinutes(10));
+
         // Activation invites use the long-lived `invitations` broker so the link
         // does not expire in 60 minutes like a password-reset token.
         $token = Password::broker('invitations')->createToken($user);
