@@ -14,12 +14,35 @@ use Carbon\Carbon;
 class HeaderComposer
 {
     /**
+     * Per-request memoized payload. This composer is bound to the '*' wildcard, so it fires
+     * once per rendered view (every @include). Building the data once per request avoids
+     * re-running ~8 queries for every partial on the page.
+     *
+     * @var array<string, mixed>|null
+     */
+    protected static ?array $cached = null;
+
+    /**
      * Bind data to the view.
      *
      * @param  \Illuminate\View\View  $view
      * @return void
      */
     public function compose(View $view)
+    {
+        if (self::$cached === null) {
+            self::$cached = $this->build();
+        }
+
+        $view->with(self::$cached);
+    }
+
+    /**
+     * Build the header/footer payload (runs at most once per request).
+     *
+     * @return array<string, mixed>
+     */
+    protected function build(): array
     {
         // Get the header menu with fallback logic:
         // 1. If primary menu is active, use it
@@ -91,7 +114,7 @@ class HeaderComposer
         $footerCompanyMenu = Menu::getFooterCompanyMenu();
         $footerCompanyItems = $footerCompanyMenu ? $footerCompanyMenu->getHierarchicalItems() : collect();
 
-        $view->with([
+        return [
             'headerProjectCategories' => $headerProjectCategories,
             'headerOfferCategories' => $headerOfferCategories,
             'footerContactInfo' => $footerContactInfo,
@@ -110,7 +133,7 @@ class HeaderComposer
             'footerQuickLinksItems' => $footerQuickLinksItems,
             'footerCompanyMenu' => $footerCompanyMenu,
             'footerCompanyItems' => $footerCompanyItems,
-        ]);
+        ];
     }
 }
 

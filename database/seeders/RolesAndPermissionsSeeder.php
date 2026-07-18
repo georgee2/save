@@ -223,6 +223,14 @@ class RolesAndPermissionsSeeder extends Seeder
                 'name' => 'Activity Logs',
                 'actions' => ['view', 'delete'],
             ],
+            'customers' => [
+                'name' => 'Customers',
+                'actions' => ['view', 'edit', 'send_email'],
+            ],
+            'crm-dashboard' => [
+                'name' => 'CRM Dashboard',
+                'actions' => ['view'],
+            ],
             'dashboard' => [
                 'name' => 'Dashboard',
                 'actions' => ['view'],
@@ -236,6 +244,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'delete' => 'Delete',
             'restore' => 'Restore',
             'force_delete' => 'Force Delete',
+            'send_email' => 'Send Email',
         ];
 
         $order = 0;
@@ -255,6 +264,13 @@ class RolesAndPermissionsSeeder extends Seeder
                     ]
                 );
             }
+        }
+
+        // Prune permissions no longer defined (idempotent).
+        $obsolete = Permission::whereIn('slug', ['customers-create', 'customers-delete'])->get();
+        foreach ($obsolete as $perm) {
+            $perm->roles()->detach();
+            $perm->delete();
         }
 
         $superAdmin = Role::firstOrCreate(
@@ -316,6 +332,17 @@ class RolesAndPermissionsSeeder extends Seeder
             ->pluck('id')
             ->toArray();
         $viewer->permissions()->sync($viewerPermissions);
+
+        // Customer-facing role for front-end portal accounts (no admin permissions).
+        Role::firstOrCreate(
+            ['slug' => 'website-user'],
+            [
+                'name' => 'Website User',
+                'description' => 'Front-end customer account with access to the customer portal only',
+                'is_system' => true,
+                'is_active' => true,
+            ]
+        );
 
         $firstUser = User::first();
         if ($firstUser && !$firstUser->roles()->exists()) {

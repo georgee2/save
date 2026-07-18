@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('favourites:clean-expired')->daily();
+        $schedule->command('emails:clean-temp-attachments')->daily();
     }
 
     /**

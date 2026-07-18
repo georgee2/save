@@ -20,11 +20,13 @@ return new class extends Migration
             // We'll just document the expected dimensions in comments for clarity
         });
         
-        // Add comments to existing image columns to document expected dimensions
-        DB::statement("ALTER TABLE projects MODIFY COLUMN main_image VARCHAR(255) COMMENT '820x550 WebP'");
-        DB::statement("ALTER TABLE projects MODIFY COLUMN site_image VARCHAR(255) NULL COMMENT '420x420 WebP'");
-        DB::statement("ALTER TABLE projects MODIFY COLUMN plan_2d_image VARCHAR(255) NULL COMMENT '420x420 WebP (2D Plan)'");
-        DB::statement("ALTER TABLE projects MODIFY COLUMN plan_3d_image VARCHAR(255) NULL COMMENT '870x420 WebP (3D Image)'");
+        // Add comments to existing image columns to document expected dimensions (MySQL only)
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE projects MODIFY COLUMN main_image VARCHAR(255) COMMENT '820x550 WebP'");
+            DB::statement("ALTER TABLE projects MODIFY COLUMN site_image VARCHAR(255) NULL COMMENT '420x420 WebP'");
+            DB::statement("ALTER TABLE projects MODIFY COLUMN plan_2d_image VARCHAR(255) NULL COMMENT '420x420 WebP (2D Plan)'");
+            DB::statement("ALTER TABLE projects MODIFY COLUMN plan_3d_image VARCHAR(255) NULL COMMENT '870x420 WebP (3D Image)'");
+        }
     }
 
     /**
@@ -36,11 +38,13 @@ return new class extends Migration
             $table->dropColumn(['cover_image', 'page_image']);
         });
         
-        // Remove comments (optional, as they don't affect functionality)
-        DB::statement("ALTER TABLE projects MODIFY COLUMN main_image VARCHAR(255)");
-        DB::statement("ALTER TABLE projects MODIFY COLUMN site_image VARCHAR(255) NULL");
-        DB::statement("ALTER TABLE projects MODIFY COLUMN plan_2d_image VARCHAR(255) NULL");
-        DB::statement("ALTER TABLE projects MODIFY COLUMN plan_3d_image VARCHAR(255) NULL");
+        // Remove comments (optional, as they don't affect functionality) (MySQL only)
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE projects MODIFY COLUMN main_image VARCHAR(255)");
+            DB::statement("ALTER TABLE projects MODIFY COLUMN site_image VARCHAR(255) NULL");
+            DB::statement("ALTER TABLE projects MODIFY COLUMN plan_2d_image VARCHAR(255) NULL");
+            DB::statement("ALTER TABLE projects MODIFY COLUMN plan_3d_image VARCHAR(255) NULL");
+        }
     }
 };
 

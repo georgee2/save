@@ -2,30 +2,52 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\RecaptchaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
-use App\Models\User;
 
 class LoginController extends Controller
 {
     /**
-     * Maximum login attempts before lockout
+     * Maximum login attempts before lockout (per email + IP).
      */
     protected $maxAttempts = 5;
     
     /**
-     * Lockout duration in seconds
+     * Lockout duration in seconds.
      */
     protected $decaySeconds = 60;
+
+    /**
+     * Maximum login attempts per IP address (guards distributed credential-stuffing
+     * that rotates many emails from a single IP). Wider window than the per-email cap.
+     */
+    protected $maxAttemptsPerIp = 20;
+
+    /**
+     * Per-IP lockout window in seconds.
+     */
+    protected $ipDecaySeconds = 300;
+
+    /**
+     * Failed attempts (per email + IP) after which a CAPTCHA challenge is required.
+     */
+    protected $captchaThreshold = 3;
+
+    public function __construct(protected RecaptchaService $recaptcha)
+    {
+    }
 
     /**
      * Show the login form
      */
     public function login()
     {
-        return view('auth.login');
+        return view('auth.login', [
+            'recaptchaEnabled' => $this->recaptcha->isEnabled(),
+        ]);
     }
 
     /**
@@ -54,12 +76,15 @@ class LoginController extends Controller
             'password.min' => 'Password must be at least 6 characters.',
         ]);
 
-        // Check rate limiting
+        // Rate limiting: a narrow per-email+IP cap and a wider per-IP cap. The
+        // per-IP cap blocks distributed credential-stuffing that rotates many
+        // emails from a single address (which the per-email key alone misses).
         $throttleKey = $this->throttleKey($request);
-        
+        $ipThrottleKey = $this->ipThrottleKey($request);
+
         if (RateLimiter::tooManyAttempts($throttleKey, $this->maxAttempts)) {
             $seconds = RateLimiter::availableIn($throttleKey);
-            
+
             throw ValidationException::withMessages([
                 'email' => [
                     "Too many login attempts. Please try again in {$seconds} seconds."
@@ -67,37 +92,62 @@ class LoginController extends Controller
             ])->status(429);
         }
 
-        // Check if user exists
-        $user = User::where('email', $credentials['email'])->first();
-        
-        if (!$user) {
-            RateLimiter::hit($throttleKey, $this->decaySeconds);
-            
+        if (RateLimiter::tooManyAttempts($ipThrottleKey, $this->maxAttemptsPerIp)) {
+            $seconds = RateLimiter::availableIn($ipThrottleKey);
+
             throw ValidationException::withMessages([
-                'email' => ['No account found with this email address.'],
+                'email' => [
+                    "Too many login attempts. Please try again in {$seconds} seconds."
+                ],
+            ])->status(429);
+        }
+
+        // Step-up CAPTCHA: once an email+IP pair has failed repeatedly, require a
+        // valid reCAPTCHA before attempting auth. Legitimate first attempts stay
+        // frictionless; automated retries get challenged. Only when reCAPTCHA is
+        // configured (skipped locally / when keys are absent).
+        if ($this->recaptcha->isEnabled()
+            && RateLimiter::attempts($throttleKey) >= $this->captchaThreshold
+            && !$this->recaptcha->verify(
+                $request->input('g-recaptcha-response'),
+                $request->ip(),
+                (float) config('services.recaptcha.login_min_score', 0.3)
+            )) {
+            RateLimiter::hit($throttleKey, $this->decaySeconds);
+            RateLimiter::hit($ipThrottleKey, $this->ipDecaySeconds);
+
+            throw ValidationException::withMessages([
+                'email' => ['Additional verification failed. Please try again.'],
             ]);
         }
 
-        // Check if user account is active (if you have is_active field)
-        if (method_exists($user, 'getAttribute') && $user->getAttribute('is_active') === false) {
+        // Attempt authentication. Use a single generic message whether the email
+        // is unknown or the password is wrong, so the login page does not leak
+        // which email addresses have accounts (no user enumeration).
+        $remember = $request->boolean('remember');
+
+        if (!Auth::attempt($credentials, $remember)) {
+            RateLimiter::hit($throttleKey, $this->decaySeconds);
+            RateLimiter::hit($ipThrottleKey, $this->ipDecaySeconds);
+
+            throw ValidationException::withMessages([
+                'email' => ['These credentials do not match our records.'],
+            ]);
+        }
+
+        // Credentials are valid; only now is it safe to reveal a deactivated state
+        // (the user has proven ownership of the account).
+        if (Auth::user()->is_active === false) {
+            Auth::logout();
+
             throw ValidationException::withMessages([
                 'email' => ['Your account has been deactivated. Please contact support.'],
             ]);
         }
 
-        // Attempt authentication
-        $remember = $request->boolean('remember');
-        
-        if (!Auth::attempt($credentials, $remember)) {
-            RateLimiter::hit($throttleKey, $this->decaySeconds);
-            
-            throw ValidationException::withMessages([
-                'password' => ['The password you entered is incorrect.'],
-            ]);
-        }
-
-        // Clear rate limiter on successful login
+        // Clear rate limiters on successful login
         RateLimiter::clear($throttleKey);
+        RateLimiter::clear($ipThrottleKey);
 
         // Regenerate session for security
         $request->session()->regenerate();
@@ -111,6 +161,13 @@ class LoginController extends Controller
             );
         } catch (\Exception $e) {
             // Silently fail if logging doesn't work
+        }
+
+        // Route by account type: customers go to the front-end portal,
+        // staff go to the admin dashboard.
+        if (Auth::user()->isCustomer()) {
+            return redirect()->intended(route('account.dashboard'))
+                ->with('success', 'Welcome back, ' . Auth::user()->name . '!');
         }
 
         return redirect()->intended(route('Admin'))
@@ -149,6 +206,14 @@ class LoginController extends Controller
      */
     protected function throttleKey(Request $request): string
     {
-        return strtolower($request->input('email')) . '|' . $request->ip();
+        return 'login|' . strtolower($request->input('email')) . '|' . $request->ip();
+    }
+
+    /**
+     * Generate a per-IP throttle key for rate limiting.
+     */
+    protected function ipThrottleKey(Request $request): string
+    {
+        return 'login-ip|' . $request->ip();
     }
 }

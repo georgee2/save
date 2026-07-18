@@ -12,6 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (DB::getDriverName() !== 'mysql') {
+            return;
+        }
+
         // Alter the ENUM column to add 'dynamic_query' type
         DB::statement("ALTER TABLE menu_items MODIFY COLUMN item_type ENUM(
             'static',
@@ -30,6 +34,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (DB::getDriverName() !== 'mysql') {
+            return;
+        }
+
         // Revert back to original ENUM without 'dynamic_query'
         // First, update any dynamic_query items to static
         DB::table('menu_items')

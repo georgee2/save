@@ -195,8 +195,8 @@
           
           <!-- Favourites CSS -->
           <link rel="stylesheet" href="{{asset('/assets/css/favourites.css')}}?v=1.1">
-          {{-- SweetAlert2 CSS - Global --}}
-          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+          {{-- SweetAlert2 CSS - Global (self-hosted for reliability/offline) --}}
+          <link rel="stylesheet" href="{{ asset('/assets/css/sweetalert2.min.css') }}?v=11">
 
         @yield('css')
 
@@ -324,8 +324,8 @@
             })();
         </script>
    
-    {{-- SweetAlert2 - Global --}}
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{-- SweetAlert2 - Global (self-hosted for reliability/offline) --}}
+    <script src="{{ asset('/assets/js/sweetalert2.min.js') }}?v=11"></script>
     
     <!-- Favourites JS -->
     <script src="{{ asset('/js/favourites.js') }}?v=1.1" defer></script>

@@ -7,8 +7,6 @@
 @section('css')
 <link rel="stylesheet" href="{{ asset('/assets/css/contact-page.css') }}?v={{ time() }}">
 <link rel="stylesheet" href="{{ asset('/assets/css/branches-page.css') }}?v={{ time() }}">
-<!-- SweetAlert2 CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 @endsection
 
 @section('content')
@@ -33,8 +31,7 @@
 @endsection
 
 @section('js')
-<!-- SweetAlert2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{{-- SweetAlert2 is loaded globally in layouts.master --}}
 @if(config('services.recaptcha.site_key'))
 <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
 @endif

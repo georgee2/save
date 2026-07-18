@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Validation\Rules\Password;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -25,6 +26,18 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         Schema::defaultStringLength(191);
+
+        // ERP seam: bind the real ERPNext implementation only when the integration
+        // is explicitly enabled AND a base URL is configured; otherwise stay on the
+        // no-op service. This keeps the site fully functional (and free of ERP
+        // errors) until the ERP team has delivered and the flag is flipped.
+        $erpReady = config('services.erpnext.enabled') && config('services.erpnext.base_url');
+        $this->app->bind(
+            \App\Services\CustomerSync\CustomerSyncService::class,
+            $erpReady
+                ? \App\Services\CustomerSync\ErpNextCustomerSyncService::class
+                : \App\Services\CustomerSync\NullCustomerSyncService::class
+        );
 
         //Get Service
         $this->app->singleton('Service', function () {
@@ -67,5 +80,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Register Header Composer for all views
         view()->composer('*', \App\Http\View\Composers\HeaderComposer::class);
+
+        // Shared customer password policy: at least 8 chars with mixed case and a number.
+        // Reused via Password::defaults() at set-password / change-password.
+        Password::defaults(fn () => Password::min(8)->mixedCase()->numbers());
     }
 }

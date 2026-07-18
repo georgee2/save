@@ -12,6 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (DB::getDriverName() !== 'mysql') {
+            return;
+        }
+
         // Modify the enum to include 'government' type
         DB::statement("ALTER TABLE partners MODIFY COLUMN partner_type ENUM('partner', 'branch', 'government') DEFAULT 'partner'");
         
@@ -27,6 +31,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (DB::getDriverName() !== 'mysql') {
+            return;
+        }
+
         // Revert to original enum values
         DB::statement("ALTER TABLE partners MODIFY COLUMN partner_type ENUM('partner', 'branch') DEFAULT 'partner'");
         

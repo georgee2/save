@@ -12,6 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (DB::getDriverName() !== 'mysql') {
+            return;
+        }
+
         // Alter the ENUM column to add 'category_with_subs' type
         DB::statement("ALTER TABLE menu_items MODIFY COLUMN item_type ENUM(
             'static',
@@ -31,6 +35,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (DB::getDriverName() !== 'mysql') {
+            return;
+        }
+
         // Revert back to ENUM without 'category_with_subs'
         // First, update any category_with_subs items to static
         DB::table('menu_items')

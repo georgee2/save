@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\CRM\App\Http\Controllers\CRMController;
 use Modules\CRM\App\Http\Controllers\JobsPostingController;
 use Modules\CRM\App\Http\Controllers\FavouritesController;
+use Modules\CRM\App\Http\Controllers\CustomersController;
 use Modules\CRM\App\Http\Controllers\AgentController;
 use Modules\CRM\App\Http\Controllers\ContactUsController;
 
@@ -20,7 +21,7 @@ use Modules\CRM\App\Http\Controllers\ContactUsController;
 
 Route::group(
     ['prefix' => LaravelLocalization::setLocale(), 
-    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath' , 'middleware' => 'auth']],
+    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath', 'auth', 'staff', 'check.route.permission']],
     function () {
 
         Route::prefix('crm')->group(function () {
@@ -56,6 +57,19 @@ Route::group(
                 Route::post('/send-notification/{sessionId}', [FavouritesController::class, 'sendNotification'])->name('crm-favourites.send-notification');
                 Route::post('/comment/{sessionId}', [FavouritesController::class, 'storeComment'])->name('crm-favourites.store-comment');
                 Route::post('/comment-delete/{id}', [FavouritesController::class, 'deleteComment'])->name('crm-favourites.delete-comment');
+            });
+
+            // Customers Routes
+            Route::prefix('customers')->group(function () {
+                Route::get('/index', [CustomersController::class, 'index'])->name('crm-customers.index');
+                Route::get('/export-report', [CustomersController::class, 'exportReport'])->name('crm-customers.export-report');
+                Route::get('/live-search', [CustomersController::class, 'liveSearch'])->name('crm-customers.live-search');
+                Route::get('/show/{id}', [CustomersController::class, 'show'])->name('crm-customers.show');
+                Route::post('/assign-agent/{id}', [CustomersController::class, 'assignAgent'])->name('crm-customers.assign-agent');
+                Route::post('/unassign-agent/{id}', [CustomersController::class, 'unassignAgent'])->name('crm-customers.unassign-agent');
+                Route::post('/send-email/{id}', [CustomersController::class, 'sendEmail'])->name('crm-customers.send-email');
+                Route::post('/comment/{id}', [CustomersController::class, 'storeComment'])->name('crm-customers.store-comment');
+                Route::post('/comment-delete/{id}', [CustomersController::class, 'deleteComment'])->name('crm-customers.delete-comment');
             });
 
             // Contact Us Routes

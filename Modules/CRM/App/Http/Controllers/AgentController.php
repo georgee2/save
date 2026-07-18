@@ -4,6 +4,7 @@ namespace Modules\CRM\App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Models\Agent;
 use App\Models\JobTitle;
 use App\Models\Rank;
@@ -105,6 +106,12 @@ class AgentController extends Controller
     public function destroy($id)
     {
         $agent = Agent::findOrFail($id);
+
+        // Clear references before soft delete: agents is MyISAM (no FK), so
+        // stale assignments would otherwise remain and display incorrectly.
+        User::where('assigned_agent_id', $id)->update(['assigned_agent_id' => null]);
+        DB::table('favourites')->where('sales_agent_id', $id)->update(['sales_agent_id' => null]);
+
         $agent->delete();
 
         return redirect()->route('crm-agents.index')->with('success', 'Agent deleted successfully!');

@@ -21,6 +21,13 @@ use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\InteriorGalleryController;
 use App\Http\Controllers\GlobalSearchController;
 use App\Http\Controllers\FavouriteController;
+use App\Http\Controllers\Auth\CustomerRegisterController;
+use App\Http\Controllers\Auth\CustomerPasswordController;
+use App\Http\Controllers\Auth\CustomerForgotPasswordController;
+use App\Http\Controllers\Auth\StaffPasswordController;
+use App\Http\Controllers\Account\DashboardController as AccountDashboardController;
+use App\Http\Controllers\Account\ProfileController as AccountProfileController;
+use App\Http\Controllers\Account\ProfileSettingsController as AccountSettingsController;
 
 
 
@@ -49,9 +56,42 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 	});
 
 
-	Route::get('/login', [LoginController::class, 'login'])->name('login');
-	Route::post('/checkuser', [LoginController::class, 'checkuser'])->name('checkuser');
+	Route::get('/login', [LoginController::class, 'login'])->name('login')->middleware('cache.headers:no_store,no_cache,must_revalidate,max_age=0');
+	Route::post('/checkuser', [LoginController::class, 'checkuser'])->name('checkuser')->middleware('throttle:30,1');
 	Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
+	// Customer registration + account activation (front-end portal)
+	Route::get('/register', [CustomerRegisterController::class, 'showForm'])->name('account.register')->middleware('cache.headers:no_store,no_cache,must_revalidate,max_age=0');
+	Route::post('/register', [CustomerRegisterController::class, 'register'])->name('account.register.submit')->middleware('throttle:5,1');
+	Route::get('/set-password/{token}', [CustomerPasswordController::class, 'showForm'])->name('account.password.set')->middleware('cache.headers:no_store,no_cache,must_revalidate,max_age=0');
+	Route::post('/set-password', [CustomerPasswordController::class, 'setPassword'])->name('account.password.update')->middleware('throttle:6,1');
+
+	// Resend account-activation invite (uniform response, no user enumeration)
+	Route::get('/resend-activation', [CustomerRegisterController::class, 'showResendForm'])->name('account.activation.resend.form')->middleware('cache.headers:no_store,no_cache,must_revalidate,max_age=0');
+	Route::post('/resend-activation', [CustomerRegisterController::class, 'resendActivation'])->name('account.activation.resend')->middleware('throttle:5,1');
+
+	// Forgot password (request a reset link; consumption reuses set-password above)
+	Route::get('/forgot-password', [CustomerForgotPasswordController::class, 'showRequestForm'])->name('password.request')->middleware('cache.headers:no_store,no_cache,must_revalidate,max_age=0');
+	Route::post('/forgot-password', [CustomerForgotPasswordController::class, 'sendResetLink'])->name('password.email')->middleware('throttle:5,1');
+
+	// Staff password reset (link target for the CMS self-service reset; staff accounts only)
+	Route::get('/staff/reset-password/{token}', [StaffPasswordController::class, 'showForm'])->name('staff.password.reset')->middleware('cache.headers:no_store,no_cache,must_revalidate,max_age=0');
+	Route::post('/staff/reset-password', [StaffPasswordController::class, 'reset'])->name('staff.password.update')->middleware('throttle:6,1');
+
+	// Customer portal (customer accounts only)
+	Route::middleware(['auth', 'customer', 'cache.headers:no_store,no_cache,must_revalidate,max_age=0'])->prefix('account')->group(function () {
+		Route::get('/', [AccountDashboardController::class, 'index'])->name('account.dashboard');
+		Route::get('/profile', [AccountProfileController::class, 'show'])->name('account.profile');
+
+		Route::get('/settings', [AccountSettingsController::class, 'edit'])->name('account.settings');
+		Route::put('/settings/details', [AccountSettingsController::class, 'updateDetails'])->name('account.settings.details');
+		Route::put('/settings/password', [AccountSettingsController::class, 'updatePassword'])->name('account.settings.password');
+		Route::put('/settings/preferences', [AccountSettingsController::class, 'updatePreferences'])->name('account.settings.preferences');
+
+		Route::get('/email/verify/{token}', [AccountSettingsController::class, 'verifyNewEmail'])
+			->name('account.email.verify')
+			->middleware('signed');
+	});
 
 
 	Route::get('/', [HomeController::class, 'index'])->name('index');

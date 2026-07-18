@@ -97,6 +97,16 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+
+        // Account-activation invites for new customers. Uses its own table and a
+        // much longer expiry than password resets, since a new user may open the
+        // activation email hours after registering.
+        'invitations' => [
+            'provider' => 'users',
+            'table' => 'customer_invitation_tokens',
+            'expire' => 2880, // 48 hours
+            'throttle' => 60,
+        ],
     ],
 
     /*
