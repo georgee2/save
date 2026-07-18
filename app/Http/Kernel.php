@@ -76,5 +76,9 @@ class Kernel extends HttpKernel
         'permission' => \App\Http\Middleware\CheckPermission::class,
         'role' => \App\Http\Middleware\CheckRole::class,
         'check.route.permission' => \App\Http\Middleware\CheckRoutePermission::class,
+        'staff' => \App\Http\Middleware\EnsureStaff::class,
+        'customer' => \App\Http\Middleware\EnsureCustomer::class,
+        'abilities' => \Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
+        'ability' => \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
     ];
 }

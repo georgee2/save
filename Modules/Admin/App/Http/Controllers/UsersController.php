@@ -53,21 +53,19 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
-
-      $password = $request->password;
-      //$password = $request->name . random_int(100000, 999999) . date('Y');
-
-      $user =  $this->User->NewRecord([
+        $user = $this->User->NewRecord([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($password)
-            ]);
-
-        //Mail::to($user->email)->send(new UserMail($user,$password));
+            'password' => Hash::make($request->password),
+            'account_type' => 'staff',
+            'source' => 'admin',
+            'password_set_at' => now(),
+        ]);
 
         return redirect()->route('users.index')->with('success',  __('lang.session.add'));
     }
@@ -93,17 +91,23 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-
-     $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,id,' . $id,
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $id,
+            'password' => 'nullable|string|min:8|confirmed',
         ]);
 
-
-        $this->User->updateRecord($id,[
+        $data = [
             'name' => $request->name,
-            'email' => $request->email
-        ]);
+            'email' => $request->email,
+        ];
+
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+            $data['password_set_at'] = now();
+        }
+
+        $this->User->updateRecord($id, $data);
 
         return redirect()->route('users.index')->with('success', __('lang.session.update'));
     }
@@ -116,6 +120,20 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
+        $target = $this->User->find($id);
+
+        // Prevent deleting your own account.
+        if ((int) $id === (int) Auth::id()) {
+            return redirect()->route('users.index')
+                ->with('error', 'You cannot delete your own account.');
+        }
+
+        // Only a super-admin may delete another super-admin.
+        if ($target->isSuperAdmin() && !Auth::user()->isSuperAdmin()) {
+            return redirect()->route('users.index')
+                ->with('error', 'You do not have permission to delete a Super Admin account.');
+        }
+
         $this->User->deleteRecord($id);
 
         return redirect()->route('users.index')->with('success', __('lang.session.delete'));

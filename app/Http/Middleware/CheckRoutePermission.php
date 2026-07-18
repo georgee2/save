@@ -569,6 +569,24 @@ class CheckRoutePermission
         
         // Basicdata Dashboard
         'Basicdata' => 'dashboard-view',
+
+        // ==========================================
+        // CRM MODULE ROUTES
+        // ==========================================
+
+        // CRM Dashboard
+        'CRM' => 'crm-dashboard-view',
+
+        // Customers
+        'crm-customers.index' => 'customers-view',
+        'crm-customers.show' => 'customers-view',
+        'crm-customers.live-search' => 'customers-view',
+        'crm-customers.export-report' => 'customers-view',
+        'crm-customers.assign-agent' => 'customers-edit',
+        'crm-customers.unassign-agent' => 'customers-edit',
+        'crm-customers.store-comment' => 'customers-edit',
+        'crm-customers.delete-comment' => 'customers-edit',
+        'crm-customers.send-email' => 'customers-send_email',
     ];
 
     /**
@@ -580,6 +598,17 @@ class CheckRoutePermission
 
         if (!$user) {
             return $next($request);
+        }
+
+        // Defense in depth: only staff accounts may reach admin/CRM routes.
+        // The `staff` middleware also enforces this at the route-group level.
+        if (!$user->isStaff()) {
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Forbidden.'], 403);
+            }
+
+            return redirect()->route('account.dashboard')
+                ->with('error', 'This area is restricted to staff accounts.');
         }
 
         if ($user->isSuperAdmin()) {

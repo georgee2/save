@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 // Use the fully qualified namespace for controllers
 use Modules\Admin\App\Http\Controllers\AdminController;
 use Modules\Admin\App\Http\Controllers\UsersController;
+use Modules\Admin\App\Http\Controllers\ProfileController;
 use Modules\Admin\App\Http\Controllers\NewsCategoriesController;
 use Modules\Admin\App\Http\Controllers\NewsController;
 use Modules\Admin\App\Http\Controllers\ServiceController;
@@ -94,7 +95,7 @@ use Modules\Admin\App\Http\Controllers\TranslationController;
 
 Route::group(
     ['prefix' => LaravelLocalization::setLocale(), 
-    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath' , 'middleware' => 'auth', 'check.route.permission']],
+    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath', 'auth', 'staff', 'check.route.permission']],
     function () {
 
         Route::prefix('admin')->group(function () {
@@ -121,6 +122,11 @@ Route::group(
             Route::post('/translate', [TranslationController::class, 'translate'])->name('admin.translate');
 
 
+
+            // Staff self-service account / password reset
+            Route::get('/profile', [ProfileController::class, 'edit'])->name('admin.profile.edit');
+            Route::post('/profile/password/email', [ProfileController::class, 'sendResetLink'])
+                ->name('admin.profile.password.email')->middleware('throttle:3,1');
 
              // Project Users Routes
             Route::prefix('users')->group(function () {

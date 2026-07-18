@@ -396,7 +396,7 @@
 @endsection
 
 @section('js')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{{-- SweetAlert2 is loaded globally in layouts.master --}}
 <script>
 // File upload visual feedback
 document.getElementById('resume').addEventListener('change', function(e) {

@@ -1,0 +1,259 @@
+/* ==========================================================================
+   Customer Portal (account area) - matches the SVEC front-end theme
+   Palette: primary #19868b, dark #172e38, accent #eff6f7
+   Mobile-first + RTL aware.
+   ========================================================================== */
+
+:root {
+  --acc-primary: #19868b;
+  --acc-primary-dark: #146a6e;
+  --acc-dark: #172e38;
+  --acc-accent: #eff6f7;
+  --acc-muted: #6b7c85;
+  --acc-border: #e6ecee;
+  --acc-danger: #e1273d;
+  --acc-success: #28a745;
+}
+
+/* ---------- Hero / breadcrumb ---------- */
+.account-hero {
+  position: relative;
+  padding: 70px 0 56px;
+  background: linear-gradient(135deg, var(--acc-dark) 0%, var(--acc-primary-dark) 100%);
+  overflow: hidden;
+}
+.account-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 85% 20%, rgba(255, 255, 255, .08), transparent 45%);
+  pointer-events: none;
+}
+.account-hero .container { position: relative; z-index: 1; }
+.account-hero .breadcrumb {
+  background: transparent;
+  padding: 0;
+  margin: 0 0 12px;
+  justify-content: center;
+}
+.account-hero .breadcrumb-item,
+.account-hero .breadcrumb-item a { color: rgba(255, 255, 255, .8); text-decoration: none; }
+.account-hero .breadcrumb-item a:hover { color: #fff; }
+.account-hero .breadcrumb-item.active { color: #fff; }
+.account-hero .breadcrumb-item + .breadcrumb-item::before { color: rgba(255, 255, 255, .5); }
+.account-hero-title {
+  color: #fff;
+  font-weight: 700;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  margin: 0;
+}
+.account-hero-subtitle {
+  color: rgba(255, 255, 255, .85);
+  margin: 8px 0 0;
+  font-size: clamp(.95rem, 2.5vw, 1.05rem);
+}
+
+/* ---------- Layout ---------- */
+.account-section { padding: 48px 0 72px; background: #f5f7fa; }
+.account-grid {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+/* ---------- Sidebar nav ---------- */
+.account-nav {
+  background: #fff;
+  border: 1px solid var(--acc-border);
+  border-radius: 14px;
+  overflow: hidden;
+  position: sticky;
+  top: 100px;
+}
+.account-nav__head {
+  padding: 20px;
+  background: var(--acc-accent);
+  border-bottom: 1px solid var(--acc-border);
+}
+.account-nav__name { font-weight: 700; color: var(--acc-dark); margin: 0; }
+.account-nav__email { font-size: .82rem; color: var(--acc-muted); margin: 2px 0 0; word-break: break-all; }
+.account-nav__list { list-style: none; margin: 0; padding: 8px; }
+.account-nav__list a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  min-height: 44px;
+  border-radius: 10px;
+  color: var(--acc-dark);
+  text-decoration: none;
+  font-weight: 500;
+  transition: background .18s, color .18s;
+}
+.account-nav__list a i { width: 18px; text-align: center; color: var(--acc-primary); }
+.account-nav__list a:hover { background: var(--acc-accent); }
+.account-nav__list a.is-active { background: var(--acc-primary); color: #fff; }
+.account-nav__list a.is-active i { color: #fff; }
+.account-nav__list a.is-danger { color: var(--acc-danger); }
+.account-nav__list a.is-danger i { color: var(--acc-danger); }
+
+/* ---------- Content card ---------- */
+.account-card {
+  background: #fff;
+  border: 1px solid var(--acc-border);
+  border-radius: 14px;
+  padding: 28px;
+}
+.account-card + .account-card { margin-top: 24px; }
+.account-card__title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--acc-dark);
+  margin: 0 0 4px;
+}
+.account-card__subtitle { color: var(--acc-muted); margin: 0 0 20px; font-size: .92rem; }
+
+/* ---------- Data list (profile view) ---------- */
+.account-data { display: grid; grid-template-columns: 1fr; gap: 0; }
+.account-data__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--acc-border);
+}
+.account-data__row:last-child { border-bottom: 0; }
+.account-data__label { color: var(--acc-muted); }
+.account-data__value { font-weight: 600; color: var(--acc-dark); text-align: right; word-break: break-word; }
+
+/* ---------- Badges ---------- */
+.account-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 600;
+}
+.account-badge--ok { background: rgba(40, 167, 69, .12); color: var(--acc-success); }
+.account-badge--warn { background: rgba(246, 181, 0, .15); color: #b78400; }
+
+/* ---------- Tabs ---------- */
+.account-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  border-bottom: 1px solid var(--acc-border);
+  margin-bottom: 24px;
+}
+.account-tabs__btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 12px 16px;
+  min-height: 44px;
+  font-weight: 600;
+  color: var(--acc-muted);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+}
+.account-tabs__btn.is-active { color: var(--acc-primary); border-bottom-color: var(--acc-primary); }
+.account-tab-pane { display: none; }
+.account-tab-pane.is-active { display: block; animation: accFade .25s ease; }
+@keyframes accFade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Forms (align with theme .form-control/.btn) ---------- */
+.account-form .form-group { margin-bottom: 18px; }
+.account-form label { font-weight: 600; color: var(--acc-dark); margin-bottom: 6px; display: block; }
+.account-form .form-control {
+  border-radius: 10px;
+  border: 1px solid var(--acc-border);
+  padding: 12px 14px;
+  min-height: 46px;
+}
+.account-form .form-control:focus {
+  border-color: var(--acc-primary);
+  box-shadow: 0 0 0 .18rem rgba(25, 134, 139, .18);
+}
+.account-form .form-text { color: var(--acc-muted); font-size: .82rem; }
+
+.account-check { display: flex; align-items: center; gap: 10px; padding: 10px 0; }
+.account-check input { width: 18px; height: 18px; }
+
+.btn-account {
+  background: var(--acc-primary);
+  border: 0;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 12px 22px;
+  min-height: 46px;
+  transition: background .18s, transform .05s;
+}
+.btn-account:hover { background: var(--acc-primary-dark); color: #fff; }
+.btn-account:active { transform: translateY(1px); }
+.btn-account-outline {
+  background: transparent;
+  border: 1px solid var(--acc-border);
+  color: var(--acc-dark);
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 12px 22px;
+  min-height: 46px;
+}
+.btn-account-outline:hover { background: var(--acc-accent); color: var(--acc-dark); }
+
+/* ---------- Auth (single card, no sidebar) ---------- */
+.account-auth-wrap { max-width: 480px; margin: 0 auto; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 991.98px) {
+  .account-grid { grid-template-columns: 1fr; gap: 20px; }
+  .account-nav { position: static; }
+}
+@media (max-width: 767.98px) {
+  .account-hero { padding: 54px 0 40px; }
+  .account-section { padding: 32px 0 56px; }
+  .account-card { padding: 20px; border-radius: 12px; }
+  .account-data__row { flex-direction: column; gap: 4px; }
+  .account-data__value { text-align: left; }
+  .account-tabs__btn { flex: 1 1 auto; text-align: center; }
+  .btn-account, .btn-account-outline { width: 100%; }
+}
+@media (max-width: 359.98px) {
+  .account-card { padding: 16px; }
+}
+
+/* ---------- Password show/hide toggle ---------- */
+.account-pw { position: relative; }
+.account-pw .form-control { padding-right: 44px; }
+.pw-toggle {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  color: var(--acc-muted);
+  cursor: pointer;
+  border-radius: 8px;
+}
+.pw-toggle:hover { color: var(--acc-primary); background: var(--acc-accent); }
+html[dir="rtl"] .account-pw .form-control { padding-right: 14px; padding-left: 44px; }
+html[dir="rtl"] .pw-toggle { right: auto; left: 8px; }
+
+/* ---------- RTL ---------- */
+html[dir="rtl"] .account-data__value { text-align: left; }
+html[dir="rtl"] .account-nav__list a.is-active { }
+html[dir="rtl"] .account-form label { text-align: right; }
+@media (max-width: 767.98px) {
+  html[dir="rtl"] .account-data__value { text-align: right; }
+}

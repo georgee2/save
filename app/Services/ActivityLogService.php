@@ -55,6 +55,8 @@ class ActivityLogService
         'App\Models\HomeSection' => 'Home Section',
         'App\Models\SiteSetting' => 'Site Setting',
         'App\Models\User' => 'User',
+        'App\Models\CustomerComment' => 'Customer Comment',
+        'App\Models\CustomerEmailLog' => 'Customer Email Log',
     ];
 
     /**

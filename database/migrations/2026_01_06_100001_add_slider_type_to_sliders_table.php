@@ -19,17 +19,22 @@ return new class extends Migration
             $table->unsignedBigInteger('project_id')->nullable()->after('slider_type');
             $table->unsignedBigInteger('offer_id')->nullable()->after('project_id');
             
-            // Make title, bio fields nullable for project/offer types
-            $table->string('title_english', 255)->nullable()->change();
-            $table->string('title_arabic', 255)->nullable()->change();
-            $table->text('bio_english')->nullable()->change();
-            $table->text('bio_arabic')->nullable()->change();
-            
             // Add indexes
             $table->index('slider_type');
             $table->index('project_id');
             $table->index('offer_id');
         });
+
+        // Column type changes require doctrine/dbal (MySQL); skip on other drivers (e.g. SQLite in tests).
+        if (\Illuminate\Support\Facades\DB::getDriverName() === 'mysql') {
+            Schema::table('sliders', function (Blueprint $table) {
+                // Make title, bio fields nullable for project/offer types
+                $table->string('title_english', 255)->nullable()->change();
+                $table->string('title_arabic', 255)->nullable()->change();
+                $table->text('bio_english')->nullable()->change();
+                $table->text('bio_arabic')->nullable()->change();
+            });
+        }
     }
 
     /**

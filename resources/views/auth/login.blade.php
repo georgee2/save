@@ -9,6 +9,7 @@
     <link href="{{ asset('/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('/css/icons.css') }}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ asset('/assets/css/sweetalert2.min.css') }}?v=11">
     <link rel="shortcut icon" href="{{url('/pic/ficon1.png')}}" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
@@ -637,19 +638,6 @@
                     <div class="accent-line"></div>
                 </div>
 
-                <!-- Success Message -->
-                @if(session('success'))
-                    <div class="alert-box success">
-                        <div class="alert-icon">
-                            <i class="fa fa-check"></i>
-                        </div>
-                        <div class="alert-content">
-                            <h6>Success</h6>
-                            <p>{{ session('success') }}</p>
-                        </div>
-                    </div>
-                @endif
-
                 <!-- Error Messages -->
                 @if($errors->any())
                     <div class="alert-box error">
@@ -725,6 +713,30 @@
                     </button>
                 </form>
 
+                <p style="text-align:center;margin:16px 0 0;">
+                    <a href="{{ route('password.request') }}" style="color:var(--primary-color);font-weight:600;">
+                        {{ app()->getLocale() === 'ar' ? 'نسيت كلمة المرور؟' : 'Forgot password?' }}
+                    </a>
+                </p>
+
+                <div class="login-divider"><span>{{ app()->getLocale() === 'ar' ? 'أو' : 'or' }}</span></div>
+
+                <p style="text-align:center;margin:0 0 8px;">
+                    {{ app()->getLocale() === 'ar' ? 'ليس لديك حساب؟' : "Don't have an account?" }}
+                    <a href="{{ route('account.register') }}" style="color:var(--primary-color);font-weight:600;">
+                        {{ app()->getLocale() === 'ar' ? 'إنشاء حساب' : 'Create one' }}
+                    </a>
+                </p>
+
+                <p style="text-align:center;margin:0;font-size:0.85rem;color:#888;">
+                    {{ app()->getLocale() === 'ar'
+                        ? 'سجّلت للتو؟ تحقق من بريدك الإلكتروني لتفعيل حسابك.'
+                        : 'Just registered? Check your email to activate your account.' }}
+                    <a href="{{ route('account.activation.resend.form') }}" style="color:var(--primary-color);font-weight:600;">
+                        {{ app()->getLocale() === 'ar' ? 'إعادة الإرسال' : 'Resend' }}
+                    </a>
+                </p>
+
                 <div class="login-footer">
                     <p>&copy; {{ date('Y') }} Content Management System.<br>Developed by <a href="#">Smart Vision Group</a></p>
                 </div>
@@ -732,7 +744,31 @@
         </div>
     </div>
 
+    <script src="{{ asset('/assets/js/sweetalert2.min.js') }}?v=11"></script>
     <script>
+        // Flash notifications (e.g. after registration or password reset request)
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof Swal === 'undefined') { return; }
+            @if(session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: @json(app()->getLocale() === 'ar' ? 'تم' : 'Success'),
+                    text: @json(session('success')),
+                    confirmButtonColor: '#19868b',
+                    timer: 6000,
+                    timerProgressBar: true
+                });
+            @endif
+            @if(session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: @json(app()->getLocale() === 'ar' ? 'خطأ' : 'Error'),
+                    text: @json(session('error')),
+                    confirmButtonColor: '#e1273d'
+                });
+            @endif
+        });
+
         // Hide preloader when page loads
         window.addEventListener('load', function() {
             document.getElementById('preloader').classList.add('hidden');

@@ -12,6 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (DB::getDriverName() !== 'mysql') {
+            return;
+        }
+
         Schema::table('feasibility_study_components', function (Blueprint $table) {
             // Modify the target enum to include new values
             DB::statement("ALTER TABLE `feasibility_study_components` MODIFY `target` ENUM('Building Components', 'Income Components', 'Length Components', 'Construction Cost', 'Project Cost') NOT NULL");
@@ -23,6 +27,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (DB::getDriverName() !== 'mysql') {
+            return;
+        }
+
         Schema::table('feasibility_study_components', function (Blueprint $table) {
             // Revert back to original enum values
             DB::statement("ALTER TABLE `feasibility_study_components` MODIFY `target` ENUM('Building Components', 'Income Components', 'Length Components') NOT NULL");

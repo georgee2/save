@@ -8,12 +8,13 @@ use Tests\TestCase;
 class ExampleTest extends TestCase
 {
     /**
-     * A basic test example.
+     * The root URL redirects to the localized home (e.g. /en) via the
+     * localization middleware.
      */
-    public function test_the_application_returns_a_successful_response(): void
+    public function test_the_root_redirects_to_the_localized_home(): void
     {
         $response = $this->get('/');
 
-        $response->assertStatus(200);
+        $response->assertRedirect();
     }
 }

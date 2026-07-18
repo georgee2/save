@@ -41,4 +41,26 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+    /**
+     * Indicate that the user is a front-end customer account.
+     */
+    public function customer(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'account_type' => 'customer',
+            'password_set_at' => now(),
+            'consent_at' => now(),
+        ]);
+    }
+
+    /**
+     * Indicate that the user is a back-office staff account.
+     */
+    public function staff(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'account_type' => 'staff',
+        ]);
+    }
 }

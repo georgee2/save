@@ -31,10 +31,10 @@
                                         <img  src="{{url('/pic/user.png')}}" alt="user" class="rounded-circle">
                                         
                                     </a>
-                                    <div hidden class="dropdown-menu dropdown-menu-right profile-dropdown ">
-                                        <a class="dropdown-item" href="#"><i class="dripicons-user text-muted"></i> Profile</a>
+                                    <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                                        <a class="dropdown-item" href="{{ route('admin.profile.edit') }}"><i class="dripicons-user text-muted"></i> {{ __('lang.staff_profile_title') }}</a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#"><i class="dripicons-exit text-muted"></i> Logout</a>
+                                        <a class="dropdown-item" href="{{ route('logout') }}"><i class="dripicons-exit text-muted"></i> {{ __('lang.account_logout') }}</a>
                                     </div>
                                 </li>
                             </ul>

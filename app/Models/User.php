@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,7 +14,7 @@ use App\Traits\LogsActivity;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, LogsActivity;
+    use HasApiTokens, HasFactory, Notifiable, LogsActivity, SoftDeletes;
     
     protected $logTitleField = 'name';
 
@@ -26,6 +27,20 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'account_type',
+        'phone',
+        'is_active',
+        'preferred_locale',
+        'consent_at',
+        'source',
+        'assigned_agent_id',
+        'erp_customer_id',
+        'erp_user_id',
+        'password_set_at',
+        'synced_at',
+        'pending_email',
+        'pending_email_token',
+        'notification_prefs',
     ];
 
     /**
@@ -46,6 +61,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_active' => 'boolean',
+        'consent_at' => 'datetime',
+        'password_set_at' => 'datetime',
+        'synced_at' => 'datetime',
+        'notification_prefs' => 'array',
     ];
 
     /**
@@ -55,6 +75,64 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class, 'user_role')
             ->withTimestamps();
+    }
+
+    /**
+     * The sales agent assigned to this customer (CRM).
+     */
+    public function assignedAgent()
+    {
+        return $this->belongsTo(Agent::class, 'assigned_agent_id');
+    }
+
+    /**
+     * Determine if the user is a back-office staff account.
+     */
+    public function isStaff(): bool
+    {
+        return ($this->account_type ?? 'staff') === 'staff';
+    }
+
+    /**
+     * Determine if the user is a front-end customer account.
+     */
+    public function isCustomer(): bool
+    {
+        return $this->account_type === 'customer';
+    }
+
+    /**
+     * Whether the user may receive staff-initiated direct emails.
+     *
+     * Strict gate: the customer must have given consent (consent_at set) and must not
+     * have opted out of email updates. Missing/null notification prefs default to allowed
+     * (mirrors the settings UI default), but a missing consent_at blocks the send.
+     */
+    public function acceptsDirectEmail(): bool
+    {
+        if ($this->consent_at === null) {
+            return false;
+        }
+
+        $prefs = $this->notification_prefs ?? [];
+
+        return !array_key_exists('email_updates', $prefs) || $prefs['email_updates'] === true;
+    }
+
+    /**
+     * Scope a query to only staff accounts.
+     */
+    public function scopeStaff($query)
+    {
+        return $query->where('account_type', 'staff');
+    }
+
+    /**
+     * Scope a query to only customer accounts.
+     */
+    public function scopeCustomers($query)
+    {
+        return $query->where('account_type', 'customer');
     }
 
     /**
@@ -233,6 +311,8 @@ class User extends Authenticatable
                 users.name AS "User Name",
                 users.email AS "E-mail"
             FROM users 
+            WHERE users.account_type = "staff"
+              AND users.deleted_at IS NULL
             ');
         return $user;
     }

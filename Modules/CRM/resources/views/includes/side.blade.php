@@ -35,6 +35,10 @@
                             </li>
 
                             <li>
+                                <a href="{{route('crm-customers.index')}}" class="waves-effect"><i class="mdi mdi-18px mdi-account-multiple"></i><span> Customers</span></a>
+                            </li>
+
+                            <li>
                                 <a href="{{route('crm-favourites.index')}}" class="waves-effect"><i class="mdi mdi-18px mdi-heart"></i><span> Favourites</span></a>
                             </li>
 
