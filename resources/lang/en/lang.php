@@ -138,6 +138,8 @@ return [
     'email_failed' => 'Failed to send email',
     'cancel' => 'Cancel',
     'login' => 'Login',
+    'register' => 'Register',
+    'logout' => 'Logout',
     'contact' => 'Contact',
     'chat_with_us' => 'Chat with us',
     'send_message' => 'Send Message',

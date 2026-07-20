@@ -63,6 +63,28 @@
                         <i class="fas fa-briefcase"></i>
                         <span>{{ __('lang.careers') }}</span>
                     </a>
+                    <span class="topbar-divider" aria-hidden="true"></span>
+                    @auth
+                        @if(auth()->user()->isCustomer())
+                        <a href="{{ route('account.dashboard') }}" class="topbar-link">
+                            <i class="fas fa-user-circle"></i>
+                            <span>{{ __('lang.account') }}</span>
+                        </a>
+                        <a href="{{ route('logout') }}" class="topbar-link">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>{{ __('lang.logout') }}</span>
+                        </a>
+                        @endif
+                    @else
+                        <a href="{{ route('login') }}" class="topbar-link">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>{{ __('lang.login') }}</span>
+                        </a>
+                        <a href="{{ route('account.register') }}" class="topbar-link topbar-link-register">
+                            <i class="fas fa-user-plus"></i>
+                            <span>{{ __('lang.register') }}</span>
+                        </a>
+                    @endauth
                 </div>
             </div>
         </div>

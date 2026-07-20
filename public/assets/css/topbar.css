@@ -88,6 +88,34 @@
     width: 100%;
 }
 
+/* Divider between quick links and auth links */
+.topbar-divider {
+    width: 1px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.35);
+    display: inline-block;
+}
+
+/* Register accent (bordered pill) */
+.topbar-link-register {
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-radius: 4px;
+    padding: 4px 12px;
+}
+
+.topbar-link-register:hover {
+    background: #ffffff;
+    color: #19868b;
+}
+
+.topbar-link-register:hover i {
+    color: #19868b;
+}
+
+.topbar-link-register::after {
+    display: none;
+}
+
 /* Contact Info */
 .topbar-contact {
     display: flex;

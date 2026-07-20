@@ -37,14 +37,34 @@
             <span class="favourite-badge" style="display: none;">0</span>
         </a>
         
-        {{-- Login/Register (No Link) --}}
-        <div class="mobile-bottom-nav-item login-item">
+        {{-- Login / Account --}}
+        @auth
+            @if(auth()->user()->isCustomer())
+            <a href="{{ route('account.dashboard') }}" class="mobile-bottom-nav-item login-item {{ str_contains(Route::currentRouteName() ?? '', 'account') ? 'active' : '' }}">
+                <div class="nav-icon">
+                    <i class="fal fa-user"></i>
+                    <i class="fas fa-user active-icon"></i>
+                </div>
+                <span class="nav-label">{{ __('lang.account') }}</span>
+            </a>
+            @else
+            <a href="{{ route('login') }}" class="mobile-bottom-nav-item login-item">
+                <div class="nav-icon">
+                    <i class="fal fa-user"></i>
+                    <i class="fas fa-user active-icon"></i>
+                </div>
+                <span class="nav-label">{{ __('lang.login') }}</span>
+            </a>
+            @endif
+        @else
+        <a href="{{ route('login') }}" class="mobile-bottom-nav-item login-item {{ Route::currentRouteName() == 'login' ? 'active' : '' }}">
             <div class="nav-icon">
                 <i class="fal fa-user"></i>
                 <i class="fas fa-user active-icon"></i>
             </div>
-            <span class="nav-label">{{ __('lang.login') ?? 'Login' }}</span>
-        </div>
+            <span class="nav-label">{{ __('lang.login') }}</span>
+        </a>
+        @endauth
     </div>
 </nav>
 
