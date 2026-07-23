@@ -35,7 +35,7 @@ class PageBannerController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'target' => 'required|string|in:services,projects,offers,showcases,blogs,careers,team,board_of_directors,partners,branches,contact',
+            'target' => 'required|string|in:services,projects,category,subcategory,featured-projects,offers,showcases,blogs,careers,team,board_of_directors,partners,branches,contact,account,register,reset_password',
             'cover' => 'required|image|mimes:jpeg,jpg,png,gif,webp|max:5120',
         ]);
 
@@ -93,7 +93,7 @@ class PageBannerController extends Controller
         $banner = PageBanner::findOrFail($id);
 
         $request->validate([
-            'target' => 'required|string|in:services,projects,offers,showcases,blogs,careers,team,board_of_directors,partners,branches,contact',
+            'target' => 'required|string|in:services,projects,category,subcategory,featured-projects,offers,showcases,blogs,careers,team,board_of_directors,partners,branches,contact,account,register,reset_password',
             'cover' => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:5120',
         ]);
 

@@ -520,6 +520,18 @@
                             </button>
                         </div>
                     </div>
+
+                    @if(!empty($linkedCustomer))
+                    <div class="alert alert-success d-flex justify-content-between align-items-center">
+                        <span>
+                            <i class="fa fa-user-check"></i>
+                            Linked to registered customer <strong>{{ $linkedCustomer->name }}</strong> ({{ $linkedCustomer->email }})
+                        </span>
+                        <a href="{{ route('crm-customers.show', $linkedCustomer->id) }}" class="btn btn-sm btn-success">
+                            <i class="fa fa-external-link-alt"></i> Open customer profile
+                        </a>
+                    </div>
+                    @endif
                     @if($userInfo->name || $userInfo->email || $userInfo->mobile)
                     <div class="row mb-4">
                         @if($userInfo->name)

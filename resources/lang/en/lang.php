@@ -531,6 +531,7 @@ return [
     'account_home' => 'Home',
     'account_dashboard' => 'Dashboard',
     'account_profile' => 'Profile',
+    'account_favourites' => 'My Favourites',
     'account_settings' => 'Settings',
     'account_logout' => 'Log out',
     'account_welcome' => 'Welcome',

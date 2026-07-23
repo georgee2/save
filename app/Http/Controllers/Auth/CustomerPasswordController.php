@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\PageBanner;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
@@ -26,6 +27,7 @@ class CustomerPasswordController extends Controller
         return view('pages.account.auth.set-password', [
             'token' => $request->route('token'),
             'email' => $request->query('email'),
+            'pageBanner' => PageBanner::getByTarget('reset_password'),
         ]);
     }
 

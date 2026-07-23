@@ -7,8 +7,10 @@ use App\Models\Agent;
 use App\Models\User;
 use App\Models\CustomerComment;
 use App\Models\CustomerEmailLog;
+use App\Models\Favourite;
 use App\Mail\CustomerDirectMail;
 use App\Exports\CustomersReportExport;
+use App\Support\GroupsFavourites;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +21,8 @@ use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf;
 
 class CustomersController extends Controller
 {
+    use GroupsFavourites;
+
     public function index(Request $request)
     {
         $query = $this->buildFilteredQuery($request);
@@ -88,7 +92,13 @@ class CustomersController extends Controller
         // Placeholder until the ERP/projects sub-plan lands.
         $projectCount = 0;
 
-        return view('crm::customers.show', compact('customer', 'agents', 'assignedAgent', 'comments', 'emailLogs', 'projectCount'));
+        // The customer's account-linked favourites (guest lists merged on login).
+        $favourites = Favourite::forUser($id)->active()->orderBy('created_at', 'desc')->get();
+        $favGrouped = $this->groupFavourites($favourites);
+        $favTotal = $favGrouped['projects']->count() + $favGrouped['offers']->count() + $favGrouped['interiors']->count();
+        $favToken = $customer->favourites_token;
+
+        return view('crm::customers.show', compact('customer', 'agents', 'assignedAgent', 'comments', 'emailLogs', 'projectCount', 'favGrouped', 'favTotal', 'favToken'));
     }
 
     public function assignAgent(Request $request, $id)

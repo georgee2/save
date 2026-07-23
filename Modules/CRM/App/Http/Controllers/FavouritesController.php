@@ -26,6 +26,7 @@ class FavouritesController extends Controller
     {
         $query = DB::table('favourites')
             ->leftJoin('agents', 'favourites.sales_agent_id', '=', 'agents.id')
+            ->leftJoin('users', 'favourites.user_id', '=', 'users.id')
             ->select(
                 'favourites.session_id',
                 DB::raw('COUNT(*) as items_count'),
@@ -38,7 +39,9 @@ class FavouritesController extends Controller
                 DB::raw('MAX(favourites.created_at) as last_added_at'),
                 DB::raw("GROUP_CONCAT(DISTINCT favourites.item_type SEPARATOR ',') as item_types"),
                 DB::raw('MAX(favourites.sales_agent_id) as sales_agent_id'),
-                DB::raw('MAX(agents.full_name_en) as agent_name')
+                DB::raw('MAX(agents.full_name_en) as agent_name'),
+                DB::raw('MAX(favourites.user_id) as user_id'),
+                DB::raw('MAX(users.name) as customer_name')
             )
             ->groupBy('favourites.session_id');
 
@@ -111,6 +114,8 @@ class FavouritesController extends Controller
             $row->is_expired = !$row->is_permanent && $row->expires_at && now()->greaterThan($row->expires_at);
             $row->share_url = url(app()->getLocale() . '/favourites/shared/' . $row->session_id);
             $row->types_array = array_filter(explode(',', $row->item_types ?? ''));
+            $row->is_registered = !is_null($row->user_id ?? null);
+            $row->customer_id = $row->user_id ?? null;
             return $row;
         });
 
@@ -206,7 +211,10 @@ class FavouritesController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('crm::favourites.show', compact('grouped', 'totalCount', 'userInfo', 'meta', 'agents', 'assignedAgent', 'comments', 'emailLogs'));
+        // Linked customer account (set when a guest's favourites were merged on login).
+        $linkedCustomer = $first->user_id ? \App\Models\User::find($first->user_id) : null;
+
+        return view('crm::favourites.show', compact('grouped', 'totalCount', 'userInfo', 'meta', 'agents', 'assignedAgent', 'comments', 'emailLogs', 'linkedCustomer'));
     }
 
     public function assignAgent(Request $request, $sessionId)
@@ -430,6 +438,7 @@ class FavouritesController extends Controller
     {
         $query = DB::table('favourites')
             ->leftJoin('agents', 'favourites.sales_agent_id', '=', 'agents.id')
+            ->leftJoin('users', 'favourites.user_id', '=', 'users.id')
             ->select(
                 'favourites.session_id',
                 DB::raw('COUNT(*) as items_count'),
@@ -442,7 +451,9 @@ class FavouritesController extends Controller
                 DB::raw('MAX(favourites.created_at) as last_added_at'),
                 DB::raw("GROUP_CONCAT(DISTINCT favourites.item_type SEPARATOR ',') as item_types"),
                 DB::raw('MAX(favourites.sales_agent_id) as sales_agent_id'),
-                DB::raw('MAX(agents.full_name_en) as agent_name')
+                DB::raw('MAX(agents.full_name_en) as agent_name'),
+                DB::raw('MAX(favourites.user_id) as user_id'),
+                DB::raw('MAX(users.name) as customer_name')
             )
             ->groupBy('favourites.session_id');
 
