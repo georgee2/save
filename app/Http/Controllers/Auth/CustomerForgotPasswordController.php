@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Mail\CustomerPasswordResetMail;
+use App\Models\PageBanner;
 use App\Models\User;
 use App\Rules\DisposableEmail;
 use Illuminate\Http\Request;
@@ -24,7 +25,9 @@ class CustomerForgotPasswordController extends Controller
             return redirect()->route('account.dashboard');
         }
 
-        return view('pages.account.auth.forgot-password');
+        return view('pages.account.auth.forgot-password', [
+            'pageBanner' => PageBanner::getByTarget('reset_password'),
+        ]);
     }
 
     /**

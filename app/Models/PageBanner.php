@@ -22,6 +22,9 @@ class PageBanner extends Model
         return [
             'services' => 'Services',
             'projects' => 'Projects',
+            'category' => 'Project Category',
+            'subcategory' => 'Project Subcategory',
+            'featured-projects' => 'Featured Projects',
             'offers' => 'Offers',
             'showcases' => 'Showcases',
             'blogs' => 'Blogs',
@@ -31,6 +34,9 @@ class PageBanner extends Model
             'partners' => 'Our Partners',
             'branches' => 'Our Branches',
             'contact' => 'Contact',
+            'account' => 'Customer Account',
+            'register' => 'Register',
+            'reset_password' => 'Reset Password',
         ];
     }
     

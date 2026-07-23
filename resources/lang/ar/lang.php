@@ -531,6 +531,7 @@ return [
     'account_home' => 'الرئيسية',
     'account_dashboard' => 'لوحة الحساب',
     'account_profile' => 'الملف الشخصي',
+    'account_favourites' => 'المفضلة',
     'account_settings' => 'الإعدادات',
     'account_logout' => 'تسجيل الخروج',
     'account_welcome' => 'مرحباً',

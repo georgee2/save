@@ -2,7 +2,9 @@
 <div class="site-topbar">
     <div class="container">
         <div class="topbar-content">
-            {{-- Social Icons - Left Side --}}
+            {{-- Left Side: Social + Contact --}}
+            <div class="topbar-left">
+            {{-- Social Icons --}}
             <div class="topbar-social">
                 @if(isset($footerContactInfo))
                     @if($footerContactInfo->facebook)
@@ -38,32 +40,25 @@
                 @endif
             </div>
 
-            {{-- Contact Info & Links - Right Side --}}
+            {{-- Contact Info (after social) --}}
+            @if(isset($footerContactInfo) && $footerContactInfo->mobile)
+            <a href="tel:{{ $footerContactInfo->mobile }}" class="topbar-phone">
+                <i class="fas fa-phone-alt"></i>
+                <span>{{ $footerContactInfo->mobile }}</span>
+            </a>
+            @endif
+            @if(isset($footerContactInfo) && $footerContactInfo->whatsapp)
+            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $footerContactInfo->whatsapp) }}" target="_blank" rel="noopener" class="topbar-whatsapp">
+                <i class="fab fa-whatsapp"></i>
+                <span>{{ __('lang.whatsapp') }}</span>
+            </a>
+            @endif
+            </div>
+
+            {{-- Links - Right Side --}}
             <div class="topbar-contact">
-                @if(isset($footerContactInfo) && $footerContactInfo->mobile)
-                <a href="tel:{{ $footerContactInfo->mobile }}" class="topbar-phone">
-                    <i class="fas fa-phone-alt"></i>
-                    <span>{{ $footerContactInfo->mobile }}</span>
-                </a>
-                @endif
-                @if(isset($footerContactInfo) && $footerContactInfo->whatsapp)
-                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $footerContactInfo->whatsapp) }}" target="_blank" rel="noopener" class="topbar-whatsapp">
-                    <i class="fab fa-whatsapp"></i>
-                    <span>{{ __('lang.whatsapp') }}</span>
-                </a>
-                @endif
-                
                 {{-- Quick Links --}}
                 <div class="topbar-links">
-                    <a href="{{ route('blogs.index') }}" class="topbar-link">
-                        <i class="fas fa-newspaper"></i>
-                        <span>{{ __('lang.news') }}</span>
-                    </a>
-                    <a href="{{ route('careers.index') }}" class="topbar-link">
-                        <i class="fas fa-briefcase"></i>
-                        <span>{{ __('lang.careers') }}</span>
-                    </a>
-                    <span class="topbar-divider" aria-hidden="true"></span>
                     @auth
                         @if(auth()->user()->isCustomer())
                         <a href="{{ route('account.dashboard') }}" class="topbar-link">
@@ -74,6 +69,7 @@
                             <i class="fas fa-sign-out-alt"></i>
                             <span>{{ __('lang.logout') }}</span>
                         </a>
+                        <span class="topbar-divider" aria-hidden="true"></span>
                         @endif
                     @else
                         <a href="{{ route('login') }}" class="topbar-link">
@@ -84,7 +80,16 @@
                             <i class="fas fa-user-plus"></i>
                             <span>{{ __('lang.register') }}</span>
                         </a>
+                        <span class="topbar-divider" aria-hidden="true"></span>
                     @endauth
+                    <a href="{{ route('blogs.index') }}" class="topbar-link">
+                        <i class="fas fa-newspaper"></i>
+                        <span>{{ __('lang.news') }}</span>
+                    </a>
+                    <a href="{{ route('careers.index') }}" class="topbar-link">
+                        <i class="fas fa-briefcase"></i>
+                        <span>{{ __('lang.careers') }}</span>
+                    </a>
                 </div>
             </div>
         </div>

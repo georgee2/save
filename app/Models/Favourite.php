@@ -8,6 +8,7 @@ class Favourite extends Model
 {
     protected $fillable = [
         'session_id',
+        'user_id',
         'item_type',
         'item_id',
         'emirate_id',
@@ -52,9 +53,22 @@ class Favourite extends Model
         return $this->belongsTo(Emirate::class);
     }
 
+    /**
+     * The customer account this favourite belongs to (null for pure guests).
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function scopeForSession($query, $sessionId)
     {
         return $query->where('session_id', $sessionId);
+    }
+
+    public function scopeForUser($query, $userId)
+    {
+        return $query->where('user_id', $userId);
     }
 
     public function scopeActive($query)
@@ -78,6 +92,15 @@ class Favourite extends Model
 
     public static function getSessionId()
     {
+        // Logged-in customers use their stable per-account token, so their
+        // favourites follow them across devices/sessions (not a per-browser
+        // cookie). We deliberately do NOT queue the plaintext cookie here.
+        $user = auth()->user();
+        if ($user && $user->isCustomer()) {
+            return $user->favouritesToken();
+        }
+
+        // Guests: persistent 30-day cookie (falls back to session, then a new UUID).
         $sessionId = request()->cookie('favourite_session_id');
 
         if (!$sessionId) {

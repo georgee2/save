@@ -7,6 +7,7 @@ use App\Http\Requests\Account\ChangePasswordRequest;
 use App\Http\Requests\Account\PreferencesRequest;
 use App\Http\Requests\Account\ProfileDetailsRequest;
 use App\Mail\CustomerEmailChangeMail;
+use App\Models\PageBanner;
 use App\Models\User;
 use App\Services\CustomerSync\CustomerSyncService;
 use Illuminate\Http\Request;
@@ -29,6 +30,7 @@ class ProfileSettingsController extends Controller
     {
         return view('pages.account.settings', [
             'user' => auth()->user(),
+            'pageBanner' => PageBanner::getByTarget('account'),
         ]);
     }
 

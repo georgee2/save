@@ -197,6 +197,10 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
+        // Drop the guest favourites cookie so the next visitor on a shared
+        // browser doesn't inherit the previous customer's wishlist.
+        \Illuminate\Support\Facades\Cookie::queue(\Illuminate\Support\Facades\Cookie::forget('favourite_session_id'));
+
         return redirect()->route('login')
             ->with('success', 'You have been logged out successfully.');
     }

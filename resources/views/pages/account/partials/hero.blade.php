@@ -1,7 +1,10 @@
 {{-- Account hero + breadcrumb.
      Expects: $title (string), $subtitle (string|null), $guest (bool|null - hide the authed "Account" crumb) --}}
-@php $guest = $guest ?? false; @endphp
-<section class="account-hero">
+@php
+    $guest = $guest ?? false;
+    $heroBanner = (($pageBanner ?? null) && $pageBanner->cover) ? asset($pageBanner->cover) : null;
+@endphp
+<section class="account-hero{{ $heroBanner ? ' account-hero--has-banner' : '' }}"@if($heroBanner) style="background-image: url('{{ $heroBanner }}'); background-size: cover; background-position: center;"@endif>
     <div class="container">
         <div class="text-center">
             <nav aria-label="breadcrumb">

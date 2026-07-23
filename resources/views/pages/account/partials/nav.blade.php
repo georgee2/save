@@ -17,6 +17,11 @@
             </a>
         </li>
         <li>
+            <a href="{{ route('account.favourites') }}" class="{{ request()->routeIs('account.favourites') ? 'is-active' : '' }}">
+                <i class="fas fa-heart"></i> {{ __('lang.account_favourites') }}
+            </a>
+        </li>
+        <li>
             <a href="{{ route('account.settings') }}" class="{{ request()->routeIs('account.settings') ? 'is-active' : '' }}">
                 <i class="fas fa-cog"></i> {{ __('lang.account_settings') }}
             </a>

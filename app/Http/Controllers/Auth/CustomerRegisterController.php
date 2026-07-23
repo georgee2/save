@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\PageBanner;
 use App\Models\User;
 use App\Rules\DisposableEmail;
 use App\Services\CustomerRegistrationService;
@@ -29,6 +30,7 @@ class CustomerRegisterController extends Controller
 
         return view('pages.account.auth.register', [
             'recaptchaEnabled' => $this->recaptcha->isEnabled(),
+            'pageBanner' => PageBanner::getByTarget('register'),
         ]);
     }
 
@@ -90,7 +92,9 @@ class CustomerRegisterController extends Controller
             return redirect()->route('account.dashboard');
         }
 
-        return view('pages.account.auth.resend-activation');
+        return view('pages.account.auth.resend-activation', [
+            'pageBanner' => PageBanner::getByTarget('register'),
+        ]);
     }
 
     /**

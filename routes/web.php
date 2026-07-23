@@ -28,6 +28,7 @@ use App\Http\Controllers\Auth\StaffPasswordController;
 use App\Http\Controllers\Account\DashboardController as AccountDashboardController;
 use App\Http\Controllers\Account\ProfileController as AccountProfileController;
 use App\Http\Controllers\Account\ProfileSettingsController as AccountSettingsController;
+use App\Http\Controllers\Account\FavouritesController as AccountFavouritesController;
 
 
 
@@ -82,6 +83,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 	Route::middleware(['auth', 'customer', 'cache.headers:no_store,no_cache,must_revalidate,max_age=0'])->prefix('account')->group(function () {
 		Route::get('/', [AccountDashboardController::class, 'index'])->name('account.dashboard');
 		Route::get('/profile', [AccountProfileController::class, 'show'])->name('account.profile');
+		Route::get('/favourites', [AccountFavouritesController::class, 'index'])->name('account.favourites');
 
 		Route::get('/settings', [AccountSettingsController::class, 'edit'])->name('account.settings');
 		Route::put('/settings/details', [AccountSettingsController::class, 'updateDetails'])->name('account.settings.details');

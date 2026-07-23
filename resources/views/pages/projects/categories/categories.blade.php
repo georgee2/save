@@ -5,6 +5,22 @@
 @section('content')
 
 
+@php $projBanner = (isset($pageBanner) && $pageBanner && $pageBanner->cover) ? asset($pageBanner->cover) : null; @endphp
+@if($projBanner)
+<section class="page-title shadow position-relative" style="background-image:url('{{ $projBanner }}');background-size:cover;background-position:center;min-height:220px;display:flex;align-items:center;">
+        <div style="position:absolute;inset:0;background:rgba(0,0,0,0.5);"></div>
+        <div class="container position-relative text-center" style="color:#fff;">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center" style="background:transparent;">
+              <li class="breadcrumb-item"><a href="{{ route('index') }}" style="color:#fff;opacity:.85;">{{ __('lang.home') }}</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('projects.index') }}" style="color:#fff;opacity:.85;">{{ __('lang.projects') }}</a></li>
+              <li class="breadcrumb-item active" aria-current="page" style="color:#fff;">{{ app()->getLocale() == 'ar' ? $category->title_arabic : $category->title_english }}</li>
+            </ol>
+            <h1 class="fs-30 lh-1 mb-0 font-weight-600" style="color:#fff;">{{ app()->getLocale() == 'ar' ? $category->title_arabic : $category->title_english }}</h1>
+          </nav>
+        </div>
+      </section>
+@else
 <section class="pb-8 page-title shadow">
         <div class="container">
           <nav aria-label="breadcrumb">
@@ -17,6 +33,7 @@
           </nav>
         </div>
       </section>
+@endif
 
       {{-- Subcategory Filter Slider --}}
       @if(isset($subcategoriesWithCount) && $subcategoriesWithCount->count() > 0)

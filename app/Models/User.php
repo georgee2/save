@@ -41,6 +41,7 @@ class User extends Authenticatable
         'pending_email',
         'pending_email_token',
         'notification_prefs',
+        'favourites_token',
     ];
 
     /**
@@ -99,6 +100,29 @@ class User extends Authenticatable
     public function isCustomer(): bool
     {
         return $this->account_type === 'customer';
+    }
+
+    /**
+     * The customer's favourites (the account-linked wishlist).
+     */
+    public function favourites()
+    {
+        return $this->hasMany(Favourite::class, 'user_id');
+    }
+
+    /**
+     * The customer's canonical favourites list id — a stable random UUID that
+     * becomes their `favourites.session_id` across devices (and share token).
+     * Generated + persisted lazily on first use.
+     */
+    public function favouritesToken(): string
+    {
+        if (empty($this->favourites_token)) {
+            $this->favourites_token = (string) \Illuminate\Support\Str::uuid();
+            $this->save();
+        }
+
+        return $this->favourites_token;
     }
 
     /**

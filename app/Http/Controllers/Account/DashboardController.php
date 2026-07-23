@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller;
+use App\Models\PageBanner;
 
 class DashboardController extends Controller
 {
@@ -13,6 +14,7 @@ class DashboardController extends Controller
     {
         return view('pages.account.dashboard', [
             'user' => auth()->user(),
+            'pageBanner' => PageBanner::getByTarget('account'),
         ]);
     }
 }
