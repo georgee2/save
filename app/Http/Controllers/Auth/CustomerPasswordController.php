@@ -45,6 +45,21 @@ class CustomerPasswordController extends Controller
             'password.regex' => __('lang.account_password_english_only'),
         ]);
 
+        // This endpoint falls back to the default broker below, which reads the same
+        // password_reset_tokens table staff resets use. Without an account-type check a
+        // staff/admin reset token could be redeemed here and then session-logged-in at the
+        // bottom of this method, bypassing LoginController entirely (no rate limiting, no
+        // reCAPTCHA step-up, no audit log). StaffPasswordController applies the mirror guard.
+        //
+        // isCustomer() is a strict comparison and fails closed; isStaff() treats a NULL
+        // account_type as staff, so !isStaff() would be the wrong test here.
+        $email = Str::lower(trim($request->email));
+        $user = User::where('email', $email)->first();
+
+        if (! $user || ! $user->isCustomer() || ! $user->is_active) {
+            return $this->invalidLink($request);
+        }
+
         $credentials = $request->only('email', 'password', 'password_confirmation', 'token');
 
         $callback = function (User $user, string $password) {
@@ -52,7 +67,6 @@ class CustomerPasswordController extends Controller
                 'password' => Hash::make($password),
                 'password_set_at' => now(),
                 'email_verified_at' => $user->email_verified_at ?? now(),
-                'is_active' => true,
                 'remember_token' => Str::random(60),
             ])->save();
 
@@ -69,21 +83,31 @@ class CustomerPasswordController extends Controller
         }
 
         if ($status !== Password::PASSWORD_RESET) {
-            return back()
-                ->withInput($request->only('email'))
-                ->withErrors(['email' => __($status)]);
+            return $this->invalidLink($request);
         }
 
-        // Log the customer in immediately after activation.
-        $user = User::where('email', Str::lower(trim($request->email)))->first();
-        if ($user) {
-            Auth::login($user);
-        }
+        // Log the customer in immediately after activation. Safe: the guard above already
+        // established this address belongs to an active customer account.
+        Auth::login($user->refresh());
 
         $message = app()->getLocale() === 'ar'
             ? 'تم تفعيل حسابك بنجاح.'
             : 'Your account has been activated successfully.';
 
         return redirect()->route('account.dashboard')->with('success', $message);
+    }
+
+    /**
+     * One response for every failure mode.
+     *
+     * Returning the broker status verbatim distinguished "we can't find a user with that
+     * email" (passwords.user) from "this token is invalid" (passwords.token), which turned
+     * this unauthenticated endpoint into an account-existence oracle.
+     */
+    private function invalidLink(Request $request)
+    {
+        return back()
+            ->withInput($request->only('email'))
+            ->withErrors(['email' => __('lang.account_reset_link_invalid')]);
     }
 }

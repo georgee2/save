@@ -575,6 +575,7 @@ return [
     'account_forgot_subtitle' => 'Enter your email and we will send you a reset link.',
     'account_send_reset_link' => 'Send reset link',
     'account_reset_link_sent' => 'If an account exists for that email, a password reset link has been sent.',
+    'account_reset_link_invalid' => 'This link is invalid or has expired. Please request a new one.',
     'account_back_to_login' => 'Back to login',
     'account_register_title' => 'Create your account',
     'account_register_subtitle' => 'Register to follow your projects and stay updated.',
