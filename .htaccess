@@ -1,6 +1,17 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    
+
+    # ============================================
+    # SECURITY: Block double-extension PHP execution
+    # ============================================
+    # mod_mime's AddHandler (see the cPanel-generated block at the bottom of this file)
+    # assigns a handler from ANY extension in a filename, not just the last one, so an
+    # uploaded file called "cv.php.pdf" would be executed as PHP. Refuse to serve any path
+    # carrying a PHP extension that is not the final one. This must stay above the
+    # front-controller rewrite below, which ends rule processing with [L].
+    RewriteCond %{REQUEST_URI} \.(php|php8|phtml)\. [NC]
+    RewriteRule ^ - [F,L]
+
     # ============================================
     # SECURITY: Block cPanel access
     # ============================================

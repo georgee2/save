@@ -285,7 +285,11 @@ class CheckRoutePermission
         'job-posting.delete' => 'job-postings-delete',
         'job-posting.trashed' => 'job-postings-view',
         'job-posting.restore' => 'job-postings-restore',
-        
+
+        // Job Applications
+        'crm-job-applications.index' => 'job-applications-view',
+        'crm-job-applications.download' => 'job-applications-view',
+
         // FAQs
         'faq.index' => 'services-view',
         'faq.create' => 'services-create',

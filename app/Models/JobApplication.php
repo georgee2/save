@@ -10,7 +10,17 @@ class JobApplication extends Model
     use HasFactory;
 
     protected $table = 'job_applications';
-    protected $guarded = [];
+
+    protected $fillable = [
+        'job_id',
+        'applicant_name',
+        'email',
+        'phone',
+        'resume',
+        'resume_original_name',
+        'cover_letter',
+        'status',
+    ];
 
     /**
      * Relationship: JobApplication belongs to JobsPosting

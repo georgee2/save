@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\CRM\App\Http\Controllers\CRMController;
 use Modules\CRM\App\Http\Controllers\JobsPostingController;
+use Modules\CRM\App\Http\Controllers\JobApplicationController;
 use Modules\CRM\App\Http\Controllers\FavouritesController;
 use Modules\CRM\App\Http\Controllers\CustomersController;
 use Modules\CRM\App\Http\Controllers\AgentController;
@@ -40,6 +41,12 @@ Route::group(
                 Route::post('/delete/{id}', [JobsPostingController::class, 'destroy'])->name('jobs-posting.delete');
                 Route::get('/trashed', [JobsPostingController::class, 'trashed'])->name('jobs-posting.trashed');
                 Route::post('/restore/{id}', [JobsPostingController::class, 'restore'])->name('jobs-posting.restore');
+            });
+
+            // Job Applications Routes (CVs live on the private disk; download is the only read path)
+            Route::prefix('job-applications')->group(function () {
+                Route::get('/index', [JobApplicationController::class, 'index'])->name('crm-job-applications.index');
+                Route::get('/download/{id}', [JobApplicationController::class, 'download'])->name('crm-job-applications.download');
             });
 
 

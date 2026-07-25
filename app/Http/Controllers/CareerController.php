@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Str;
 
 class CareerController extends Controller
 {
@@ -121,15 +122,21 @@ class CareerController extends Controller
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:50',
             'resume' => 'required|file|mimes:pdf,doc,docx|max:5120', // 5MB max
-            'cover_letter' => 'nullable|string',
+            'cover_letter' => 'nullable|string|max:5000',
         ]);
-        
-        // Handle resume upload
+
+        // Store the CV on the private `local` disk, never the public one: these files carry
+        // applicant PII and anything under storage/app/public is web-reachable via the
+        // public/storage symlink. The name is generated server-side from a MIME-derived
+        // extension so a client filename like "cv.php.pdf" cannot survive into the path.
         if ($request->hasFile('resume')) {
             $resumeFile = $request->file('resume');
-            $resumeName = time() . '_' . $resumeFile->getClientOriginalName();
-            $resumePath = $resumeFile->storeAs('uploads/resumes', $resumeName, 'public');
-            $data['resume'] = '/' . $resumePath;
+            $data['resume'] = $resumeFile->storeAs(
+                'resumes',
+                Str::uuid() . '.' . $resumeFile->extension(),
+                'local'
+            );
+            $data['resume_original_name'] = $resumeFile->getClientOriginalName();
         }
         
         // Add job_id and default status

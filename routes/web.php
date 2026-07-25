@@ -182,7 +182,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 	Route::prefix('careers')->name('careers.')->group(function () {
 		Route::get('/', [CareerController::class, 'index'])->name('index');
 		Route::get('/{id}', [CareerController::class, 'show'])->name('show');
-		Route::post('/{id}/apply', [CareerController::class, 'apply'])->name('apply');
+		Route::post('/{id}/apply', [CareerController::class, 'apply'])->name('apply')->middleware('throttle:5,1');
 	});
 
 	// Interior Design Gallery Routes
