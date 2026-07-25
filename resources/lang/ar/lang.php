@@ -575,6 +575,7 @@ return [
     'account_forgot_subtitle' => 'أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين.',
     'account_send_reset_link' => 'إرسال رابط إعادة التعيين',
     'account_reset_link_sent' => 'إذا كان هناك حساب بهذا البريد، فقد تم إرسال رابط إعادة تعيين كلمة المرور.',
+    'account_reset_link_invalid' => 'هذا الرابط غير صالح أو منتهي الصلاحية. يرجى طلب رابط جديد.',
     'account_back_to_login' => 'العودة لتسجيل الدخول',
     'account_register_title' => 'إنشاء حساب',
     'account_register_subtitle' => 'سجّل لمتابعة مشاريعك والبقاء على اطلاع.',
