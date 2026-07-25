@@ -9,6 +9,8 @@ use App\Rules\DisposableEmail;
 use App\Services\CustomerRegistrationService;
 use App\Services\RecaptchaService;
 use App\Support\FormGuard;
+use App\Support\RecaptchaFallbackLimiter;
+use App\Support\RecaptchaOutcome;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -53,8 +55,17 @@ class CustomerRegisterController extends Controller
 
         // Layer 3: reCAPTCHA v3 (only enforced when keys are configured). Guards
         // against using registration to email-bomb arbitrary third parties.
-        if ($this->recaptcha->isEnabled()
-            && !$this->recaptcha->verify($request->input('g-recaptcha-response'), $request->ip())) {
+        $outcome = $this->recaptcha->check($request->input('g-recaptcha-response'), 'register', $request->ip());
+
+        // Could not reach Google: let the submission through rather than blocking signups
+        // during an outage, but hold this IP to a much stricter budget than the route
+        // throttle so the fail-open path is not itself a free bypass.
+        if ($outcome === RecaptchaOutcome::Unavailable
+            && RecaptchaFallbackLimiter::exceeded($request, 'register')) {
+            $outcome = RecaptchaOutcome::Failed;
+        }
+
+        if ($outcome === RecaptchaOutcome::Failed) {
             $message = app()->getLocale() === 'ar'
                 ? 'فشل التحقق من أنك لست روبوت. يرجى المحاولة مرة أخرى.'
                 : 'Spam verification failed. Please try again.';

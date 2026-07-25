@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Services\RecaptchaService;
+use App\Support\RecaptchaOutcome;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
 
@@ -107,18 +109,30 @@ class LoginController extends Controller
         // frictionless; automated retries get challenged. Only when reCAPTCHA is
         // configured (skipped locally / when keys are absent).
         if ($this->recaptcha->isEnabled()
-            && RateLimiter::attempts($throttleKey) >= $this->captchaThreshold
-            && !$this->recaptcha->verify(
+            && RateLimiter::attempts($throttleKey) >= $this->captchaThreshold) {
+            $outcome = $this->recaptcha->check(
                 $request->input('g-recaptcha-response'),
+                'login',
                 $request->ip(),
                 (float) config('services.recaptcha.login_min_score', 0.3)
-            )) {
-            RateLimiter::hit($throttleKey, $this->decaySeconds);
-            RateLimiter::hit($ipThrottleKey, $this->ipDecaySeconds);
+            );
 
-            throw ValidationException::withMessages([
-                'email' => ['Additional verification failed. Please try again.'],
-            ]);
+            if ($outcome === RecaptchaOutcome::Failed) {
+                RateLimiter::hit($throttleKey, $this->decaySeconds);
+                RateLimiter::hit($ipThrottleKey, $this->ipDecaySeconds);
+
+                throw ValidationException::withMessages([
+                    'email' => ['Additional verification failed. Please try again.'],
+                ]);
+            }
+
+            // Unavailable falls through to normal auth rather than into the strict
+            // fallback limiter the anonymous forms use. Locking staff out of the CMS
+            // because Google is unreachable would be a self-inflicted outage, and the
+            // two limiters above already bound this endpoint.
+            if ($outcome === RecaptchaOutcome::Unavailable) {
+                Log::error('Login step-up reCAPTCHA unavailable; allowing the attempt through.');
+            }
         }
 
         // Attempt authentication. Use a single generic message whether the email

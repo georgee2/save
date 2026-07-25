@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Models\ContactInformation;
 use App\Models\ContactUs;
 use App\Models\Service;
 use App\Models\PageBanner;
+use App\Services\RecaptchaService;
 use App\Support\FormGuard;
+use App\Support\RecaptchaFallbackLimiter;
+use App\Support\RecaptchaOutcome;
 use App\Models\Partner;
 use App\Models\AboutInformation;
 use App\Models\ContactPageSection;
@@ -18,6 +20,10 @@ use App\Mail\ContactConfirmationMail;
 
 class ContactController extends Controller
 {
+    public function __construct(protected RecaptchaService $recaptcha)
+    {
+    }
+
     /**
      * Display the contact page.
      */
@@ -55,19 +61,33 @@ class ContactController extends Controller
             return $this->staleForm($request);
         }
 
-        // Layer 3: reCAPTCHA v3 verification (only if keys are configured)
-        $recaptchaSecret = config('services.recaptcha.secret_key');
-        if ($recaptchaSecret && $request->filled('g-recaptcha-response')) {
-            if (!$this->verifyRecaptcha($request->input('g-recaptcha-response'), $recaptchaSecret)) {
-                $errorMessage = app()->getLocale() == 'en'
-                    ? 'Spam verification failed. Please try again.'
-                    : 'فشل التحقق من البريد العشوائي. يرجى المحاولة مرة أخرى.';
+        // Layer 3: reCAPTCHA v3. This used to run only when the request happened to carry
+        // a token, so omitting the field skipped verification entirely; the token is now
+        // always assessed. Both the contact page and the home inline form post here, hence
+        // two acceptable actions.
+        $outcome = $this->recaptcha->check(
+            $request->input('g-recaptcha-response'),
+            ['contact_form', 'home_contact'],
+            $request->ip()
+        );
 
-                if ($request->ajax() || $request->wantsJson()) {
-                    return response()->json(['success' => false, 'message' => $errorMessage], 422);
-                }
-                return back()->withErrors(['recaptcha' => $errorMessage])->withInput();
+        // Could not reach Google: accept the message rather than dropping leads during an
+        // outage, but hold this IP to a much stricter budget so failing verification is
+        // not itself a bypass.
+        if ($outcome === RecaptchaOutcome::Unavailable
+            && RecaptchaFallbackLimiter::exceeded($request, 'contact')) {
+            $outcome = RecaptchaOutcome::Failed;
+        }
+
+        if ($outcome === RecaptchaOutcome::Failed) {
+            $errorMessage = app()->getLocale() == 'en'
+                ? 'Spam verification failed. Please try again.'
+                : 'فشل التحقق من البريد العشوائي. يرجى المحاولة مرة أخرى.';
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $errorMessage], 422);
             }
+            return back()->withErrors(['recaptcha' => $errorMessage])->withInput();
         }
 
         // Layer 4: Standard validation + content filtering
@@ -175,25 +195,6 @@ class ContactController extends Controller
             );
         } catch (\Exception $e) {
             Log::warning('Contact confirmation email failed: ' . $e->getMessage());
-        }
-    }
-
-    private function verifyRecaptcha(string $token, string $secret): bool
-    {
-        try {
-            $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-                'secret' => $secret,
-                'response' => $token,
-                'remoteip' => request()->ip(),
-            ]);
-
-            $data = $response->json();
-            $minScore = config('services.recaptcha.min_score', 0.5);
-
-            return ($data['success'] ?? false) && ($data['score'] ?? 0) >= $minScore;
-        } catch (\Exception $e) {
-            Log::warning('reCAPTCHA verification failed: ' . $e->getMessage());
-            return true;
         }
     }
 }
