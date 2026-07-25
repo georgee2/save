@@ -155,9 +155,11 @@ class CareerController extends Controller
             $data['resume_original_name'] = $resumeFile->getClientOriginalName();
         }
         
-        // Add job_id and default status
+        // Add job_id, default status, and attribution so abuse is traceable
         $data['job_id'] = $id;
         $data['status'] = 'Received';
+        $data['ip_address'] = $request->ip();
+        $data['user_agent'] = Str::limit((string) $request->userAgent(), 250, '');
         
         // Create application
         JobApplication::create($data);

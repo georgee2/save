@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use App\Rules\DisposableEmail;
 use App\Models\ContactInformation;
 use App\Models\ContactUs;
 use App\Models\Service;
@@ -94,8 +97,10 @@ class ContactController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'subject' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'nullable|string|max:255',
+            // Matches the auth flows, which already use this combination. DisposableEmail
+            // existed but had never been applied to the form spammers actually target.
+            'email' => ['required', 'email:rfc,dns', 'max:255', new DisposableEmail()],
+            'phone' => ['nullable', 'string', 'max:30', 'regex:/^[0-9+\-\s()]+$/'],
             'message' => ['required', 'string', 'max:5000', function ($attr, $value, $fail) {
                 $spamPatterns = [
                     '/\[url[=\]]/i',
@@ -115,8 +120,19 @@ class ContactController extends Controller
                 }
             }],
             'service_id' => 'nullable|exists:services,id',
-            'source' => 'nullable|string|max:50',
+            // Client-controlled and now persisted and shown in the CRM, so it is pinned to
+            // the values our own forms post rather than accepting free text.
+            'source' => 'nullable|in:home_inline,contact_page',
         ]);
+
+        // Drop repeat submissions of the same message. Fingerprinted in the cache rather
+        // than queried from the database because `message` is a TEXT column and MySQL
+        // cannot index it without a prefix length. Cache::add is atomic on the file driver
+        // when given a TTL, so two concurrent posts cannot both win.
+        $fingerprint = 'contact-dup:' . sha1(Str::lower($request->email) . '|' . $request->message);
+        if (!Cache::add($fingerprint, true, 600)) {
+            return $this->fakeSuccess($request);
+        }
 
         ContactUs::create([
             'name' => $request->name,
@@ -125,6 +141,9 @@ class ContactController extends Controller
             'phone' => $request->phone,
             'message' => $request->message,
             'service_id' => $request->service_id,
+            'ip_address' => $request->ip(),
+            'user_agent' => Str::limit((string) $request->userAgent(), 250, ''),
+            'source' => $request->input('source', 'contact_page'),
             'status' => 'Pending',
         ]);
 
@@ -174,6 +193,13 @@ class ContactController extends Controller
 
     private function sendConfirmationEmail(string $email, ?string $name): void
     {
+        // One auto-reply per address per 10 minutes. This endpoint is unauthenticated and
+        // mails whatever address is typed in, so without a per-address cap it is a way to
+        // point our SMTP relay at someone else's inbox.
+        if (!Cache::add('contact-confirm:' . Str::lower($email), true, 600)) {
+            return;
+        }
+
         try {
             $contactInfo = ContactInformation::getContactInfo();
 
@@ -190,9 +216,18 @@ class ContactController extends Controller
 
             $branches = Partner::getBranches();
 
-            Mail::to($email)->send(
-                new ContactConfirmationMail($name ?? '', $contactInfo, $branches, $emailBody)
-            );
+            // Send after the response is flushed so a slow SMTP round-trip never holds the
+            // submitter's request open. Matches CustomerRegistrationService::sendInvite;
+            // afterResponse rather than ->queue() because there is no queue worker.
+            dispatch(function () use ($email, $name, $contactInfo, $branches, $emailBody) {
+                try {
+                    Mail::to($email)->send(
+                        new ContactConfirmationMail($name ?? '', $contactInfo, $branches, $emailBody)
+                    );
+                } catch (\Throwable $e) {
+                    Log::warning('Contact confirmation email failed: ' . $e->getMessage());
+                }
+            })->afterResponse();
         } catch (\Exception $e) {
             Log::warning('Contact confirmation email failed: ' . $e->getMessage());
         }
