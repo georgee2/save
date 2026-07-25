@@ -78,6 +78,14 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
+        // Pin the host used by route()/url() to the configured app URL. Without this the
+        // generator derives the root from the request's Host header, so an attacker who
+        // reaches the app with a spoofed Host can poison the links in password-reset and
+        // account-activation emails and capture the victim's token.
+        if ($root = config('app.url')) {
+            URL::forceRootUrl($root);
+        }
+
         // Register Header Composer for all views
         view()->composer('*', \App\Http\View\Composers\HeaderComposer::class);
 
