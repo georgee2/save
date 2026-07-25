@@ -164,9 +164,26 @@
                     </div>
                     @endif
 
+                    {{-- Errors not tied to a single field (the per-field @error blocks below
+                         cannot render these, so without this they would vanish silently). --}}
+                    @if($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fal fa-exclamation-circle mr-2"></i>
+                        <ul class="mb-0 pl-3">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    @endif
+
                     <form action="{{ route('careers.apply', $job->id) }}" method="POST" enctype="multipart/form-data" class="application-form" id="applicationForm">
                         @csrf
-                        
+                        @include('includes.form-guard')
+
                         <div class="form-group">
                             <label for="applicant_name">
                                 <i class="fal fa-user"></i>

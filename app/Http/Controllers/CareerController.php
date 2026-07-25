@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
+use App\Support\FormGuard;
 
 class CareerController extends Controller
 {
@@ -99,6 +100,21 @@ class CareerController extends Controller
      */
     public function apply(Request $request, $id)
     {
+        // Honeypot + signed time-trap. A bot signal gets the same success message a real
+        // application would, so it learns nothing; a stale page gets a visible message.
+        // Errors go through session flash, not withErrors, because this page renders
+        // per-field @error blocks only and would swallow a bag-level message.
+        if ($reason = FormGuard::tripped($request)) {
+            if ($reason->isBot()) {
+                return back()->with('success', App::getLocale() == 'en'
+                    ? 'Your application has been submitted successfully! We will contact you soon.'
+                    : 'تم تقديم طلبك بنجاح! سنتواصل معك قريباً.');
+            }
+
+            // The redirect drops the uploaded file, so the message says to re-attach it.
+            return back()->withInput()->with('error', __('lang.form_expired_with_file'));
+        }
+
         $today = Carbon::today();
         
         // Verify job exists and is accepting applications

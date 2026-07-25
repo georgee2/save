@@ -10,6 +10,7 @@ use App\Models\ContactInformation;
 use App\Models\ContactUs;
 use App\Models\Service;
 use App\Models\PageBanner;
+use App\Support\FormGuard;
 use App\Models\Partner;
 use App\Models\AboutInformation;
 use App\Models\ContactPageSection;
@@ -43,15 +44,15 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        // Layer 1: Honeypot — bots fill hidden fields, real users don't
-        if ($request->filled('website_url')) {
-            return $this->fakeSuccess($request);
-        }
+        // Layers 1 & 2: honeypot + signed time-trap. Bot signals get the same success
+        // response a real submission would, so the bot cannot tune around the trap; a
+        // stale page instead gets a visible prompt to refresh.
+        if ($reason = FormGuard::tripped($request)) {
+            if ($reason->isBot()) {
+                return $this->fakeSuccess($request);
+            }
 
-        // Layer 2: Time-based check — reject if form submitted in under 3 seconds
-        $formLoaded = (int) $request->input('_form_loaded', 0);
-        if ($formLoaded > 0 && (time() - $formLoaded) < 3) {
-            return $this->fakeSuccess($request);
+            return $this->staleForm($request);
         }
 
         // Layer 3: reCAPTCHA v3 verification (only if keys are configured)
@@ -133,6 +134,22 @@ class ContactController extends Controller
             return response()->json(['success' => true, 'message' => $msg]);
         }
         return back()->with('success', $msg);
+    }
+
+    /**
+     * The signed form timestamp was missing, forged, or expired. Shown to the user rather
+     * than faked as a success: this is usually a real person whose page sat open, and
+     * silently discarding their message would be worse than asking them to resend.
+     */
+    private function staleForm(Request $request)
+    {
+        $msg = __('lang.form_expired');
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['success' => false, 'message' => $msg], 422);
+        }
+
+        return back()->withInput()->withErrors(['_form_ts' => $msg]);
     }
 
     private function sendConfirmationEmail(string $email, ?string $name): void
