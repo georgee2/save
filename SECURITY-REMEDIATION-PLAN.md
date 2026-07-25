@@ -286,7 +286,7 @@ Visitors fill in name, email, phone, and tour date believing they submitted a re
 - [ ] Add `throttle:30,1` (CSRF-exempt, anonymous, unthrottled DB-write amplifier; no bot filtering, unlike `TrackPageView`).
 - [ ] Clamp `time_on_page` — currently unbounded `(int)`, so `2147483647` corrupts every engagement metric the CRM dashboard computes.
 - [ ] Merge the two separate `update()` calls (lines 224 and 228) into one.
-- [ ] **Move the closure into a controller** — closures cannot be serialized, so this route currently breaks `php artisan route:cache` entirely.
+- [ ] **Move the closure into a controller** for testability. (Corrected: this does *not* break `php artisan route:cache` — Laravel 9+ ships `laravel/serializable-closure`, and caching was verified working on this codebase.)
 
 ### 5.3 — Minor hardening
 
@@ -351,7 +351,7 @@ Worth preserving through the refactor — these are above average for a marketin
 | 4.1 | Stored XSS via `map_url` on public contact page | Medium | `branches.blade.php:80` |
 | 4.2 | No CSP, no HSTS, `SESSION_SECURE_COOKIE` unset | Medium | `.htaccess:154-172` |
 | 5.1 | Project/offer inquiry forms discard user data | Medium | `offers/show.blade.php:668` |
-| 5.2 | Analytics heartbeat unthrottled; breaks route caching | Medium | `routes/web.php:215-232` |
+| 5.2 | Analytics heartbeat unthrottled + unbounded `time_on_page` | Medium | `routes/web.php:215-232` |
 | 3.5 | `/api/user` returns whole model, no ability gate | Medium | `routes/api.php:20-22` |
 | 5.3 | Assorted minor hardening | Low | various |
 
