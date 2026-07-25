@@ -307,20 +307,20 @@ Visitors fill in name, email, phone, and tour date believing they submitted a re
 - [ ] If wiring: add `@csrf`, the honeypot + signed time-trap pair, a hidden `subject`, and rename fields to match the controller (`name`/`email`/`subject`, not `info_name`/`info_email`).
 - [ ] Remove the hardcoded placeholder agent identities and photos shipping to production (`project.blade.php:524-565` — "Oliver Beddows", `images/agent-2.jpg`, "March 17, 2020").
 
-### 5.2 — Analytics heartbeat
+### 5.2 — Analytics heartbeat — DONE (Phase 2 branch)
 
-**Location:** `routes/web.php:215-232`
+**Location:** now `app/Http/Controllers/AnalyticsHeartbeatController.php`
 
-- [ ] Add `throttle:30,1` (CSRF-exempt, anonymous, unthrottled DB-write amplifier; no bot filtering, unlike `TrackPageView`).
-- [ ] Clamp `time_on_page` — currently unbounded `(int)`, so `2147483647` corrupts every engagement metric the CRM dashboard computes.
-- [ ] Merge the two separate `update()` calls (lines 224 and 228) into one.
-- [ ] **Move the closure into a controller** for testability. (Corrected: this does *not* break `php artisan route:cache` — Laravel 9+ ships `laravel/serializable-closure`, and caching was verified working on this codebase.)
+- [x] Rate limited — but keyed on the `svec_vid` cookie, **not** `throttle:30,1` as originally written. The beacon fires every 30s per open tab, so an IP-keyed limit would throttle a whole office behind one NAT, and `sendBeacon` is fire-and-forget so the 429 would never surface on the client.
+- [x] `time_on_page` clamped to 0–3600.
+- [x] The two `update()` calls merged into one, preserving the write-once guard on `page_title`.
+- [x] Closure moved into a controller for testability. (Corrected: this did *not* break `php artisan route:cache` — Laravel 9+ ships `laravel/serializable-closure`, and caching was verified working before and after.)
 
 ### 5.3 — Minor hardening
 
 - [ ] Cap `limit` on `GET /search/live` (`GlobalSearchController.php:30`) — `?limit=999999` drives two full scans plus a `usort`. Not injectable, but a cheap CPU amplifier: `min((int) $request->get('limit', 5), 20)`.
 - [ ] Validate `item_id` with `exists:` per `item_type` in `FavouriteController::toggle` — currently `integer` only, so non-existent IDs create rows that pollute the CRM leads grid.
-- [ ] Replace `$guarded = []` with explicit `$fillable` on `app/Models/ContactUs.php:13` and `app/Models/JobApplication.php:13`.
+- [x] Replace `$guarded = []` with explicit `$fillable` on `app/Models/ContactUs.php:13` and `app/Models/JobApplication.php:13`. **Done** (Phase 2 branch).
 - [ ] Escape LIKE wildcards in CRM filters (`Modules/CRM/App/Http/Controllers/ContactUsController.php:27,31,35`) — bound, so not injection, but `%` dumps everything.
 - [ ] Whitelist MIME types and cap array size on CRM reply attachments (`ContactUsController.php:225` — any type, 10 MB, unlimited count); wrap the send in `try/finally` so temp files are cleaned on exception.
 - [ ] Tighten `link_urls.*` to `url:http,https` (`ContactUsController.php:226`) — `filter_var` accepts `javascript://`.
