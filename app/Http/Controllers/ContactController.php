@@ -97,9 +97,12 @@ class ContactController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'subject' => 'required|string|max:255',
-            // Matches the auth flows, which already use this combination. DisposableEmail
-            // existed but had never been applied to the form spammers actually target.
-            'email' => ['required', 'email:rfc,dns', 'max:255', new DisposableEmail()],
+            // DisposableEmail existed but had never been applied to the form spammers
+            // actually target. Deliberately `rfc` and not `rfc,dns` unlike the auth flows:
+            // `dns` performs a blocking MX lookup with no timeout, and this is the highest
+            // volume public POST on the site. A bad domain here only means the auto-reply
+            // bounces, whereas a slow resolver would cost us a real lead.
+            'email' => ['required', 'email:rfc', 'max:255', new DisposableEmail()],
             'phone' => ['nullable', 'string', 'max:30', 'regex:/^[0-9+\-\s()]+$/'],
             'message' => ['required', 'string', 'max:5000', function ($attr, $value, $fail) {
                 $spamPatterns = [

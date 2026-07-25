@@ -140,7 +140,35 @@ Two defects chain into unauthenticated admin takeover.
 
 ---
 
-## Phase 2 — High: spam and bot defenses (next sprint)
+## Phase 2 — High: spam and bot defenses — DONE
+
+Delivered on `fix/form-guard-and-captcha-hardening`. All of 2.1–2.4 is implemented, plus
+5.2 and the two `$fillable` items from 5.3. Deviations from the plan as originally written,
+and why:
+
+- **`->queue()` was not used for mail.** This project has no queue at all: `QUEUE_CONNECTION=sync`,
+  no `jobs` table, no worker, no cron. Mail now uses `dispatch(closure)->afterResponse()`,
+  matching `CustomerRegistrationService::sendInvite`.
+- **Dedupe lives in the cache, not the database.** `contact_us.message` is a `text` column
+  and MySQL will not index it without a prefix length, so the planned index was impossible.
+  `Cache::add()` is atomic on the file driver when given a TTL.
+- **`email:rfc,dns` was NOT applied to the contact form** (only `rfc`). `dns` performs a
+  blocking MX lookup with no timeout, and this is the highest-volume public POST on the
+  site; a bad domain there only bounces the auto-reply, whereas a slow resolver costs a
+  real lead. The auth flows keep `dns`.
+- **Login is exempt from the reCAPTCHA fallback throttle.** reCAPTCHA there is a step-up
+  after 3 failures; locking staff out of the CMS because Google is unreachable would be a
+  self-inflicted outage. Login already has two limiters.
+- **The heartbeat limiter is keyed on the `svec_vid` cookie, not the IP.** The beacon fires
+  every 30s per tab, so an IP key would throttle a whole office behind one NAT — and
+  `sendBeacon` is fire-and-forget, so the 429 would be invisible.
+- **No HTTP retry on siteverify.** We fail open on `Unavailable` anyway, so a retry would
+  only double the worst-case wait on a public form.
+
+Note for future work: `Application::terminate()` does not clear terminating callbacks, so in
+a feature test that issues several requests the first `afterResponse` mail re-fires on every
+later request. That is a harness artifact — production gets a fresh app per request — but it
+makes `Mail::assertSentCount` unreliable across multiple requests in one test.
 
 ### 2.1 — Contact form: both bot layers are opt-in for the attacker
 

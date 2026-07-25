@@ -61,8 +61,9 @@ class RecaptchaService
         }
 
         try {
+            // Timeout but no retry: we fail open on Unavailable anyway, so a second attempt
+            // would only double the worst-case wait a visitor sits through on a public form.
             $response = Http::timeout(3)
-                ->retry(1, 200, throw: false)
                 ->asForm()
                 ->post('https://www.google.com/recaptcha/api/siteverify', [
                     'secret' => $secret,
