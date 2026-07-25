@@ -28,6 +28,15 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
+        // Analytics heartbeat. Keyed on the visitor cookie rather than the IP: the beacon
+        // fires every 30 seconds per open tab, so an IP-keyed limit would throttle a whole
+        // office behind one NAT and silently lose their analytics — sendBeacon is
+        // fire-and-forget, so nothing would surface the 429. Falls back to the IP only for
+        // requests with no cookie, which the endpoint rejects anyway.
+        RateLimiter::for('heartbeat', function (Request $request) {
+            return Limit::perMinute(30)->by($request->cookie('svec_vid') ?: $request->ip());
+        });
+
         $this->routes(function () {
             Route::middleware('api')
                 ->prefix('api')
