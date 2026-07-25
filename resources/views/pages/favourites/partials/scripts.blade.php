@@ -245,16 +245,32 @@ document.addEventListener('DOMContentLoaded', function() {
                         alert(isAr ? 'تم إرسال المفضلة إلى بريدك الإلكتروني.' : 'Your favourites have been sent to your email.');
                     }
                 } else {
+                    // Distinguish the rate limit from a genuine failure, and surface the
+                    // server's own message (e.g. "No favourites to send") when it sends one.
+                    var isThrottled = xhr.status === 429;
+                    var serverMessage = '';
+                    try {
+                        serverMessage = (JSON.parse(xhr.responseText) || {}).message || '';
+                    } catch (e) {}
+
+                    var failTitle = isThrottled
+                        ? (isAr ? 'طلبات كثيرة جداً' : 'Too Many Requests')
+                        : (isAr ? 'فشل الإرسال' : 'Failed to Send');
+
+                    var failText = isThrottled
+                        ? (isAr ? 'لقد أرسلت عدة رسائل مؤخراً. يرجى المحاولة بعد قليل.' : 'You have sent several emails recently. Please try again later.')
+                        : (serverMessage || (isAr ? 'حدث خطأ أثناء إرسال البريد الإلكتروني. حاول مرة أخرى.' : 'Something went wrong while sending the email. Please try again.'));
+
                     if (typeof Swal !== 'undefined') {
                         Swal.fire({
-                            icon: 'error',
-                            title: isAr ? 'فشل الإرسال' : 'Failed to Send',
-                            text: isAr ? 'حدث خطأ أثناء إرسال البريد الإلكتروني. حاول مرة أخرى.' : 'Something went wrong while sending the email. Please try again.',
+                            icon: isThrottled ? 'warning' : 'error',
+                            title: failTitle,
+                            text: failText,
                             confirmButtonColor: '#e1273d',
                             confirmButtonText: isAr ? 'حسناً' : 'OK',
                         });
                     } else {
-                        alert(isAr ? 'فشل في إرسال البريد الإلكتروني' : 'Failed to send email. Please try again.');
+                        alert(failText);
                     }
                 }
             };

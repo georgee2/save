@@ -145,11 +145,6 @@ class FavouriteController extends Controller
 
         $sessionId = Favourite::getSessionId();
 
-        Favourite::forSession($sessionId)->active()->update(array_filter([
-            'email' => $request->input('email'),
-            'name' => $request->input('name'),
-        ]));
-
         $favourites = Favourite::forSession($sessionId)
             ->active()
             ->orderBy('created_at', 'desc')
@@ -158,6 +153,14 @@ class FavouriteController extends Controller
         if ($favourites->isEmpty()) {
             return response()->json(['success' => false, 'message' => 'No favourites to send.'], 422);
         }
+
+        // Stamp the requester's details only once we know this session actually owns rows.
+        // These columns are what the CRM surfaces as the lead identity, so writing them
+        // before the check let a caller overwrite a lead record without holding any items.
+        Favourite::forSession($sessionId)->active()->update(array_filter([
+            'email' => $request->input('email'),
+            'name' => $request->input('name'),
+        ]));
 
         $grouped = $this->groupFavourites($favourites);
         $shareUrl = route('favourites.shared', ['token' => $sessionId]);

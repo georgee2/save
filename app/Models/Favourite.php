@@ -101,10 +101,14 @@ class Favourite extends Model
         }
 
         // Guests: persistent 30-day cookie (falls back to session, then a new UUID).
-        $sessionId = request()->cookie('favourite_session_id');
+        // The cookie is encrypted, so a tampered value fails to decrypt and arrives as null.
+        // The shape check is a second line of defence: this value is written straight into
+        // users.favourites_token by FavouriteMergeService when a guest logs in, so anything
+        // that is not a UUID we generated is discarded rather than adopted.
+        $sessionId = static::sanitiseSessionId(request()->cookie('favourite_session_id'));
 
         if (!$sessionId) {
-            $sessionId = session('favourite_session_id');
+            $sessionId = static::sanitiseSessionId(session('favourite_session_id'));
         }
 
         if (!$sessionId) {
@@ -115,6 +119,18 @@ class Favourite extends Model
         cookie()->queue('favourite_session_id', $sessionId, 60 * 24 * 30);
 
         return $sessionId;
+    }
+
+    /**
+     * Accept a session id only if it looks like a UUID we minted.
+     */
+    protected static function sanitiseSessionId($value): ?string
+    {
+        if (!is_string($value) || !\Illuminate\Support\Str::isUuid($value)) {
+            return null;
+        }
+
+        return $value;
     }
 
     public static function countForSession($sessionId)

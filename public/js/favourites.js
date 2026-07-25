@@ -141,6 +141,8 @@
                 }
             } else {
                 if (icon) icon.className = origClass;
+                // Without this a rate-limited toggle silently reverts and looks broken.
+                if (xhr.status === 429) showToast('throttled');
             }
         };
 
@@ -172,13 +174,22 @@
     function showToast(action) {
         if (typeof Swal === 'undefined') return;
         var isAr = document.documentElement.getAttribute('lang') === 'ar';
-        var msg = action === 'added'
-            ? (isAr ? 'تمت الإضافة إلى المفضلة' : 'Added to Favourites')
-            : (isAr ? 'تمت الإزالة من المفضلة' : 'Removed from Favourites');
+        var msg;
+        var icon;
+        if (action === 'added') {
+            msg = isAr ? 'تمت الإضافة إلى المفضلة' : 'Added to Favourites';
+            icon = 'success';
+        } else if (action === 'throttled') {
+            msg = isAr ? 'طلبات كثيرة. يرجى الانتظار قليلاً.' : 'Too many requests. Please wait a moment.';
+            icon = 'warning';
+        } else {
+            msg = isAr ? 'تمت الإزالة من المفضلة' : 'Removed from Favourites';
+            icon = 'info';
+        }
         Swal.fire({
             toast: true,
             position: isAr ? 'bottom-left' : 'bottom-right',
-            icon: action === 'added' ? 'success' : 'info',
+            icon: icon,
             title: msg,
             showConfirmButton: false,
             timer: 2000,
