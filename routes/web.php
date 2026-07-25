@@ -198,11 +198,13 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 	// Favourites
 	Route::prefix('favourites')->group(function () {
 		Route::get('/', [FavouriteController::class, 'index'])->name('favourites.index');
-		Route::post('/toggle', [FavouriteController::class, 'toggle'])->name('favourites.toggle');
+		Route::post('/toggle', [FavouriteController::class, 'toggle'])->name('favourites.toggle')->middleware('throttle:60,1');
 		Route::delete('/clear/all', [FavouriteController::class, 'clear'])->name('favourites.clear');
 		Route::get('/count', [FavouriteController::class, 'count'])->name('favourites.count');
 		Route::get('/shared/{token}', [FavouriteController::class, 'shared'])->name('favourites.shared');
-		Route::post('/send-email', [FavouriteController::class, 'sendEmail'])->name('favourites.sendEmail');
+		// Sends branded mail from our own SMTP relay to a caller-supplied address, so this
+		// is kept deliberately tight - it was an unauthenticated open relay before.
+		Route::post('/send-email', [FavouriteController::class, 'sendEmail'])->name('favourites.sendEmail')->middleware('throttle:3,60');
 		Route::delete('/{id}', [FavouriteController::class, 'remove'])->name('favourites.remove');
 	});
 
