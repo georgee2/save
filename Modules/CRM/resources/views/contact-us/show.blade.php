@@ -424,6 +424,36 @@
                                     @endif
                                 </div>
                             </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Submitted From</div>
+                                <div class="detail-value">
+                                    @if($contact->source)
+                                        <span class="badge badge-secondary" style="font-size:13px;">{{ $contact->source }}</span>
+                                    @else
+                                        <span class="text-muted">&mdash;</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">IP Address</div>
+                                <div class="detail-value">
+                                    @if($contact->ip_address)
+                                        <code>{{ $contact->ip_address }}</code>
+                                    @else
+                                        <span class="text-muted">Not recorded</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">User Agent</div>
+                                <div class="detail-value">
+                                    @if($contact->user_agent)
+                                        <small class="text-muted">{{ $contact->user_agent }}</small>
+                                    @else
+                                        <span class="text-muted">Not recorded</span>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
                     </div>
 

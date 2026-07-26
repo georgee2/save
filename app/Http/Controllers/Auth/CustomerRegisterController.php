@@ -8,6 +8,9 @@ use App\Models\User;
 use App\Rules\DisposableEmail;
 use App\Services\CustomerRegistrationService;
 use App\Services\RecaptchaService;
+use App\Support\FormGuard;
+use App\Support\RecaptchaFallbackLimiter;
+use App\Support\RecaptchaOutcome;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -39,21 +42,30 @@ class CustomerRegisterController extends Controller
      */
     public function register(Request $request)
     {
-        // Layer 1: Honeypot - bots fill hidden fields, real users do not.
-        if ($request->filled('website_url')) {
-            return $this->done($request);
-        }
+        // Layers 1 & 2: honeypot + signed time-trap. Bot signals get the uniform success
+        // response; a stale page gets a visible prompt to refresh so a real user does not
+        // silently lose their submission.
+        if ($reason = FormGuard::tripped($request)) {
+            if ($reason->isBot()) {
+                return $this->done($request);
+            }
 
-        // Layer 2: Time-based check - reject submissions faster than 3 seconds.
-        $formLoaded = (int) $request->input('_form_loaded', 0);
-        if ($formLoaded > 0 && (time() - $formLoaded) < 3) {
-            return $this->done($request);
+            return $this->staleForm($request);
         }
 
         // Layer 3: reCAPTCHA v3 (only enforced when keys are configured). Guards
         // against using registration to email-bomb arbitrary third parties.
-        if ($this->recaptcha->isEnabled()
-            && !$this->recaptcha->verify($request->input('g-recaptcha-response'), $request->ip())) {
+        $outcome = $this->recaptcha->check($request->input('g-recaptcha-response'), 'register', $request->ip());
+
+        // Could not reach Google: let the submission through rather than blocking signups
+        // during an outage, but hold this IP to a much stricter budget than the route
+        // throttle so the fail-open path is not itself a free bypass.
+        if ($outcome === RecaptchaOutcome::Unavailable
+            && RecaptchaFallbackLimiter::exceeded($request, 'register')) {
+            $outcome = RecaptchaOutcome::Failed;
+        }
+
+        if ($outcome === RecaptchaOutcome::Failed) {
             $message = app()->getLocale() === 'ar'
                 ? 'فشل التحقق من أنك لست روبوت. يرجى المحاولة مرة أخرى.'
                 : 'Spam verification failed. Please try again.';
@@ -102,14 +114,14 @@ class CustomerRegisterController extends Controller
      */
     public function resendActivation(Request $request)
     {
-        // Honeypot + time-trap (mirrors registration): short-circuit bots to the
+        // Honeypot + signed time-trap (mirrors registration): short-circuit bots to the
         // uniform response without revealing anything or sending mail.
-        if ($request->filled('website_url')) {
-            return back()->with('success', __('lang.account_activation_resent'));
-        }
-        $formLoaded = (int) $request->input('_form_loaded', 0);
-        if ($formLoaded > 0 && (time() - $formLoaded) < 3) {
-            return back()->with('success', __('lang.account_activation_resent'));
+        if ($reason = FormGuard::tripped($request)) {
+            if ($reason->isBot()) {
+                return back()->with('success', __('lang.account_activation_resent'));
+            }
+
+            return $this->staleForm($request);
         }
 
         $request->validate([
@@ -141,5 +153,21 @@ class CustomerRegisterController extends Controller
         }
 
         return redirect()->route('login')->with('success', $message);
+    }
+
+    /**
+     * The signed form timestamp was missing, forged, or expired. Unlike the bot paths this
+     * is visible: it is usually a real person on a page that sat open, and a silent success
+     * would let them believe the submission went through.
+     */
+    private function staleForm(Request $request)
+    {
+        $message = __('lang.form_expired');
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['success' => false, 'message' => $message], 422);
+        }
+
+        return back()->withInput()->withErrors(['email' => $message]);
     }
 }

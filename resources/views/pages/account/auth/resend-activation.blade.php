@@ -23,13 +23,7 @@
 
                 <form method="POST" action="{{ route('account.activation.resend') }}" class="account-form">
                     @csrf
-                    <input type="hidden" name="_form_loaded" value="{{ time() }}">
-                    {{-- Honeypot: hidden from real users --}}
-                    <div style="position:absolute;left:-9999px;opacity:0;height:0;width:0;overflow:hidden;" aria-hidden="true">
-                        <label>Do not fill this field
-                            <input type="text" name="website_url" tabindex="-1" autocomplete="off">
-                        </label>
-                    </div>
+                    @include('includes.form-guard')
                     <div class="form-group">
                         <label for="email">{{ __('lang.account_email') }}</label>
                         <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required autofocus>

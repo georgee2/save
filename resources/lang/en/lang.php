@@ -576,6 +576,8 @@ return [
     'account_send_reset_link' => 'Send reset link',
     'account_reset_link_sent' => 'If an account exists for that email, a password reset link has been sent.',
     'account_reset_link_invalid' => 'This link is invalid or has expired. Please request a new one.',
+    'form_expired' => 'This page was open too long and your submission could not be verified. Please refresh the page and send it again.',
+    'form_expired_with_file' => 'This page was open too long and your application could not be verified. Please refresh the page, re-attach your CV and submit again.',
     'account_back_to_login' => 'Back to login',
     'account_register_title' => 'Create your account',
     'account_register_subtitle' => 'Register to follow your projects and stay updated.',

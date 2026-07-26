@@ -3,6 +3,7 @@
 namespace Tests\Feature\Security;
 
 use App\Models\JobApplication;
+use App\Support\FormGuard;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -76,6 +77,8 @@ class ResumeUploadTest extends TestCase
     private function applyWith(int $jobId, UploadedFile $resume)
     {
         return $this->post(route('careers.apply', $jobId), [
+            // Aged past FormGuard::MIN_SECONDS so the submission reads as human.
+            FormGuard::TIMESTAMP => FormGuard::signature(time() - 10),
             'applicant_name' => 'Sara Ahmed',
             'email' => 'sara@example.com',
             'phone' => '+971500000000',
@@ -147,6 +150,7 @@ class ResumeUploadTest extends TestCase
         $jobId = $this->makeOpenJob();
 
         $this->post(route('careers.apply', $jobId), [
+            FormGuard::TIMESTAMP => FormGuard::signature(time() - 10),
             'applicant_name' => 'Sara Ahmed',
             'email' => 'sara@example.com',
             'phone' => '+971500000000',

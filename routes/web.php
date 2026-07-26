@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AnalyticsHeartbeatController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ServiceController;
@@ -199,13 +200,13 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 	Route::prefix('favourites')->group(function () {
 		Route::get('/', [FavouriteController::class, 'index'])->name('favourites.index');
 		Route::post('/toggle', [FavouriteController::class, 'toggle'])->name('favourites.toggle')->middleware('throttle:60,1');
-		Route::delete('/clear/all', [FavouriteController::class, 'clear'])->name('favourites.clear');
+		Route::delete('/clear/all', [FavouriteController::class, 'clear'])->name('favourites.clear')->middleware('throttle:30,1');
 		Route::get('/count', [FavouriteController::class, 'count'])->name('favourites.count');
 		Route::get('/shared/{token}', [FavouriteController::class, 'shared'])->name('favourites.shared');
 		// Sends branded mail from our own SMTP relay to a caller-supplied address, so this
 		// is kept deliberately tight - it was an unauthenticated open relay before.
 		Route::post('/send-email', [FavouriteController::class, 'sendEmail'])->name('favourites.sendEmail')->middleware('throttle:3,60');
-		Route::delete('/{id}', [FavouriteController::class, 'remove'])->name('favourites.remove');
+		Route::delete('/{id}', [FavouriteController::class, 'remove'])->name('favourites.remove')->middleware('throttle:30,1');
 	});
 
 });
@@ -214,24 +215,9 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // Analytics heartbeat (CSRF-exempt, outside localization)
-Route::post('/analytics/heartbeat', function (\Illuminate\Http\Request $request) {
-    $visitorId = $request->cookie('svec_vid');
-    if (!$visitorId) return response()->json(['ok' => false], 200);
-
-    $pageView = \App\Models\Analytics\AnalyticsPageView::where('visitor_id', $visitorId)
-        ->orderBy('viewed_at', 'desc')
-        ->first();
-
-    if ($pageView && $request->input('time_on_page')) {
-        $pageView->update(['time_on_page' => (int) $request->input('time_on_page')]);
-    }
-
-    if ($request->input('title') && $pageView && !$pageView->page_title) {
-        $pageView->update(['page_title' => substr($request->input('title'), 0, 500)]);
-    }
-
-    return response()->json(['ok' => true], 200);
-})->name('analytics.heartbeat');
+Route::post('/analytics/heartbeat', AnalyticsHeartbeatController::class)
+    ->name('analytics.heartbeat')
+    ->middleware('throttle:heartbeat');
 
 // ============================================
 // FALLBACK: Catch all undefined routes - return 404

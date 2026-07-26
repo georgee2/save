@@ -22,16 +22,10 @@
 
                 <form method="POST" action="{{ route('account.register.submit') }}" class="account-form" id="registerForm">
                     @csrf
-                    <input type="hidden" name="_form_loaded" value="{{ time() }}">
+                    @include('includes.form-guard')
                     @if(!empty($recaptchaEnabled))
                         <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
                     @endif
-                    {{-- Honeypot: hidden from real users --}}
-                    <div style="position:absolute;left:-9999px;opacity:0;height:0;width:0;overflow:hidden;" aria-hidden="true">
-                        <label>Do not fill this field
-                            <input type="text" name="website_url" tabindex="-1" autocomplete="off">
-                        </label>
-                    </div>
 
                     <div class="form-group">
                         <label for="name">{{ __('lang.account_full_name') }}</label>

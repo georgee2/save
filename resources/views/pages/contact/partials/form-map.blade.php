@@ -38,10 +38,7 @@
                     
                     <form action="{{ route('contact.store') }}" method="POST" class="contact-form" id="contactForm">
                         @csrf
-                        <input type="hidden" name="_form_loaded" value="{{ time() }}">
-                        <div style="position:absolute;left:-9999px;opacity:0;height:0;width:0;overflow:hidden;" aria-hidden="true">
-                            <input type="text" name="website_url" tabindex="-1" autocomplete="off" value="">
-                        </div>
+                        @include('includes.form-guard')
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">

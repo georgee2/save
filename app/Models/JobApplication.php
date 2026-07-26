@@ -19,6 +19,8 @@ class JobApplication extends Model
         'resume',
         'resume_original_name',
         'cover_letter',
+        'ip_address',
+        'user_agent',
         'status',
     ];
 
