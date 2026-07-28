@@ -14,6 +14,11 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('favourites:clean-expired')->daily();
         $schedule->command('emails:clean-temp-attachments')->daily();
+
+        // Sanctum tokens now expire; this clears the dead rows out of
+        // personal_access_tokens so the table does not grow without bound.
+        // Requires `schedule:run` to be on cron - see the deployment notes.
+        $schedule->command('sanctum:prune-expired --hours=24')->daily();
     }
 
     /**

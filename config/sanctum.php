@@ -46,7 +46,9 @@ return [
     |
     */
 
-    'expiration' => null,
+    // Tokens used to live forever, so a stolen one outlived any password change. 30 days
+    // by default; `sanctum:prune-expired` is scheduled in app/Console/Kernel.php.
+    'expiration' => env('SANCTUM_EXPIRATION', 43200),
 
     /*
     |--------------------------------------------------------------------------
