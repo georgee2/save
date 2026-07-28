@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Rules\DisposableEmail;
+use App\Services\ActivityLogService;
 use App\Services\CustomerRegistrationService;
+use App\Support\LoginThrottle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -59,8 +62,9 @@ class CustomerAuthController extends Controller
 
         $email = Str::lower(trim($request->email));
 
-        // Per-email throttle (route throttle is IP-only): cap failed logins per
-        // account to slow credential-stuffing that rotates IPs.
+        // Narrow per-email+IP throttle. The comment here used to claim this capped failures
+        // per account, but the key contains the IP, so rotating addresses reset it - the
+        // account-wide ceiling below is what actually does that.
         $throttleKey = 'api-login:' . $email . '|' . $request->ip();
         if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
             throw ValidationException::withMessages([
@@ -70,8 +74,27 @@ class CustomerAuthController extends Controller
 
         $user = User::where('email', $email)->first();
 
+        // Shared with the web login, so an attacker cannot spend the web budget and then
+        // start again on the API against the same account.
+        if (LoginThrottle::locked($email, $user)) {
+            throw ValidationException::withMessages([
+                'email' => ['Too many login attempts. Please try again later.'],
+            ])->status(429);
+        }
+
         if (!$user || !Hash::check($request->password, $user->password)) {
             RateLimiter::hit($throttleKey, 60);
+            LoginThrottle::recordFailure($email, $user);
+
+            try {
+                ActivityLogService::logAuth('failed_login', $user, [
+                    'email' => $email,
+                    'reason' => $user ? 'bad_password' : 'unknown_email',
+                    'channel' => 'api',
+                ]);
+            } catch (\Throwable $e) {
+                Log::warning('Failed-login audit entry could not be written: ' . $e->getMessage());
+            }
 
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
@@ -92,6 +115,7 @@ class CustomerAuthController extends Controller
         }
 
         RateLimiter::clear($throttleKey);
+        LoginThrottle::clear($email, $user);
 
         $token = $user->createToken(
             $request->input('device_name', 'mobile-app'),

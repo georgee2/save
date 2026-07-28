@@ -597,6 +597,7 @@ return [
     'account_activation_resent' => 'If an account exists for that email, an activation link has been sent.',
     'email_invite_subject' => 'Activate your account - SVEC',
     'email_reset_subject' => 'Reset your password - SVEC',
+    'email_account_locked_subject' => 'Your account has been temporarily locked - SVEC',
     'email_change_subject' => 'Confirm your new email address - SVEC',
 
     // Staff self-service account / password reset (CMS)
