@@ -85,13 +85,16 @@ class ProfileSettingsController extends Controller
     {
         $user = $request->user();
 
-        // logoutOtherDevices hashes and saves the password itself, so it replaces the
-        // Hash::make write that used to be here rather than following it - doing both
-        // would persist a different hash than the one it records in the session, and the
-        // user would be logged out of this device on their next request.
-        Auth::logoutOtherDevices($request->password);
+        $user->password = Hash::make($request->password);
+        $user->password_set_at = now();
+        $user->save();
 
-        $user->forceFill(['password_set_at' => now()])->save();
+        // Must come AFTER the save: logoutOtherDevices verifies the password it is given
+        // against the stored hash and throws if it does not match, so it takes the NEW
+        // password once that password is the current one. It then re-hashes and updates
+        // the hash AuthenticateSession keeps per session, which is what invalidates every
+        // other device while leaving this one signed in.
+        Auth::logoutOtherDevices($request->password);
 
         // Revokes outstanding reset and invitation links, every API token, and the
         // remember-me cookie. Previously none of that happened, so a user changing their
