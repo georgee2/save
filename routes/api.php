@@ -17,8 +17,20 @@ use App\Http\Controllers\Api\ErpWebhookController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Returns an explicit field list, not the model. It used to return $request->user()
+// wholesale, which serialised pending_email_token, favourites_token, the ERP ids and the
+// assigned agent — and it was the only Sanctum route with no ability gate, so a token
+// deliberately scoped to read-only still saw everything.
+Route::middleware(['auth:sanctum', 'ability:customer:read'])->get('/user', function (Request $request) {
+    $user = $request->user();
+
+    return response()->json([
+        'id' => $user->id,
+        'name' => $user->name,
+        'email' => $user->email,
+        'phone' => $user->phone,
+        'preferred_locale' => $user->preferred_locale,
+    ]);
 });
 
 // Mobile app - customer authentication

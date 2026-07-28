@@ -46,6 +46,7 @@ class ActivityLog extends Model
     const ACTION_BULK_DELETE = 'bulk_delete';
     const ACTION_LOGIN = 'login';
     const ACTION_LOGOUT = 'logout';
+    const ACTION_FAILED_LOGIN = 'failed_login';
 
     /**
      * Get the user that performed the action
@@ -72,6 +73,7 @@ class ActivityLog extends Model
             self::ACTION_BULK_DELETE => ['label' => 'Bulk Deleted', 'color' => 'danger', 'icon' => 'fa-trash-alt'],
             self::ACTION_LOGIN => ['label' => 'Logged In', 'color' => 'primary', 'icon' => 'fa-sign-in-alt'],
             self::ACTION_LOGOUT => ['label' => 'Logged Out', 'color' => 'secondary', 'icon' => 'fa-sign-out-alt'],
+            self::ACTION_FAILED_LOGIN => ['label' => 'Failed Login', 'color' => 'danger', 'icon' => 'fa-exclamation-triangle'],
         ];
 
         return $labels[$this->action] ?? ['label' => ucfirst($this->action), 'color' => 'secondary', 'icon' => 'fa-circle'];

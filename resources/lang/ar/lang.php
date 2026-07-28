@@ -597,6 +597,7 @@ return [
     'account_activation_resent' => 'إذا كان هناك حساب بهذا البريد، فقد تم إرسال رابط التفعيل.',
     'email_invite_subject' => 'تفعيل حسابك - SVEC',
     'email_reset_subject' => 'إعادة تعيين كلمة المرور - SVEC',
+    'email_account_locked_subject' => 'تم قفل حسابك مؤقتاً - SVEC',
     'email_change_subject' => 'تأكيد بريدك الإلكتروني الجديد - SVEC',
 
     // إعادة تعيين كلمة المرور الذاتية للموظفين (لوحة التحكم)

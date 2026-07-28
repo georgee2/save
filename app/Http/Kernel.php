@@ -34,6 +34,12 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
+            // Binds each session to the password hash it was created under, so changing a
+            // password logs out every other device. Without this in the stack
+            // Auth::logoutOtherDevices() is a silent no-op. It self-heals for sessions that
+            // predate it (it stores the hash rather than logging the user out), so enabling
+            // it does not sign existing users out.
+            \Illuminate\Session\Middleware\AuthenticateSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,

@@ -42,6 +42,7 @@ class User extends Authenticatable
         'pending_email_token',
         'notification_prefs',
         'favourites_token',
+        'locked_until',
     ];
 
     /**
@@ -52,6 +53,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        // Both are bearer-equivalent: pending_email_token completes an email change and
+        // favourites_token is the favourites authorization key.
+        'pending_email_token',
+        'favourites_token',
     ];
 
     /**
@@ -67,7 +72,16 @@ class User extends Authenticatable
         'password_set_at' => 'datetime',
         'synced_at' => 'datetime',
         'notification_prefs' => 'array',
+        'locked_until' => 'datetime',
     ];
+
+    /**
+     * Whether a brute-force lockout is currently in force.
+     */
+    public function isLockedOut(): bool
+    {
+        return $this->locked_until !== null && $this->locked_until->isFuture();
+    }
 
     /**
      * Get the roles for the user

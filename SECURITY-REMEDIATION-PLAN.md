@@ -237,6 +237,26 @@ Four public endpoints currently have none:
 
 ## Phase 3 — Authentication hardening
 
+> **3.1, 3.3 and 3.5 are DONE** on `fix/auth-bruteforce-and-revocation` (Phase 3A).
+> 3.2 (enumeration oracles) and 3.4 (activation / email-change flows) remain — that is Phase 3B.
+>
+> Corrections found while implementing, worth knowing before touching this area again:
+>
+> - **`Auth::logoutOtherDevices()` must be called AFTER saving the new password, not
+>   instead of saving it.** It verifies the password you hand it against the stored hash and
+>   throws `InvalidArgumentException` if they differ, so calling it in place of the
+>   `Hash::make` write produced a 500. It then re-hashes and updates the per-session hash.
+> - It is a **silent no-op** unless `AuthenticateSession` is in the middleware stack. The
+>   alias existed in `Kernel.php` but was applied to zero routes, so any call would have
+>   done nothing. It is now in the `web` group; it self-heals for pre-existing sessions,
+>   so enabling it does not sign current users out.
+> - A `PasswordReset` listener alone does **not** cover the self-service change-password
+>   flows — they never fired the event. They now do.
+> - There is no `sessions` table, so sessions cannot be enumerated or deleted directly;
+>   `logoutOtherDevices` is the only mechanism available.
+> - `ValidationException->status(429)` only applies to JSON callers. A browser form post
+>   gets a 302 with a session error, which is what tests must assert.
+
 ### 3.1 — Brute force: no per-account ceiling
 
 **Location:** `LoginController.php:213,221`, `Api/CustomerAuthController.php:64`, `routes/web.php:61`

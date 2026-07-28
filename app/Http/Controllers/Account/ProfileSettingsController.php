@@ -10,7 +10,9 @@ use App\Mail\CustomerEmailChangeMail;
 use App\Models\PageBanner;
 use App\Models\User;
 use App\Services\CustomerSync\CustomerSyncService;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -82,9 +84,22 @@ class ProfileSettingsController extends Controller
     public function updatePassword(ChangePasswordRequest $request)
     {
         $user = $request->user();
+
         $user->password = Hash::make($request->password);
         $user->password_set_at = now();
         $user->save();
+
+        // Must come AFTER the save: logoutOtherDevices verifies the password it is given
+        // against the stored hash and throws if it does not match, so it takes the NEW
+        // password once that password is the current one. It then re-hashes and updates
+        // the hash AuthenticateSession keeps per session, which is what invalidates every
+        // other device while leaving this one signed in.
+        Auth::logoutOtherDevices($request->password);
+
+        // Revokes outstanding reset and invitation links, every API token, and the
+        // remember-me cookie. Previously none of that happened, so a user changing their
+        // password after a compromise did not actually evict the attacker.
+        event(new PasswordReset($user));
 
         return redirect()->route('account.settings')->with('success', __('lang.account_password_updated'));
     }

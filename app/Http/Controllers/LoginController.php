@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Services\RecaptchaService;
+use App\Support\LoginThrottle;
 use App\Support\RecaptchaOutcome;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -104,6 +106,26 @@ class LoginController extends Controller
             ])->status(429);
         }
 
+        // Per-account ceiling. Both keys above contain the IP, so an attacker rotating
+        // addresses got the full budget again from every one of them and a single account
+        // had no aggregate cap at all. This one is keyed on the email alone.
+        //
+        // Looked up before authenticating so a durable lockout can be honoured, but the
+        // response below is the same message the per-IP caps use, and the limiter is hit
+        // for unknown addresses too, so this reveals nothing about whether an account exists.
+        $email = strtolower(trim((string) $request->input('email')));
+        $user = User::where('email', $email)->first();
+
+        if (LoginThrottle::locked($email, $user)) {
+            $seconds = LoginThrottle::availableIn($email, $user);
+
+            throw ValidationException::withMessages([
+                'email' => [
+                    "Too many login attempts. Please try again in {$seconds} seconds."
+                ],
+            ])->status(429);
+        }
+
         // Step-up CAPTCHA: once an email+IP pair has failed repeatedly, require a
         // valid reCAPTCHA before attempting auth. Legitimate first attempts stay
         // frictionless; automated retries get challenged. Only when reCAPTCHA is
@@ -143,6 +165,19 @@ class LoginController extends Controller
         if (!Auth::attempt($credentials, $remember)) {
             RateLimiter::hit($throttleKey, $this->decaySeconds);
             RateLimiter::hit($ipThrottleKey, $this->ipDecaySeconds);
+            LoginThrottle::recordFailure($email, $user);
+
+            // The 'failed_login' action has existed in ActivityLogService since the audit
+            // log was built but was never called, so a brute-force attempt left no trace.
+            // $user is null for an unknown address, hence the email in the metadata.
+            try {
+                \App\Services\ActivityLogService::logAuth('failed_login', $user, [
+                    'email' => $email,
+                    'reason' => $user ? 'bad_password' : 'unknown_email',
+                ]);
+            } catch (\Throwable $e) {
+                Log::warning('Failed-login audit entry could not be written: ' . $e->getMessage());
+            }
 
             throw ValidationException::withMessages([
                 'email' => ['These credentials do not match our records.'],
@@ -151,8 +186,12 @@ class LoginController extends Controller
 
         // Credentials are valid; only now is it safe to reveal a deactivated state
         // (the user has proven ownership of the account).
-        if (Auth::user()->is_active === false) {
+        if (!Auth::user()->is_active) {
+            // Auth::attempt already migrated the session and may have issued a remember
+            // cookie, so tear both down rather than just clearing the user.
             Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
 
             throw ValidationException::withMessages([
                 'email' => ['Your account has been deactivated. Please contact support.'],
@@ -162,6 +201,7 @@ class LoginController extends Controller
         // Clear rate limiters on successful login
         RateLimiter::clear($throttleKey);
         RateLimiter::clear($ipThrottleKey);
+        LoginThrottle::clear($email, Auth::user());
 
         // Regenerate session for security
         $request->session()->regenerate();
