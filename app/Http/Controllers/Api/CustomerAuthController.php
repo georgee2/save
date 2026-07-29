@@ -8,6 +8,7 @@ use App\Rules\DisposableEmail;
 use App\Services\ActivityLogService;
 use App\Services\CustomerRegistrationService;
 use App\Support\LoginThrottle;
+use App\Support\TimingGuard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -80,6 +81,13 @@ class CustomerAuthController extends Controller
             throw ValidationException::withMessages([
                 'email' => ['Too many login attempts. Please try again later.'],
             ])->status(429);
+        }
+
+        // PHP short-circuits the || below, so an unknown address never reaches Hash::check
+        // and answers about one bcrypt faster than a real one - enough to enumerate users
+        // despite the identical message.
+        if ($user === null) {
+            TimingGuard::burnPasswordHash();
         }
 
         if (!$user || !Hash::check($request->password, $user->password)) {
