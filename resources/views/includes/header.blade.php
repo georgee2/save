@@ -335,7 +335,7 @@
             <a href="{{ route('account.dashboard') }}" class="mobile-auth-btn mobile-auth-btn-primary">
                 <i class="fal fa-user-circle"></i> {{ __('lang.account') }}
             </a>
-            <a href="{{ route('logout') }}" class="mobile-auth-btn mobile-auth-btn-outline">
+            <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();" class="mobile-auth-btn mobile-auth-btn-outline">
                 <i class="fal fa-sign-out-alt"></i> {{ __('lang.logout') }}
             </a>
             @endif

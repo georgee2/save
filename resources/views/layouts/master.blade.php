@@ -232,6 +232,9 @@
 
     <body>
       @include('includes.preloader')
+      @auth
+        @include('includes.logout-form')
+      @endauth
       @include('includes.topbar')
       @include('includes.header')
 

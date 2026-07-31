@@ -60,7 +60,9 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 
 	Route::get('/login', [LoginController::class, 'login'])->name('login')->middleware('cache.headers:no_store,no_cache,must_revalidate,max_age=0');
 	Route::post('/checkuser', [LoginController::class, 'checkuser'])->name('checkuser')->middleware('throttle:30,1');
-	Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+	// POST, not GET: as a GET this was CSRF-able, so any third-party page could sign a
+	// visitor out (and clear their guest favourites) with an <img src> tag.
+	Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 	// Customer registration + account activation (front-end portal)
 	Route::get('/register', [CustomerRegisterController::class, 'showForm'])->name('account.register')->middleware('cache.headers:no_store,no_cache,must_revalidate,max_age=0');
@@ -87,8 +89,9 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 		Route::get('/favourites', [AccountFavouritesController::class, 'index'])->name('account.favourites');
 
 		Route::get('/settings', [AccountSettingsController::class, 'edit'])->name('account.settings');
-		Route::put('/settings/details', [AccountSettingsController::class, 'updateDetails'])->name('account.settings.details');
-		Route::put('/settings/password', [AccountSettingsController::class, 'updatePassword'])->name('account.settings.password');
+		// Both send mail to an address the caller supplies or controls, so both are capped.
+		Route::put('/settings/details', [AccountSettingsController::class, 'updateDetails'])->name('account.settings.details')->middleware('throttle:5,1');
+		Route::put('/settings/password', [AccountSettingsController::class, 'updatePassword'])->name('account.settings.password')->middleware('throttle:5,1');
 		Route::put('/settings/preferences', [AccountSettingsController::class, 'updatePreferences'])->name('account.settings.preferences');
 
 		Route::get('/email/verify/{token}', [AccountSettingsController::class, 'verifyNewEmail'])
