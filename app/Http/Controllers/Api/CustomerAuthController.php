@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Rules\DisposableEmail;
 use App\Services\ActivityLogService;
 use App\Services\CustomerRegistrationService;
+use App\Support\EmailRules;
 use App\Support\LoginThrottle;
 use App\Support\TimingGuard;
 use Illuminate\Http\Request;
@@ -26,7 +27,7 @@ class CustomerAuthController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => ['required', 'email:rfc,dns', 'max:255', new DisposableEmail()],
+            'email' => ['required', EmailRules::format(), 'max:255', new DisposableEmail()],
             'phone' => 'nullable|string|max:30',
             'consent' => 'accepted',
             'preferred_locale' => 'sometimes|in:en,ar',

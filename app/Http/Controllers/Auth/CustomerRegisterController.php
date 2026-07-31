@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Rules\DisposableEmail;
 use App\Services\CustomerRegistrationService;
 use App\Services\RecaptchaService;
+use App\Support\EmailRules;
 use App\Support\FormGuard;
 use App\Support\RecaptchaFallbackLimiter;
 use App\Support\RecaptchaOutcome;
@@ -79,7 +80,7 @@ class CustomerRegisterController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => ['required', 'email:rfc,dns', 'max:255', new DisposableEmail()],
+            'email' => ['required', EmailRules::format(), 'max:255', new DisposableEmail()],
             'phone' => 'nullable|string|max:30',
             'consent' => 'accepted',
         ]);
@@ -125,7 +126,7 @@ class CustomerRegisterController extends Controller
         }
 
         $request->validate([
-            'email' => ['required', 'email:rfc,dns', new DisposableEmail()],
+            'email' => ['required', EmailRules::format(), new DisposableEmail()],
         ]);
 
         $email = Str::lower(trim($request->email));

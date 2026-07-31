@@ -7,6 +7,7 @@ use App\Mail\CustomerPasswordResetMail;
 use App\Models\PageBanner;
 use App\Models\User;
 use App\Rules\DisposableEmail;
+use App\Support\EmailRules;
 use App\Support\FormGuard;
 use App\Support\TimingGuard;
 use Illuminate\Http\Request;
@@ -49,7 +50,7 @@ class CustomerForgotPasswordController extends Controller
         }
 
         $request->validate([
-            'email' => ['required', 'email:rfc,dns', new DisposableEmail()],
+            'email' => ['required', EmailRules::format(), new DisposableEmail()],
         ]);
 
         $email = Str::lower(trim($request->email));

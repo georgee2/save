@@ -237,8 +237,14 @@ Four public endpoints currently have none:
 
 ## Phase 3 — Authentication hardening
 
-> **3.1, 3.3 and 3.5 are DONE** on `fix/auth-bruteforce-and-revocation` (Phase 3A).
-> 3.2 (enumeration oracles) and 3.4 (activation / email-change flows) remain — that is Phase 3B.
+> **Phase 3 is COMPLETE.** 3.1, 3.3 and 3.5 shipped on `fix/auth-bruteforce-and-revocation`
+> (merged as PR #59); 3.2 and 3.4 on `fix/auth-enumeration-and-email-change` (Phase 3B).
+>
+> One 3.4 item was **deliberately not done**: `CustomerRegisterController` still re-invites
+> an already-activated account on `/resend-activation`. Phase 3B made that path the
+> *intended* behaviour for registration — an existing unactivated account gets its invite
+> resent rather than an error — so adding a `password_set_at` guard now would contradict it.
+> Revisit only if invite-window abuse is actually observed.
 >
 > Corrections found while implementing, worth knowing before touching this area again:
 >
