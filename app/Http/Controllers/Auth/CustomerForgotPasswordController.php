@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Mail\CustomerPasswordResetMail;
+use App\Models\PageBanner;
 use App\Models\User;
 use App\Rules\DisposableEmail;
+use App\Support\FormGuard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -24,7 +26,9 @@ class CustomerForgotPasswordController extends Controller
             return redirect()->route('account.dashboard');
         }
 
-        return view('pages.account.auth.forgot-password');
+        return view('pages.account.auth.forgot-password', [
+            'pageBanner' => PageBanner::getByTarget('reset_password'),
+        ]);
     }
 
     /**
@@ -32,14 +36,15 @@ class CustomerForgotPasswordController extends Controller
      */
     public function sendResetLink(Request $request)
     {
-        // Honeypot + time-trap (mirrors registration): bots fill hidden fields
+        // Honeypot + signed time-trap (mirrors registration): bots fill hidden fields
         // and submit instantly. Short-circuit to the uniform response.
-        if ($request->filled('website_url')) {
-            return $this->done();
-        }
-        $formLoaded = (int) $request->input('_form_loaded', 0);
-        if ($formLoaded > 0 && (time() - $formLoaded) < 3) {
-            return $this->done();
+        if ($reason = FormGuard::tripped($request)) {
+            if ($reason->isBot()) {
+                return $this->done();
+            }
+
+            // Safe to surface: it says nothing about whether the address has an account.
+            return back()->withInput()->withErrors(['email' => __('lang.form_expired')]);
         }
 
         $request->validate([

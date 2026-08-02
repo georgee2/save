@@ -161,6 +161,39 @@
                         </div>
                     </div>
 
+                    {{-- Favourites (account-linked wishlist) --}}
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h5 class="section-title text-primary">
+                                <i class="fa fa-heart"></i> Favourites
+                                <span class="badge badge-secondary">{{ $favTotal }}</span>
+                            </h5>
+                        </div>
+                        @if($favTotal > 0)
+                        <div class="col-md-12">
+                            <ul class="list-group mb-2">
+                                @foreach(['projects' => 'Project', 'offers' => 'Offer', 'interiors' => 'Interior'] as $favKey => $favLabel)
+                                    @foreach($favGrouped[$favKey] as $fav)
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span>
+                                            <span class="badge badge-info">{{ $favLabel }}</span>
+                                            {{ $fav->itemData->title_english ?? ('#' . $fav->item_id) }}
+                                        </span>
+                                    </li>
+                                    @endforeach
+                                @endforeach
+                            </ul>
+                            @if($favToken)
+                            <a href="{{ route('crm-favourites.show', ['sessionId' => $favToken]) }}" class="btn btn-sm btn-outline-primary">
+                                <i class="fa fa-external-link-alt"></i> Manage in Favourites console
+                            </a>
+                            @endif
+                        </div>
+                        @else
+                        <div class="col-md-12"><p class="text-muted mb-0">This customer has no favourites yet.</p></div>
+                        @endif
+                    </div>
+
                     {{-- Contact Information --}}
                     <div class="row">
                         <div class="col-md-12">

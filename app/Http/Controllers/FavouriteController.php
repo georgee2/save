@@ -9,11 +9,14 @@ use App\Models\InteriorDesignGallery;
 use App\Models\Emirate;
 use App\Models\ContactInformation;
 use App\Mail\FavouritesMail;
+use App\Support\GroupsFavourites;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 class FavouriteController extends Controller
 {
+    use GroupsFavourites;
+
     public function index()
     {
         $sessionId = Favourite::getSessionId();
@@ -142,11 +145,6 @@ class FavouriteController extends Controller
 
         $sessionId = Favourite::getSessionId();
 
-        Favourite::forSession($sessionId)->active()->update(array_filter([
-            'email' => $request->input('email'),
-            'name' => $request->input('name'),
-        ]));
-
         $favourites = Favourite::forSession($sessionId)
             ->active()
             ->orderBy('created_at', 'desc')
@@ -155,6 +153,14 @@ class FavouriteController extends Controller
         if ($favourites->isEmpty()) {
             return response()->json(['success' => false, 'message' => 'No favourites to send.'], 422);
         }
+
+        // Stamp the requester's details only once we know this session actually owns rows.
+        // These columns are what the CRM surfaces as the lead identity, so writing them
+        // before the check let a caller overwrite a lead record without holding any items.
+        Favourite::forSession($sessionId)->active()->update(array_filter([
+            'email' => $request->input('email'),
+            'name' => $request->input('name'),
+        ]));
 
         $grouped = $this->groupFavourites($favourites);
         $shareUrl = route('favourites.shared', ['token' => $sessionId]);
@@ -180,45 +186,4 @@ class FavouriteController extends Controller
         }
     }
 
-    private function groupFavourites($favourites): array
-    {
-        $projectIds = $favourites->where('item_type', 'project')->pluck('item_id');
-        $offerIds = $favourites->where('item_type', 'offer')->pluck('item_id');
-        $interiorIds = $favourites->where('item_type', 'interior')->pluck('item_id');
-
-        $projects = Project::whereIn('id', $projectIds)
-            ->with(['category', 'subcategory', 'emirate', 'specifications'])
-            ->get()
-            ->keyBy('id');
-
-        $offers = Offer::whereIn('id', $offerIds)
-            ->with(['category', 'subcategory', 'prices' => function($q) { $q->where('status', 0); }, 'prices.emirate', 'currency', 'specifications'])
-            ->get()
-            ->keyBy('id');
-
-        $interiors = InteriorDesignGallery::whereIn('id', $interiorIds)
-            ->with(['category', 'projectStyle'])
-            ->get()
-            ->keyBy('id');
-
-        return [
-            'projects' => $favourites->where('item_type', 'project')->map(function ($fav) use ($projects) {
-                $fav->itemData = $projects->get($fav->item_id);
-                return $fav;
-            })->filter(fn($fav) => $fav->itemData !== null),
-
-            'offers' => $favourites->where('item_type', 'offer')->map(function ($fav) use ($offers) {
-                $fav->itemData = $offers->get($fav->item_id);
-                if ($fav->itemData && $fav->emirate_id) {
-                    $fav->selectedPrice = $fav->itemData->prices->firstWhere('emirate_id', $fav->emirate_id);
-                }
-                return $fav;
-            })->filter(fn($fav) => $fav->itemData !== null),
-
-            'interiors' => $favourites->where('item_type', 'interior')->map(function ($fav) use ($interiors) {
-                $fav->itemData = $interiors->get($fav->item_id);
-                return $fav;
-            })->filter(fn($fav) => $fav->itemData !== null),
-        ];
-    }
 }

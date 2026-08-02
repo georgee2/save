@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\CustomerEmailChangeMail;
 use App\Models\User;
 use App\Services\CustomerSync\CustomerSyncService;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -126,6 +127,21 @@ class CustomerProfileController extends Controller
         $user->password_set_at = now();
         $user->save();
 
-        return response()->json(['success' => true]);
+        // Revokes outstanding reset and invitation links and every existing API token,
+        // including the one used for this request - a token issued under the old password
+        // must not outlive it. Nothing was revoked here before.
+        event(new PasswordReset($user));
+
+        // The caller just proved it knows the new password, so hand back a working token
+        // rather than silently signing the app out.
+        $token = $user->createToken(
+            $request->input('device_name', 'mobile-app'),
+            ['customer:read', 'customer:write']
+        );
+
+        return response()->json([
+            'success' => true,
+            'token' => $token->plainTextToken,
+        ]);
     }
 }

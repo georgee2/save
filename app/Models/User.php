@@ -41,6 +41,8 @@ class User extends Authenticatable
         'pending_email',
         'pending_email_token',
         'notification_prefs',
+        'favourites_token',
+        'locked_until',
     ];
 
     /**
@@ -51,6 +53,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        // Both are bearer-equivalent: pending_email_token completes an email change and
+        // favourites_token is the favourites authorization key.
+        'pending_email_token',
+        'favourites_token',
     ];
 
     /**
@@ -66,7 +72,16 @@ class User extends Authenticatable
         'password_set_at' => 'datetime',
         'synced_at' => 'datetime',
         'notification_prefs' => 'array',
+        'locked_until' => 'datetime',
     ];
+
+    /**
+     * Whether a brute-force lockout is currently in force.
+     */
+    public function isLockedOut(): bool
+    {
+        return $this->locked_until !== null && $this->locked_until->isFuture();
+    }
 
     /**
      * Get the roles for the user
@@ -99,6 +114,29 @@ class User extends Authenticatable
     public function isCustomer(): bool
     {
         return $this->account_type === 'customer';
+    }
+
+    /**
+     * The customer's favourites (the account-linked wishlist).
+     */
+    public function favourites()
+    {
+        return $this->hasMany(Favourite::class, 'user_id');
+    }
+
+    /**
+     * The customer's canonical favourites list id — a stable random UUID that
+     * becomes their `favourites.session_id` across devices (and share token).
+     * Generated + persisted lazily on first use.
+     */
+    public function favouritesToken(): string
+    {
+        if (empty($this->favourites_token)) {
+            $this->favourites_token = (string) \Illuminate\Support\Str::uuid();
+            $this->save();
+        }
+
+        return $this->favourites_token;
     }
 
     /**

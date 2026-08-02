@@ -31,11 +31,14 @@ email ≤255; `phone` nullable ≤255; `message` required ≤5000 + spam-pattern
 `[url]`, multiple links, casino/viagra/etc., `<a href`, `{tokens}`); `service_id` nullable
 `exists:services,id`; `source` nullable ≤50.
 
-Anti-spam reuse: the web uses honeypot (`website_url`), a time-trap (`_form_loaded`), and
-reCAPTCHA v3 (`RecaptchaService`). For the app, DROP honeypot/time-trap (no HTML form) and
-instead rely on: the Sanctum token (if logged in) OR an app-attestation/reCAPTCHA token, PLUS
-the route `throttle` and the message spam-pattern filter. Keep `RecaptchaService::verify()` if
-the app can produce a token; otherwise gate by throttle + auth.
+Anti-spam reuse: the web uses a honeypot and a signed time-trap (both rendered by
+`@include('includes.form-guard')` and checked by `App\Support\FormGuard`), plus reCAPTCHA v3
+(`RecaptchaService`). For the app, DROP honeypot/time-trap (no HTML form) and instead rely on:
+the Sanctum token (if logged in) OR an app-attestation/reCAPTCHA token, PLUS the route
+`throttle` and the message spam-pattern filter. Use `RecaptchaService::check($token, $action)`
+if the app can produce a token; otherwise gate by throttle + auth. Note `check()` returns a
+`RecaptchaOutcome` enum, not a bool — treat only `Failed` as a rejection, and compensate for
+`Unavailable` with a stricter throttle rather than blocking.
 
 Persistence: `ContactUs::create([... 'status' => 'Pending'])`, then `sendConfirmationEmail()`.
 

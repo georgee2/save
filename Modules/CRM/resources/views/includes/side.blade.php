@@ -31,6 +31,7 @@
                                     <li><a href="{{route('jobs-posting.create')}}">Add New Job Posting</a></li>
                                     <li><a href="{{route('jobs-posting.index')}}">Jobs Postings List</a></li>
                                     <li><a href="{{route('jobs-posting.trashed')}}">Trashed Jobs Postings</a></li>
+                                    <li><a href="{{route('crm-job-applications.index')}}">Job Applications</a></li>
                                 </ul>
                             </li>
 

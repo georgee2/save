@@ -509,3 +509,56 @@ body.scrolled .mobile-header {
 body.mobile-menu-open {
     overflow: hidden;
 }
+
+/* ========================================
+   AUTH LINKS (Login / Register / Account)
+   ======================================== */
+
+/* Mobile sidebar auth buttons */
+.mobile-sidebar-auth {
+    display: flex;
+    gap: 10px;
+    padding: 16px 20px;
+    border-bottom: 1px solid #eee;
+    background: #ffffff;
+}
+
+.mobile-auth-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 11px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.mobile-auth-btn-primary {
+    background: #19868b;
+    color: #fff;
+    border: 1px solid #19868b;
+}
+
+.mobile-auth-btn-primary:hover {
+    background: #146b6f;
+    border-color: #146b6f;
+    color: #fff;
+    text-decoration: none;
+}
+
+.mobile-auth-btn-outline {
+    background: transparent;
+    color: #19868b;
+    border: 1px solid #19868b;
+}
+
+.mobile-auth-btn-outline:hover {
+    background: rgba(25, 134, 139, 0.1);
+    color: #19868b;
+    text-decoration: none;
+}

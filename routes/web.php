@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AnalyticsHeartbeatController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ServiceController;
@@ -28,6 +29,7 @@ use App\Http\Controllers\Auth\StaffPasswordController;
 use App\Http\Controllers\Account\DashboardController as AccountDashboardController;
 use App\Http\Controllers\Account\ProfileController as AccountProfileController;
 use App\Http\Controllers\Account\ProfileSettingsController as AccountSettingsController;
+use App\Http\Controllers\Account\FavouritesController as AccountFavouritesController;
 
 
 
@@ -82,6 +84,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 	Route::middleware(['auth', 'customer', 'cache.headers:no_store,no_cache,must_revalidate,max_age=0'])->prefix('account')->group(function () {
 		Route::get('/', [AccountDashboardController::class, 'index'])->name('account.dashboard');
 		Route::get('/profile', [AccountProfileController::class, 'show'])->name('account.profile');
+		Route::get('/favourites', [AccountFavouritesController::class, 'index'])->name('account.favourites');
 
 		Route::get('/settings', [AccountSettingsController::class, 'edit'])->name('account.settings');
 		Route::put('/settings/details', [AccountSettingsController::class, 'updateDetails'])->name('account.settings.details');
@@ -180,7 +183,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 	Route::prefix('careers')->name('careers.')->group(function () {
 		Route::get('/', [CareerController::class, 'index'])->name('index');
 		Route::get('/{id}', [CareerController::class, 'show'])->name('show');
-		Route::post('/{id}/apply', [CareerController::class, 'apply'])->name('apply');
+		Route::post('/{id}/apply', [CareerController::class, 'apply'])->name('apply')->middleware('throttle:5,1');
 	});
 
 	// Interior Design Gallery Routes
@@ -196,12 +199,14 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 	// Favourites
 	Route::prefix('favourites')->group(function () {
 		Route::get('/', [FavouriteController::class, 'index'])->name('favourites.index');
-		Route::post('/toggle', [FavouriteController::class, 'toggle'])->name('favourites.toggle');
-		Route::delete('/clear/all', [FavouriteController::class, 'clear'])->name('favourites.clear');
+		Route::post('/toggle', [FavouriteController::class, 'toggle'])->name('favourites.toggle')->middleware('throttle:60,1');
+		Route::delete('/clear/all', [FavouriteController::class, 'clear'])->name('favourites.clear')->middleware('throttle:30,1');
 		Route::get('/count', [FavouriteController::class, 'count'])->name('favourites.count');
 		Route::get('/shared/{token}', [FavouriteController::class, 'shared'])->name('favourites.shared');
-		Route::post('/send-email', [FavouriteController::class, 'sendEmail'])->name('favourites.sendEmail');
-		Route::delete('/{id}', [FavouriteController::class, 'remove'])->name('favourites.remove');
+		// Sends branded mail from our own SMTP relay to a caller-supplied address, so this
+		// is kept deliberately tight - it was an unauthenticated open relay before.
+		Route::post('/send-email', [FavouriteController::class, 'sendEmail'])->name('favourites.sendEmail')->middleware('throttle:3,60');
+		Route::delete('/{id}', [FavouriteController::class, 'remove'])->name('favourites.remove')->middleware('throttle:30,1');
 	});
 
 });
@@ -210,24 +215,9 @@ Route::group(['prefix' => LaravelLocalization::setLocale() , 'middleware' => ['l
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // Analytics heartbeat (CSRF-exempt, outside localization)
-Route::post('/analytics/heartbeat', function (\Illuminate\Http\Request $request) {
-    $visitorId = $request->cookie('svec_vid');
-    if (!$visitorId) return response()->json(['ok' => false], 200);
-
-    $pageView = \App\Models\Analytics\AnalyticsPageView::where('visitor_id', $visitorId)
-        ->orderBy('viewed_at', 'desc')
-        ->first();
-
-    if ($pageView && $request->input('time_on_page')) {
-        $pageView->update(['time_on_page' => (int) $request->input('time_on_page')]);
-    }
-
-    if ($request->input('title') && $pageView && !$pageView->page_title) {
-        $pageView->update(['page_title' => substr($request->input('title'), 0, 500)]);
-    }
-
-    return response()->json(['ok' => true], 200);
-})->name('analytics.heartbeat');
+Route::post('/analytics/heartbeat', AnalyticsHeartbeatController::class)
+    ->name('analytics.heartbeat')
+    ->middleware('throttle:heartbeat');
 
 // ============================================
 // FALLBACK: Catch all undefined routes - return 404

@@ -15,6 +15,13 @@
     align-items: center;
 }
 
+/* Left cluster: social + contact */
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
 /* Social Icons */
 .topbar-social {
     display: flex;
@@ -46,9 +53,6 @@
     display: flex;
     align-items: center;
     gap: 15px;
-    margin-left: 20px;
-    padding-left: 20px;
-    border-left: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .topbar-link {
@@ -86,6 +90,34 @@
 
 .topbar-link:hover::after {
     width: 100%;
+}
+
+/* Divider between quick links and auth links */
+.topbar-divider {
+    width: 1px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.35);
+    display: inline-block;
+}
+
+/* Register accent (bordered pill) */
+.topbar-link-register {
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-radius: 4px;
+    padding: 4px 12px;
+}
+
+.topbar-link-register:hover {
+    background: #ffffff;
+    color: #19868b;
+}
+
+.topbar-link-register:hover i {
+    color: #19868b;
+}
+
+.topbar-link-register::after {
+    display: none;
 }
 
 /* Contact Info */

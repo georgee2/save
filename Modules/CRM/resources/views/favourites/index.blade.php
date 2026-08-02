@@ -535,7 +535,14 @@
                                     <td>
                                         <span class="ref-id-badge">{{ $session->ref_id }}</span>
                                     </td>
-                                    <td>{{ $session->name ?: '---' }}</td>
+                                    <td>
+                                        {{ $session->name ?: '---' }}
+                                        @if($session->is_registered)
+                                            <a href="{{ route('crm-customers.show', $session->customer_id) }}" class="badge badge-success ml-1" title="Registered customer account"><i class="fa fa-user-check"></i> Registered</a>
+                                        @else
+                                            <span class="badge badge-light ml-1 text-muted">Guest</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         @if($session->email)
                                             <a href="mailto:{{ $session->email }}">{{ $session->email }}</a>

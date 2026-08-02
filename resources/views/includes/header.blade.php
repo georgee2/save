@@ -327,7 +327,28 @@
             <i class="fal fa-times"></i>
         </button>
     </div>
-    
+
+    {{-- Account / Auth --}}
+    <div class="mobile-sidebar-auth">
+        @auth
+            @if(auth()->user()->isCustomer())
+            <a href="{{ route('account.dashboard') }}" class="mobile-auth-btn mobile-auth-btn-primary">
+                <i class="fal fa-user-circle"></i> {{ __('lang.account') }}
+            </a>
+            <a href="{{ route('logout') }}" class="mobile-auth-btn mobile-auth-btn-outline">
+                <i class="fal fa-sign-out-alt"></i> {{ __('lang.logout') }}
+            </a>
+            @endif
+        @else
+            <a href="{{ route('login') }}" class="mobile-auth-btn mobile-auth-btn-primary">
+                <i class="fal fa-sign-in-alt"></i> {{ __('lang.login') }}
+            </a>
+            <a href="{{ route('account.register') }}" class="mobile-auth-btn mobile-auth-btn-outline">
+                <i class="fal fa-user-plus"></i> {{ __('lang.register') }}
+            </a>
+        @endauth
+    </div>
+
     {{-- Sidebar Navigation --}}
     <div class="mobile-sidebar-nav">
         @if(isset($primaryMenuItems) && $primaryMenuItems->isNotEmpty())
