@@ -27,4 +27,19 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    /**
+     * Always render /api/* exceptions as JSON, regardless of the client's Accept
+     * header - a client that forgets "Accept: application/json" would otherwise
+     * silently get an HTML error page (Ignition in debug mode) instead of a
+     * usable error response. Laravel's own exception-to-JSON conversion already
+     * includes message/exception/file/line/trace when APP_DEBUG=true, so this is
+     * the only change needed to make every API error easy to read from a REST
+     * client. Web routes are untouched - this only adds a case, it never removes
+     * the existing Accept-header-based detection.
+     */
+    protected function shouldReturnJson($request, Throwable $e): bool
+    {
+        return $request->is('api/*') || parent::shouldReturnJson($request, $e);
+    }
 }

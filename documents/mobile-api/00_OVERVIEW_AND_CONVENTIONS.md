@@ -11,17 +11,17 @@
 
 ## Document index
 
-| # | File | Covers |
-|---|------|--------|
-| 00 | [00_OVERVIEW_AND_CONVENTIONS.md](00_OVERVIEW_AND_CONVENTIONS.md) | Conventions, auth, locale, image URLs, envelope, endpoint index (this file) |
-| 01 | [01_CODEBASE_MAP.md](01_CODEBASE_MAP.md) | Where every feature lives: models, tables, migrations, controllers, routes, views |
-| 02 | [02_AUTH_AND_ACCOUNT_API.md](02_AUTH_AND_ACCOUNT_API.md) | Register, login, logout, profile, password (exist) + forgot/reset/resend (to build) |
-| 03 | [03_CONTENT_API.md](03_CONTENT_API.md) | Projects, Offers, Interior Design: list + detail |
-| 04 | [04_TAXONOMY_AND_SEARCH_API.md](04_TAXONOMY_AND_SEARCH_API.md) | Categories, subcategories, types, styles, emirates, specs, live search |
-| 05 | [05_FAVOURITES_API.md](05_FAVOURITES_API.md) | Favourites list/toggle/remove/clear (token-gated) |
-| 06 | [06_INQUIRIES_API.md](06_INQUIRIES_API.md) | Contact + project/offer inquiries |
-| 07 | [07_MENU_HEADER_SITE_API.md](07_MENU_HEADER_SITE_API.md) | Menu tree + site/contact/social/logo |
-| 08 | [08_GAPS_AND_BACKEND_CHANGES.md](08_GAPS_AND_BACKEND_CHANGES.md) | Backend changes required before the API is complete |
+| #   | File                                                             | Covers                                                                              |
+| --- | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| 00  | [00_OVERVIEW_AND_CONVENTIONS.md](00_OVERVIEW_AND_CONVENTIONS.md) | Conventions, auth, locale, image URLs, envelope, endpoint index (this file)         |
+| 01  | [01_CODEBASE_MAP.md](01_CODEBASE_MAP.md)                         | Where every feature lives: models, tables, migrations, controllers, routes, views   |
+| 02  | [02_AUTH_AND_ACCOUNT_API.md](02_AUTH_AND_ACCOUNT_API.md)         | Register, login, logout, profile, password (exist) + forgot/reset/resend (to build) |
+| 03  | [03_CONTENT_API.md](03_CONTENT_API.md)                           | Projects, Offers, Interior Design: list + detail                                    |
+| 04  | [04_TAXONOMY_AND_SEARCH_API.md](04_TAXONOMY_AND_SEARCH_API.md)   | Categories, subcategories, types, styles, emirates, specs, live search              |
+| 05  | [05_FAVOURITES_API.md](05_FAVOURITES_API.md)                     | Favourites list/toggle/remove/clear (token-gated)                                   |
+| 06  | [06_INQUIRIES_API.md](06_INQUIRIES_API.md)                       | Contact + project/offer inquiries                                                   |
+| 07  | [07_MENU_HEADER_SITE_API.md](07_MENU_HEADER_SITE_API.md)         | Menu tree + site/contact/social/logo                                                |
+| 08  | [08_GAPS_AND_BACKEND_CHANGES.md](08_GAPS_AND_BACKEND_CHANGES.md) | Backend changes required before the API is complete                                 |
 
 ## 1. Base URL & versioning
 
@@ -89,24 +89,27 @@ Follow the shapes the existing controllers already return so the app has one con
 Success (single / action):
 
 ```json
-{ "success": true, "data": { } }
+{ "success": true, "data": {} }
 ```
 
 List with pagination (mirror Laravel's `paginate()` meta; web uses `paginate(9)` for projects/offers and `paginate(12)` for interior):
 
 ```json
 {
-  "success": true,
-  "data": [ { } ],
-  "meta": { "current_page": 1, "per_page": 9, "total": 42, "last_page": 5 },
-  "links": { "next": "...", "prev": null }
+    "success": true,
+    "data": [{}],
+    "meta": { "current_page": 1, "per_page": 9, "total": 42, "last_page": 5 },
+    "links": { "next": "...", "prev": null }
 }
 ```
 
 Validation error (HTTP 422) - Laravel's default `ValidationException` shape, already produced by the existing API controllers:
 
 ```json
-{ "message": "The email field is required.", "errors": { "email": ["The email field is required."] } }
+{
+    "message": "The email field is required.",
+    "errors": { "email": ["The email field is required."] }
+}
 ```
 
 Rate limited (HTTP 429): same shape with a "too many attempts" message (the existing auth endpoints throw a 429 `ValidationException`).
@@ -121,50 +124,50 @@ Legend: [E] already exists, [B] to build.
 
 ### Public (no token)
 
-| Method | Path | Purpose | Status |
-|--------|------|---------|--------|
-| GET | `/api/v1/projects` | List/filter/sort/paginate projects | [B] |
-| GET | `/api/v1/projects/{slug}` | Project detail | [B] |
-| GET | `/api/v1/offers` | List/filter/sort/paginate offers (with pricing) | [B] |
-| GET | `/api/v1/offers/{slug}` | Offer detail | [B] |
-| GET | `/api/v1/interior` | List/filter/paginate interior gallery | [B] |
-| GET | `/api/v1/interior/{slug}` | Interior detail (web has none - see doc 03) | [B] |
-| GET | `/api/v1/taxonomies/categories?type=projects|offers` | Category list | [B] |
-| GET | `/api/v1/taxonomies/subcategories?type=&category_id=` | Subcategory list | [B] |
-| GET | `/api/v1/taxonomies/types` | Project types | [B] |
-| GET | `/api/v1/taxonomies/styles` | Project styles | [B] |
-| GET | `/api/v1/taxonomies/emirates` | Emirates | [B] |
-| GET | `/api/v1/taxonomies/specification-values?specification_id=` | Distinct spec values | [B] |
-| GET | `/api/v1/search?q=&type=&emirate_id=` | Live search | [B] |
-| GET | `/api/v1/menu` | Header + footer menu trees (resolved) | [B] |
-| GET | `/api/v1/site` | Contact info, social, logo, about, category trees | [B] |
-| GET | `/api/v1/about` | Full About page content (optional; else nested in `/site`) | [B] |
+| Method | Path                                                        | Purpose                                                    | Status        |
+| ------ | ----------------------------------------------------------- | ---------------------------------------------------------- | ------------- | --- |
+| GET    | `/api/v1/projects`                                          | List/filter/sort/paginate projects                         | [B]           |
+| GET    | `/api/v1/projects/{slug}`                                   | Project detail                                             | [B]           |
+| GET    | `/api/v1/offers`                                            | List/filter/sort/paginate offers (with pricing)            | [B]           |
+| GET    | `/api/v1/offers/{slug}`                                     | Offer detail                                               | [B]           |
+| GET    | `/api/v1/interior`                                          | List/filter/paginate interior gallery                      | [B]           |
+| GET    | `/api/v1/interior/{slug}`                                   | Interior detail (web has none - see doc 03)                | [B]           |
+| GET    | `/api/v1/taxonomies/categories?type=projects                | offers`                                                    | Category list | [B] |
+| GET    | `/api/v1/taxonomies/subcategories?type=&category_id=`       | Subcategory list                                           | [B]           |
+| GET    | `/api/v1/taxonomies/types`                                  | Project types                                              | [B]           |
+| GET    | `/api/v1/taxonomies/styles`                                 | Project styles                                             | [B]           |
+| GET    | `/api/v1/taxonomies/emirates`                               | Emirates                                                   | [B]           |
+| GET    | `/api/v1/taxonomies/specification-values?specification_id=` | Distinct spec values                                       | [B]           |
+| GET    | `/api/v1/search?q=&type=&emirate_id=`                       | Live search                                                | [B]           |
+| GET    | `/api/v1/menu`                                              | Header + footer menu trees (resolved)                      | [B]           |
+| GET    | `/api/v1/site`                                              | Contact info, social, logo, about, category trees          | [B]           |
+| GET    | `/api/v1/about`                                             | Full About page content (optional; else nested in `/site`) | [B]           |
 
 ### Auth & account
 
-| Method | Path | Purpose | Status |
-|--------|------|---------|--------|
-| POST | `/api/customer/register` | Register (invite email) | [E] |
-| POST | `/api/customer/login` | Login -> token | [E] |
-| POST | `/api/customer/logout` | Revoke current token | [E] |
-| GET | `/api/customer/me` | Basic identity | [E] |
-| GET | `/api/customer/profile` | Full profile | [E] |
-| PUT | `/api/customer/profile` | Update details/prefs (email change -> verify) | [E] |
-| PUT | `/api/customer/password` | Change password | [E] |
-| POST | `/api/v1/auth/forgot-password` | Email a reset link | [B] |
-| POST | `/api/v1/auth/reset-password` | Reset via token | [B] |
-| POST | `/api/v1/auth/resend-activation` | Resend set-password invite | [B] |
+| Method | Path                             | Purpose                                       | Status |
+| ------ | -------------------------------- | --------------------------------------------- | ------ |
+| POST   | `/api/customer/register`         | Register (invite email)                       | [E]    |
+| POST   | `/api/customer/login`            | Login -> token                                | [E]    |
+| POST   | `/api/customer/logout`           | Revoke current token                          | [E]    |
+| GET    | `/api/customer/me`               | Basic identity                                | [E]    |
+| GET    | `/api/customer/profile`          | Full profile                                  | [E]    |
+| PUT    | `/api/customer/profile`          | Update details/prefs (email change -> verify) | [E]    |
+| PUT    | `/api/customer/password`         | Change password                               | [E]    |
+| POST   | `/api/v1/auth/forgot-password`   | Email a reset link                            | [B]    |
+| POST   | `/api/v1/auth/reset-password`    | Reset via token                               | [B]    |
+| POST   | `/api/v1/auth/resend-activation` | Resend set-password invite                    | [B]    |
 
 ### Token-gated (customer)
 
-| Method | Path | Purpose | Status |
-|--------|------|---------|--------|
-| GET | `/api/v1/favourites` | List favourites (grouped) | [B] |
-| GET | `/api/v1/favourites/count` | Count + id list | [B] |
-| POST | `/api/v1/favourites/toggle` | Add/remove a favourite | [B] |
-| DELETE | `/api/v1/favourites/{id}` | Remove one | [B] |
-| DELETE | `/api/v1/favourites` | Clear all | [B] |
-| POST | `/api/v1/inquiries` | Inquiry (optional project/offer link) | [B] |
-| POST | `/api/v1/contact` | General contact message | [B] |
+| Method | Path                        | Purpose                               | Status |
+| ------ | --------------------------- | ------------------------------------- | ------ |
+| GET    | `/api/v1/favourites`        | List favourites (grouped)             | [B]    |
+| GET    | `/api/v1/favourites/count`  | Count + id list                       | [B]    |
+| POST   | `/api/v1/favourites/toggle` | Add/remove a favourite                | [B]    |
+| DELETE | `/api/v1/favourites/{id}`   | Remove one                            | [B]    |
+| DELETE | `/api/v1/favourites`        | Clear all                             | [B]    |
+| POST   | `/api/v1/inquiries`         | Inquiry (optional project/offer link) | [B]    |
+| POST   | `/api/v1/contact`           | General contact message               | [B]    |
 
 See each domain doc for request fields, response JSON, and the exact source logic to reuse.

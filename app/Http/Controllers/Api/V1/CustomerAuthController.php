@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -31,7 +31,7 @@ class CustomerAuthController extends Controller
         // Per-email throttle (route throttle is IP-only): cap repeated signups for
         // the same address to blunt automated account-creation abuse.
         $emailKey = 'api-register:' . Str::lower(trim($data['email']));
-        if (RateLimiter::tooManyAttempts($emailKey, 5)) {
+        if (RateLimiter::tooManyAttempts($emailKey, 10)) {
             throw ValidationException::withMessages([
                 'email' => ['Too many attempts. Please try again later.'],
             ])->status(429);
