@@ -633,8 +633,8 @@
                 
                 {{-- Schedule A Tour / Request Info Card --}}
                 @php
-                    $showOfferScheduleTour = env('OFFERS_SCHEDULE_TOUR', false);
-                    $showOfferRequestInfo = env('OFFERS_REQUEST_INFO', false);
+                    $showOfferScheduleTour = config('features.offers.schedule_tour');
+                    $showOfferRequestInfo = config('features.offers.request_info');
                     $showOfferForms = $showOfferScheduleTour || $showOfferRequestInfo;
                 @endphp
                 @if($showOfferForms)
@@ -665,11 +665,22 @@
                     </div>
                     @endif
                     <div class="card-body px-4 shadow-xxs-2 pb-4 pt-0">
-                        <form id="tourRequestForm">
-                            <div class="tab-content pt-1 pb-0 px-0 shadow-none">
-                                @if($showOfferScheduleTour)
-                                {{-- Schedule A Tour Tab --}}
-                                <div class="tab-pane fade {{ $showOfferScheduleTour ? 'show active' : '' }}" id="schedule-tour" role="tabpanel">
+                        {{-- Two independent forms, one per tab. They used to share a single
+                             <form>, so with both tabs enabled every field posted together and
+                             the two field sets collided. --}}
+                        <div class="tab-content pt-1 pb-0 px-0 shadow-none">
+                            @if($showOfferScheduleTour)
+                            {{-- Schedule A Tour Tab --}}
+                            <div class="tab-pane fade {{ $showOfferScheduleTour ? 'show active' : '' }}" id="schedule-tour" role="tabpanel">
+                                <form action="{{ route('contact.store') }}" method="POST" class="offer-inquiry-form" id="offerTourForm">
+                                    @csrf
+                                    @include('includes.form-guard')
+                                    <input type="hidden" name="source" value="offer_tour">
+                                    <input type="hidden" name="related_type" value="offer">
+                                    <input type="hidden" name="related_id" value="{{ $offer->id }}">
+                                    <input type="hidden" name="subject" value="{{ __('lang.schedule_a_tour') }} - {{ app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english }}">
+                                    <input type="hidden" name="message" value="{{ __('lang.interested_in_offer', ['offer' => app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english]) }}">
+                                    <input type="hidden" name="g-recaptcha-response" class="offer-recaptcha-token">
                                     {{-- Date Picker Slider with Custom Navigation --}}
                                     <div class="calendar-slider-wrapper mt-4 mb-3">
                                         <button type="button" class="calendar-nav calendar-prev" id="calendarPrev">
@@ -699,11 +710,11 @@
                                             <i class="fas fa-chevron-right"></i>
                                         </button>
                                     </div>
-                                    <input type="hidden" id="selectedDate" name="date" value="{{ $today->format('Y-m-d') }}">
-                                    
+                                    <input type="hidden" id="selectedDate" name="preferred_date" value="{{ $today->format('Y-m-d') }}">
+
                                     <div class="form-group mb-3">
                                         <label class="fs-13 text-muted mb-1">{{ __('lang.preferred_time') }}</label>
-                                        <select class="form-control form-control-lg border-0 bg-gray-01" name="time">
+                                        <select class="form-control form-control-lg border-0 bg-gray-01" name="preferred_time">
                                             <option value="">{{ __('lang.select_time') }}</option>
                                             <option value="09:00">09:00 AM</option>
                                             <option value="10:00">10:00 AM</option>
@@ -725,34 +736,45 @@
                                     <div class="form-group mb-4">
                                         <input type="tel" class="form-control form-control-lg border-0 bg-gray-01" name="phone" placeholder="{{ __('lang.phone_number') }}">
                                     </div>
-                                    <button type="button" class="btn btn-primary btn-lg btn-block rounded">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block rounded">
                                         <i class="fas fa-calendar-check mr-2"></i>{{ __('lang.schedule_a_tour') }}
                                     </button>
-                                </div>
-                                @endif
+                                </form>
+                            </div>
+                            @endif
                                 
-                                @if($showOfferRequestInfo)
-                                {{-- Request Info Tab --}}
-                                <div class="tab-pane fade {{ !$showOfferScheduleTour ? 'show active' : '' }} pt-4" id="request-info" role="tabpanel">
+                            @if($showOfferRequestInfo)
+                            {{-- Request Info Tab --}}
+                            <div class="tab-pane fade {{ !$showOfferScheduleTour ? 'show active' : '' }} pt-4" id="request-info" role="tabpanel">
+                                <form action="{{ route('contact.store') }}" method="POST" class="offer-inquiry-form" id="offerInfoForm">
+                                    @csrf
+                                    @include('includes.form-guard')
+                                    <input type="hidden" name="source" value="offer_info">
+                                    <input type="hidden" name="related_type" value="offer">
+                                    <input type="hidden" name="related_id" value="{{ $offer->id }}">
+                                    <input type="hidden" name="subject" value="{{ __('lang.request_info') }} - {{ app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english }}">
+                                    <input type="hidden" name="g-recaptcha-response" class="offer-recaptcha-token">
+                                    {{-- These were info_name / info_email / info_phone, which the contact
+                                         endpoint does not accept; it requires name / email / phone. --}}
                                     <div class="form-group mb-3">
-                                        <input type="text" class="form-control form-control-lg border-0 bg-gray-01" name="info_name" placeholder="{{ __('lang.full_name') }}">
+                                        <input type="text" class="form-control form-control-lg border-0 bg-gray-01" name="name" placeholder="{{ __('lang.full_name') }}">
                                     </div>
                                     <div class="form-group mb-3">
-                                        <input type="email" class="form-control form-control-lg border-0 bg-gray-01" name="info_email" placeholder="{{ __('lang.email_address') }}">
+                                        <input type="email" class="form-control form-control-lg border-0 bg-gray-01" name="email" placeholder="{{ __('lang.email_address') }}">
                                     </div>
                                     <div class="form-group mb-3">
-                                        <input type="tel" class="form-control form-control-lg border-0 bg-gray-01" name="info_phone" placeholder="{{ __('lang.phone_number') }}">
+                                        <input type="tel" class="form-control form-control-lg border-0 bg-gray-01" name="phone" placeholder="{{ __('lang.phone_number') }}">
                                     </div>
                                     <div class="form-group mb-4">
                                         <textarea class="form-control border-0 bg-gray-01" name="message" rows="4" placeholder="{{ __('lang.interested_message') }}">{{ __('lang.interested_in_offer', ['offer' => app()->getLocale() == 'ar' ? $offer->title_arabic : $offer->title_english]) }}</textarea>
                                     </div>
-                                    <button type="button" class="btn btn-primary btn-lg btn-block rounded">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block rounded">
                                         <i class="fas fa-paper-plane mr-2"></i>{{ __('lang.request_info') }}
                                     </button>
-                                </div>
-                                @endif
+                                </form>
                             </div>
-                        </form>
+                            @endif
+                        </div>
                     </div>
                 </div>
                 @else
@@ -1044,5 +1066,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
+@if($showOfferScheduleTour || $showOfferRequestInfo)
+    @include('includes.inquiry-form-scripts', [
+        'inquiryFormSelector' => '.offer-inquiry-form',
+        'inquiryRecaptchaAction' => 'offer_enquiry',
+    ])
+@endif
 @endsection
 

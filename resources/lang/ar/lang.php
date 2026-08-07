@@ -214,6 +214,7 @@ return [
     'phone_number' => 'رقم الهاتف',
     'interested_message' => 'رسالتك...',
     'interested_in_offer' => 'مرحباً، أنا مهتم بـ :offer',
+    'interested_in_project' => 'مرحباً، أنا مهتم بـ :project',
     'interior_design' => 'التصميم الداخلي',
     'interior_gallery_title' => 'معرض التصميم الداخلي',
     'interior_gallery_bio' => 'استكشف مجموعتنا المذهلة من مشاريع التصميم الداخلي التي تعرض الأناقة والإبداع والجماليات العصرية.',
