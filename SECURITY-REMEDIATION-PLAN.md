@@ -322,6 +322,20 @@ Every limiter key contains the IP, so a single account has **no aggregate attemp
 
 ### 5.1 — Project and offer inquiry forms are not connected to anything
 
+> **DONE** on `fix/wire-inquiry-forms`.
+>
+> **Correction to the framing below:** these were *not* losing live enquiries. Both forms are
+> gated behind env flags that are `false` (`.env:66-69`), and when off each page renders a
+> working contact card instead — nobody had seen them. The finding was real but latent: they
+> would have started discarding data the moment anyone flipped a flag.
+>
+> The flags remain `false`. Turning them on is a business decision, and the forms are now
+> safe to turn on.
+>
+> A second bug was found while fixing this: the blades read the flags with `env()`, which
+> returns `null` once `config:cache` runs — and `config:cache` is in the deployment runbook —
+> so the flags would have been permanently stuck off. Moved to `config/features.php`.
+
 This is a **business/lead-loss issue**, discovered during the audit.
 
 - `resources/views/pages/offers/show.blade.php:668` — `<form id="tourRequestForm">` has no `action`, no `method`, no `@csrf`; both buttons are `type="button"`; a repo-wide search for `tourRequestForm` finds **no JavaScript handler**.
