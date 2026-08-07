@@ -6,23 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\ChangePasswordRequest;
 use App\Http\Requests\Account\PreferencesRequest;
 use App\Http\Requests\Account\ProfileDetailsRequest;
-use App\Mail\CustomerEmailChangeMail;
 use App\Models\PageBanner;
 use App\Models\User;
 use App\Services\CustomerSync\CustomerSyncService;
+use App\Services\EmailChangeService;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Str;
 
 class ProfileSettingsController extends Controller
 {
-    public function __construct(protected CustomerSyncService $sync)
-    {
+    public function __construct(
+        protected CustomerSyncService $sync,
+        protected EmailChangeService $emailChange,
+    ) {
     }
 
     /**
@@ -45,28 +44,15 @@ class ProfileSettingsController extends Controller
         $user->name = $request->name;
         $user->phone = $request->phone;
 
-        $emailChanged = $request->email !== $user->email;
-
-        if ($emailChanged) {
-            $token = Str::random(64);
-            $user->pending_email = $request->email;
-            $user->pending_email_token = $token;
-        }
+        $emailChanged = $request->emailIsChanging();
 
         $user->save();
 
         if ($emailChanged) {
-            $url = URL::temporarySignedRoute(
-                'account.email.verify',
-                now()->addHours(24),
-                ['token' => $token]
-            );
-
-            try {
-                Mail::to($user->pending_email)->send(new CustomerEmailChangeMail($user, $url, $user->pending_email));
-            } catch (\Throwable $e) {
-                Log::warning('Email-change verification mail failed: ' . $e->getMessage());
-            }
+            // Stores a hashed token with a server-side expiry, mails the new address a
+            // confirmation link and warns the old one. Shared with the API, which had its
+            // own drifting copy of this.
+            $this->emailChange->start($user, $request->email);
         }
 
         $this->pushSync($user);
@@ -130,24 +116,9 @@ class ProfileSettingsController extends Controller
         $user = $request->user();
         $token = (string) $request->route('token');
 
-        $valid = $user->pending_email
-            && $user->pending_email_token
-            && hash_equals($user->pending_email_token, $token);
-
-        // Guard against the address being taken since the request was made.
-        $taken = $valid && User::where('email', $user->pending_email)
-            ->where('id', '!=', $user->id)
-            ->exists();
-
-        if (!$valid || $taken) {
+        if (!$this->emailChange->confirm($user, $token)) {
             return redirect()->route('account.settings')->with('error', __('lang.account_email_change_invalid'));
         }
-
-        $user->email = $user->pending_email;
-        $user->email_verified_at = now();
-        $user->pending_email = null;
-        $user->pending_email_token = null;
-        $user->save();
 
         $this->pushSync($user);
 

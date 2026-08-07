@@ -7,7 +7,9 @@ use App\Mail\CustomerPasswordResetMail;
 use App\Models\PageBanner;
 use App\Models\User;
 use App\Rules\DisposableEmail;
+use App\Support\EmailRules;
 use App\Support\FormGuard;
+use App\Support\TimingGuard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -48,19 +50,22 @@ class CustomerForgotPasswordController extends Controller
         }
 
         $request->validate([
-            'email' => ['required', 'email:rfc,dns', new DisposableEmail()],
+            'email' => ['required', EmailRules::format(), new DisposableEmail()],
         ]);
 
         $email = Str::lower(trim($request->email));
         $user = User::where('email', $email)->first();
 
+        $issued = false;
+
         // Only send for active customer accounts; silently skip otherwise.
         if ($user && $user->isCustomer() && $user->is_active) {
-            // Per-email cooldown (anti email-bomb): only one reset mail per email
-            // every 10 minutes, on top of the broker's built-in throttle.
+            // Per-email cooldown (anti email-bomb): one reset mail per address every 10
+            // minutes. Cache::add is atomic; the previous has()-then-put() let two
+            // concurrent requests both pass and send twice.
             $cooldownKey = 'pwreset-cooldown:' . $email;
-            if (!Cache::has($cooldownKey)) {
-                Cache::put($cooldownKey, true, now()->addMinutes(10));
+            if (Cache::add($cooldownKey, true, now()->addMinutes(10))) {
+                $issued = true;
 
                 $token = Password::broker()->createToken($user);
 
@@ -73,6 +78,13 @@ class CustomerForgotPasswordController extends Controller
                     }
                 })->afterResponse();
             }
+        }
+
+        // createToken bcrypt-hashes the token, and that hash is the whole timing signal:
+        // without it an unknown address answers measurably faster than a real one, which
+        // enumerates users regardless of the uniform message below.
+        if (!$issued) {
+            TimingGuard::burnPasswordHash();
         }
 
         return $this->done();

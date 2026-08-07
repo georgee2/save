@@ -16,7 +16,7 @@ class ProfileDetailsRequest extends FormRequest
     {
         $id = $this->user()->id;
 
-        return [
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:30'],
             'email' => [
@@ -26,6 +26,21 @@ class ProfileDetailsRequest extends FormRequest
                 Rule::unique('users', 'pending_email')->ignore($id),
             ],
         ];
+
+        // Redirecting the account's email is the first move in taking it over, so it needs
+        // proof of the password rather than just a live session. Only demanded when the
+        // address is actually changing, so editing a name or phone stays frictionless.
+        if ($this->emailIsChanging()) {
+            $rules['current_password'] = ['required', 'current_password'];
+        }
+
+        return $rules;
+    }
+
+    public function emailIsChanging(): bool
+    {
+        return $this->input('email') !== null
+            && $this->input('email') !== $this->user()->email;
     }
 
     protected function prepareForValidation(): void

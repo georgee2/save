@@ -27,7 +27,7 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('logout') }}" class="is-danger">
+            <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();" class="is-danger">
                 <i class="fas fa-sign-out-alt"></i> {{ __('lang.account_logout') }}
             </a>
         </li>

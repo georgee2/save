@@ -598,6 +598,8 @@ return [
     'email_invite_subject' => 'تفعيل حسابك - SVEC',
     'email_reset_subject' => 'إعادة تعيين كلمة المرور - SVEC',
     'email_account_locked_subject' => 'تم قفل حسابك مؤقتاً - SVEC',
+    'email_registration_attempt_subject' => 'لديك حساب بالفعل في سمارت فيجن',
+    'email_change_alert_subject' => 'يتم تغيير البريد الإلكتروني لحسابك - SVEC',
     'email_change_subject' => 'تأكيد بريدك الإلكتروني الجديد - SVEC',
 
     // إعادة تعيين كلمة المرور الذاتية للموظفين (لوحة التحكم)
