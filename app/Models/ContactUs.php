@@ -18,12 +18,20 @@ class ContactUs extends Model
         'phone',
         'message',
         'service_id',
+        'related_type',
+        'related_id',
+        'preferred_date',
+        'preferred_time',
         'ip_address',
         'user_agent',
         'source',
         'notes',
         'status',
         'agent_id',
+    ];
+
+    protected $casts = [
+        'preferred_date' => 'date',
     ];
     
     /**

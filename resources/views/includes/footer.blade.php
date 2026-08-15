@@ -14,9 +14,9 @@
                     <div class="footer-widget footer-about">
                         <a href="{{ url('/') }}" class="footer-logo">
                             @if(app()->getLocale() == 'ar')
-                            <img src="{{ url('/pic/logos/logoarfooter.png') }}" alt="{{ env('APP_NAME') }}">
+                            <img src="{{ url('/pic/logos/logoarfooter.png') }}" alt="{{ config('app.name') }}">
                             @else
-                            <img src="{{ url('/pic/logos/logoenfooter.png') }}" alt="{{ env('APP_NAME') }}">
+                            <img src="{{ url('/pic/logos/logoenfooter.png') }}" alt="{{ config('app.name') }}">
                             @endif
                         </a>
                         @if($footerContactInfo && ($footerContactInfo->footer_bio_english || $footerContactInfo->footer_bio_arabic))
@@ -261,7 +261,7 @@
             <div class="row align-items-center">
                 <div class="col-md-6 text-center text-md-{{ app()->getLocale() == 'ar' ? 'right' : 'left' }}">
                     <p class="copyright">
-                        &copy; {{ date('Y') }} {{ env('APP_NAME') }}. {{ __('lang.all_rights_reserved') }}
+                        &copy; {{ date('Y') }} {{ config('app.name') }}. {{ __('lang.all_rights_reserved') }}
                     </p>
                 </div>
                 <div class="col-md-6 text-center text-md-{{ app()->getLocale() == 'ar' ? 'left' : 'right' }}">

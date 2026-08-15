@@ -214,6 +214,7 @@ return [
     'phone_number' => 'Phone Number',
     'interested_message' => 'Your message...',
     'interested_in_offer' => 'Hello, I am interested in :offer',
+    'interested_in_project' => 'Hello, I am interested in :project',
     'interior_design' => 'Interior Design',
     'interior_gallery_title' => 'Our Interior Gallery',
     'interior_gallery_bio' => 'Explore our stunning collection of interior design projects showcasing elegance, creativity, and modern aesthetics.',

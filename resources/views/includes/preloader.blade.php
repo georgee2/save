@@ -2,7 +2,7 @@
 <div id="preloader" class="preloader">
     <div class="preloader-inner">
         <div class="preloader-logo">
-            <img src="{{ url('/pic/svgwhite.svg') }}" alt="{{ env('APP_NAME') }}">
+            <img src="{{ url('/pic/svgwhite.svg') }}" alt="{{ config('app.name') }}">
         </div>
         <div class="preloader-spinner">
             <div class="spinner-ring"></div>
