@@ -5,9 +5,9 @@
           <nav class="navbar navbar-expand-lg px-0">
             <a class="navbar-brand" href="{{ route('index') }}">
               @if(app()->getLocale() == 'ar')
-              <img style="max-width: 200px;max-height: 90px" src="{{ url('/pic/logos/logoar.png') }}" alt="{{ env('APP_NAME') }}">
+              <img style="max-width: 200px;max-height: 90px" src="{{ url('/pic/logos/logoar.png') }}" alt="{{ config('app.name') }}">
               @else
-              <img style="max-width: 200px;max-height: 90px" src="{{ url('/pic/logos/logoen.png') }}" alt="{{ env('APP_NAME') }}">
+              <img style="max-width: 200px;max-height: 90px" src="{{ url('/pic/logos/logoen.png') }}" alt="{{ config('app.name') }}">
               @endif
             </a>
             <div class="collapse navbar-collapse mt-lg-0 mx-auto flex-grow-0" id="primaryMenu01">
@@ -292,9 +292,9 @@
         {{-- Logo (Center) --}}
         <a href="{{ route('index') }}" class="mobile-header-logo">
             @if(app()->getLocale() == 'ar')
-            <img src="{{ url('/pic/logos/logoar.png') }}" alt="{{ env('APP_NAME') }}">
+            <img src="{{ url('/pic/logos/logoar.png') }}" alt="{{ config('app.name') }}">
             @else
-            <img src="{{ url('/pic/logos/logoen.png') }}" alt="{{ env('APP_NAME') }}">
+            <img src="{{ url('/pic/logos/logoen.png') }}" alt="{{ config('app.name') }}">
             @endif
         </a>
         
@@ -318,9 +318,9 @@
     <div class="mobile-sidebar-header">
         <a href="{{ route('index') }}" class="mobile-sidebar-logo">
             @if(app()->getLocale() == 'ar')
-            <img src="{{ url('/pic/logos/logoar.png') }}" alt="{{ env('APP_NAME') }}">
+            <img src="{{ url('/pic/logos/logoar.png') }}" alt="{{ config('app.name') }}">
             @else
-            <img src="{{ url('/pic/logos/logoen.png') }}" alt="{{ env('APP_NAME') }}">
+            <img src="{{ url('/pic/logos/logoen.png') }}" alt="{{ config('app.name') }}">
             @endif
         </a>
         <button class="mobile-sidebar-close" id="mobileMenuClose" aria-label="Close menu">
