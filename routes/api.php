@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\CustomerAuthController;
 use App\Http\Controllers\Api\V1\DevController;
 use App\Http\Controllers\Api\V1\CustomerPasswordController;
 use App\Http\Controllers\Api\V1\CustomerProfileController;
+use App\Http\Controllers\Api\V1\Public\AboutUsController;
 use App\Http\Controllers\Api\V1\Public\MenuItemsController;
 // use App\Http\Controllers\Api\V1\Public\ProjectsController;
 // use App\Http\Controllers\Api\V1\Public\OffersController;
@@ -64,7 +65,12 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::prefix('contact')->group(function () {
-        Route::post('/', [ContactController::class, 'store'])->middleware('throttle:5,1');
+        Route::get('/', [ContactController::class, 'info']);
+        Route::post('/', [ContactController::class, 'store']);
+    });
+
+    Route::prefix('about')->group(function () {
+        Route::get('/', [AboutUsController::class, 'index']);
     });
 
     Route::prefix('favourites')->group(function () {

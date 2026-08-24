@@ -85,6 +85,62 @@ class ProjectQueryService
     }
 
     /**
+     * Years since the oldest project record still in the system. Deliberately NOT
+     * gated by publish_status - "years of experience" is about how long since the
+     * first project was ever added, even if that particular project never got
+     * published/completed. Soft-deleted rows are excluded since they don't really
+     * "exist" anymore.
+     */
+    public function yearsOfExperience(): int
+    {
+        $oldest = Project::whereNull('deleted_at')->oldest('created_at')->first();
+
+        return $oldest ? (int) $oldest->created_at->diffInYears(now()) : 0;
+    }
+
+    /**
+     * "Completed" has no dedicated status column on projects - publish_status=0 is
+     * used as the closest real signal, same publish gate used everywhere else.
+     */
+    public function completedCount(): int
+    {
+        return Project::where('publish_status', 0)->whereNull('deleted_at')->count();
+    }
+
+    /**
+     * Distinct emirates with at least one published project.
+     */
+    public function emiratesCount(): int
+    {
+        return Project::where('publish_status', 0)->whereNull('deleted_at')
+            ->whereNotNull('emirate_id')
+            ->distinct()
+            ->count('emirate_id');
+    }
+
+    /**
+     * Brief cards for the most recently added published ("completed") projects -
+     * same shape/fields as the favourites brief cards, for a home-screen list.
+     */
+    public function latestCompleted(int $limit = 10): array
+    {
+        $locale = app()->getLocale();
+
+        return Project::where('publish_status', 0)->whereNull('deleted_at')
+            ->orderBy('created_at', 'desc')
+            ->limit($limit)
+            ->get()
+            ->map(fn (Project $project) => [
+                'id' => $project->id,
+                'slug' => $project->slug,
+                'title' => $locale === 'ar' ? $project->title_arabic : $project->title_english,
+                'main_image' => $this->mediaUrl($project->main_image),
+                'emirate_id' => $project->emirate_id,
+            ])
+            ->all();
+    }
+
+    /**
      * Full detail for one project: the publish gate + the whole relation set
      * (03_CONTENT_API.md) + absolute media URLs, ready to render as-is. Returns null
      * if not found/unpublished/deleted so the controller can 404.

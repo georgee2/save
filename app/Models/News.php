@@ -20,6 +20,11 @@ class News extends Model
     /** Public route prefix for auto slug-change redirects (see RecordsSlugRedirects). */
     protected string $slugRedirectPrefix = 'blogs';
 
+    public function category()
+    {
+        return $this->belongsTo(Newscategory::class, 'category_code');
+    }
+
     public function NewRecord(array $data){
         $this->create($data);
     }

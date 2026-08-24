@@ -14,6 +14,11 @@ class Newscategory extends Model
     use SoftDeletes;
     protected $guarded = [];
 
+    public function news()
+    {
+        return $this->hasMany(News::class, 'category_code');
+    }
+
     public function NewRecord(array $data){
         $this->create($data);
     }

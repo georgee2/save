@@ -56,7 +56,7 @@ class InteriorQueryService
         $gallery = InteriorDesignGallery::where('id', $id)
             ->where('publish_status', 0)
             ->whereNull('deleted_at')
-            ->with(['category', 'projectStyle', 'projectType', 'emirate', 'project'])
+            ->with(['category', 'projectStyle', 'projectType', 'emirate', 'project.images'])
             ->first();
 
         if (!$gallery) {
@@ -84,6 +84,15 @@ class InteriorQueryService
             if (!empty($data[$rel]['image'])) {
                 $data[$rel]['image'] = $this->mediaUrl($data[$rel]['image']);
             }
+        }
+
+        // When this gallery is linked to a project, include that project's own photo
+        // gallery too (project_images, via project.images) - resolved to absolute URLs.
+        if (!empty($data['project']['images'])) {
+            foreach ($data['project']['images'] as &$projectImage) {
+                $projectImage['image'] = $this->mediaUrl($projectImage['image']);
+            }
+            unset($projectImage);
         }
 
         $data['related'] = $related->map(function (InteriorDesignGallery $item) {

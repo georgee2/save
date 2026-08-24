@@ -148,6 +148,7 @@ class Project extends Model
                 'p.project_number',
                 'p.title_english',
                 'p.title_arabic',
+                'p.category_id',
                 'ec.title_english as category_name',
                 'pt.name_english as type_name',
                 'p.publish_status',

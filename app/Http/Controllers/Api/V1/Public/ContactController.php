@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api\V1\Public;
 
 use App\Http\Controllers\Controller;
 use App\Mail\ContactConfirmationMail;
+use App\Models\AboutInformation;
 use App\Models\ContactInformation;
 use App\Models\ContactUs;
 use App\Models\Partner;
+use App\Services\Api\Concerns\ResolvesMediaUrls;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -20,6 +22,49 @@ use Illuminate\Support\Facades\Mail;
  */
 class ContactController extends Controller
 {
+    use ResolvesMediaUrls;
+
+    /**
+     * Company contact-us display info. Only fields with real backing columns are
+     * returned (see 08_GAPS_AND_BACKEND_CHANGES.md discussion) - office hours has no
+     * company-wide column anywhere in the schema, so it's intentionally omitted
+     * rather than reported as null/misleading. social_links only includes platforms
+     * that are actually set (pinterest, for example, is currently null in this data).
+     */
+    public function info()
+    {
+        $contact = ContactInformation::getContactInfo();
+        $about = AboutInformation::getAboutInfo();
+
+        $socialPlatforms = [
+            'facebook' => $contact->facebook,
+            'twitter' => $contact->twitter,
+            'instagram' => $contact->instagram,
+            'linkedin' => $contact->linkedin,
+            'pinterest' => $contact->pinterest,
+        ];
+
+        $socialLinks = [];
+        foreach ($socialPlatforms as $platform => $url) {
+            if (!empty($url)) {
+                $socialLinks[] = ['platform' => $platform, 'url' => $url];
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'company_profile_url' => $this->mediaUrl($about->company_profile),
+                'whatsapp' => $contact->whatsapp,
+                'company_phone' => $contact->mobile,
+                'email' => $contact->email,
+                'location_name_english' => $contact->location_text_english,
+                'location_name_arabic' => $contact->location_text_arabic,
+                'social_links' => $socialLinks,
+            ],
+        ]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
