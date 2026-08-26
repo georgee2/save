@@ -125,6 +125,15 @@ class User extends Authenticatable
     }
 
     /**
+     * The customer's FCM push token - at most one per user (see
+     * UserFcmToken::saveForUser()); logging in on a new device replaces it.
+     */
+    public function fcmToken()
+    {
+        return $this->hasOne(UserFcmToken::class);
+    }
+
+    /**
      * The customer's canonical favourites list id — a stable random UUID that
      * becomes their `favourites.session_id` across devices (and share token).
      * Generated + persisted lazily on first use.

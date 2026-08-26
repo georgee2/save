@@ -30,6 +30,16 @@ class NewsQueryService
         return $query;
     }
 
+    /**
+     * Cheap existence check (news is unpinned, so no constraints) - used by
+     * MenuItemsController::index() to drop menu items with nothing to show, without
+     * paying for a full paginated fetch just to throw the rows away.
+     */
+    public function hasAny(): bool
+    {
+        return $this->query(new Request())->exists();
+    }
+
     public function paginate(Request $request): LengthAwarePaginator
     {
         $perPage = (int) ($request->page_size ?? 20);

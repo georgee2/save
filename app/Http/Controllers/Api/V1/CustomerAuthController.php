@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\UserFcmToken;
 use App\Rules\DisposableEmail;
 use App\Services\ActivityLogService;
 use App\Services\CustomerRegistrationService;
@@ -58,6 +59,7 @@ class CustomerAuthController extends Controller
             'email' => 'required|email',
             'password' => 'required|string',
             'device_name' => 'nullable|string|max:255',
+            'fcm_token' => 'nullable|string|max:255',
         ]);
 
         $email = Str::lower(trim($request->email));
@@ -122,6 +124,10 @@ class CustomerAuthController extends Controller
             ['customer:read', 'customer:write']
         );
 
+        if ($request->filled('fcm_token')) {
+            UserFcmToken::saveForUser($user->id, $request->fcm_token);
+        }
+
         return response()->json([
             'success' => true,
             'token' => $token->plainTextToken,
@@ -147,7 +153,27 @@ class CustomerAuthController extends Controller
             'email' => $user->email,
             'phone' => $user->phone,
             'preferred_locale' => $user->preferred_locale,
+            // Tells the app whether it needs to call POST /customer/fcm-token -
+            // never the token value itself, the app already has that.
+            'has_fcm_token' => $user->fcmToken()->exists(),
         ]);
+    }
+
+    /**
+     * Register/update the FCM token for the device making this request. Separate
+     * from login() because a token can rotate independently of a session (Firebase
+     * SDK reissues tokens periodically) - the app calls this whenever that happens,
+     * not just at login.
+     */
+    public function saveFcmToken(Request $request)
+    {
+        $request->validate([
+            'fcm_token' => 'required|string|max:255',
+        ]);
+
+        UserFcmToken::saveForUser($request->user()->id, $request->fcm_token);
+
+        return response()->json(['success' => true]);
     }
 
     /**

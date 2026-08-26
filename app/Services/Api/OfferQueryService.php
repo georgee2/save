@@ -48,6 +48,16 @@ class OfferQueryService
         return $query;
     }
 
+    /**
+     * Cheap existence check for a pinned scope (no request-level filters) - used by
+     * MenuItemsController::index() to drop menu items with nothing to show, without
+     * paying for a full paginated fetch just to throw the rows away.
+     */
+    public function hasAny(array $constraints = []): bool
+    {
+        return $this->query(new Request(), $constraints)->exists();
+    }
+
     public function paginate(Request $request, array $constraints = []): LengthAwarePaginator
     {
         $perPage = (int) ($request->page_size ?? 20);

@@ -16,6 +16,7 @@ use App\Services\Api\InteriorQueryService;
 use App\Services\Api\NewsQueryService;
 use App\Services\Api\OfferQueryService;
 use App\Services\Api\ProjectQueryService;
+use App\Services\Api\ServiceQueryService;
 use Illuminate\Http\Request;
 
 class MenuItemsController extends Controller
@@ -31,6 +32,7 @@ class MenuItemsController extends Controller
         protected OfferQueryService $offers,
         protected InteriorQueryService $interior,
         protected NewsQueryService $news,
+        protected ServiceQueryService $services,
     ) {
     }
 
@@ -43,6 +45,12 @@ class MenuItemsController extends Controller
                 $menu->items()->where('is_visible_mobile', 1)->get()
             );
         }
+
+        // Drop items (static or dynamic) that resolve to a content listing with
+        // nothing in it right now - tapping one would just show an empty screen.
+        // Items that AREN'T a content listing at all (About, Contact, Home, ...)
+        // are never judged by this and always stay.
+        $activeItems = $activeItems->filter(fn (MenuItem $item) => $this->itemHasContent($item))->values();
 
         //used for location info
         $contact = ContactInformation::getContactInfo();
@@ -117,6 +125,10 @@ class MenuItemsController extends Controller
             // category (App\Models\MenuItem::getDynamicChildren() always resolves it
             // to every category that has news) - it always means "all news".
             $resolved = ['domain' => 'news'];
+        } elseif ($item->item_type === MenuItem::TYPE_DYNAMIC_SERVICES) {
+            // Services has no category-pinning mechanism either - always "all
+            // (main) services", same reasoning as dynamic_news above.
+            $resolved = ['domain' => 'services'];
         } elseif (in_array($item->item_type, [MenuItem::TYPE_DYNAMIC_QUERY, MenuItem::TYPE_CATEGORY_WITH_SUBS], true)) {
             $resolved = $this->resolveDynamic($item);
         } else {
@@ -170,8 +182,9 @@ class MenuItemsController extends Controller
             'projects' => [$this->projects->paginate($request, $constraints), $this->projects->filterOptions($constraints)],
             'offers' => [$this->offers->paginate($request, $constraints), $this->offers->filterOptions($constraints)],
             'interior' => [$this->interior->paginate($request, $constraints), $this->interior->filterOptions($constraints)],
-            // News has no pinned-scope concept - always "all news", so no $constraints.
+            // News/services have no pinned-scope concept - always "all", so no $constraints.
             'news' => [$this->news->paginate($request), $this->news->filterOptions()],
+            'services' => [$this->services->paginate($request), $this->services->filterOptions()],
         };
 
         return response()->json([
@@ -193,10 +206,10 @@ class MenuItemsController extends Controller
         $domain = $request->domain;
         $id = $request->id;
 
-        if (!$id || !in_array($domain, ['projects', 'offers', 'interior', 'news'], true)) {
+        if (!$id || !in_array($domain, ['projects', 'offers', 'interior', 'news', 'services'], true)) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'domain (projects|offers|interior|news) and id are required',
+                'message' => 'domain (projects|offers|interior|news|services) and id are required',
             ], 422);
         }
 
@@ -205,6 +218,7 @@ class MenuItemsController extends Controller
             'offers' => $this->offers->detail((int) $id, $request->emirate_id ? (int) $request->emirate_id : null),
             'interior' => $this->interior->detail((int) $id),
             'news' => $this->news->detail((int) $id),
+            'services' => $this->services->detail((int) $id),
         };
 
         if (!$data) {
@@ -247,6 +261,13 @@ class MenuItemsController extends Controller
         // forgiving-by-title approach as Home above.
         if (str_contains(strtolower(trim($item->title_english ?? '')), 'news')) {
             return ['domain' => 'news'];
+        }
+
+        // Same forgiving-by-title approach for Services: all real rows share
+        // route_name 'services.index' regardless of static/dynamic type or exact
+        // title ("Services", "All Services").
+        if (str_contains(strtolower(trim($item->title_english ?? '')), 'service')) {
+            return ['domain' => 'services'];
         }
 
         $params = $item->route_params ?? [];
@@ -324,6 +345,54 @@ class MenuItemsController extends Controller
             'category_ids' => $item->query_category_ids ?: null,
             'subcategory_ids' => $item->query_source === MenuItem::QUERY_SOURCE_INTERIOR ? null : ($item->query_subcategory_ids ?: null),
         ];
+    }
+
+    /**
+     * True if index() should include this item: either it isn't a content listing
+     * at all (About, Contact, Home, dividers, ...) - always kept, this check
+     * doesn't apply to them - or it IS one and currently has at least one matching
+     * published item in its pinned scope.
+     */
+    protected function itemHasContent(MenuItem $item): bool
+    {
+        if ($item->item_type === MenuItem::TYPE_STATIC) {
+            // Cheap short-circuit: Home is a dashboard, not a content listing, so
+            // it's never judged here - going through resolveStatic() would trigger
+            // the full (expensive) section/dashboard build just to discard it.
+            if (strtolower(trim($item->title_english ?? '')) === 'home') {
+                return true;
+            }
+
+            $resolved = $this->resolveStatic($item);
+        } elseif ($item->item_type === MenuItem::TYPE_DYNAMIC_NEWS) {
+            $resolved = ['domain' => 'news'];
+        } elseif ($item->item_type === MenuItem::TYPE_DYNAMIC_SERVICES) {
+            $resolved = ['domain' => 'services'];
+        } elseif (in_array($item->item_type, [MenuItem::TYPE_DYNAMIC_QUERY, MenuItem::TYPE_CATEGORY_WITH_SUBS], true)) {
+            $resolved = $this->resolveDynamic($item);
+        } else {
+            // Dividers/headers/other non-content types aren't judged either way.
+            return true;
+        }
+
+        $domain = $resolved['domain'] ?? null;
+
+        if ($domain === null) {
+            return true;
+        }
+
+        $constraints = [
+            'category_ids' => $resolved['category_ids'] ?? null,
+            'subcategory_ids' => $resolved['subcategory_ids'] ?? null,
+        ];
+
+        return match ($domain) {
+            'projects' => $this->projects->hasAny($constraints),
+            'offers' => $this->offers->hasAny($constraints),
+            'interior' => $this->interior->hasAny($constraints),
+            'news' => $this->news->hasAny(),
+            'services' => $this->services->hasAny(),
+        };
     }
 
     /**

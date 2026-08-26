@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\V1\Public\MenuItemsController;
 // use App\Http\Controllers\Api\V1\Public\OffersController;
 // use App\Http\Controllers\Api\V1\Public\InteriorController;
 use App\Http\Controllers\Api\V1\Public\ContactController;
+use App\Http\Controllers\Api\V1\Public\SearchController;
 use App\Http\Controllers\Api\V1\CustomerFavouriteController;
 
 /*
@@ -61,6 +62,7 @@ Route::prefix('v1')->group(function () {
         Route::middleware(['auth:sanctum', 'ability:customer:write'])->group(function () {
             Route::put('/profile', [CustomerProfileController::class, 'update']);
             Route::put('/password', [CustomerProfileController::class, 'updatePassword']);
+            Route::post('/fcm-token', [CustomerAuthController::class, 'saveFcmToken']);
         });
     });
 
@@ -92,6 +94,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/route', [MenuItemsController::class, 'itemRoute']);
         Route::get('/detail', [MenuItemsController::class, 'itemDetail']);
     });
+
+    Route::get('/search', [SearchController::class, 'index']);
 });
 
 // Local-only testing helper: reset rate-limit/cooldown keys for an email from
