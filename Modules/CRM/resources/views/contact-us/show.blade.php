@@ -424,6 +424,40 @@
                                     @endif
                                 </div>
                             </div>
+                            {{-- Which offer or project the enquiry came from. Only set by the
+                                 offer/project inquiry forms; blank for general contact messages. --}}
+                            <div class="detail-row">
+                                <div class="detail-label">Regarding</div>
+                                <div class="detail-value">
+                                    @if($contact->related_type && $contact->relatedTitle)
+                                        @if($contact->relatedUrl)
+                                            <a href="{{ $contact->relatedUrl }}" target="_blank" rel="noopener">
+                                                {{ $contact->relatedTitle }}
+                                            </a>
+                                        @else
+                                            {{ $contact->relatedTitle }}
+                                        @endif
+                                        <span class="badge badge-light ml-1" style="font-size:12px;">{{ ucfirst($contact->related_type) }}</span>
+                                    @elseif($contact->related_type)
+                                        <span class="text-muted">{{ ucfirst($contact->related_type) }} #{{ $contact->related_id }} (no longer available)</span>
+                                    @else
+                                        <span class="text-muted">&mdash;</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Preferred Visit</div>
+                                <div class="detail-value">
+                                    @if($contact->preferred_date)
+                                        {{ \Carbon\Carbon::parse($contact->preferred_date)->format('D, d M Y') }}
+                                        @if($contact->preferred_time)
+                                            <span class="text-muted">at {{ $contact->preferred_time }}</span>
+                                        @endif
+                                    @else
+                                        <span class="text-muted">&mdash;</span>
+                                    @endif
+                                </div>
+                            </div>
                             <div class="detail-row">
                                 <div class="detail-label">Submitted From</div>
                                 <div class="detail-value">

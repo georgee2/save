@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Mail\CustomerInviteMail;
+use App\Mail\RegistrationAttemptMail;
 use App\Models\Role;
 use App\Models\User;
 use App\Services\CustomerSync\CustomerSyncService;
@@ -12,7 +13,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
 
 /**
  * Shared customer-registration logic used by both the web controller and the app API.
@@ -30,9 +30,7 @@ class CustomerRegistrationService
      * Register (or idempotently re-invite) a customer.
      *
      * @param array{name:string,email:string,phone?:string|null} $data
-     * @return array{user: User, status: string}  status: 'created'
-     *
-     * @throws \Illuminate\Validation\ValidationException when the email already exists
+     * @return array{user: ?User, status: string}  status: 'created' | 'exists'
      */
     public function register(array $data, string $source = 'web'): array
     {
@@ -41,7 +39,9 @@ class CustomerRegistrationService
         $existing = User::where('email', $email)->first();
 
         if ($existing) {
-            $this->failEmailExists($existing);
+            $this->notifyExistingAccount($existing);
+
+            return ['user' => null, 'status' => 'exists'];
         }
 
         try {
@@ -66,7 +66,9 @@ class CustomerRegistrationService
             $duplicate = User::where('email', $email)->first();
 
             if ($duplicate) {
-                $this->failEmailExists($duplicate);
+                $this->notifyExistingAccount($duplicate);
+
+                return ['user' => null, 'status' => 'exists'];
             }
 
             throw $e;
@@ -87,26 +89,40 @@ class CustomerRegistrationService
     }
 
     /**
-     * Reject registration when the email already exists, with a clear message so
-     * the user knows to log in, reset, or activate instead of re-registering.
+     * Tell the address owner, by email, that someone tried to register with their address.
+     *
+     * This used to throw a ValidationException whose wording distinguished four cases -
+     * no account, activated customer, unactivated customer, and staff - which made
+     * registration an oracle for whether an address exists, whether it has been activated,
+     * and whether it belongs to staff. The caller now returns its ordinary success
+     * response either way, and the fact is delivered here, where only the owner sees it.
+     *
+     * An unactivated customer gets their activation link resent instead, since that is
+     * almost always what they were actually trying to do.
      */
-    protected function failEmailExists(User $existing): void
+    protected function notifyExistingAccount(User $existing): void
     {
-        if (!$existing->isCustomer()) {
-            throw ValidationException::withMessages([
-                'email' => [__('This email address is already in use.')],
-            ]);
+        if ($existing->isCustomer() && is_null($existing->password_set_at) && $existing->is_active) {
+            $this->sendInvite($existing);
+
+            return;
         }
 
-        // Distinguish an activated account from one that was created but never
-        // activated, so we can point the user to the right next step.
-        $message = is_null($existing->password_set_at)
-            ? __('lang.account_email_pending')
-            : __('lang.account_email_registered');
+        // Cooldown shared with sendInvite's, so repeatedly submitting an address cannot be
+        // used to flood its owner.
+        $cooldownKey = 'registration-attempt:' . Str::lower($existing->email);
 
-        throw ValidationException::withMessages([
-            'email' => [$message],
-        ]);
+        if (!Cache::add($cooldownKey, true, now()->addMinutes(10))) {
+            return;
+        }
+
+        dispatch(function () use ($existing) {
+            try {
+                Mail::to($existing->email)->send(new RegistrationAttemptMail($existing));
+            } catch (\Throwable $e) {
+                Log::warning('Registration-attempt notice failed: ' . $e->getMessage());
+            }
+        })->afterResponse();
     }
 
     /**

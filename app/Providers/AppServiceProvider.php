@@ -89,8 +89,14 @@ class AppServiceProvider extends ServiceProvider
         // Register Header Composer for all views
         view()->composer('*', \App\Http\View\Composers\HeaderComposer::class);
 
-        // Shared customer password policy: at least 8 chars with mixed case and a number.
-        // Reused via Password::defaults() at set-password / change-password.
-        Password::defaults(fn () => Password::min(8)->mixedCase()->numbers());
+        // Shared password policy, reused via Password::defaults() everywhere a password is
+        // set. The breach check is production-only: it calls Have I Been Pwned over the
+        // network, which would make the test suite slow and dependent on connectivity.
+        // It fails open if the API is unreachable, so an outage cannot block a reset.
+        Password::defaults(function () {
+            $rule = Password::min(12)->mixedCase()->numbers();
+
+            return app()->isProduction() ? $rule->uncompromised() : $rule;
+        });
     }
 }

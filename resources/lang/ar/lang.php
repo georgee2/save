@@ -214,6 +214,7 @@ return [
     'phone_number' => 'رقم الهاتف',
     'interested_message' => 'رسالتك...',
     'interested_in_offer' => 'مرحباً، أنا مهتم بـ :offer',
+    'interested_in_project' => 'مرحباً، أنا مهتم بـ :project',
     'interior_design' => 'التصميم الداخلي',
     'interior_gallery_title' => 'معرض التصميم الداخلي',
     'interior_gallery_bio' => 'استكشف مجموعتنا المذهلة من مشاريع التصميم الداخلي التي تعرض الأناقة والإبداع والجماليات العصرية.',
@@ -598,6 +599,8 @@ return [
     'email_invite_subject' => 'تفعيل حسابك - SVEC',
     'email_reset_subject' => 'إعادة تعيين كلمة المرور - SVEC',
     'email_account_locked_subject' => 'تم قفل حسابك مؤقتاً - SVEC',
+    'email_registration_attempt_subject' => 'لديك حساب بالفعل في سمارت فيجن',
+    'email_change_alert_subject' => 'يتم تغيير البريد الإلكتروني لحسابك - SVEC',
     'email_change_subject' => 'تأكيد بريدك الإلكتروني الجديد - SVEC',
 
     // إعادة تعيين كلمة المرور الذاتية للموظفين (لوحة التحكم)

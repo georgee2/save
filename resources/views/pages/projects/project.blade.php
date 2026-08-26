@@ -366,8 +366,8 @@
             <aside class="col-lg-4 pl-xl-4 primary-sidebar sidebar-sticky" id="sidebar">
               <div class="primary-sidebar-inner">
               @php
-                  $showProjectScheduleTour = env('PROJECTS_SCHEDULE_TOUR', false);
-                  $showProjectRequestInfo = env('PROJECTS_REQUEST_INFO', false);
+                  $showProjectScheduleTour = config('features.projects.schedule_tour');
+                  $showProjectRequestInfo = config('features.projects.request_info');
                   $showProjectForms = $showProjectScheduleTour || $showProjectRequestInfo;
               @endphp
               @if($showProjectForms)
@@ -398,201 +398,111 @@
                 </div>
                 @endif
                 <div class="card-body px-sm-6 shadow-xxs-2 pb-5 pt-0">
-                  <form>
-                    <div class="tab-content pt-1 pb-0 px-0 shadow-none">
-                      @if($showProjectScheduleTour)
-                      <div class="tab-pane fade {{ $showProjectScheduleTour ? 'show active' : '' }}" id="schedule" role="tabpanel">
-                        <div class="slick-slider calendar arrow-hide-disable mx-n1"
-                                             data-slick-options='{"slidesToShow": 5, "autoplay":false,"dots":false}'>
-                          <div class="box px-1 py-4">
-                            <div class="card pointer active border-0 shadow-xxs-1"
-                                                     data-date="March 17, 2020">
-                              <div class="card-body p-1 text-center">
-                                <p class="day fs-12 text-muted lh-2 mb-0">Tue</p>
-                                <p class="date fs-18 text-heading lh-173 mb-0 font-weight-bold">
-                                  17</p>
-                                <p class="month fs-13 letter-spacing-087 mb-0">Mar</p>
+                  <div class="tab-content pt-1 pb-0 px-0 shadow-none">
+                    @php
+                      $projectTitle = app()->getLocale() == 'ar' ? $project->title_arabic : $project->title_english;
+                      $projectToday = \Carbon\Carbon::now();
+                    @endphp
+                    @if($showProjectScheduleTour)
+                    <div class="tab-pane fade {{ $showProjectScheduleTour ? 'show active' : '' }}" id="schedule" role="tabpanel">
+                      <form action="{{ route('contact.store') }}" method="POST" class="project-inquiry-form" id="projectTourForm">
+                        @csrf
+                        @include('includes.form-guard')
+                        <input type="hidden" name="source" value="project_tour">
+                        <input type="hidden" name="related_type" value="project">
+                        <input type="hidden" name="related_id" value="{{ $project->id }}">
+                        <input type="hidden" name="subject" value="{{ __('lang.schedule_a_tour') }} - {{ $projectTitle }}">
+                        <input type="hidden" name="message" value="{{ __('lang.interested_in_project', ['project' => $projectTitle]) }}">
+                        <input type="hidden" name="g-recaptcha-response" class="project-recaptcha-token">
+
+                        {{-- 14 days forward from today. This calendar was previously hardcoded
+                             to March 2020, so every date offered was five years in the past. --}}
+                        <div class="calendar-slider-wrapper mt-4 mb-3">
+                          <button type="button" class="calendar-nav calendar-prev" id="projectCalendarPrev">
+                            <i class="fas fa-chevron-left"></i>
+                          </button>
+                          <div class="slick-slider calendar-slider" id="projectCalendarSlider"
+                               data-slick-options='{"slidesToShow": 5, "autoplay":false, "dots":false, "arrows":false, "infinite":false, "responsive":[{"breakpoint": 400,"settings": {"slidesToShow":3}},{"breakpoint": 576,"settings": {"slidesToShow":4}}]}'>
+                            @for($i = 0; $i < 14; $i++)
+                            @php $projectDate = $projectToday->copy()->addDays($i); @endphp
+                            <div class="box px-1 py-2">
+                              <div class="calendar-day text-center px-2 py-3 rounded {{ $i === 0 ? 'active' : '' }}"
+                                   data-date="{{ $projectDate->format('Y-m-d') }}"
+                                   style="cursor: pointer; border: 2px solid transparent; transition: all 0.3s ease;">
+                                <span class="d-block fs-12 text-muted text-uppercase">{{ $projectDate->format('D') }}</span>
+                                <span class="d-block fs-20 font-weight-600 text-heading">{{ $projectDate->format('d') }}</span>
+                                <span class="d-block fs-11 text-muted">{{ $projectDate->format('M') }}</span>
                               </div>
                             </div>
+                            @endfor
                           </div>
-                          <div class="box px-1 py-4">
-                            <div class="card pointer border-0 shadow-xxs-1"
-                                                     data-date="March 18, 2020">
-                              <div class="card-body p-1 text-center">
-                                <p class="day fs-12 text-muted lh-2 mb-0">Wed</p>
-                                <p class="date fs-18 text-heading lh-173 mb-0 font-weight-bold">
-                                  18</p>
-                                <p class="month fs-13 letter-spacing-087 mb-0">Mar</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="box px-1 py-4">
-                            <div class="card pointer border-0 shadow-xxs-1"
-                                                     data-date="March 19, 2020">
-                              <div class="card-body p-1 text-center">
-                                <p class="day fs-12 text-muted lh-2 mb-0">Thur</p>
-                                <p class="date fs-18 text-heading lh-173 mb-0 font-weight-bold">
-                                  19</p>
-                                <p class="month fs-13 letter-spacing-087 mb-0">Mar</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="box px-1 py-4">
-                            <div class="card pointer border-0 shadow-xxs-1"
-                                                     data-date="March 20, 2020">
-                              <div class="card-body p-1 text-center">
-                                <p class="day fs-12 text-muted lh-2 mb-0">Fri</p>
-                                <p class="date fs-18 text-heading lh-173 mb-0 font-weight-bold">
-                                  20</p>
-                                <p class="month fs-13 letter-spacing-087 mb-0">Mar</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="box px-1 py-4">
-                            <div class="card pointer border-0 shadow-xxs-1"
-                                                     data-date="March 21, 2020">
-                              <div class="card-body p-1 text-center">
-                                <p class="day fs-12 text-muted lh-2 mb-0">Sat</p>
-                                <p class="date fs-18 text-heading lh-173 mb-0 font-weight-bold">
-                                  21</p>
-                                <p class="month fs-13 letter-spacing-087 mb-0">Mar</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="box px-1 py-4">
-                            <div class="card pointer border-0 shadow-xxs-1"
-                                                     data-date="March 22, 2020">
-                              <div class="card-body p-1 text-center">
-                                <p class="day fs-12 text-muted lh-2 mb-0">Sun</p>
-                                <p class="date fs-18 text-heading lh-173 mb-0 font-weight-bold">
-                                  22</p>
-                                <p class="month fs-13 letter-spacing-087 mb-0">Mar</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="box px-1 py-4">
-                            <div class="card pointer border-0 shadow-xxs-1"
-                                                     data-date="March 23, 2020">
-                              <div class="card-body p-1 text-center">
-                                <p class="day fs-12 text-muted lh-2 mb-0">Mon</p>
-                                <p class="date fs-18 text-heading lh-173 mb-0 font-weight-bold">
-                                  23</p>
-                                <p class="month fs-13 letter-spacing-087 mb-0">Mar</p>
-                              </div>
-                            </div>
-                          </div>
+                          <button type="button" class="calendar-nav calendar-next" id="projectCalendarNext">
+                            <i class="fas fa-chevron-right"></i>
+                          </button>
                         </div>
-                        <input type="hidden" class="date" name="date" value="March 17, 2020">
-                        <div class="form-group mb-2">
-                          <div class="input-group input-group-lg bootstrap-timepicker timepicker">
-                            <input type="text" class="form-control border-0 text-body shadow-none"
-                                                       placeholder="Choose a time">
-                            <div class="input-group-append input-group-addon">
-                              <button class="btn bg-input shadow-none fs-18 lh-1" type="button"><i
-                                                            class="fal fa-angle-down"></i></button>
-                            </div>
-                          </div>
+                        <input type="hidden" id="projectSelectedDate" name="preferred_date" value="{{ $projectToday->format('Y-m-d') }}">
+
+                        <div class="form-group mb-3">
+                          <label class="fs-13 text-muted mb-1">{{ __('lang.preferred_time') }}</label>
+                          <select class="form-control form-control-lg border-0 bg-gray-01" name="preferred_time">
+                            <option value="">{{ __('lang.select_time') }}</option>
+                            <option value="09:00">09:00 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="12:00">12:00 PM</option>
+                            <option value="13:00">01:00 PM</option>
+                            <option value="14:00">02:00 PM</option>
+                            <option value="15:00">03:00 PM</option>
+                            <option value="16:00">04:00 PM</option>
+                            <option value="17:00">05:00 PM</option>
+                          </select>
                         </div>
-                        <div class="form-group mb-2">
-                          <input type="text" class="form-control form-control-lg border-0"
-                                                   placeholder="First Name, Last Name">
+                        <div class="form-group mb-3">
+                          <input type="text" class="form-control form-control-lg border-0 bg-gray-01" name="name" placeholder="{{ __('lang.full_name') }}">
                         </div>
-                        <div class="form-group mb-2">
-                          <input type="email" class="form-control form-control-lg border-0"
-                                                   placeholder="Your Email">
+                        <div class="form-group mb-3">
+                          <input type="email" class="form-control form-control-lg border-0 bg-gray-01" name="email" placeholder="{{ __('lang.email_address') }}">
                         </div>
                         <div class="form-group mb-4">
-                          <input type="tel" class="form-control form-control-lg border-0"
-                                                   placeholder="Your phone">
+                          <input type="tel" class="form-control form-control-lg border-0 bg-gray-01" name="phone" placeholder="{{ __('lang.phone_number') }}">
                         </div>
-                        <button type="submit" class="btn btn-primary btn-lg btn-block rounded">Schedule
-                          A Tour
+                        <button type="submit" class="btn btn-primary btn-lg btn-block rounded">
+                          <i class="fas fa-calendar-check mr-2"></i>{{ __('lang.schedule_a_tour') }}
                         </button>
-                        <div class="form-group form-check mt-2 mb-0">
-                          <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                          <label class="form-check-label fs-13" for="exampleCheck1">Egestas fringilla
-                            phasellus
-                            faucibus
-                            scelerisque
-                            eleifend donec.</label>
-                        </div>
-                      </div>
-                      @endif
-                      @if($showProjectRequestInfo)
-                      <div class="tab-pane fade {{ !$showProjectScheduleTour ? 'show active' : '' }} pt-5" id="request-info" role="tabpanel">
-                        <div class="form-check d-flex align-items-center border-bottom pb-3 mb-3">
-                          <input class="form-check-input" type="radio" name="agent" value="option1">
-                          <div class="form-check-label ml-2">
-                            <div class="d-flex align-items-center">
-                              <a href="agent-details-1.html"
-                                                       class="d-block w-60px h-60 mr-3">
-                                <img src="images/agent-2.jpg"
-                                                             class="rounded-circle" alt="agent-2">
-                              </a>
-                              <div>
-                                <a href="agent-details-1.html"
-                                                           class="d-block text-dark font-weight-500 lh-15 hover-primary">Oliver
-                                  Beddows</a>
-                                <p class="mb-0 fs-13 mb-0 lh-17">Sales Excutive</p>
-                                <p class="mb-0 fs-13 mb-0 lh-17"><span>(+123)</span><span
-                                                                class="text-heading d-inline-block ml-2">1900 68668</span>
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="form-check d-flex align-items-center mb-6">
-                          <input class="form-check-input" type="radio" name="agent" id="inlineRadio2"
-                                                   value="option2">
-                          <div class="form-check-label ml-2">
-                            <div class="d-flex align-items-center">
-                              <a href="agent-details-1.html"
-                                                       class="d-block w-60px h-60 mr-3">
-                                <img src="images/agent-1.jpg"
-                                                             class="rounded-circle" alt="agent-1">
-                              </a>
-                              <div>
-                                <a href="agent-details-1.html"
-                                                           class="d-block text-dark font-weight-500 lh-15 hover-primary">Max
-                                  Kordex</a>
-                                <p class="mb-0 fs-13 mb-0 lh-17">Real estate broker</p>
-                                <p class="mb-0 fs-13 mb-0 lh-17"><span>(+123)</span><span
-                                                                class="text-heading d-inline-block ml-2">1900 68668</span>
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="form-group mb-2">
-                          <input type="text" class="form-control form-control-lg border-0"
-                                                   placeholder="First Name, Last Name">
-                        </div>
-                        <div class="form-group mb-2">
-                          <input type="email" class="form-control form-control-lg border-0"
-                                                   placeholder="Your Email">
-                        </div>
-                        <div class="form-group mb-2">
-                          <input type="tel" class="form-control form-control-lg border-0"
-                                                   placeholder="Your phone">
-                        </div>
-                        <div class="form-group mb-4">
-                          <textarea class="form-control border-0" rows="4">Hello, I'm interested in Villa Called Archangel</textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-lg btn-block rounded">Request
-                          Info
-                        </button>
-                        <div class="form-group form-check mt-2 mb-0">
-                          <input type="checkbox" class="form-check-input" id="exampleCheck2">
-                          <label class="form-check-label fs-13" for="exampleCheck2">Egestas fringilla
-                            phasellus
-                            faucibus
-                            scelerisque
-                            eleifend donec.</label>
-                        </div>
-                      </div>
-                      @endif
+                      </form>
                     </div>
-                  </form>
+                    @endif
+
+                    @if($showProjectRequestInfo)
+                    <div class="tab-pane fade {{ !$showProjectScheduleTour ? 'show active' : '' }} pt-4" id="request-info" role="tabpanel">
+                      <form action="{{ route('contact.store') }}" method="POST" class="project-inquiry-form" id="projectInfoForm">
+                        @csrf
+                        @include('includes.form-guard')
+                        <input type="hidden" name="source" value="project_info">
+                        <input type="hidden" name="related_type" value="project">
+                        <input type="hidden" name="related_id" value="{{ $project->id }}">
+                        <input type="hidden" name="subject" value="{{ __('lang.request_info') }} - {{ $projectTitle }}">
+                        <input type="hidden" name="g-recaptcha-response" class="project-recaptcha-token">
+
+                        <div class="form-group mb-3">
+                          <input type="text" class="form-control form-control-lg border-0 bg-gray-01" name="name" placeholder="{{ __('lang.full_name') }}">
+                        </div>
+                        <div class="form-group mb-3">
+                          <input type="email" class="form-control form-control-lg border-0 bg-gray-01" name="email" placeholder="{{ __('lang.email_address') }}">
+                        </div>
+                        <div class="form-group mb-3">
+                          <input type="tel" class="form-control form-control-lg border-0 bg-gray-01" name="phone" placeholder="{{ __('lang.phone_number') }}">
+                        </div>
+                        <div class="form-group mb-4">
+                          <textarea class="form-control border-0 bg-gray-01" name="message" rows="4" placeholder="{{ __('lang.interested_message') }}">{{ __('lang.interested_in_project', ['project' => $projectTitle]) }}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block rounded">
+                          <i class="fas fa-paper-plane mr-2"></i>{{ __('lang.request_info') }}
+                        </button>
+                      </form>
+                    </div>
+                    @endif
+                  </div>
                 </div>
               </div>
               @else
@@ -1315,4 +1225,37 @@ $(document).ready(function() {
     });
 });
 </script>
+
+@if($showProjectScheduleTour || $showProjectRequestInfo)
+<script>
+// Date picker for the tour form. Mirrors the offers page: clicking a day highlights it and
+// writes the ISO date into the hidden field the controller validates.
+document.addEventListener('DOMContentLoaded', function () {
+    var days = document.querySelectorAll('#projectCalendarSlider .calendar-day');
+    var hidden = document.getElementById('projectSelectedDate');
+
+    days.forEach(function (day) {
+        day.addEventListener('click', function () {
+            days.forEach(function (d) { d.classList.remove('active'); });
+            day.classList.add('active');
+            if (hidden) { hidden.value = day.getAttribute('data-date'); }
+        });
+    });
+
+    if (typeof jQuery !== 'undefined' && jQuery.fn.slick) {
+        var $slider = jQuery('#projectCalendarSlider');
+        if ($slider.length && !$slider.hasClass('slick-initialized')) {
+            $slider.slick(JSON.parse($slider.attr('data-slick-options')));
+            jQuery('#projectCalendarPrev').on('click', function () { $slider.slick('slickPrev'); });
+            jQuery('#projectCalendarNext').on('click', function () { $slider.slick('slickNext'); });
+        }
+    }
+});
+</script>
+
+    @include('includes.inquiry-form-scripts', [
+        'inquiryFormSelector' => '.project-inquiry-form',
+        'inquiryRecaptchaAction' => 'project_enquiry',
+    ])
+@endif
 @endsection

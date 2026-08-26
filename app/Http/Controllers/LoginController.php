@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Services\RecaptchaService;
 use App\Support\LoginThrottle;
 use App\Support\RecaptchaOutcome;
+use App\Support\TimingGuard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -161,6 +162,13 @@ class LoginController extends Controller
         // is unknown or the password is wrong, so the login page does not leak
         // which email addresses have accounts (no user enumeration).
         $remember = $request->boolean('remember');
+
+        // Auth::attempt short-circuits before Hash::check when the address has no account,
+        // so an unknown email answers about one bcrypt faster than a known one. The message
+        // was already uniform; this makes the timing uniform too.
+        if ($user === null) {
+            TimingGuard::burnPasswordHash();
+        }
 
         if (!Auth::attempt($credentials, $remember)) {
             RateLimiter::hit($throttleKey, $this->decaySeconds);

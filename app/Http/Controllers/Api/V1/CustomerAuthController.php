@@ -8,7 +8,9 @@ use App\Models\UserFcmToken;
 use App\Rules\DisposableEmail;
 use App\Services\ActivityLogService;
 use App\Services\CustomerRegistrationService;
+use App\Support\EmailRules;
 use App\Support\LoginThrottle;
+use App\Support\TimingGuard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -26,7 +28,7 @@ class CustomerAuthController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => ['required', 'email:rfc,dns', 'max:255', new DisposableEmail()],
+            'email' => ['required', EmailRules::format(), 'max:255', new DisposableEmail()],
             'phone' => 'nullable|string|max:30',
             'consent' => 'accepted',
             'preferred_locale' => 'sometimes|in:en,ar',
@@ -82,6 +84,13 @@ class CustomerAuthController extends Controller
             throw ValidationException::withMessages([
                 'email' => ['Too many login attempts. Please try again later.'],
             ])->status(429);
+        }
+
+        // PHP short-circuits the || below, so an unknown address never reaches Hash::check
+        // and answers about one bcrypt faster than a real one - enough to enumerate users
+        // despite the identical message.
+        if ($user === null) {
+            TimingGuard::burnPasswordHash();
         }
 
         if (!$user || !Hash::check($request->password, $user->password)) {

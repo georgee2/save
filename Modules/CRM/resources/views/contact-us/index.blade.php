@@ -309,6 +309,7 @@
                                     <th>Phone</th>
                                     <th>Subject</th>
                                     <th>Service</th>
+                                    <th>Regarding</th>
                                     <th>Message</th>
                                     <th>Agent</th>
                                     <th>Status</th>
@@ -333,6 +334,13 @@
                                     <td>
                                         @if($contact->service_name)
                                             <span class="badge badge-info">{{ $contact->service_name }}</span>
+                                        @else
+                                            <span class="text-muted">---</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($contact->related_type)
+                                            <span class="badge badge-light">{{ ucfirst($contact->related_type) }} #{{ $contact->related_id }}</span>
                                         @else
                                             <span class="text-muted">---</span>
                                         @endif
@@ -370,7 +378,7 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="11" class="text-center py-4">
+                                    <td colspan="12" class="text-center py-4">
                                         <i class="fa fa-envelope-o fa-3x text-muted mb-3"></i>
                                         <p class="text-muted">No contact messages found.</p>
                                         @if(request()->hasAny(['name', 'email', 'phone', 'status', 'service_id', 'agent', 'date_from', 'date_to']))

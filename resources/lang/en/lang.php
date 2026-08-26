@@ -214,6 +214,7 @@ return [
     'phone_number' => 'Phone Number',
     'interested_message' => 'Your message...',
     'interested_in_offer' => 'Hello, I am interested in :offer',
+    'interested_in_project' => 'Hello, I am interested in :project',
     'interior_design' => 'Interior Design',
     'interior_gallery_title' => 'Our Interior Gallery',
     'interior_gallery_bio' => 'Explore our stunning collection of interior design projects showcasing elegance, creativity, and modern aesthetics.',
@@ -598,6 +599,8 @@ return [
     'email_invite_subject' => 'Activate your account - SVEC',
     'email_reset_subject' => 'Reset your password - SVEC',
     'email_account_locked_subject' => 'Your account has been temporarily locked - SVEC',
+    'email_registration_attempt_subject' => 'You already have a Smart Vision account',
+    'email_change_alert_subject' => 'Your account email address is being changed - SVEC',
     'email_change_subject' => 'Confirm your new email address - SVEC',
 
     // Staff self-service account / password reset (CMS)

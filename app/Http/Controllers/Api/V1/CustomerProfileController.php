@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\CustomerEmailChangeMail;
 use App\Models\User;
 use App\Services\CustomerSync\CustomerSyncService;
+use App\Services\EmailChangeService;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -19,8 +20,10 @@ use Illuminate\Validation\Rules\Password;
 
 class CustomerProfileController extends Controller
 {
-    public function __construct(protected CustomerSyncService $sync)
-    {
+    public function __construct(
+        protected CustomerSyncService $sync,
+        protected EmailChangeService $emailChange,
+    ) {
     }
 
     /**
@@ -49,6 +52,9 @@ class CustomerProfileController extends Controller
     {
         $user = $request->user();
 
+        $emailIsChanging = $request->has('email')
+            && Str::lower(trim((string) $request->input('email'))) !== $user->email;
+
         $data = Validator::make($request->all(), [
             'name' => ['sometimes', 'required', 'string', 'max:255'],
             'phone' => ['sometimes', 'nullable', 'string', 'max:30'],
@@ -57,6 +63,11 @@ class CustomerProfileController extends Controller
                 Rule::unique('users', 'email')->ignore($user->id),
                 Rule::unique('users', 'pending_email')->ignore($user->id),
             ],
+            // Matches the web form: redirecting the account's email is the first move in
+            // taking it over, so it needs the password and not just a valid token.
+            'current_password' => $emailIsChanging
+                ? ['required', 'current_password:sanctum']
+                : ['sometimes'],
             'preferred_locale' => ['sometimes', 'required', Rule::in(['en', 'ar'])],
             'notification_prefs' => ['sometimes', 'array'],
         ])->validate();
@@ -74,27 +85,16 @@ class CustomerProfileController extends Controller
             $user->notification_prefs = $data['notification_prefs'];
         }
 
-        $emailChanged = false;
-        if (array_key_exists('email', $data)) {
-            $newEmail = Str::lower(trim($data['email']));
-            if ($newEmail !== $user->email) {
-                $emailChanged = true;
-                $token = Str::random(64);
-                $user->pending_email = $newEmail;
-                $user->pending_email_token = $token;
-            }
-        }
-
         $user->save();
 
-        if ($emailChanged) {
-            $url = URL::temporarySignedRoute('account.email.verify', now()->addHours(24), ['token' => $token]);
-            try {
-                Mail::to($user->pending_email)->send(new CustomerEmailChangeMail($user, $url, $user->pending_email));
-            } catch (\Throwable $e) {
-                Log::warning('API email-change verification mail failed: ' . $e->getMessage());
-            }
+        // Shared with the web flow rather than duplicated here: this copy had already
+        // drifted, storing the token in plaintext with no server-side expiry and never
+        // warning the address that was losing control of the account.
+        if ($emailIsChanging) {
+            $this->emailChange->start($user, Str::lower(trim((string) $request->input('email'))));
         }
+
+        $emailChanged = $emailIsChanging;
 
         try {
             $this->sync->pushProfileUpdate($user);

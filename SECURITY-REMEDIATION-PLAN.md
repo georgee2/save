@@ -237,8 +237,14 @@ Four public endpoints currently have none:
 
 ## Phase 3 — Authentication hardening
 
-> **3.1, 3.3 and 3.5 are DONE** on `fix/auth-bruteforce-and-revocation` (Phase 3A).
-> 3.2 (enumeration oracles) and 3.4 (activation / email-change flows) remain — that is Phase 3B.
+> **Phase 3 is COMPLETE.** 3.1, 3.3 and 3.5 shipped on `fix/auth-bruteforce-and-revocation`
+> (merged as PR #59); 3.2 and 3.4 on `fix/auth-enumeration-and-email-change` (Phase 3B).
+>
+> One 3.4 item was **deliberately not done**: `CustomerRegisterController` still re-invites
+> an already-activated account on `/resend-activation`. Phase 3B made that path the
+> *intended* behaviour for registration — an existing unactivated account gets its invite
+> resent rather than an error — so adding a `password_set_at` guard now would contradict it.
+> Revisit only if invite-window abuse is actually observed.
 >
 > Corrections found while implementing, worth knowing before touching this area again:
 >
@@ -315,6 +321,20 @@ Every limiter key contains the IP, so a single account has **no aggregate attemp
 ## Phase 5 — Data integrity and functional gaps
 
 ### 5.1 — Project and offer inquiry forms are not connected to anything
+
+> **DONE** on `fix/wire-inquiry-forms`.
+>
+> **Correction to the framing below:** these were *not* losing live enquiries. Both forms are
+> gated behind env flags that are `false` (`.env:66-69`), and when off each page renders a
+> working contact card instead — nobody had seen them. The finding was real but latent: they
+> would have started discarding data the moment anyone flipped a flag.
+>
+> The flags remain `false`. Turning them on is a business decision, and the forms are now
+> safe to turn on.
+>
+> A second bug was found while fixing this: the blades read the flags with `env()`, which
+> returns `null` once `config:cache` runs — and `config:cache` is in the deployment runbook —
+> so the flags would have been permanently stuck off. Moved to `config/features.php`.
 
 This is a **business/lead-loss issue**, discovered during the audit.
 

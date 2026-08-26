@@ -65,7 +65,7 @@
                             <i class="fas fa-user-circle"></i>
                             <span>{{ __('lang.account') }}</span>
                         </a>
-                        <a href="{{ route('logout') }}" class="topbar-link">
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();" class="topbar-link">
                             <i class="fas fa-sign-out-alt"></i>
                             <span>{{ __('lang.logout') }}</span>
                         </a>

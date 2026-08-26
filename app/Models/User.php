@@ -40,6 +40,7 @@ class User extends Authenticatable
         'synced_at',
         'pending_email',
         'pending_email_token',
+        'pending_email_expires_at',
         'notification_prefs',
         'favourites_token',
         'locked_until',
@@ -73,6 +74,7 @@ class User extends Authenticatable
         'synced_at' => 'datetime',
         'notification_prefs' => 'array',
         'locked_until' => 'datetime',
+        'pending_email_expires_at' => 'datetime',
     ];
 
     /**

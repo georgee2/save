@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -70,7 +71,7 @@ class ContactController extends Controller
         // two acceptable actions.
         $outcome = $this->recaptcha->check(
             $request->input('g-recaptcha-response'),
-            ['contact_form', 'home_contact'],
+            ['contact_form', 'home_contact', 'offer_enquiry', 'project_enquiry'],
             $request->ip()
         );
 
@@ -125,14 +126,40 @@ class ContactController extends Controller
             'service_id' => 'nullable|exists:services,id',
             // Client-controlled and now persisted and shown in the CRM, so it is pinned to
             // the values our own forms post rather than accepting free text.
-            'source' => 'nullable|in:home_inline,contact_page',
+            'source' => 'nullable|in:home_inline,contact_page,offer_tour,offer_info,project_tour,project_info',
+            // Which offer or project the enquiry is about. Validated as a pair: an id
+            // without a type has nothing to resolve against, and the existence check below
+            // depends on knowing which table to look in.
+            'related_type' => ['nullable', 'in:offer,project', 'required_with:related_id'],
+            'related_id' => ['nullable', 'integer', 'min:1', 'required_with:related_type'],
+            'preferred_date' => ['nullable', 'date', 'after_or_equal:today'],
+            'preferred_time' => ['nullable', 'string', 'max:20'],
         ]);
+
+        // Existence is checked here rather than with `exists:` because the table depends on
+        // related_type. A dangling reference would render as a broken link in the CRM.
+        if ($request->filled('related_type') && !$this->relatedItemExists($request->related_type, (int) $request->related_id)) {
+            return back()->withInput()->withErrors([
+                'related_id' => app()->getLocale() == 'en'
+                    ? 'The item this enquiry refers to could not be found.'
+                    : 'تعذر العثور على العنصر المرتبط بهذا الطلب.',
+            ]);
+        }
 
         // Drop repeat submissions of the same message. Fingerprinted in the cache rather
         // than queried from the database because `message` is a TEXT column and MySQL
         // cannot index it without a prefix length. Cache::add is atomic on the file driver
         // when given a TTL, so two concurrent posts cannot both win.
-        $fingerprint = 'contact-dup:' . sha1(Str::lower($request->email) . '|' . $request->message);
+        // The item is part of the fingerprint: the offer and project forms pre-fill their
+        // message, so enquiring about two different offers within the window would
+        // otherwise look like a duplicate and the second would be silently dropped.
+        $fingerprint = 'contact-dup:' . sha1(implode('|', [
+            Str::lower($request->email),
+            $request->message,
+            (string) $request->input('source', ''),
+            (string) $request->input('related_type', ''),
+            (string) $request->input('related_id', ''),
+        ]));
         if (!Cache::add($fingerprint, true, 600)) {
             return $this->fakeSuccess($request);
         }
@@ -144,6 +171,10 @@ class ContactController extends Controller
             'phone' => $request->phone,
             'message' => $request->message,
             'service_id' => $request->service_id,
+            'related_type' => $request->related_type,
+            'related_id' => $request->filled('related_type') ? $request->related_id : null,
+            'preferred_date' => $request->preferred_date,
+            'preferred_time' => $request->preferred_time,
             'ip_address' => $request->ip(),
             'user_agent' => Str::limit((string) $request->userAgent(), 250, ''),
             'source' => $request->input('source', 'contact_page'),
@@ -164,6 +195,23 @@ class ContactController extends Controller
         }
 
         return back()->with('success', $successMessage);
+    }
+
+    /**
+     * Whether the offer or project an enquiry refers to actually exists and is published.
+     *
+     * Deliberately mirrors the visibility rules the public detail pages use, so an enquiry
+     * cannot be forged against a soft-deleted or unpublished item.
+     */
+    private function relatedItemExists(string $type, int $id): bool
+    {
+        $table = $type === 'offer' ? 'offers' : 'projects';
+
+        return DB::table($table)
+            ->where('id', $id)
+            ->where('publish_status', 0)
+            ->whereNull('deleted_at')
+            ->exists();
     }
 
     private function fakeSuccess(Request $request)

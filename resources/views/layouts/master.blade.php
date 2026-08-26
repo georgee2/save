@@ -34,13 +34,13 @@
         <meta name="analytics-heartbeat-url" content="{{ url('/analytics/heartbeat') }}">
         <meta content="@yield('seo_desc')" name="description">
         <meta content="@yield('seo_tags')" name="keywords">
-        <title>@yield('title' , env('APP_NAME'))</title>
+        <title>@yield('title' , config('app.name'))</title>
         
         {{-- Open Graph Meta Tags for Social Sharing --}}
         @hasSection('og_title')
         <meta property="og:title" content="@yield('og_title')">
         @else
-        <meta property="og:title" content="@yield('title', env('APP_NAME'))">
+        <meta property="og:title" content="@yield('title', config('app.name'))">
         @endif
         
         @hasSection('og_description')
@@ -57,7 +57,7 @@
         
         <meta property="og:url" content="{{ $canonicalUrl }}">
         <meta property="og:type" content="@yield('og_type', 'website')">
-        <meta property="og:site_name" content="{{ env('APP_NAME') }}">
+        <meta property="og:site_name" content="{{ config('app.name') }}">
         <meta property="og:locale" content="{{ app()->getLocale() == 'ar' ? 'ar_AE' : 'en_US' }}">
         
         {{-- Twitter Card Meta Tags --}}
@@ -65,7 +65,7 @@
         @hasSection('og_title')
         <meta name="twitter:title" content="@yield('og_title')">
         @else
-        <meta name="twitter:title" content="@yield('title', env('APP_NAME'))">
+        <meta name="twitter:title" content="@yield('title', config('app.name'))">
         @endif
         
         @hasSection('og_description')
@@ -232,6 +232,9 @@
 
     <body>
       @include('includes.preloader')
+      @auth
+        @include('includes.logout-form')
+      @endauth
       @include('includes.topbar')
       @include('includes.header')
 

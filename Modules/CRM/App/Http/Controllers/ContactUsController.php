@@ -104,6 +104,28 @@ class ContactUsController extends Controller
             abort(404);
         }
 
+        // Resolve the offer/project an inquiry-form submission came from. Looked up here
+        // rather than joined, because the target table depends on related_type. Left null
+        // when the item has since been deleted; the view says so rather than 404-ing.
+        $contact->relatedTitle = null;
+        $contact->relatedUrl = null;
+
+        if ($contact->related_type && $contact->related_id) {
+            $table = $contact->related_type === 'offer' ? 'offers' : 'projects';
+
+            $related = DB::table($table)
+                ->select('title_english', 'slug')
+                ->where('id', $contact->related_id)
+                ->first();
+
+            if ($related) {
+                $contact->relatedTitle = $related->title_english;
+                $contact->relatedUrl = $contact->related_type === 'offer'
+                    ? route('offers.show', $related->slug)
+                    : route('projects.show', $related->slug);
+            }
+        }
+
         $agentsList = DB::table('agents')
             ->whereNull('deleted_at')
             ->where('status', 'Active')

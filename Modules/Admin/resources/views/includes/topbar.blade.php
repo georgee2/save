@@ -17,7 +17,8 @@
                                 
                                 <li class="list-inline-item dropdown notification-list hidden-xs-down">
                                     <a title="{{__('lang.Logout')}}" class="nav-link waves-effect text-primary font-weight-bold"
-                                        href="{{route('logout')}}">
+                                        href="{{route('logout')}}"
+                                        onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                         <i class="mdi mdi-power-settings mdi-24px"></i>
                                         
                                     </a>
@@ -34,8 +35,9 @@
                                     <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
                                         <a class="dropdown-item" href="{{ route('admin.profile.edit') }}"><i class="dripicons-user text-muted"></i> {{ __('lang.staff_profile_title') }}</a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="{{ route('logout') }}"><i class="dripicons-exit text-muted"></i> {{ __('lang.account_logout') }}</a>
+                                        <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i class="dripicons-exit text-muted"></i> {{ __('lang.account_logout') }}</a>
                                     </div>
+                                    @include('includes.logout-form')
                                 </li>
                             </ul>
 
